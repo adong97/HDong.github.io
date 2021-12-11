@@ -1,0 +1,506 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639227308609">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639227308609" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%83-docker-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86">七、 Docker 数据管理</a>
+<ul>
+<li><a href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E5%8D%B7data-volume">1. 什么是数据卷(data volume)</a></li>
+<li><a href="#2-%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD">2. 文件挂载</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%B8%80%E6%AC%A1%E6%8C%82%E8%BD%BD%E5%A4%9A%E4%B8%AA%E7%9B%AE%E5%BD%95">如何一次挂载多个目录</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%95%B0%E6%8D%AE%E5%8D%B7%E5%AE%B9%E5%99%A8">3. 数据卷容器</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%AB-%E7%BD%91%E7%BB%9C%E9%83%A8%E5%88%86">八、 网络部分</a>
+<ul>
+<li><a href="#%E5%AE%B9%E5%99%A8%E4%B9%8B%E9%97%B4%E7%9A%84%E4%BA%92%E8%81%94">容器之间的互联</a></li>
+<li><a href="#docker-%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B">docker 网络类型</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Docker 数据管理与网络</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-10 / 12 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/knjbfiwu.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="七-docker-数据管理">七、 Docker 数据管理</h1>
+<pre><code>如果正在运行中的容器修如果生成了新的数据或者修改了现有的一个已经存在的文件内容，
+那么新产生的数据将会被复制到读写层进行持久化保存，这个读写层也就是容器的工作目录，
+此即“写时复制(COW) copy on write”机制 
+</code></pre>
+<p><strong>数据类型</strong></p>
+<pre><code>Docker的镜像是分层设计的，镜像层是只读的，通过镜像启动的容器添加了一层可读写的文件系统，用户写入的数据都保存在这一层当中。 
+如果要将写入到容器的数据永久保存，则需要将容器中的数据保存到宿主机的指定目录，
+目前Docker的数据类型分为两种，一是数据卷，二是数据容器，数据卷类似于挂载的一块磁盘，数据容器是将数据保存在一个容器上。
+</code></pre>
+<pre><code>root@s1:~# docker inspect f55c55544e05 #查看指定PID的容器信息 
+
+LowerDir： image 镜像层(镜像本身，只读) 
+UpperDir： 容器的上层(读写) 
+MergedDir：容器的文件系统，使用Union FS（联合文件系统）将lowerdir和upperdir合并给容器使用。 
+WorkDir：  容器在宿主机的工作目录 
+</code></pre>
+<p>在容器生成数据：</p>
+<pre><code># docker exec -it fa01784532f0 bash 
+[root@fa01784532f0 /]# dd  if=/dev/zero of=file bs=1M count=100 
+100+0 records in 
+100+0 records out 
+104857600 bytes (105 MB) copied, 0.257476 s, 407 MB/s 
+ 
+[root@fa01784532f0 /]# md5sum file  
+2f282b84e7e608d5852449ed940bfc51  file 
+ 
+# cp anaconda-post.log  /opt/ 
+</code></pre>
+<h2 id="1-什么是数据卷data-volume">1. 什么是数据卷(data volume)</h2>
+<p>数据卷实际上就是宿主机上的目录或者是文件，可以被直接 mount 到容器当中使用。<br>
+实际生成环境中，需要针对不同类型的服务、不同类型的数据存储要求做相应的规划，最终保证服务的可扩展性、稳定性以及数据的安全性。</p>
+<p>数据卷的特点及使用：</p>
+<pre><code>1、	数据卷是宿主机的目录或者文件，并且可以在多个容器之间共同使用。 
+2、	在宿主机对数据卷更改数据后会在所有容器里面会立即更新。 
+3、	数据卷的数据可以持久保存，即使删除使用使用该容器卷的容器也不影响。 
+4、	在容器里面的写入数据不会影响到镜像本身。 
+</code></pre>
+<h2 id="2-文件挂载">2. 文件挂载</h2>
+<p>文件挂载用于很少更改文件内容的场景，比如nginx的配置文件、tomcat的配置文件等。<br>
+创建容器并挂载配置文件</p>
+<pre><code># ll /data/testapp/ 
+total 28 
+drwxr-xr-x 2 root root    43 Sep 12 17:40 ./ 
+drwxr-xr-x 4 root root    35 Sep 12 17:10 ../ 
+-rwxr-xr-x 1 root root 23611 Aug  5  2018 catalina.sh* 
+-rw-r--r-- 1 root root    20 Sep 12 17:22 index.html 
+ 
+#自定义 JAVA 选项参数： 
+JAVA_OPTS=&quot;-server -Xms4g -Xmx4g -Xss512k -Xmn1g \
+-XX:CMSInitiatingOccupancyFraction=65  \
+-XX:+UseFastAccessorMethods \
+-XX:+AggressiveOpts \
+-XX:+UseBiasedLocking \
+-XX:+DisableExplicitGC \
+-XX:MaxTenuringThreshold=10 \
+-XX:NewSize=2048M \
+-XX:MaxNewSize=2048M \
+-XX:NewRatio=2 \
+-XX:PermSize=128m \
+-XX:MaxPermSize=512m \
+-XX:CMSFullGCsBeforeCompaction=5 \
+-XX:+ExplicitGCInvokesConcurrent \
+-XX:+UseConcMarkSweepGC \
+-XX:+UseParNewGC \
+-XX:+CMSParallelRemarkEnabled \
+-XX:+UseCMSCompactAtFullCollection \
+-XX:LargePageSizeInBytes=128m \
+-XX:+UseFastAccessorMethods&quot; 
+ 
+创建容器： 
+# docker run -it -d -p 8080:8080 -v /data/testapp/catalina.sh:/apps/tomcat/bin/catalina.sh:ro tomcat-web:app2 
+2e90299a39163d7c3af97888b84f02f2c3481529fcf6a9da8f06fbb92bd05f7c  
+</code></pre>
+<p>进入容器测试文件读写</p>
+<pre><code>root@docker-server1:~# docker exec -it 2e90299a3916 bash 
+[root@2e90299a3916 /]# echo &quot;test&quot; &gt;&gt; /apps/tomcat/bin/catalina.sh  
+bash: /apps/tomcat/bin/catalina.sh: Read-only file system 
+[root@2e90299a3916 /]# 
+</code></pre>
+<h3 id="如何一次挂载多个目录">如何一次挂载多个目录</h3>
+<p>多个目录可以位于不同的目录下</p>
+<pre><code>root@docker-server1:~# mkdir /data/magedu 
+root@docker-server1:~# echo &quot;magedu&quot; &gt;&gt; /data/magedu/index.html 
+ 
+# docker run -d --name web1 -p 8081:8080  -v 
+/data/testapp/catalina.sh:/apps/tomcat/bin/catalina.sh:ro  -v 
+/data/magedu/:/apps/tomcat/webapps/testapp t omcatweb:app1 
+491b5acd8426d125dc747b6a90990513d655fac4573597bd13afb330ca1c2dd4 
+ 
+再启动一个容器，验证宿主机目录或文件是否共享： 
+~# docker run -d --name web2 -p 8082:8080  -v 
+/data/testapp/catalina.sh:/apps/tomcat/bin/catalina.sh:ro  -v 
+/data/magedu/:/apps/tomcat/webapps/testapp t omcat-web:app2 
+b07b9c09c8cadca8a8ef9e4e5c3969f3713a47280e9e5608fb8bd4e11ec45128 
+</code></pre>
+<p>数据卷使用场景：</p>
+<pre><code>1、日志输出 
+2、静态 web 页面 
+3、应用配置文件 
+4、多容器间目录或文件共享 
+</code></pre>
+<h2 id="3-数据卷容器">3. 数据卷容器</h2>
+<p>数据卷容器功能是可以让数据在多个docker容器之间共享，即可以让B容器访问A容器的内容，而容器C也可以访问A容器的内容，即先要创建一个后台运行的容器作为Server，用于卷提供，这个卷可以为其他容器提供数据存储服务，其他使用此卷的容器作为client端</p>
+<h1 id="八-网络部分">八、 网络部分</h1>
+<pre><code>主要介绍docker网络相关知识。 
+Docker服务安装完成之后，默认在每个宿主机会生成一个名称为docker0的网卡
+其IP地址都是 172.17.0.1/16，并且会生成三种不能类型的网络 
+</code></pre>
+<h2 id="容器之间的互联">容器之间的互联</h2>
+<p>通过容器名称互联</p>
+<pre><code>即在同一个宿主机上的容器之间可以通过自定义的容器名称相互访问，比如一个业务前端静态页面是使用 nginx，
+动态页面使用的是 tomcat，由于容器在启动的时候其内部 IP 地址是 DHCP 随机分配的，
+所以如果通过内部访问的话，自定义名称是相对比较固定的，因此比较适用于此场景。
+</code></pre>
+<p>此方式最少需要两个容器之间操作</p>
+<pre><code>1. 先创建第一个容器，后续会使用到这个容器的名称： 
+docker run -it -d --name tomcat-web1 -p 8801:8080 tomcat-web:app1 
+96fd3426c786b032f252b709d4bb483590de8e57a99f401821634e4bd0045577 
+
+2. 查看当前 hosts 文件内容： 
+docker exec -it  96fd3426c786 bash 
+
+vim /etc/hosts 
+127.0.0.1 	localhost 
+::1 localhost ip6-localhost ip6-loopback 
+fe00::0 ip6-localnet ff00::0 ip6-mcastprefix 
+ff02::1 ip6-allnodes 
+ff02::2 ip6-allrouters 172.17.0.2 96fd3426c786 
+1.1.1.1 abc.test.com 
+3. 创建第二个容器： 
+docker run -it -d -p 80:80  --name magedu-nginx-web1 --link tomcat-web1  magedu-nginx:v1 
+e7796ad98c84d7e6148fd25e10c7026bdbe9a21fd5699995912340ab8906b9fc 
+
+4. 查看第二个容器的 hosts 文件内容： 
+docker exec -it e7796ad98c84 bash 
+cat /etc/hosts 
+127.0.0.1 	localhost 
+::1 localhost ip6-localhost ip6-loopback 
+fe00::0 ip6-localnet 
+ff00::0 ip6-mcastprefix 
+ff02::1 ip6-allnodes ff02::2 ip6-allrouters 
+172.17.0.2 	tomcat-web1 96fd3426c786  #连接的对方容器的 ID 和容器名称 
+172.17.0.3 	e7796ad98c84 
+</code></pre>
+<p>通过自定义容器别名互联：</p>
+<pre><code>上一步骤中，自定义的容器名称可能后期会发生变化，那么一旦名称发生变化，程序之间也要随之发生变化，
+比如程序通过容器名称进行服务调用，但是容器名称发生变化之后再使用之前的名称肯定是无法成功调用，
+每次都进行更改的话又比较麻烦，因此可以使用自定义别名的方式解决，即容器名称可以随意更，
+只要不更改别名即可，具体如下： 
+
+命令格式： 
+docker run -d --name 新容器名称 --link 目标容器名称:自定义的名称 -p 本地端口:容器端口 镜像名称    shell 命令 
+</code></pre>
+<p>启动第三个容器：</p>
+<pre><code>docker run -it -d -p 81:80  --name magedu-nginx-web2 --link tomcatweb1:java_server  magedu-nginx:v1 
+6acb8a2b366ec31045b19f9c5a00bd7e811d95c5c46202aec09f140bf3420508 
+
+查看当前容器的 hosts 文件: 
+docker exec -it 6acb8a2b366e bash 
+cat /etc/hosts 
+127.0.0.1 	localhost 
+::1 localhost ip6-localhost ip6-loopback 
+fe00::0 ip6-localnet ff00::0 ip6-mcastprefix 
+ff02::1 ip6-allnodes 
+ff02::2 ip6-allrouters 
+172.17.0.2 	java_server 96fd3426c786 tomcat-web1 
+172.17.0.4 	6acb8a2b366   
+</code></pre>
+<h2 id="docker-网络类型">docker 网络类型</h2>
+<pre><code>Docker的网络使用docker network ls命令看到有三种类型，下面将介绍每一种类型的具体工作方式： 
+Bridge模式，使用参数–net=bridge指定，不指定默认就是bridge模式。 
+
+查看当前 docke 的网卡信息： 
+docker network list 
+
+NETWORK ID          NAME                DRIVER              SCOPE 
+96b8c5310386        bridge              bridge              local 
+06be5dcfad98        host                host                local 
+9374ba0c4a30        none                null                local 
+ 
+Bridge：#桥接，使用自定义 IP 
+Host：  #不获取 IP 直接使用物理机 IP，并监听物理机 IP 监听端口 
+None:   #没有网络 
+</code></pre>
+<p><strong>Host 模式：</strong></p>
+<pre><code>Host模式，使用参数–net=host指定。 
+启动的容器如果指定了使用 host 模式，那么新创建的容器不会创建自己的虚拟网卡，
+而是直接使用宿主机的网卡和 IP 地址，因此在容器里面查看到的 IP 信息就是宿主机的信息，
+访问容器的时候直接使用宿主机 IP+容器端口即可，
+不过容器的其他资源们必须文件系统、系统进程等还是和宿主机保持隔离。
+此模式的网络性能最高，但是各容器之间端口不能相同，适用于运行容器端口比较固定的业务。 
+为避免端口冲突，先删除所有的容器：先确认宿主机端口没有占用 80 端口：  
+</code></pre>
+<pre><code>启动一个新容器，并指定网络模式为 host 
+docker run -d --name net_host --net=host magedu-nginx:v1 
+7d65d6106ca87d41b6c62677740a1cdd14a870234f7c15d0beac6b306583cff8 
+</code></pre>
+<pre><code>Host 模式不支持端口映射，当指定端口映射的时候会提示如下警告信息：
+使用主机网络模式时，将丢弃已指定的端口： 
+
+docker run -it -d  --name net_host -p 80:80 --net=host magedu-nginx:v1  
+/apps/nginx/sbin/nginx 
+WARNING: Published ports are discarded when using host network mode 
+025ff64d057f095032ac6c271d5275d81cea1f73645e93877c3d696cb2280020 
+</code></pre>
+<p><strong>none 模式：</strong></p>
+<pre><code>None 模式，使用参数 –net=none 指定 
+在使用 none 模式后，Docker 容器不会进行任何网络配置，其没有网卡、没有 IP 也没有路由，
+因此默认无法与外界通信，需要手动添加网卡配置 IP 等，所以极少使用，命令使用方式： 
+
+docker run -it -d  --name net_none -p 80:80 --net=none magedu-nginx:v1  
+/apps/nginx/sbin/nginx 
+7d7125a2a53e0af9718e6f7b3407b093a1367499188d5493b8c4b4a56dfff584 
+</code></pre>
+<p><strong>Container 模式：</strong></p>
+<pre><code>Container 模式，使用参数 –net=container:名称或 ID 指定。 
+使用此模式创建的容器需指定和一个已经存在的容器共享一个网络，而不是和宿主机共享网，
+新创建的容器不会创建自己的网卡也不会配置自己的 IP，而是和一个已经存在的被指定的容器东西 IP 和端口范围，
+因此这个容器的端口不能和被指定的端口冲突，除了网络之外的文件系统、进程信息等仍然保持相互隔离，
+两个容器的进程可以通过 lo 网卡及容器 IP 进行通信。 
+</code></pre>
+<pre><code>docker rm -fv `docker ps -a -q` 
+ 
+docker run -it -d  --name  nginx-web1 -p 80:80 --net=bridge magedu-nginx:v1  
+/apps/nginx/sbin/nginx 
+8d6950bcf89f7744b2cc3d53733b4561f4c9e2ec2fb735f75972bedb0a4eb79a 
+ 
+docker run -it -d  --name tomcat-web1 --net=container:nginx-web1 tomcat-web:app1   
+#直接使用对方的网络，此方式较少使用 
+bf77a272fe2b88b1888b321c96c95d6a27da8d5297366d6965ac1e3e26560083 
+</code></pre>
+<p><strong>bridge 模式：</strong></p>
+<pre><code>docker 的默认模式即不指定任何模式就是 bridge 模式，
+也是使用比较多的模式，此模式创建的容器会为每一个容器分配自己的网络 IP 等信息，
+并将容器连接到一个虚拟网桥与外界通信。 
+docker network inspect bridge 
+docker rm -fv `docker ps -a -q` 
+docker run -it -d  --name  nginx-web1 -p 80:80 --net=bridge magedu-nginx:v1  
+/apps/nginx/sbin/nginx 
+0dfe5a96ef1b7c8f0af820a097a4b140aed8809a787562c694d4982d8f0037b9 
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/dockerdanjibianpai/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Docker 单机编排之Docker Compose
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/fisubdefs/">
+                <h3 class="post-title">
+                  Docker 镜像制作(实操)
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

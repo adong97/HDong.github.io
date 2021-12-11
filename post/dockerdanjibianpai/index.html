@@ -1,0 +1,530 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639227308609">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639227308609" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B9%9D-%E5%8D%95%E6%9C%BA%E7%BC%96%E6%8E%92%E4%B9%8Bdocker-compose">九、 单机编排之Docker Compose</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">1. 基础环境准备</a></li>
+<li><a href="#2-%E6%9F%A5%E7%9C%8B-docker-compose-%E5%B8%AE%E5%8A%A9">2. 查看 docker-compose 帮助</a></li>
+<li><a href="#3-docker-compose-%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3">3. docker-compose 命令详解</a></li>
+<li><a href="#4-%E4%BB%8Edocker-compose%E5%90%AF%E5%8A%A8%E5%8D%95%E4%B8%AA%E5%AE%B9%E5%99%A8">4. 从docker compose启动单个容器</a></li>
+<li><a href="#5-docker-compose-%E5%90%AF%E5%8A%A8%E5%A4%9A%E4%B8%AA%E5%AE%B9%E5%99%A8">5. docker compose 启动多个容器</a></li>
+<li><a href="#6-%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E5%8D%B7%E6%8C%82%E8%BD%BD">6. 定义数据卷挂载</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Docker 单机编排之Docker Compose</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-10 / 11 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/dockerdanjibianpai.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="九-单机编排之docker-compose">九、 单机编排之Docker Compose</h1>
+<p>当在宿主机启动较多的容器时候，如果都是手动操作会觉得比较麻烦而且容器出错，<br>
+这个时候推荐使用docker单机编排工具docker-compose，docker-compose是docker容器的一种单机编排服务。</p>
+<p>docker-compose是一个管理多个容器的工具，比如可以解决容器之间的依赖关系，就像启动一个nginx前端服务的时候会调用后端的tomcat，那就得先启动tomcat，但是启动tomcat容器还需要依赖数据库，那就还得先启动数据库，docker-compose就可以解决这样的嵌套依赖关系，其完全可以替代docker run对容器进行创建、启动和停止。</p>
+<p>docker-compose项目是Docker官方的开源项目，负责实现对Docker容器集群的快速编排，<br>
+docker-compose将所管理的容器分为三层，分别是工程（project），服务（service）以及容器（container）。</p>
+<pre><code>工程: docker-compose文件所在的目录,默认会取目录下的工程名称,
+工程名称没有实际意义,只是用默认的方式区区分一下
+
+服务: 在定义容器的时候，可以先定义成服务，doeker-compose在操作容器的时候,不是直接操作容器，
+而是先找到服务,在服务中找到所针对的容器
+
+github地址: 
+https://github.com/docker/compose 
+</code></pre>
+<h2 id="1-基础环境准备">1. 基础环境准备</h2>
+<pre><code>#########   pip安装
+安装 python-pip 软件包
+
+python-pip 包将安装一个pip的命令，pip命令是一个pyhton安装包的安装工具，
+其类似于 ubuntu 的 apt 或者 redhat 的 yum，但是 pip 只安装 python 相关的安装包，
+可以在多种操作系统安装和使用 pip。 
+注：官方二进制下载地址：https://github.com/docker/compose/releases   
+
+安装 docker compose： 
+pip install docker-compose  
+ 
+验证 docker-compose 版本： 
+docker-compose  version 
+
+#########  二进制安装方法
+curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose 
+
+mv  /usr/local/bin/docker-compose  /usr/bin/
+chmod a+x /usr/bin/docker-compose 
+</code></pre>
+<h2 id="2-查看-docker-compose-帮助">2. 查看 docker-compose 帮助</h2>
+<pre><code>#官方文档 
+https://docs.docker.com/compose/reference/ 
+
+docker-compose  --help 
+Usage:   
+  docker-compose [-f &lt;arg&gt;...] [options] [COMMAND] [ARGS...]   
+  docker-compose -h|--help 
+ 
+选项如下： 
+-f，–file FILE #指定 Compose 模板文件，默认为 docker-compose.yml。 
+-p，–project-name NAME #指定项目名称，默认将使用当前所在目录名称作为项目名。 
+--verbose   #显示更多输出信息 
+--log-level LEVEL    #定义日志级别 (DEBUG, INFO, WARNING, ERROR, CRITICAL) 
+--no-ansi #不显示 ANSI 控制字符 
+-v, --version #显示版本 
+ 
+docker-compose: 
+命令选项，需要在docker-compose.yml文件目录执行 (不常用的命令,已加注释)
+
+#build      #构建镜像 
+#bundle     #从当前 docker compose 文件生成一个以当前目录为名称的Docker Bundle文件。 
+config  -q  #查看当前配置，没有错误不输出任何信息 
+#create     #创建服务(service)， 
+down        #停止和删除所有容器、网络、镜像和卷 
+#events     #从容器接收实时事件，可以指定json日志格式 
+        例： docker-compose events  --json nginx 
+exec        #进入指定容器进行操作
+        例： docker-compose exec nginx bash 
+help        #显示帮助细信息 
+#images     #显示当前镜像信息 
+#kill       #强制终止运行中的容器 
+logs        #查看容器的日志 
+pause       #暂停服务 
+        例: docker-compose pause nginx 
+unpause     #取消暂停,恢复容器使用 
+        例： docker-compose unpause nginx 
+port        #查看端口 
+#ps         #列出容器 
+pull        #重新拉取镜像 
+push        #上传镜像 
+#restart    #重启服务(容器) 
+rm          #删除已经停止的服务(容器)
+   -s 停止服务
+   -f 强制删除容器 
+run         #一次性运行容器 等同于 docker run --rm 
+scale       #设置指定服务运行的容器个数,相当于横向扩容 
+#start      #启动服务 ,针对当前docker-compose.yml配置文件中写的所有容器
+#stop       #停止服务 
+top         #显示容器运行状态 
+        例： docker-compose top nginx  
+up          #创建并启动容器 
+Version     #显示docker-compose版本信息 
+</code></pre>
+<h2 id="3-docker-compose-命令详解">3. docker-compose 命令详解</h2>
+<pre><code>1&gt; docker-compose comfig -q 如果配置文件没有问题,则不输出信息,否则会将检查文件的内容输入出来
+
+2&gt; create  (不常用)  docker-compose将容器放在service中去调用,所以他不是创建容器，而是创建service
+   例: services： 
+           nginx   services定义nginx名称
+             image 定义调用哪个镜像
+             container_name  定义容器的名称
+           expose: 等同于dockefile中的EXPOSE 用来暴露端口
+           ports:  定义端口映射,将宿主机的端口映射为容器的端口
+docker-compose  create  将容器创建出来,只创建不运行
+
+3&gt; docker-compose  start (不常用) 启动容器,他会在当前目录下,读取docker-compose.yml文件
+
+4&gt; docker-compose up -d 创建并启动容器  -d 在后台运行容器 
+
+5&gt; docker-compose down 会停止并删除本机上所有的容器 
+
+6&gt; docker-compose pull 重新从harbor仓库中拉取镜像,将本地的镜像覆盖掉 
+
+7&gt; docker-compose  scale  设置指定服务运行的容器个数,相当于横向扩容    
+</code></pre>
+<pre><code>docker-compose  scale  设置指定服务运行的容器个数,相当于横向扩容 
+
+横向扩容: 
+service是一个访问入口,service将用户的请求向后端转发到容器上去
+容器默认是一个,如果一个容器扛不住了,需要启动多个容器,多个容器共用一个service前端
+访问的时候,先访问到seivice访问入口,然后再转发到后端多个容器上,以实现高并发的能力
+
+如果监听多个容器的80端口,则会发生端口冲突,k8s中容器不会直接映射宿主的端口,而是再容器中再封装一层网络
+这时,容器中的端口可以任意监听
+
+现阶段,只能将端口映射去掉,不再映射端口
+docker-compose  scale 参数
+  service=num 指定service数量 
+  -t 设置时间,指定一个shutdown time
+
+例: docker-compose scale  nginx=2
+docker中无法监听相同的端口,只能在docker-compose.yml 配置文件中将监听的端口删掉,才能同时启动多个容器
+所有容器都要监听80端口,因为在k8s中进行调度的时候,访问入口service往容器的相同端口转发,因此端口必须都保持一致
+
+docker-compose只能限制在单机上运行,不可以跨主机,但是k8s不存在这种问题,
+k8s可以横向扩容,也可以在service中动态发现后端新加的容器,并且将新加的容器自动关联到service上,
+让用户访问到新的容器,用户并不知道新加了容器,我们称为k8s内部的负载均衡,这是由k8s原生实现的.
+内部负载均衡的功能就是,将用户的请求转发到后端的容器上去,可以实现跨主机,不单单时当前主机上.
+service可以以跨主机的形式将用户的请求转发到另外一台主机上的容器上去,
+而且新加的容器会尽快发现新加的容器,也就是对业务进行横向扩容以后,新的容器会自动发现,自动添加,自动转发.
+如果容器宕机或者被删除，k8s会将被删掉的容器,宕机的容器从后端主机列表中删除掉.
+</code></pre>
+<h2 id="4-从docker-compose启动单个容器">4. 从docker compose启动单个容器</h2>
+<pre><code>目录可以在任意目录，推荐放在有意义的位置。 
+cd /opt/ 
+
+mkdir magedu 
+cd magedu/ 
+</code></pre>
+<p>单个容器的docker compose文件</p>
+<pre><code>将镜像上传到harbor上
+docker tag centos-nginx:1.16.1  172.18.1.133/linux38/centos-nginx:1.16.1   
+docker push 172.18.1.133/linux38/centos-nginx:1.16.1
+
+为了docker-compose的复用性,如果当前主机的容器宕机,只要就将docker-compose文件拷贝到其他节点
+在其他节点执行docker-compose up -d,只要能将镜像从harbor仓库中拉取到，就能将容器创建出来  
+
+编写一个 yml 格式的配置 docker-compose 文件，启动一个nginx服务，
+由于格式为 yml 格式，因此要注意前后的缩进及上下行的等级关系。 
+
+cd /opt/magedu 
+ 
+vim  docker-compose.yml  
+service-nginx-web: 
+  image: 192.168.7.103/linux37/ubuntu-nginx:1.16.1  
+  expose:      # 暴露端口
+    - 80     
+    - 443   
+  ports:      # 映射端口 
+    - &quot;80:80&quot; 
+    - &quot;443:443&quot; 
+ 
+启动容器： 
+必须要在docker compose文件所在的目录执行： 
+cd /opt/magedu 
+docker-compose up -d #不加是d前台启动 
+
+启动完成： 
+镜像下载完成后将容器创建完成并成功运行。 
+</code></pre>
+<p>自定义容器名称：</p>
+<pre><code>vim  docker-compose.yml  
+
+service-nginx-web: 
+  image: 192.168.7.103/linux37/ubuntu-nginx:1.16.1    
+  container_name: nginx-web1    
+  expose:     
+    - 80     
+    - 443   
+  ports:     
+    - &quot;80:80&quot; 
+    - &quot;443:443&quot; 
+ 
+#后台启动docker-compose
+docker-compose  up -d 
+Recreating magedu_service-nginx-web_1 ... done 
+
+#查看容器进程：
+docker-compose  ps 
+   Name      Command   State                    Ports                  
+----------------------------------------------------------------------- 
+nginx-web1   nginx     Up      0.0.0.0:443-&gt;443/tcp, 0.0.0.0:80-&gt;80/tcp 
+</code></pre>
+<h2 id="5-docker-compose-启动多个容器">5. docker compose 启动多个容器</h2>
+<pre><code>1：编辑 docker-compose 文件：
+
+cd /opt/magedu 
+ 
+vim docker-compose.yml  
+service-nginx-web: 
+  image: 172.18.1.133/linux38/centos-nginx:1.16.1  #指定镜像
+  container_name: nginx-web1   #指定容器名称   
+  expose:     
+    - 80     
+    - 443   
+  ports:     
+    - &quot;80:80&quot; 
+    - &quot;443:443&quot; 
+ 
+service-tomcat-app1: 
+  image: 172.18.1.133/linux38/tomcat-web:app1    
+  container_name: tomcat-app1   
+  expose:     
+    - 8080   
+  ports:  
+    - &quot;8080:8080&quot; 
+ 
+重新启动容器： 
+cd /opt/magedu 
+docker-compose  stop 
+docker-compose  up -d 
+</code></pre>
+<h2 id="6-定义数据卷挂载">6. 定义数据卷挂载</h2>
+<p>1：创建数据目录和文件：</p>
+<pre><code>在宿主机创建代码目录
+mkdir -p /data/nginx/magedu 
+echo &quot;magedu test page&quot; &gt;  /data/nginx/magedu/index.html 
+ 
+编辑 compose 配置文件： 
+cat docker-compose.yml  service-nginx-web: 
+  image: 192.168.7.103/linux37/ubuntu-nginx:1.16.1    
+  container_name: nginx-web1   
+  volumes:      #定义数据目录映射关系,可以映射多个目录,添加- 即可
+    - /data/nginx/magedu:/apps/nginx/html   
+  expose:     
+    - 80     
+    - 443   
+  ports:     
+    - &quot;80:80&quot;     
+    - &quot;443:443&quot; 
+# links: 
+#   - nginx-web1 
+ 
+ 
+service-tomcat-app1: 
+  image: 192.168.7.103/linux37/linux37-tomcat:app1    
+  container_name: tomcat-app1   
+  expose:     
+    - 8080   
+  ports: 
+    - &quot;8080:8080&quot; 
+ 
+重启容器： 
+docker-compose  stop 
+docker-compose  up –d 
+ 
+docker-compose  up -d tomcat-app1 is up-to-date 
+Recreating nginx-web1 ... done 
+ 
+验证 web 访问： 
+注：同一个文件，数据卷的优先级比镜像内的文件优先级高 
+  
+ 
+重启单个指定容器： 
+docker-compose  restart  service-nginx-web #写容器的 service 名称 
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Kubernetes 概述
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/knjbfiwu/">
+                <h3 class="post-title">
+                  Docker 数据管理与网络
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

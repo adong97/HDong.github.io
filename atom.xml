@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2021-12-11T08:49:24.125Z</updated>
+    <updated>2021-12-11T12:55:20.782Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2021, Adong&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[《认知觉醒：开启自我改变的原动力》]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/lesslessren-zhi-jue-xing-kai-qi-zi-wo-gai-bian-de-yuan-dong-li-greatergreater/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/lesslessren-zhi-jue-xing-kai-qi-zi-wo-gai-bian-de-yuan-dong-li-greatergreater/">
+        <id>https://adong97.github.io/HDong.github.io/post/renzhijuexing/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/">
         </link>
         <updated>2021-12-11T08:40:02.000Z</updated>
         <content type="html"><![CDATA[<p>​                                                     自序  开启自我改变的原动力</p>
@@ -1666,8 +1666,8 @@ ip link del dummy0
     </entry>
     <entry>
         <title type="html"><![CDATA[CA认证原理及CFSSL证书生成工具的使用]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/ca-ren-zheng-yuan-li-ji-cfssl-zheng-shu-sheng-cheng-gong-ju-de-shi-yong/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/ca-ren-zheng-yuan-li-ji-cfssl-zheng-shu-sheng-cheng-gong-ju-de-shi-yong/">
+        <id>https://adong97.github.io/HDong.github.io/post/carenzheng/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/carenzheng/">
         </link>
         <updated>2021-12-11T07:58:05.000Z</updated>
         <content type="html"><![CDATA[<p>kubernetesV1.18版本后建议开启TLS双向认证及RBAC授权管理，以加强集群的安全管理。界内流行的开启TLS方法为基于一个“公钥基础设施（public key infrastructure，缩写为 PKI）”，使用了内部托管的认证中心（CA），常见PKI工具有CFSSL,OPENSSL等，下面详细介绍kubernetes使用CFSSL工具创建CA并开启TLS认证。</p>
@@ -2052,8 +2052,8 @@ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kube
     </entry>
     <entry>
         <title type="html"><![CDATA[二进制部署kubernets 1.20]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/er-jin-zhi-bu-shu-kubernets-120/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/er-jin-zhi-bu-shu-kubernets-120/">
+        <id>https://adong97.github.io/HDong.github.io/post/erjinzhibushu/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/erjinzhibushu/">
         </link>
         <updated>2021-12-11T07:51:29.000Z</updated>
         <content type="html"><![CDATA[<h2 id="一-环境准备">一、环境准备</h2>
@@ -7786,8 +7786,8 @@ kubelet是运行于工作节点之上的守护进程，它从API Server接收关
     </entry>
     <entry>
         <title type="html"><![CDATA[Docker 单机编排之Docker Compose]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/docker-dan-ji-bian-pai-zhi-docker-compose/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/docker-dan-ji-bian-pai-zhi-docker-compose/">
+        <id>https://adong97.github.io/HDong.github.io/post/dockerdanjibianpai/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/dockerdanjibianpai/">
         </link>
         <updated>2021-12-09T16:33:32.000Z</updated>
         <content type="html"><![CDATA[<h1 id="九-单机编排之docker-compose">九、 单机编排之Docker Compose</h1>
@@ -8067,8 +8067,8 @@ docker-compose  restart  service-nginx-web #写容器的 service 名称
     </entry>
     <entry>
         <title type="html"><![CDATA[Docker 数据管理与网络]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/docker-shu-ju-guan-li-yu-wang-luo/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/docker-shu-ju-guan-li-yu-wang-luo/">
+        <id>https://adong97.github.io/HDong.github.io/post/knjbfiwu/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/knjbfiwu/">
         </link>
         <updated>2021-12-09T16:26:22.000Z</updated>
         <content type="html"><![CDATA[<h1 id="七-docker-数据管理">七、 Docker 数据管理</h1>
@@ -8317,8 +8317,8 @@ docker run -it -d  --name  nginx-web1 -p 80:80 --net=bridge magedu-nginx:v1
     </entry>
     <entry>
         <title type="html"><![CDATA[Docker 镜像制作(实操)]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/docker-jing-xiang-zhi-zuo-shi-cao/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/docker-jing-xiang-zhi-zuo-shi-cao/">
+        <id>https://adong97.github.io/HDong.github.io/post/fisubdefs/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/fisubdefs/">
         </link>
         <updated>2021-12-09T16:07:38.000Z</updated>
         <content type="html"><![CDATA[<p>Docker镜像有没有内核？<br>
