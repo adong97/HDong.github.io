@@ -30,30 +30,19 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%A6%82%E5%BF%B5">概念</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#krew%E7%9A%84%E4%BD%BF%E7%94%A8">krew的使用</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -115,28 +104,76 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">安装krew插件</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-11 / 3 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/bq2VWq1rc.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="概念">概念</h2>
+<p>Krew是kubectl插件的包管理工具。借助Krew，可以轻松地使用kubectl plugin：发现插件、安装和管理插件。使用类似apt、dnf或者brew。</p>
+<ul>
+<li>对于kubectl用户：krew能帮助用户搜索、安装和管理kubectl插件；</li>
+<li>对于插件开发者：krew可以帮助你在多种平台上打包和发布插件。</li>
+</ul>
+<p>Krew 为 1.12 版本以上的 Kubectl 插件提供了类似于 apt/yum 的包管理功能。在 Krew 的帮助下，用户可以方便的安装和使用 Kubectl 插件，能够完成很多有趣有用的功能。</p>
+<blockquote>
+<p>警告：krew仅兼容kubectl v1.12或更高版本。</p>
+</blockquote>
+<h2 id="安装">安装</h2>
+<pre><code class="language-shell"># 在 OSX 或者 Linux 系统中，首先需要安装 git，然后在 Bash/zsh 之中，用如下命令进行安装：
+(set -x; cd &quot;$(mktemp -d)&quot; &amp;&amp; curl -fsSLO &quot;https://github.com/kubernetes-sigs/krew/releases/download/v0.3.3/krew.{tar.gz,yaml}&quot; &amp;&amp; tar zxvf krew.tar.gz &amp;&amp; KREW=./krew-&quot;$(uname | tr '[:upper:]' '[:lower:]')_amd64&quot; &amp;&amp; &quot;$KREW&quot; install --manifest=krew.yaml --archive=krew.tar.gz &amp;&amp; &quot;$KREW&quot; update)
+
+# 若无法在线安装的话可以事先把需要的文件下载下来，然后修改命令行中文件路径再进行安装
+
+# 下载地址
+https://github.com/kubernetes-sigs/krew/releases
+# 需要下载krew.tar.gz和krew.yaml
+# 比如把这俩文件上传到/usr/local/src/目录下，则安装命令是
+(set -x; cd &quot;$(mktemp -d)&quot; &amp;&amp; tar zxvf /usr/local/src/krew.tar.gz &amp;&amp; KREW=./krew-&quot;$(uname | tr '[:upper:]' '[:lower:]')_amd64&quot; &amp;&amp; &quot;$KREW&quot; install --manifest=/usr/local/src/krew.yaml --archive=/usr/local/src/krew.tar.gz &amp;&amp; &quot;$KREW&quot; update)
+
+# 然后把 Krew 加入路径：
+export PATH=&quot;${KREW_ROOT:-$HOME/.krew}/bin:$PATH&quot;
+echo 'export PATH=&quot;${KREW_ROOT:-$HOME/.krew}/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<h2 id="krew的使用">krew的使用</h2>
+<pre><code class="language-shell">kubectl krew search               # 显示所有插件
+kubectl krew install view-secret  # 安装名为view-secret的插件
+kubectl view-secret               # 使用该插件
+kubectl krew upgrade              # 升级安装的插件
+kubectl krew remove view-secret   # 卸载插件
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Kubernetes</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">6</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/13oNyyBgZ/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">prometheus</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">1</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">Docker</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">7</span>
-            </a>
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ai-RB8y79/">
+                <h3 class="post-title">
+                  Kubernetes 集群监控 kube-prometheus 部署
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

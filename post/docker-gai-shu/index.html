@@ -1,0 +1,615 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639211907138">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639211907138" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E4%B8%80-docker-%E7%AE%80%E4%BB%8B">一、docker 简介</a>
+<ul>
+<li><a href="#11-docker-%E6%98%AF%E4%BB%80%E4%B9%88">1.1 Docker 是什么</a></li>
+<li><a href="#12-docker-%E7%9A%84%E7%BB%84%E6%88%90">1.2 Docker 的组成</a></li>
+<li><a href="#13-docker-%E5%AF%B9%E6%AF%94%E8%99%9A%E6%8B%9F%E6%9C%BA">1.3 Docker 对比虚拟机</a></li>
+<li><a href="#14-linux-namespace-%E6%8A%80%E6%9C%AF">1.4 Linux Namespace 技术</a></li>
+<li><a href="#15-linux-control-groups-%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">1.5 Linux control groups 资源限制</a></li>
+<li><a href="#16-docker-%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9">1.6 Docker 的优缺点</a></li>
+<li><a href="#17-docker%E5%AE%B9%E5%99%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF">1.7 docker(容器)的核心技术</a></li>
+<li><a href="#18-docker%E5%AE%B9%E5%99%A8%E7%9A%84%E4%BE%9D%E8%B5%96%E6%8A%80%E6%9C%AF">1.8 docker容器的依赖技术</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Docker 概述</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-09 / 26 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/docker-gai-shu.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="前言">前言</h1>
+<p>统称来说，容器是一种工具，指的是可以装下其它物品的工具，以方便人类归纳放置物品、存储和异地运输，<br>
+具体来说比如人类使用的衣柜、行李箱、背包等可以成为容器，但今天我们所说的容器是一种IT技术。</p>
+<p>容器技术是虚拟化、云计算、大数据之后的一门新兴的并且是炙手可热的新技术，容器技术提高了硬件资源利用率(相对于物理机或者虚拟机)、方便了企业的业务快速横向扩容、实现了业务宕机自愈功能，因此未来数年会是一个容器愈发流行的时代，这是一个对于IT行业来说非常有影响和价值的技术，而对于IT行业的从业者来说，熟练掌握容器技术无疑是一个很有前景的行业工作机会。容器技术最早出现在freebsd叫做jail。</p>
+<p>虚拟机是直接运行在物理机上的,可以实现嵌套虚拟化,但是性能较差,不经常使用。公司一般使用KVM+openstack对容器进行批量管理,创建以及批量维护,实现虚拟机的快速创建。KVM通过命令快速创建虚拟机,提供了虚拟机的运行环境，使用docker+k8s对容器进行管理,实现容器的快速创建,通过k8s快速创建容器,docker提供了容器的运行环境。</p>
+<p>docker和虚拟机的差别主要在于: 横向扩容和故障自治愈。<br>
+故障自治愈指的是：业务跑在多个物理机或者虚拟机上vm1 vm2，当虚拟机或者物理机挂掉以后,可以自动转移到其他物理机或虚拟机并启动。</p>
+<h1 id="一-docker-简介">一、docker 简介</h1>
+<h2 id="11-docker-是什么">1.1 Docker 是什么</h2>
+<p>首先，Docker是一个在2013年开源的应用程序并且是一个基于go语言编写是一个开源的PAAS服务(Platform as a Service，平台即服务的缩写)，go语言是由google开发，docker公司最早叫dotCloud后由于Docker开源后大受欢迎就将公司改名为Docker Inc，总部位于美国加州的旧金山，Docker是基于linux内核实现，Docker最早采用LXC技术(LinuX Container的简写，LXC是Linux原生支持的容器技术，可以提供轻量级的虚拟化，可以说docker就是基于LXC发展起来的，提供LXC的高级封装，发展标准的配置方法)，而虚拟化技术KVM(Kernelbased Virtual Machine)基于模块实现，Docker后改为自己研发并开源的runc技术运行容器。</p>
+<p>Docker相比虚拟机的交付速度更快，资源消耗更低，Docker采用客户端/服务端架构，使用远程API来管理和创建Docker容器，其可以轻松的创建一个轻量级的、可移植的、自给自足的容器。</p>
+<p>docker的三大理念是 build(构建)、ship(运输)、 run(运行)，Docker遵从apache 2.0协议，并通过（namespace及cgroup等）来提供容器的资源隔离与安全保障等，所以Docke容器在运行时不需要类似虚拟机（空运行的虚拟机占用物理机6-8%性能）的额外资源开销，因此可以大幅提高资源利用率。</p>
+<p>总而言之，Docker是一种用了新颖方式实现的轻量级虚拟机。类似于VM但是在原理和应用上和VM的差别还是很大的，并且docker的专业叫法是应用容器(Application Container)。</p>
+<pre><code>可移植指的是：可以运行在多种不同的操作平台上
+自给自足指的是：每个docker夺回包括自己服务的运行环境, 例如java (JDL + TOMCAT + APP代码),将服务封装在服务中就可以运行。
+
+docker的三大理念是build(构建)、ship(运输)、run(运行)指的是：
+一次构建到处运输到处运行将构建的结果运输到任何有docker环境的服务器上,
+就可以运行构建的结果就是一个image(镜像) 在KVM(虚拟机)中称为模板,
+创建虚拟机的时候就是基于模板创建虚拟机，创建容器的时候就是基于镜像创建容器。
+namespace及cgroup也调用宿主机的内核,实现了docker运行的两个核心机制,这就会导致支持的功能可能会不一样。
+</code></pre>
+<p>dockerd 是整个docker的守护进程,基于守护进程再创建容器,这些容器都属于docker的子进程，<br>
+优点在于结构简单,当dockerd进程被kill掉或者出现异常以后,所有容器都会无法使用。</p>
+<p>远程API指的是创建容器的时候，使用Cli客户端命令,或者使用web界面(由k8s封装的界面,称为dashborad)<br>
+dashborad也是调用了dockerd来创建容器。</p>
+<h2 id="12-docker-的组成">1.2 Docker 的组成</h2>
+<pre><code>Docker官方文档：
+https://docs.docker.com/engine/docker-overview/
+
+Docker官方仓库:
+https://hub.docker.com/ 包括第三方提供的镜像
+
+Docker主机(Host/node节点/宿主机)：一个物理机或虚拟机，用于运行Docker服务进程和容器。
+
+Docker服务端(Server): Docker守护进程，用于启动创建和运行docker容器。
+
+Docker客户端(Client): 客户端使用docker命令或其他工具调用docker API。
+
+Docker仓库(Registry): 统一保存镜像的仓库，类似于git或svn这样的版本控制系统,公司内部一般使用harbor搭建
+
+Docker镜像(Images): 镜像可以理解为创建实例使用的模板。
+
+Docker容器(Container): 容器是从镜像生成对外提供服务的一个或一组服务。
+</code></pre>
+<h2 id="13-docker-对比虚拟机">1.3 Docker 对比虚拟机</h2>
+<pre><code>1&gt; 资源利用率更高：一台物理机可以运行数百个容器，但是一般只能运行数十个虚拟机。
+    虚拟机有内核,docker没有内核
+    容器直接调用宿主机内核,所以也没有硬件的管理机制,所以容器才会轻量级(空间小,功能少)
+2&gt; 开销更小：不需要启动单独的虚拟机占用硬件资源。
+3&gt; 启动速度更快：可以在数秒内完成启动。
+</code></pre>
+<p>使用虚拟机是为了更好的实现服务运行环境隔离，每个虚拟机都有独立的内核，虚拟化可以实现不同操作系统的虚拟机，但是通常一个虚拟机只运行一个服务，很明显资源利用率比较低且造成不必要的性能损耗，我们创建虚拟机的目的是为了运行应用程序，比如 Nginx、PHP、Tomcat等web程序，使用虚拟机无疑带来了一些不必要的资源开销，但是容器技术则基于减少中间运行环节带来较大的性能提升。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1639062407180.png" alt="" loading="lazy"><br>
+但是，如上图一个宿主机运行了N个容器，多个容器带来的以下问题怎么解决:</p>
+<pre><code>1.怎么样保证每个容器都有不同的文件系统并且能互不影响？
+2.一个docker主进程内的各个容器都是其子进程，那么实现同一个主进程下不同类型的子进程？各个进程间通信能相互访问(内存数据)吗？
+3.每个容器怎么解决IP及端口分配的问题？
+4.多个容器的主机名能一样吗？
+5.每个容器都要不要有root用户？怎么解决账户重名问题？
+</code></pre>
+<h2 id="14-linux-namespace-技术">1.4 Linux Namespace 技术</h2>
+<p>namespace是Linux系统的底层概念，在宿主机内核层实现，即有一些不同类型的命名空间被部署在内核中，各个docker容器运行在同一个docker主进程并且共用同一个宿主机系统内核，各docker容器运行在宿主机的用户空间，每个容器都要有类似于虚拟机一样的相互隔离的运行空间，但是容器技术是在一个进程内实现运行指定服务的运行环境，并且还可以保护宿主机内核不受其他进程的干扰和影响，如文件系统空间(rootfs 可执行命令 目录结构)、网络空间(IP地址和端口)、进程空间等，目前主要通过以下技术实现容器运行空间的相互隔离：</p>
+<table>
+<thead>
+<tr>
+<th>隔离类型</th>
+<th>功能</th>
+<th>系统调用参数</th>
+<th>内核版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MNT Namespace(mount)</td>
+<td>提供磁盘挂载点和文件系统的隔离能力</td>
+<td>CLONE_NEWNS</td>
+<td>Linux 2.4.19</td>
+</tr>
+<tr>
+<td>IPC Namespace(Inter-Process Communication)</td>
+<td>提供进程间通信的隔离能力</td>
+<td>CLONE_NEWIPC</td>
+<td>Linux 2.6.19</td>
+</tr>
+<tr>
+<td>UTS Namespace(UNIX Timesharing System)</td>
+<td>提供主机名隔离能力</td>
+<td>CLONE_NEWUTS</td>
+<td>Linux 2.6.19</td>
+</tr>
+<tr>
+<td>PID Namespace(Process Identification)</td>
+<td>提供进程隔离能力</td>
+<td>CLONE_NEWPID</td>
+<td>Linux 2.6.24</td>
+</tr>
+<tr>
+<td>Net Namespace(network)</td>
+<td>提供网络隔离能力</td>
+<td>CLONE_NEWNET</td>
+<td>Linux 2.6.29</td>
+</tr>
+<tr>
+<td>User Namespace(user)</td>
+<td>提供用户隔离能力</td>
+<td>CLONE_NEWUSER</td>
+<td>Linux 3.8</td>
+</tr>
+</tbody>
+</table>
+<p>namespace指的是逻辑上隔离开的一个空间,叫命名空间。<br>
+每个容器之间都是相互隔离的,隔离开指的是用户的空间是隔离的,每个容器都有root用户和普通用户,且不互相冲突,网络空间也相互隔离,每个容器都有80端口,但是还是不冲突,基于宿主机内核实现。<br>
+一个宿主机上运行好多容器,当一个容器出问题以后,不会影响其他容器服务。</p>
+<p><strong>MNT Namespace</strong></p>
+<pre><code>每个容器都要有独立的根文件系统有独立的用户空间，以实现在容器里面启动服务并且使用容器的运行环境，
+即一个宿主机是ubuntu的服务器，可以在里面启动一个centos运行环境的容器并且在容器里面启动一个Nginx服务，
+此Nginx运行时使用的运行环境就是centos系统目录的运行环境，但是在容器里面是不能访问宿主机的资源，
+宿主机是使用了chroot技术把容器锁定到一个指定的运行目录里面。
+
+例如：/var/lib/containerd/io.containerd.runtime.v1.linux/moby/容器ID
+
+一个容器业务(moby)会有很多的小服务,在业务中会有很多分支,
+docker只是其中的一个会有创建容器的服务，管理容器的服务,保存容器的仓库服务，
+小服务来实现具体功能
+
+/var/lib/containerd/io.containerd.runtime.v1.linux 为锁定目录,
+会将容器锁定在此目录中,但是容器的数据目录和根目录不在一块,实现了联合挂载。
+联合挂载指的是在宿主机上将不同的目录挂在容器中给容器使用。
+</code></pre>
+<p><strong>IPC Namespace</strong></p>
+<pre><code>一个容器内的进程间通信，允许一个容器内的不同进程的(内存、缓存等)数据访问，
+但是不能夸容器访问其他容器的数据。
+</code></pre>
+<p><strong>UTS Namespace</strong></p>
+<pre><code>UTS namespace（UNIX Timesharing System包含了运行内核的名称、版本、底层体系结构类型等信息）用于系统标识，
+其中包含了hostname和域名domainname，它使得一个容器拥有属于自己的hostname标识，
+这个主机名标识独立于宿主机系统和其上的其他容器。 
+每一个容器都有一个独立的主机名,并且相互之间互相隔离,容器中使用的是宿主机的内核
+</code></pre>
+<p><strong>PID Namespace</strong></p>
+<pre><code>Linux系统中，有一个PID为1的进程(init/systemd)是其他所有进程的父进程，
+那么在每个容器内也要有一个父进程来管理其下属的子进程，
+多个容器的进程通过 PID namespace 进行隔离(比如PID编号重复、器内的主进程生成与回收子进程等)
+</code></pre>
+<pre><code>在容器中启动服务的时候,不是拿init.service start 或者systemctl start启动,因为容器没有独立的内核
+容器启动服务,会直接使用某一个服务的命令来启动,例如nginx。
+会使用nginx命令直接起来,而不是systemd,nginx命令后面有很多选项,其中一个选项就是-g，通过-g传递指令
+</code></pre>
+<pre><code>容器启动nginx的时候,启动的是nginx -g daemon off 将后台守护进程关掉了,直接让它在前台启动
+由于nginx -g daemon off 是第一个在前台启动的进程,所以是唯一的,然后会启动多个work进程,生成多个子进程
+
+nginx -g daemon off -&gt; 可以在当前终端可以长久执行的进程，当容器遇到这样的进程就会将PID改为 1
+</code></pre>
+<pre><code>容器和虚拟机一样,在宿主机上就是一个进程，
+nginx容器无非就是在宿主机上起了一个nginx进程,将进程封装成了一个容器
+
+在宿主机 通过pstree -p 1 观察进程关系
+
+systemd(1)  为所有宿主机的子进程的父进程
+containerd(4145)  containerd进程用于管理容器,守护进程,可以生成多个容器
+containerd-shim(6773)  容器进程，多个容器进程共用一个守护进程
+由此解决了用户的启动。
+
+systemd(1) 
+dockerd(6269)  用于管理网络访问服务,主要体现在iptables规则上 
+docker-proxy(6766)  用于生成iptables规则
+由此解决用户的网络访问。
+</code></pre>
+<p><strong>Net Namespace</strong></p>
+<pre><code>每一个容器都类似于虚拟机一样有自己的网卡、监听端口、TCP/IP 协议栈等， Docker使用network namespace启动一个vethX接口，这样你的容器将拥有它自己的桥接ip地址，通常是docker0，而docker0实质就是Linux的虚拟网桥,网桥是在OSI七层模型的数据链路层的网络设备，通过mac地址对网络进行划分，并且在不同网络直接传递数据。
+
+每个容器中都会有一个eth0,这个eth0会体现在宿主机的vethX网卡上。通常情况下,容器中只有一块网卡eth0。
+容器中的eth0 MAC地址一定不会和宿主机的MAC地址一致。
+
+docker0是一个虚拟交换机也称为网桥,存在于物理机。
+docker0的接口叫做vethX,有多少个容器就有多少个veth接口,保证宿主机和容器连接起来做对接
+
+docker0将用户的请求转发到宿主机的eth0
+宿主机的eth0再将请求向外发送,到达宿主机网关
+中间走了iptables来转发,如果走iptables的话,跨网段的转发,则需要开启ipv4_forword 路由转发功能
+
+网桥的一端和宿主机的vethX连接,另外一端和容器的eth0连接,从而保证可以相互通信。
+1&gt; 同一个宿主机，容器之间的通信，当A容器去访问B容器,直接在本机网桥(docker0)上就可以实现
+   在宿主机上通过iptables -nvL 查看iptables规则,都是docker自动生成的规则,不需要人为管理
+   iptables -t nat -vnL 在nat规则中做了路由转发,所有同一宿主机之间的容器之间的通信,
+   都是基于iptables做转发实现，因此必须开启路由转发功能
+</code></pre>
+<p><strong>User Namespace</strong></p>
+<pre><code>各个容器内可能会出现重名的用户和用户组名称，或重复的用户UID或者GID，那么怎么隔离各个容器内的用户空间呢？
+
+User Namespace允许在各个宿主机的各个容器空间内创建相同的用户名以及相同的用户UID和GID，
+只是会把用户的作用范围限制在每个容器内，即A容器和B容器可以有相同的用户名称和ID的账户，
+但是此用户的有效范围仅是当前容器内，不能访问另外一个容器内的文件系统，即相互隔离、互补影响、永不相见。
+</code></pre>
+<h2 id="15-linux-control-groups-资源限制">1.5 Linux control groups 资源限制</h2>
+<p>在一个容器，如果不对其做任何资源限制，则宿主机会允许其占用无限大的内存空间，有时候会因为代码bug程序会一直申请内存，直到把宿主机内存占完，为了避免此类的问题出现，宿主机有必要对容器进行资源分配限制，比如CPU、内存等。</p>
+<p>Linux Cgroups的全称是Linux Control Groups，它最主要的作用，就是限制一个进程组能够使用的资源上限，包括 CPU、内存、磁盘、网络带宽等等。此外，还能够对进程进行优先级设置和CPU绑定，以及将进程挂起和恢复等操作。</p>
+<p><strong>验证系统 cgroups</strong></p>
+<p>Cgroups在内核层默认已经开启，从centos和ubuntu对比结果来看，显然内核较新的ubuntu支持的功能更多。</p>
+<pre><code>### 查看内核编译文件
+cat /boot/config-4.15.0-55-generic | grep CGROUP   
+</code></pre>
+<p>cgroups 中内存模块</p>
+<pre><code class="language-shell">cat  /boot/config-4.15.0-54-generic  |  grep MEMCG
+
+CONFIG_MEMCG=y        #开启内核支持内存的功能,限制物理内存
+CONFIG_MEMCG_SWAP=y   #限制交换分区
+CONFIG_MEMCG_SWAP_ENABLED is not set 
+CONFIG_SLUB_MEMCG_SYSFS_ON=y 
+</code></pre>
+<p>cgroups 具体实现</p>
+<pre><code>blkio：  块设备IO限制。 主要用于限制磁盘 
+cpu：    使用调度程序为cgroup任务提供cpu的访问。
+    可以让docker调用,也可以让nginx调用,去调用cpu,banging在哪个cpu上。
+cpuacct：产生cgroup任务的cpu资源报告。  资源限制以后,资源利用率是多少，会提供报告清单
+cpuset： 如果是多核心的cpu，这个子系统会为cgroup任务分配单独cpu和内存。将进程绑定在cpu上 
+devices：允许或拒绝cgroup任务对设备的访问。 
+freezer：暂停和恢复cgroup任务。 
+memory：设置每个cgroup的内存限制以及产生内存资源报告。 
+net_cls：标记每个网络包以供cgroup方便使用。 
+ns：       命名空间子系统。 
+perf_event：增加了对每group的监测跟踪的能力，
+    可以监测属于某个特定的group的所有线程以及运行在特定CPU上的线程。 
+</code></pre>
+<p>查看系统 cgroups</p>
+<pre><code class="language-shell">ll  /sys/fs/cgroup/  
+# 加载完以后产生的文件目录 
+
+drwxr-xr-x 5 root root  0 Jun 30 18:12 blkio 
+lrwxrwxrwx 1 root root 11 Jun 30 18:12 cpu -&gt; cpu,cpuacct 
+lrwxrwxrwx 1 root root 11 Jun 30 18:12 cpuacct -&gt; cpu,cpuacct 
+drwxr-xr-x 5 root root  0 Jun 30 18:12 cpu,cpuacct 
+drwxr-xr-x 3 root root  0 Jun 30 18:12 cpuset 
+drwxr-xr-x 5 root root  0 Jun 30 18:12 devices 
+drwxr-xr-x 3 root root  0 Jun 30 18:12 freezer 
+drwxr-xr-x 3 root root  0 Jun 30 18:12 hugetlb 
+drwxr-xr-x 5 root root  0 Jun 30 18:12 memory 
+drwxr-xr-x 3 root root  0 Jun 30 18:12 net_cls 
+drwxr-xr-x 3 root root  0 Jun 30 18:12 perf_event 
+drwxr-xr-x 5 root root  0 Jun 30 18:12 systemd 
+</code></pre>
+<p>有了以上的 chroot、namespace、cgroups 就具备了基础的容器运行环境，但是还需要有相应的容器创建与删除的管理工具、以及怎么样把容器运行起来、容器数据怎么处理、怎么进行启动与关闭等问题需要解决，于是容器管理技术出现了。</p>
+<pre><code>chroot    将容器锁定在某一个宿主机目录,将此目录当作容器的根目录
+namespace 各种用户,PID等等的空间隔离技术
+cgroups   对容器进行资源限制
+</code></pre>
+<h2 id="16-docker-的优缺点">1.6 Docker 的优缺点</h2>
+<pre><code>Docker的优点：
+快速部署： 短时间内可以部署成百上千个应用，更快速交付到线上。
+高效虚拟化：不需要额外的hypervisor支持，直接基于linux实现应用虚拟化，相比虚拟机大幅提高性能和效率。
+节省开支： 提高服务器利用率，降低IT支出。
+简化配置： 将运行环境打包保存至容器，使用时直接启动即可。
+快速迁移和扩展：可夸平台运行在物理机、虚拟机、公有云等环境，良好的兼容性可以方便将应用从A宿主机迁移到B宿主机，甚至是A平台迁移到B平台。
+
+Docker 的缺点：
+隔离性：各应用之间的隔离不如虚拟机彻底。
+</code></pre>
+<h2 id="17-docker容器的核心技术">1.7 docker(容器)的核心技术</h2>
+<p>容器规范</p>
+<pre><code>容器技术除了的docker之外，还有coreOS的rkt，还有阿里的Pouch，
+为了保证容器生态的标准性和健康可持续发展，包括Linux基金会、Docker、微软、红帽谷歌和、IBM、等公司
+在2015年6月共同成立了一个叫open container（OCI）的组织，其目的就是制定开放的标准的容器规范。
+
+目前OCI一共发布了两个规范，分别是runtime spec(容器的运行时,定义容器是怎么运行的)
+和image format spec(镜像格式,定义了在打镜像的时候,必须按照这个标准打镜像)，
+有了这两个规范，不同的容器公司开发的容器只要兼容这两个规范，
+就可以保证容器的可移植性和相互可操作性。
+</code></pre>
+<p>容器 runtime(容器运行时)</p>
+<pre><code>runtime 是真正运行容器的地方，因此为了运行不同的容器,runtime需要和操作系统内核紧密合作相互在支持，以便为容器提供相应的运行环境。
+
+目前主流的三种 runtime：
+1&gt; Lxc： linux上早期的runtime，Docker早期就是采用lxc作为runtime。
+2&gt; runc：目前Docker默认的runtime，runc遵守OCI规范，因此可以兼容lxc。
+3&gt; rkt： 是CoreOS开发的容器runtime，也符合OCI规范，所以使用rktruntime也可以运行Docker容器。
+</code></pre>
+<p>容器管理工具</p>
+<pre><code>管理工具连接runtime与用户，对用户提供图形或命令方式操作，然后管理工具将用户操作传递给runtime执行。
+
+1&gt; lxc是lxd的管理工具。lvd是一个守护进程,通过lxc调用。
+2&gt; Runc的管理工具是docker engine，docker engine包含后台deamon(服务端)和cli(客户端)两部分，
+大家经常提到的Docker就是指的docker engine。通过docker version可以查看详细信息
+3&gt; Rkt的管理工具是rkt cli。
+</code></pre>
+<p>容器定义工具</p>
+<pre><code>容器定义工具允许用户定义容器的属性和内容，以方便容器能够被保存、共享和重建。
+
+Docker image(镜像)：是docker容器的模板，runtime依据docker image创建容器。
+Dockerfile：包含N个命令的文本文件，通过dockerfile创建出docker image。
+ACI(App container image)：与docker image类似，是CoreOS开发的rkt容器的镜像格式。
+
+制作docker image的两种常见方式:
+1&gt; dockerfile
+2&gt; 手动打镜像,将一个正在运行中的容器,提升为一个镜像(不常用)
+</code></pre>
+<p>Registry 镜像仓库</p>
+<pre><code>Registry：用于保存镜像
+统一保存镜像而且是多个不同镜像版本的地方，叫做镜像仓库。
+打完镜像需要存放到一个地方,目的是为了做分发/共享,而且一定实在内网中进行
+
+1&gt; Image registry：docker官方提供的私有仓库部署工具。
+2&gt; Docker hub：docker官方的公共仓库，已经保存了大量的常用镜像，可以方便大家直接使用。
+3&gt; Harbor：vmware提供的自带web界面自带认证功能的镜像仓库，目前有很多公司使用。
+
+镜像访问示例:
+harbor地址/镜像仓库的名称(一般会以业务名称命名)/镜像
+172.18.200.101/project/centos:7.2.1511
+172.18.200.101/project/centos: latest
+172.18.200.101/project/java-7.0.59:v2
+
+在机房内部做代码升级
+在公网上拉镜像会占据带宽出口的带宽,在端时间内做多个应用的升级,会频繁的上传和拉去镜像,影响其他业务的正常访问,不可取。
+我们通常会在公司内部,搭建一个镜像服务器叫Harbor,在做代码升级时候直接让web服务器通过内网拉去镜像
+打镜像或者上传下载等操作是不会影响带宽出口的带宽,也不会影响业务
+</code></pre>
+<p>编排工具</p>
+<pre><code>当多个容器在多个主机运行的时候，单独管理容器是相当复杂而且很容易出错，
+而且也无法实现某一台主机宕机后容器自动迁移到其他主机从而实现高可用的目的，也无法实现动态伸缩的功能。
+因此需要有一种工具可以实现统一管理、动态伸缩、故障自愈、批量执行等功能，这就是容器编排引擎。
+容器编排通常包括容器管理、调度、集群定义和服务发现等功能。
+
+动态伸缩: 在业务量高峰期自动多创建一部分容器,在高峰期过后再自动回收
+故障自愈: 当其中一台节点挂掉以后,编排工具可以发现节点宕机,会自动将服务在其他节点起来
+批量执行；可以将某些容器直接批量删除或重启
+
+目前比较主流的编排引擎
+1&gt; Docker swarm：docker 开发的容器编排引擎。
+2&gt; Kubernetes：google领导开发的容器编排引擎，内部项目为Borg，且其同时支持docker和CoreOS。
+3&gt; Mesos+Marathon：通用的集群组员调度平台，mesos(实现资源分配)与marathon(容器编排平台)一起提供容器编排引擎功能。
+</code></pre>
+<p>服务发现</p>
+<pre><code>假如业务量突然猛增,需要扩展容器,如何保证扩展的容器被用户访问到？
+1&gt; 更改负载均衡,手动添加
+2&gt; k8s可以实现自动添加功能,叫做动态识别
+
+k8s中有一个内置服务叫做service,跑在k8s的内部环境中,它会打通各个服务器的内网通信,service是逻辑上存在的东西。
+service是k8s内部的负载均衡,我们会给它配置一些label标签,
+label会具备选择功能,他会选择出来容器上所带的特征,在k8s称为pod(容器的名称、属于什么业务、或者自定义标签)。
+将所选择的标签进行自动发现、自动添加,我们访问的时候并不是直接访问容器,尤其是在k8s上,并不能直接访问容器。
+
+我们会先访问service，然后再将service在宿主机上暴露一个端口(30001),30001会将请求转发给service
+所以说当我们访问的时候,实际上访问的是30001端口,30001会转发给service，service再将我们的请求交给各个后端的容器。service会自动发现已经起来的容器
+</code></pre>
+<h2 id="18-docker容器的依赖技术">1.8 docker容器的依赖技术</h2>
+<p><strong>容器网络：</strong><br>
+docker自带的网络docker network仅支持管理单机上的容器网络，当多主机运行的时候需要使用第三方开源网络，<br>
+例如calico、flannel等,用于解决容器跨主机通信,以及网络管理(自动分配IP地址,保证每个容器拿到的IP地址都不一样)</p>
+<p><strong>服务发现：</strong><br>
+容器的动态扩容特性决定了容器IP也会随之变化(每个服务器都有一个独立的地址段),因此需要有一种机制可以自动识别并将用户请求动态转发到新创建的容器上，kubernetes自带服务发现功能，需要结合kube-dns服务解析内部域名。</p>
+<p><strong>容器监控：</strong><br>
+可以通过原生命令docker ps/top/stats查看容器运行状态，另外也可以使heapster/Prometheus等第三方监控工具监控容器的运行状态。</p>
+<p><strong>数据管理：</strong><br>
+容器的动态迁移会导致其在不同的Host之间迁移，因此如何保证与容器相关的数据也能随之迁移或随时访问，可以使用逻辑卷/存储挂载等方式解决。</p>
+<p><strong>日志收集：</strong><br>
+docker原生的日志查看工具docker logs，但是容器内部的日志需要通过ELK等专门的日志收集分析和展示工具进行处理。</p>
+<pre><code>搭建docker需要解决的问题
+监控报警
+日志收集
+代码部署回滚
+网络问题-容器跨主机通信和IP地址管理
+数据存储-依赖于外部存储或者PV/PVC
+动态识别-容器扩容之后,自动让用户访问到新创建的容器
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/docker-an-zhuang-ji-ji-chu-ming-ling-jie-shao/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Docker 安装及基础命令介绍
+                </h3>
+              </a>
+            </div>
+          
+
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

@@ -1,0 +1,404 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639211907138">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639211907138" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%89-docker-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">三、docker 存储引擎</a></li>
+<li><a href="#%E5%9B%9B-docker-%E6%9C%8D%E5%8A%A1%E8%BF%9B%E7%A8%8B">四、 docker 服务进程</a>
+<ul>
+<li><a href="#41-containerd-%E8%BF%9B%E7%A8%8B%E5%85%B3%E7%B3%BB">4.1 containerd 进程关系</a></li>
+<li><a href="#42-containerd-shim-%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8">4.2 containerd-shim 命令使用：</a></li>
+<li><a href="#43-%E5%AE%B9%E5%99%A8%E7%9A%84%E5%88%9B%E5%BB%BA%E4%B8%8E%E7%AE%A1%E7%90%86%E8%BF%87%E7%A8%8B">4.3 容器的创建与管理过程：</a></li>
+<li><a href="#44-grpc-%E7%AE%80%E4%BB%8B">4.4 grpc 简介：</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Docker 存储引擎与服务进程</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-09 / 9 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/docker-cun-chu-yin-qing-yu-fu-wu-jin-cheng.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="三-docker-存储引擎">三、docker 存储引擎</h1>
+<p>目前docker的默认存储引擎为overlay2，不同的存储引擎需要相应的系统支持，如需要磁盘分区的时候传递d-type文件分层功能，即需要传递内核参数开启格式化磁盘的时候的指定功能。<br>
+支持d-type的功能的参数是 ftype=1</p>
+<p>历史更新信息：<br>
+https://github.com/moby/moby/blob/master/CHANGELOG.md</p>
+<p>官方文档关于存储引擎的选择文档：<br>
+https://docs.docker.com/storage/storagedriver/select-storage-driver/</p>
+<pre><code>存储驱动类型： 
+1&gt; AUFS（AnotherUnionFS）是一种 Union FS，是文件级的存储驱动。
+所谓 UnionFS 就是把不同物理位置的目录合并mount到同一个目录中。
+简单来说就是支持将不同目录挂载到同一个虚拟文件系统下的文件系统。
+这种文件系统可以一层一层地叠加修改文件。无论底下有多少层都是只读的，只有最上层的文件系统是可写的。
+当需要修改一个文件时，AUFS 创建该文件的一个副本，使用 CoW 将文件从只读层复制到可写层进行修改，结果也保存在可写层。
+在Docker中，底下的只读层就是image，可写层就是Container，
+是Docker 18.06及更早版本的首选存储驱动程序，在内核3.13上运行Ubuntu 14.04时不支持overlay2。 
+
+OverlayFS是一种现代的联合文件系统，与AUFS类似，但速度更快且实现更简单。
+Docker为OverlayFS提供了两个存储驱动程序：原始的overlay，更新的和更稳定的overlay2。
+
+2&gt; Overlay：一种Union FS文件系统，Linux内核3.18后支持。 
+
+3&gt; overlay2: Overlay的升级版，到目前为止，所有Linux发行版推荐使用的存储类型。 
+
+4&gt; devicemapper：是CentOS 和 RHEL的推荐存储驱动程序，因为之前的内核版本不支持overlay2，
+但是当前较新版本的CentOS 和 RHEL现在已经支持overlay2，因此推荐使用 overlay2。 
+
+5&gt; ZFS(Sun-2005)/btrfs(Oracle-2007)：目前没有广泛使用。 
+
+6&gt; vfs：用于测试环境，适用于无法使用copy-on-write文件系统的情况。 此存储驱动程序的性能很差，通常不建议用于生产。 
+</code></pre>
+<p>Docker官方推荐首选存储引擎为 overlay2，devicemapper存在使用空间方面的一些限制，<br>
+虽然可以通过后期配置解决，但是官方依然推荐使用overlay2，以下是网上查到的部分资料：<br>
+https://www.cnblogs.com/youruncloud/p/5736718.html</p>
+<pre><code class="language-shell">不推荐更改文件系统,更改文件系统,会导致所有数据丢失
+更改存储引擎：
+1&gt; 停止Docker 
+   
+2&gt; vim /etc/docker/daemon.json
+ {
+  &quot;storage-driver&quot;: &quot;overlay&quot;
+ }
+
+3&gt; 重启生效
+   systemctl restart docker 
+
+更改存储引擎会重新生成/var/lib/docker中的数据
+</code></pre>
+<pre><code>如果docker数据目录是一块单独的磁盘分区而且是xfs格式的， 那么需要在格式化的时候加上参数-n ftype=1，否则后期在启动容器的时候会报错不支持dtype。
+
+推荐是以较新的操作系统,以支持overlay2驱动程序,更好的支持UnionFS 联合文件挂载。
+
+在宿主机上启动一个容器,在容器中看,就只有一个文件系统/opt、/etc等目录结构
+但是这个容器会在宿主机上有多个目录 work 工作目录  image 保存镜像的目录 diff 保存差异数据的目录
+将这些目录联合起来都指向容器的系统盘,供容器使用,当从容器中看的时候,这些目录都在一起
+并不知道这些目录是挂载在一块的,我们把这种方式叫做联合文件挂载
+
+通过这种方法是来解决镜像的只读层
+只读的意思是,我们的镜像在加载容器的时候,会将镜像拉取下来,放在某个位置
+因为镜像中有文件系统(可执行程序、目录结构、应用环境以及代码)都会放到镜像中,是只读的
+还有一个地方是可写的,在创建容器的时候,会生成一个可写目录,将可写的目录也挂载在容器中
+当镜像加载完以后,底层是只读的,往镜像中写入数据会写到可写的目录中
+在容器中查看可写的数据,没有任何区别,只是在的底层的宿主机上查看是两个完全不同的目录,一个是只读的,一个是可写的
+还有一个目录叫做工作目录,容器在启动完成以后,会被锁定到work目录中去,
+work目录其实在宿主机上就是最大的可跳转的空间,不可以跳到其他目录
+这些目录挂载到容器中,供容器使用,我们称为联合挂载
+
+联合挂载需要overlay2驱动引擎支持, overlay2又需要宿主机的文件系统支持(ext4、xfs)
+centos 7.2在格式化系统盘的时候需要加上一个-n ftype=1才能支持overlay2,否则仅支持devicemapper 
+</code></pre>
+<h1 id="四-docker-服务进程">四、 docker 服务进程</h1>
+<p>通过查看 docker 进程，了解docker的运行及工作方式</p>
+<h2 id="41-containerd-进程关系">4.1 containerd 进程关系</h2>
+<pre><code>有四个进程： 
+1&gt; dockerd：被client(docker命令)直接访问，其父进程为宿主机的 systemd 守护进程。
+
+2&gt; docker-proxy：实现容器通信,生成iptables规则，其父进程为dockerd  
+有多少个容器就会有多少个docker-prox子进程,每个docker-proxy只为当前自己维护的容器来处理网络通信(管理iptables规则)
+ 
+
+3&gt; containerd：被dockerd进程调用以实现与runc交互。 
+  在docker的启动文件中有一个sock文件,这个sock文件就是containerd的本机的sock文件,
+  dockerd是基于这个sock文件调用的containerd服务以实现和runc的交互,创建容器等等
+
+  containerd本身是一个单独的服务.但是他并不对外直接提供服务,而是由dockerd调用,
+  docker命令调用dockerd服务,dockerd服务再用containerd来创建容器
+
+4&gt; containerd-shim：真正运行容器的载体，其父进程为containerd。  
+  每起一个容器就会生成一个containerd-shim进程,进程中就会包装容器运行的目录结构或者说运行空间
+</code></pre>
+<h2 id="42-containerd-shim-命令使用">4.2 containerd-shim 命令使用：</h2>
+<pre><code class="language-shell">containerd-shim 命令也可以用来创建容器
+容器的创建是由dockerd来调用containerd-shim来创建的
+
+containerd-shim -h 
+Usage of containerd-shim: 
+  -address string 
+     	grpc address back to main containerd   
+  -containerd-binary containerd publish 
+     	path to containerd binary (used for containerd publish) (default &quot;containerd&quot;) 
+  -criu string 
+     	path to criu binary 
+  -debug 
+     	enable debug output in logs 
+  -namespace string 
+     	namespace that owns the shim 
+  -runtime-root string 
+     	root directory for the runtime (default &quot;/run/containerd/runc&quot;)   
+  -socket string 
+     	abstract socket path to serve 
+  -systemd-cgroup 
+     	set runtime to use systemd-cgroup 
+  -workdir string 
+     	path used to storge large temporary data 
+</code></pre>
+<h2 id="43-容器的创建与管理过程">4.3 容器的创建与管理过程：</h2>
+<pre><code>通信流程：  
+1.dockerd通过grpc和containerd模块通信,通信目录的是为了实现runc的运行空间交换
+  dockerd和containerd通信的socket文件：/run/containerd/containerd.sock。 
+  dockerd在启动的时候会通过containerd.sock文件调用containerd,
+  containerd再调用runc,通过runc创建和管理容器
+ 
+2.containerd在dockerd启动时被启动，然后containerd启动grpc请求监听，
+containerd处理grpc请求，根据请求做相应动作。 
+  /usr/bin/dockerd -H fd:// 
+  --containerd=/run/containerd/containerd.sock 
+  grpc: google开发的一款中立、开源的远程过程调用(RPC)系统,各个组件之间通过API相互调用的一个方式
+ 
+3.若是创建容器，containerd拉起一个container-shim容器进程,并进行相应的创建操作(对容器进行初始化)。 
+ 
+4.container-shim被拉起后，start/exec/create拉起runC进程，通过exit、control文件和containerd通信，
+  通过父子进程关系和 SIGCHLD(信号)监控容器中进程状态。 
+ 
+5.在整个容器生命周期中，containerd通过epoll监控容器文件，监控容器事件。 
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639064963234.png" alt="" loading="lazy"></figure>
+<pre><code>创建容器和访问容器都是先访问到dockerd，然后dockerd通过GRPC发送request请求给containerd(发送给containerd.sock文件,本地调用)
+然后containerd收到以后,处理request请求,不同的消息会有不同的处理方式，如果要创建容器或者启动容器,他会调用shim进程。
+然后拉起一个容器,拉起容器以后就会创建一个containerd-shim的进程,再调用runc进程,执行create/start/ex rc，
+将容器创建起来,成为容器以后,再将创建的结果,一步一步返回回来,这样容器就创建成功了
+
+如果结果是发送respose返回回来的,要执行一些操作,containerd要和runc进行交互,然后再返回给dockerd
+</code></pre>
+<h2 id="44-grpc-简介">4.4 grpc 简介：</h2>
+<pre><code>gRPC是Google开发的一款高性能、开源和通用的RPC框架，支持众多语言客户端。 
+
+官网地址：
+https://www.grpc.io/ 
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/docker-jing-xiang-guan-li-yu-dockerfile-wen-jian-can-shu-xiang-jie/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Docker 镜像管理与Dockerfile文件参数详解
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/docker-an-zhuang-ji-ji-chu-ming-ling-jie-shao/">
+                <h3 class="post-title">
+                  Docker 安装及基础命令介绍
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
