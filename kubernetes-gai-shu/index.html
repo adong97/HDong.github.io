@@ -1,0 +1,363 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639211708898">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639211708898" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#11-kubernetes%E7%89%B9%E6%80%A7">1.1 Kubernetes特性</a></li>
+<li><a href="#12-kubernetes-%E6%A6%82%E5%BF%B5%E5%92%8C%E6%9C%AF%E8%AF%AD">1.2 Kubernetes 概念和术语</a></li>
+<li><a href="#13-kubernetes-%E9%9B%86%E7%BE%A4%E7%BB%84%E4%BB%B6">1.3 Kubernetes 集群组件</a>
+<ul>
+<li><a href="#131-master-%E7%BB%84%E4%BB%B6">1.3.1 Master 组件</a></li>
+<li><a href="#132-node-%E7%BB%84%E4%BB%B6">1.3.2 Node 组件</a></li>
+<li><a href="#133-%E6%A0%B8%E5%BF%83%E9%99%84%E4%BB%B6">1.3.3 核心附件</a></li>
+</ul>
+</li>
+<li><a href="#14-kubernetes-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80">1.4 Kubernetes 网络模型基础</a>
+<ul>
+<li><a href="#141-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E6%A6%82%E8%BF%B0">1.4.1 网络模型概述</a></li>
+<li><a href="#142-%E9%9B%86%E7%BE%A4%E4%B8%8A%E7%9A%84%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1">1.4.2 集群上的网络通信</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Kubernetes 概述</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-10 / 20 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/kubernetes-gai-shu.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="11-kubernetes特性">1.1 Kubernetes特性</h2>
+<p>Kubernetes是一种用于在一组主机上运行和协同容器化应用程序的系统，旨在提供可预测性、可扩展性与高可用性的方法来完全管理容器化应用程序和服务的生命周期的平台。用户可以定义应用程序的运行方式，以及与其他应用程序或外部世界交互的途径，并能实现服务的扩容和缩容，执行平滑滚动更新，以及在不同版本的应用程序之间调度流量以测试功能或回滚有问题的部署。Kubernetes提供了接口和可组合的平台原语，使得用户能够以高度的灵活性和可靠性定义及管理应用程序。简单总结起来，它具有以下几个重要特性。</p>
+<p>(1)自动装箱<br>
+建构于容器之上，基于资源依赖及其他约束自动完成容器部署且不影响其可用性，并通过调度机制混合关键型应用和非关键型应用的工作负载于同一节点以提升资源利用率。</p>
+<p>(2)自我修复（自愈）<br>
+支持容器故障后自动重启、节点故障后重新调度容器，以及其他可用节点、健康状态检查失败后关闭容器并重新创建等自我修复机制。</p>
+<p>(3)水平扩展<br>
+支持通过简单命令或UI手动水平扩展，以及基于CPU等资源负载率的自动水平扩展机制。</p>
+<p>(4)服务发现和负载均衡<br>
+Kubernetes通过其附加组件之一的KubeDNS（或CoreDNS）为系统内置了服务发现功能，它会为每个Service配置DNS名称，并允许集群内的客户端直接使用此名称发出访问请求，而Service则通过iptables或ipvs内建了负载均衡机制。</p>
+<p>(5)自动发布和回滚<br>
+Kubernetes支持“灰度”更新应用程序或其配置信息，它会监控更新过程中应用程序的健康状态，以确保它不会在同一时刻杀掉所有实例，而此过程中一旦有故障发生，就会立即自动执行回滚操作。</p>
+<p>(6)密钥和配置管理<br>
+Kubernetes的ConfigMap实现了配置数据与Docker镜像解稠，需要时，仅对配置做出变更而无须重新构建Docker镜像，这为应用开发部署带来了很大的灵活性。此外，对于应用所依赖的一些敏感数据，如用户名和密码、令牌、密钥等信息，Kubernetes专门提供了Secret对象为其解耦，既便利了应用的快速开发和交付，又提供了一定程度上的安全保障。</p>
+<p>(7)存储编排<br>
+Kubernetes支持Pod对象按需自动挂载不同类型的存储系统，这包括节点本地存储、公有云服务商的云存储（如AWS和GCP等），以及网络存储系统（例如，N陀、iSCSI、Gluster陀、Ceph、Cinder和Flocker等）。</p>
+<p>(8)批量处理执行<br>
+除了服务型应用，Kubernetes还支持批处理作业及CI（持续集成）,如果需要，一样可以实现容器故障后恢复。</p>
+<h2 id="12-kubernetes-概念和术语">1.2 Kubernetes 概念和术语</h2>
+<p>Kubernetes使用共享网络将多个物理机或虚拟机汇集到一个集群中，在各服务器之间进行通信，该集群是配置Kubernetes的所有组件、功能和工作负载的物理平台。集群中一台服务器（或高可用部署中的一组服务器）用作Master，负责管理整个集群，余下的其他机器用作Worker Node（早期版本中也称为 Minion），它们是使用本地和外部资源接收和运行工作负载的服务器。</p>
+<p>(1) Master<br>
+Master是集群的网关和中枢，负责诸如为用户和客户端暴露API，跟踪其他服务器的健康状态、以最优方式调度工作负载，以及编排其他组件之间的通信等任务，它是用户或客户端与集群之间的核心联络点，并负责Kubemetes系统的大多数集中式管控逻辑。单个Master节点即可完成其所有的功能，但出于冗余及负载均衡等目的，生产环境中通常需要协同部署多个此类主机。 Master节点类似于蜂群中的蜂王。</p>
+<p>(2) Node<br>
+Node是Kubernetes集群的工作节点，负责接收来自Master的工作指令并根据指令相应地创建或销毁Pod对象，以及调整网络规则以合理地路由和转发流量等。理论上讲，Node可以是任何形式的计算设备，不过Master会统一将其抽象为Node对象进行管理。Node类似于蜂群中的工蜂，生产环境中，它们通常数量众多。</p>
+<p>Kubernetes将所有Node的资源集结于一处形成一台更加强大的“服务器”，在用户将应用部署于其上时，Master会使用调度算法将其自动指派至某个特定的Node运行。在Node加入集群或从集群中移除时Master也会按需重新编排影响到的Pod（容器）。于是，用户无须关心其应用究竟运行于何处。</p>
+<p>从抽象的视角来讲，Kubernetes还有着众多的组件来支撑其内部的业务逻辑，包括运行应用、应用编排、服务暴露、应用恢复等，它们在Kubemetes中被抽象为Pod、Service、Controller等资源类型，下面列出了几个较为常用的资源抽象。</p>
+<p>(1) Pod<br>
+Kubernetes并不直接运行容器，而是使用一个抽象的资源对象来封装一个或者多个容器，这个抽象即为Pod，它也是Kubernetes的最小调度单元。同一Pod中的容器共享网络名称空间和存储资源，这些容器可经由本地回环节口lo直接通信，但彼此之间又在Mount、User及PID等名称空间上保持了隔离。尽管Pod中可以包含多个容器，但是作为最小调度单元，它应该尽可能地保持“小”，即通常只应该包含一个主容器，以及必要的辅助型容器（sidecar）。</p>
+<p>(2)资源标签<br>
+标签（Label）是将资源进行分类的标识符，资源标签其实就是一个键值型（key/values)数据。标签旨在指定对象（如Pod等）辨识性的属性，这些属性仅对用户存在特定的意义，对Kubernetes集群来说并不直接表达核心系统语义。标签可以在对象创建时附加其上，并能够在创建后的任意时间进行添加和修改。一个对象可以拥有多个标签，一个标签也可以附加于多个对象（通常是同一类对象）之上。</p>
+<p>(3)标签选择器<br>
+标签选择器（Selector）全称为“Label Selector&quot;，它是一种根据Label来过滤符合条件的资源对象的机制。例如，将附有标签“role: backend”的所有Pod对象挑选出来归为一组就是标签选择器的一种应用。用户通常使用标签对资源对象进行分类，而后使用标签选择器挑选出它们，例如将其创建为某Service的端点。</p>
+<p>( 4 ) Pod控制器<br>
+尽管Pod是Kubemetes的最小调度单元，但用户通常并不会直接部署及管理Pod对象，而是要借助于另一类抽象控制器（Controller）对其进行管理。用于工作负载的控制器是一种管理Pod生命周期的资源抽象，它们是Kubernetes上的一类对象，而非单个资源对象，包括 ReplicationController、ReplicaSet 、Deployment、StatefulSet、Job等。以图 1-9中所示的Deployment控制器为例，它负责确保指定的Pod对象的副本数量精确符合定义，否则“多退少补”。使用控制器之后就不再需要手动管理Pod对象了，用户只需要声明应用的期望状态，控制器就会自动对其进行进程管理。</p>
+<p>(5)服务资源(Service)<br>
+Service是建立在一组Pod对象之上的资源抽象，它通过标签选择器选定一组Pod对象，并为这组Pod对象定义一个统一的固定访问入口（通常是一个 IP 地址），若Kubemetes集群存在DNS附件，它就会在Service创建时为其自动配置一个DNS名称以便客户端进行服务发现。到达Service IP的请求将被负载均衡至其后的端点一一各个Pod对象之上，因此Service从本质上来讲是一个四层代理服务。另外，Service还可以将集群外部流量引入到集群中来。</p>
+<p>(6)存储卷<br>
+存储卷（Volume）是独立于容器文件系统之外的存储空间，常用于扩展容器的存储空间并为它提供持久存储能力。Kubemetes集群上的存储卷大体可分为临时卷、本地卷和网络卷。临时卷和本地卷都位于Node本地，一旦Pod被调度至其他Node，此种类型的存储卷将无法访问到，因此临时卷和本地卷通常用于数据缓存，持久化的数据则需要放置于持久卷(persistent volume）之上。</p>
+<p>(7) Name和Namespace<br>
+名称（Name）是Kubernetes集群中资源对象的标识符，它们的作用域通常是名称空间<br>
+(Namespace)，因此名称空间是名称的额外的限定机制。在同一个名称空间中，同一类型资源、对象的名称必须具有唯一性。名称空间通常用于实现租户或项目的资源隔离，从而形成逻辑分组，如图1-10所示。创建的Pod和Service等资源对象都属于名称空间级别，未指定时，它们都属于默认的名称空间“default”。</p>
+<p>(8) Annotation<br>
+Annotation（注解）是另一种附加在对象之上的键值类型的数据，但它拥有更大的数据<br>
+容量。Annotation常用于将各种非标识型元数据（metadata）附加到对象上，但它不能用于标识和选择对象，通常也不会被Kubernetes直接使用，其主要目的是方便工具或用户的阅读及查找等。</p>
+<p>(9) Ingress<br>
+Kubernetes将Pod对象和外部网络环境进行了隔离，Pod和Service等对象间的通信都使用其内部专用地址进行，如若需要开放某些Pod对象提供给外部用户访问，则需要为其请求流量打开一个通往Kubernetes集群内部的通道，除了Service之外，Ingress也是这类通道的实现方式之一。</p>
+<h2 id="13-kubernetes-集群组件">1.3 Kubernetes 集群组件</h2>
+<p>一个典型的Kubernetes集群由多个工作节点（worker node）和一个集群控制平面(control plane，即Master)，以及一个集群状态存储系统（etcd）组成。<br>
+其中Master节点负责整个集群的管理工作，为集群提供管理接口，并监控和编排集群中的各个工作节点。各节点负责以Pod的形式运行容器，因此，各节点需要事先配置好容器运行依赖到的所有服务和资源，如容器运行时环境等。</p>
+<p>Master节点主要由apiserver、controller-manager和scheduler三个组件，以及一个用于集群状态存储的etcd存储服务组成，而每个Node节点则主要包含kubelet、kube-proxy及容器引擎（Docker是最为常用的实现）等组件。此外，完整的集群服务还依赖于一些附加组件，如KubeDNS等。</p>
+<h3 id="131-master-组件">1.3.1 Master 组件</h3>
+<p>Kubernetes的集群控制平面由多个组件组成，这些组件可统一运行于单一Master节点，也可以以多副本的方式同时运行于多个节点，以为Master提供高可用功能，甚至还可以运行于Kubernetes集群自身之上。</p>
+<p>Master主要包含以下几个组件：</p>
+<p>(1) API Server<br>
+API Server负责输出RESTful风格的Kubemetes API，它是发往集群的所有REST操作命令的接入点，并负责接收、校验并响应所有的REST请求，结果状态被持久存储于etcd中。因此，API Server是整个集群的网关。</p>
+<p>(2）集群状态存储(Cluster State Store)<br>
+Kubernetes集群的所有状态信息都需要持久存储于存储系统etcd中，不过，etcd是由CoreOS基于Raft协议开发的分布式键值存储，可用于服务发现、共享配置以及一致性保障（如数据库主节点选择、分布式锁等）。因此，etcd是独立的服务组件，并不隶属于Kubernetes集群自身。生产环境中应该以etcd集群的方式运行以确保其服务可用性。</p>
+<p>etcd不仅能够提供键值数据存储，而且还为其提供了监听(watch)机制，用于监听和推送变更。Kubernetes集群系统中，etcd中的键值发生变化时会通知到API Server，并由其通过watch API向客户端输出。基于watch机制，Kubernetes集群的各组件实现了高效协同。</p>
+<p>(3)控制器管理器(Controller Manager)<br>
+Kubernetes中，集群级别的大多数功能都是由几个被称为控制器的进程执行实现的，这几个进程被集成于kube-controller-manager守护进程中。由控制器完成的功能主要包括生命周期功能和API业务逻辑，具体如下:</p>
+<p>生命周期功能：包括Namespace创建和生命周期、Event垃圾回收、Pod终止相关的垃圾回收、级联垃圾回收及Node垃圾回收等。<br>
+API业务逻辑：例如，由ReplicaSet执行的Pod扩展等。</p>
+<p>(4)调度器(Scheduler)<br>
+Kubernetes是用于部署和管理大规模容器应用的平台，根据集群规模的不同，其托管运行的容器很可能会数以千计甚至更多。API Server确认Pod对象的创建请求之后，便需要由Scheduler根据集群内各节点的可用资源状态，以及要运行的容器的资源需求做出调度决策， 其工作逻辑如图1-12所示。另外，Kubernetes还支持用户自定义调度器。</p>
+<h3 id="132-node-组件">1.3.2 Node 组件</h3>
+<p>Node负责提供运行容器的各种依赖环境，并接受Master的管理。 每个Node主要由以下几个组件构成。</p>
+<p>(1) Node的核心代理程序 kubelet<br>
+kubelet是运行于工作节点之上的守护进程，它从API Server接收关于Pod对象的配置信息并确保它们处于期望的状态(desired state，后文不加区别地称之为“目标状态”)。 kubelet会在API Server上注册当前工作节点，定期向Master汇报节点资源使用情况，并通过cAdvisor监控容器和节点的资源占用状况。</p>
+<p>(2)容器运行时环境<br>
+每个Node都要提供一个容器运行时(Container Runtime)环境，它负责下载镜像并运行容器。kubelet并未固定链接至某容器运行时环境，而是以插件的方式载入配置的容器环境。这种方式清晰地定义了各组件的边界。目前，Kubernetes支持的容器运行环境至少包括Docker、RKT、cri-o和Fraki等。</p>
+<p>(3) kube-proxy<br>
+每个工作节点都需要运行一个kube-proxy守护进程，它能够按需为Service资源对象生成iptables或ipvs规则，从而捕获访问当前Service的ClusterIP的流量并将其转发至正确的后端Pod对象。</p>
+<h3 id="133-核心附件">1.3.3 核心附件</h3>
+<p>Kubernetes集群还依赖于一组称为“附件”（add-ons）的组件以提供完整的功能，它们<br>
+通常是由第三方提供的特定应用程序，且托管运行于Kubernetes集群之上。</p>
+<p>下面列出的几个附件各自为集群从不同角度引用了所需的核心功能:</p>
+<p>KubeDNS：在Kubernetes集群中调度运行提供DNS服务的Pod，同一集群中的其他Pod可使用此DNS服务解决主机名。Kubernetes自1.11版本开始默认使用CoreDNS项目为集群提供服务注册和服务发现的动态名称解析服务，之前的版本中用到的是kube-dns项目，而SkyDNS则是更早一代的项目。</p>
+<p>Kubernetes Dashboard: Kubernetes集群的全部功能都要基于Web的UI，来管理集 群中的应用甚至是集群自身。</p>
+<p>Heapster：容器和节点的性能监控与分析系统，它收集并解析多种指标数据，如资源利用率、生命周期事件等。新版本的Kubernetes中，其功能会逐渐由Prometheus结合其他组件所取代。</p>
+<p>Ingress Controller: Service是一种工作于传统层的负载均衡器，而Ingress是在应用层实现的HTTP(s)负载均衡机制。不过，Ingress资源自身并不能进行“流量穿透”，它仅是一组路由规则的集合，这些规则需要通过Ingress控制器(Ingress Controller)发挥作用。目前，此类的可用项目有Nginx、Traefik、Envoy及HAProxy等。</p>
+<h2 id="14-kubernetes-网络模型基础">1.4 Kubernetes 网络模型基础</h2>
+<h3 id="141-网络模型概述">1.4.1 网络模型概述</h3>
+<p>Kubernetes的网络中主要存在四种类型的通信：同－Pod内的容器间通信、各Pod彼此之间的通信、Pod与Service间的通信以及集群外部的流量同Service之间的通信。</p>
+<p>Kubernetes为Pod和Service资源对象分别使用了各自的专用网络，Pod网络由Kubernetes的网络插件配置实现，而Service的网络则由Kubernetes集群予以指定。为了提供更灵活的解决方式，Kubernetes的网络模型需要借助于外部插件实现，它要求任何实现机制都必须满足以下需求:</p>
+<p>所有节点均可不经NAT机制而直接与所有容器通信。<br>
+容器自己使用的IP也是其他容器或节点直接看到的地址。换句话讲，所有Pod对象都位于同一平面网络中，而且可以使用Pod自身的地址直接通信。</p>
+<p>Kubernetes使用的网络插件必须能为Pod提供满足以上要求的网络，它需要为每个Pod配置至少一个特定的地址，即Pod IP。Pod IP地址实际存在于某个网卡(可以是虚拟设备)上，而Service的地址却是一个虚拟IP地址，没有任何网络接口配置此地址，它由kube proxy借助iptables规则或ipvs规则重新定向到本地端口，再将其调度至后端Pod对象。Service的IP地址是集群提供服务的接口，也称为Cluster IP。</p>
+<p>Pod网络及其IP由Kubernetes的网络插件负责配置和管理，具体使用的网络地址可在管理配置网络插件时指定，如10.244.0.0/16网络。而Cluster网络和IP则是由Kubernetes集群负责配置和管理，如10.96.0.01/12网络。</p>
+<p>总结起来，Kubernetes集群至少应该包含三个网络，如图1-13中的网络环境所示。<br>
+一个是各主机（Master、Node和etcd等）自身所属的网络，其地址配置于主机的网络接口，用于各主机之间的通信，例如，Master与各Node之间的通信。此地址配置于Kubernetes集群构建之前，它并不能由Kubernetes管理，管理员需要于集群构建之前自行确定其地址配置及管理方式。</p>
+<p>第二个是Kubernetes集群上专用于Pod资源对象的网络，它是一个虚拟网络，用于为各Pod对象设定IP地址等网络参数，其地址配置于Pod中容器的网络接口之上。Pod网络需要借助kubenet插件或CNI插件实现，该插件可独立部署于Kubernetes集群之外，亦可托管于Kubernetes之上，它需要在构建Kubernetes集群时由管理员进行定义，而后在创建Pod对象时由其自动完成各网络参数的动态配置。</p>
+<p>第三个是专用于Service资源对象的网络，它也是一个虚拟网络，用于为Kubernetes集群之中的Service配置IP地址，但此地址并不配置于任何主机或容器的网络接口之上，而是通过Node之上的kube-proxy配置为iptables或ipvs规则，从而将发往此地址的所有流量调度至其后端的各Pod对象之上。Service网络在Kubernetes集群创建时予以指定，而各Service的地址则在用户创建Service时予以动态配置。</p>
+<h3 id="142-集群上的网络通信">1.4.2 集群上的网络通信</h3>
+<p>Kubernetes集群的客户端大体可以分为两类：API Server客户端和应用程序（运行为Pod中的容器）客户端，如图1-14所示。</p>
+<p>第一类客户端通常包含人类用户和Pod对象两种，它们通过API Server访问Kubernetes集群完成管理任务，例如，管理集群上的各种资源对象。<br>
+第二类客户端一般也包含人类用户和Pod对象两种，它们的访问目标是Pod上运行于容器中的应用程序提供的各种具体的服务，如redis或nginx等，不过，这些访问请求通常要经由Service或Ingress资源对象进行。<br>
+另外，第二类客户端的访问目标对象的操作要经由第一类客户端创建和配置完成后才能进行。</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/er-jin-zhi-bu-shu-kubernets-120/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  二进制部署kubernets 1.20
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/docker-dan-ji-bian-pai-zhi-docker-compose/">
+                <h3 class="post-title">
+                  Docker 单机编排之Docker Compose
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
