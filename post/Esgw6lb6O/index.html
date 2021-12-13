@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639229935433">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1639411200673">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639229935433" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1639411200673" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -52,8 +52,9 @@
 <li><a href="#5-%E5%8A%A0%E5%85%A5kubernetes-node">5、 加入Kubernetes Node</a></li>
 <li><a href="#6-%E9%83%A8%E7%BD%B2%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9Ccni">6、 部署容器网络（CNI）</a></li>
 <li><a href="#7-%E6%B5%8B%E8%AF%95kubernetes%E9%9B%86%E7%BE%A4">7、 测试kubernetes集群</a></li>
-<li><a href="#8-%E9%83%A8%E7%BD%B2-dashboard">8、 部署 Dashboard</a></li>
-<li><a href="#9-%E6%B8%85%E7%90%86%E7%8E%AF%E5%A2%83">9、清理环境</a></li>
+<li><a href="#8-%E8%AE%BE%E7%BD%AEkubectl%E8%87%AA%E5%8A%A8%E8%A1%A5%E5%85%A8">8. 设置kubectl自动补全</a></li>
+<li><a href="#9-%E9%83%A8%E7%BD%B2-dashboard">9、 部署 Dashboard</a></li>
+<li><a href="#10-%E6%B8%85%E7%90%86%E7%8E%AF%E5%A2%83">10、清理环境</a></li>
 </ul>
 
           </div>
@@ -338,7 +339,14 @@ kubectl expose deployment nginx --port=80 --type=NodePort
 kubectl get pod,svc
 </code></pre>
 <p>访问地址：http://NodeIP:Port</p>
-<h1 id="8-部署-dashboard">8、 部署 Dashboard</h1>
+<h1 id="8-设置kubectl自动补全">8. 设置kubectl自动补全</h1>
+<p>操作节点：<code>k8s-master</code></p>
+<pre><code class="language-shell">$ yum install bash-completion -y
+$ source /usr/share/bash-completion/bash_completion
+$ source &lt;(kubectl completion bash)
+$ echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc
+</code></pre>
+<h1 id="9-部署-dashboard">9、 部署 Dashboard</h1>
 <p>Dashboard是官方提供的一个UI，可用于基本管理K8s资源。</p>
 <pre><code>wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/recommended.yaml
 </code></pre>
@@ -379,7 +387,7 @@ kubectl describe secrets -n kube-system $(kubectl -n kube-system get secret | aw
 <p>使用输出的token登录Dashboard。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1639211020960.jpg" alt="" loading="lazy"><br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1639211027733.jpg" alt="" loading="lazy"></p>
-<h1 id="9-清理环境">9、清理环境</h1>
+<h1 id="10-清理环境">10、清理环境</h1>
 <p>如果你的集群安装过程中遇到了其他问题，我们可以使用下面的命令来进行重置：</p>
 <pre><code class="language-shell"># 在全部集群节点执行
 kubeadm reset
