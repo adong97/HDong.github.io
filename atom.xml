@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2021-12-14T09:05:10.972Z</updated>
+    <updated>2021-12-14T09:45:35.380Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -17,9 +17,9 @@
         </link>
         <updated>2021-12-13T09:09:33.000Z</updated>
         <content type="html"><![CDATA[<p>Kubernetes API 是管理其各种资源对象的唯一人口，它提供了一个RESTful 风格的<br>
-CRUD (Create 、 Read 、 Update 和 Delete) 接口用于查询和修改集群状态，并将结 果存储于集群状态存储系统 etcd 中。事实 上， API server 也是用于更新 etcd 中资源对象状态的唯一途径， Kubernetes 的其他所有组件和客户端都要通过它来完成查询或修改操作，如图 2-9 所示。 从这个角度来讲，它们都算得上是 API server 的客户端。<br>
+CRUD (Create、Read、Update 和Delete) 接口用于查询和修改集群状态，并将结 果存储于集群状态存储系统 etcd 中。事实上，API server 也是用于更新 etcd 中资源对象状态的唯一途径，Kubernetes 的其他所有组件和客户端都要通过它来完成查询或修改操作，如图 2-9 所示。 从这个角度来讲，它们都算得上是 API server 的客户端。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1639386755849.png" alt="" width="400" height="400" loading="lazy"></p>
-<p>任何 RESTful 风格 API 中的核心概念都是“资源”（resource），它是具有类型、关联数据、同其他资源的关系以及可对其执行的一组操作方法的对象，它与对象式编程语言中的对象实例类似，两者之间的重要区别在于 RESTful API 仅为资源定义了少量的标准方法 （对应于标准 HTTP 的 GET 、 POST 、 PUT 和 DELETE 方法）,而编程语言中的对象实例通常有很多方法。另外，资源可以根据其特性分组， 每个组是同一类型资源的集合，它仅包含 一种类型的资源，并且各资源间不存在顺序的概念，集合本身也是资源。 对应于 Kubernetes 中， Pod 、 Deploym巳nt 和 Service 等都是所谓的资源类型，它们由相应类型的对象集合而成。</p>
+<p>任何 RESTful 风格 API 中的核心概念都是“资源”（resource），它是具有类型、关联数据、同其他资源的关系以及可对其执行的一组操作方法的对象，它与对象式编程语言中的对象实例类似，两者之间的重要区别在于 RESTful API 仅为资源定义了少量的标准方法 （对应于标准 HTTP 的 GET 、 POST 、PUT 和 DELETE 方法）,而编程语言中的对象实例通常有很多方法。另外，资源可以根据其特性分组， 每个组是同一类型资源的集合，它仅包含一种类型的资源，并且各资源间不存在顺序的概念，集合本身也是资源。 对应于 Kubernetes 中，Pod、 Deployment 和 Service 等都是所谓的资源类型，它们由相应类型的对象集合而成。</p>
 <p>API Server 通过认证（ Authentication ）、 授权（ Authorization ）和准入控制（ Admission Control ）等来管理对资源的访问请求，因此，来自于任何客户端（如 kubectl 、 kubelet 、 kube-proxy 等）的访问请求都必须事先完成认证之后方可进行后面的其他操作。 API Server 支持多种认证方式，客户端可以使用命令行选项或专用的配置文件（称为 kubeconfig）提供认证信息。</p>
 <p>kubectl 的核心功能在于通过 API Server 操作 Kubernetes 的各种资源对象，它支持三种操作方式，其中直接命令式（ Imperative commands）的使用最为简便，是了解 Kubernetes 集群管理的一种有效途径。</p>
 <h1 id="kubectl-命令常用操作示例">kubectl 命令常用操作示例</h1>
@@ -68,6 +68,59 @@ $ kubectl get pods -l k8s-app -n kube-system
 <p>若要删除指定名称空间中的所有的某类对象，可以使用&quot;kubectl delete TYPE --all -n<br>
 NS&quot;命令，例如，删除 kube-public 名称空间中的所有 Pod 对象</p>
 <pre><code class="language-shell">$ kubect l delete pods --all -n kube public
+</code></pre>
+<h1 id="命令式容器应用编排">命令式容器应用编排</h1>
+<p>一般说来，Kubernetes 之上应用程序的基础管理操作由如下几个部分组成。</p>
+<ul>
+<li>
+<p>1&gt;  通过合用的 Controller 类的资源（如 Deployment 或 ReplicationController ） 创建并管控 Pod 对象以运行特定的应用程序，如 Nginx 或 tomcat 等。 无状态 （ stateless ）应用 的部署和控制通常使用 Deployment 控制器进行， 而有状态应用则需要使用 StatefulSet 控 制器。</p>
+</li>
+<li>
+<p>2&gt; 为 Pod 对象创建 Service 对象，以便向客户端提供固定的访问路径，并借助于 CoreDNS<br>
+进行服务发现。</p>
+</li>
+<li>
+<p>3&gt;  随时按需获取各资源对象的简要或详细信息，以了解其运行状态。</p>
+</li>
+<li>
+<p>4&gt;  如有需要，则手动对支持扩缩容的 Controller 组件进行扩容或缩容；或者， 为支持<br>
+HPA 的 Controller 组件（如 Deployment 或 ReplicationController ） 创建 HPA 资源对象以实现 Pod 副本数目的自动伸缩。</p>
+</li>
+<li>
+<p>5&gt; 滚动更新：当应用程序的镜像出现新版本时，对其执行更新操作；必要时， 为 Pod<br>
+对象中的容器更新其镜像版本；并可根据需要执行回滚操作。</p>
+</li>
+</ul>
+<h2 id="部署应用pod">部署应用（Pod）</h2>
+<h3 id="创建deployment控制器对象">创建Deployment控制器对象</h3>
+<p>&quot;kubectl run&quot;命令可于命令行直接创建Deployment控制器,并以--image选项指定的镜像运行Pod中的容器, --dry-run选项可用于命令的测试运行，但并未真正执行资源对象的创建过程。</p>
+<p>创建一个名为 myapp 的 Deployment 控制器对象，它使用 镜像 ikubernetes/myapp: v l 创建 Pod 对象，但仅在测试运行后即退出:</p>
+<pre><code class="language-shell">$ kubectl run myapp --image=ikubernetes/myapp:v1 --port=80 --replicas=1 --dry-run
+</code></pre>
+<p>确认测试命令无误后，可移除&quot;--dry-run&quot;选项后再次执行命令以完成资源对象的创建:</p>
+<pre><code class="language-shell">$ kubectl run myapp --image=ikubernetes/myapp:v1 --port=80 --replicas=1 deployment.apps/myapp created
+</code></pre>
+<p>kubectl run命令其他常用的选项还有如下几个,它们支持用户在创建资源对象时实现更多的控制,具体如下:</p>
+<blockquote>
+<p>-l， --labels: 为 Pod 对象设定自定义标签。<br>
+--record: 是否将当前的对象创建命令保存至对象的 Annotation 中，布尔型数据，其值可为true 或 false 。<br>
+--save-config: 是否将当前对象的配置信息保存至 Annotation 中，布尔型数据，其值可为 true 或 false 。<br>
+--restart=Never: 创建不受控制器管控的自主式 Pod 对象。</p>
+</blockquote>
+<h3 id="打印资源对象的相关信息">打印资源对象的相关信息</h3>
+<p>查看前面创建的 Deployment 对象的相关运行状态的命令及其输出结果：</p>
+<pre><code class="language-shell">$ kubectl get deployments
+NAME    DESIRED   CURRENT    UP-TO-DATE    AVAILABLE    AGE
+myapp        1                1                    1                    1   lm
+</code></pre>
+<p>上面命令的执行结果中，各字段的说明具体如下。</p>
+<pre><code>1&gt;  NAME: 资源对象的名称。 
+2&gt;  DESIRED: 用户期望由当前控制器管理的 Pod 对象副本的精确数量。 
+3&gt;  CURRENT: 当前控制器已有的 Pod 对象的副本数量。 
+4&gt;  UP-TO-DATE: 更新到最新版本定义的 Pod 对象的副本数量，
+      在控制器的滚动更新模式下，它表示已经完成版本更新的Pod对象的副本数量。 
+5&gt;  AVAILABLE: 当前处于可用状态的Pod对象的副本数量，即可正常提供服务的副本数。 
+6&gt;  AGE : Pod的存在时长。
 </code></pre>
 ]]></content>
     </entry>
