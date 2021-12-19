@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2021-12-19T00:22:12.986Z</updated>
+    <updated>2021-12-19T00:29:43.430Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -2043,19 +2043,19 @@ spec:
 </code></pre>
 </li>
 </ul>
-<h6 id="示意图">示意图：</h6>
+<h5 id="341-示意图">3.4.1 示意图：</h5>
 <figure data-type="image" tabindex="12"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840756401.webp" alt="" loading="lazy"></figure>
 <p>Ingress的作用：</p>
 <pre><code>目的是：集群外部的流量访问内部的Pod
 通过安装Ingress控制器，外部的流量第一步，一定是转发到Ingress控制器上。
 流量到Ingress之后，它可以根据域名或者路径，转发到Service，进而转发到具体的Pod上。
 </code></pre>
-<h6 id="实现逻辑">实现逻辑</h6>
+<h5 id="342-实现逻辑">3.4.2 实现逻辑</h5>
 <p>1）ingress controller通过和kubernetes api交互，动态的去感知集群中ingress规则变化<br>
 2）然后读取ingress规则(规则就是写明了哪个域名对应哪个service)，按照自定义的规则，生成一段nginx配置<br>
 3）再写到nginx-ingress-controller的pod里，这个Ingress controller的pod里运行着一个Nginx服务，控制器把生成的nginx配置写入/etc/nginx/nginx.conf文件中<br>
 4）然后reload一下使配置生效。以此达到域名分别配置和动态更新的问题。</p>
-<h6 id="安装">安装</h6>
+<p>#####3.4.3 安装</p>
 <p><a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md">官方文档</a></p>
 <pre><code class="language-powershell">$ wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
 ## 或者使用myblog/deployment/ingress/mandatory.yaml
@@ -2174,13 +2174,13 @@ spec:
 
 
 </code></pre>
-<h6 id="访问">访问</h6>
+<h5 id="344-访问">3.4.4 访问</h5>
 <p>域名解析服务，将 <code>myblog.luffy.com</code>解析到ingress的地址上。ingress是支持多副本的，高可用的情况下，生产的配置是使用lb服务（内网F5设备，公网elb、slb、clb，解析到各ingress的机器，如何域名指向lb地址）</p>
 <p>本机，添加如下hosts记录来演示效果。</p>
 <pre><code class="language-json">172.21.51.143 myblog.luffy.com
 </code></pre>
 <p>然后，访问 http://myblog.luffy.com/blog/index/</p>
-<h6 id="https访问">HTTPS访问：</h6>
+<p>#####3.4.5 HTTPS访问：</p>
 <pre><code class="language-powershell">#自签名证书
 $ openssl req -x509 -nodes -days 2920 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj &quot;/CN=*.luffy.com/O=ingress-nginx&quot;
 
@@ -2212,7 +2212,7 @@ spec:
     secretName: tls-myblog
 </code></pre>
 <p>然后，访问 https://myblog.luffy.com/blog/index/</p>
-<h6 id="多路径转发及重写的实现">多路径转发及重写的实现</h6>
+<h5 id="346-多路径转发及重写的实现">3.4.6 多路径转发及重写的实现</h5>
 <ol>
 <li>
 <p>多path转发示例：</p>
