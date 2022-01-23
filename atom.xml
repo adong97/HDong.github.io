@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-01-03T04:00:46.667Z</updated>
+    <updated>2022-01-23T16:14:53.754Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,360 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/">
+        </link>
+        <updated>2022-01-23T14:31:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="一-基础环境">一 基础环境</h1>
+<p>部署k8s集群的节点按照用途可以划分为如下2类角色：</p>
+<ul>
+<li>master：集群的master节点，集群的初始化节点，基础配置不低于2C4G</li>
+<li>node：集群的node节点，可以多台，基础配置不低于2C4G</li>
+</ul>
+<p>本次部署使用Ubuntu系统搭建高可用环境K8s,如下：</p>
+<ul>
+<li>K8s部署版本：1.22.5</li>
+<li>Ubuntu版本：18.04 Server</li>
+<li>Kernel版本：Linux version 4.15.0-55-generic (buildd@lcy01-amd64-029)</li>
+</ul>
+<h2 id="11-节点规划">1.1 节点规划</h2>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>节点IP</th>
+<th>角色</th>
+<th>部署组件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K8s-Master1</td>
+<td>10.1.13.156</td>
+<td>master</td>
+<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td>K8s-Master2</td>
+<td>10.1.13.157</td>
+<td>master</td>
+<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td></td>
+<td>10.1.13.171</td>
+<td>VIP</td>
+<td>作为2台master节点的LB使用</td>
+</tr>
+<tr>
+<td>K8s-Node1</td>
+<td>10.1.13.158</td>
+<td>node</td>
+<td>kubectl, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td>K8s-Node2</td>
+<td>10.1.13.159</td>
+<td>node</td>
+<td>kubectl, kubelet, kube-proxy, flannel</td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-组件版本">1.2 组件版本</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>3.5.0-0</td>
+<td>使用Pod方式部署，默认数据挂载到本地路径</td>
+</tr>
+<tr>
+<td>coredns</td>
+<td>v1.8.4</td>
+<td></td>
+</tr>
+<tr>
+<td>kubeadm</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kubectl</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>flannel</td>
+<td>v0.16.0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="二-kubeadmin">二 kubeadmin</h1>
+<pre><code>kubeadmin官方文档：https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/
+</code></pre>
+<h2 id="21-概述">2.1 概述</h2>
+<p>Kubeadm 是一个提供了 kubeadm init 和 kubeadm join 的工具， 作为创建 Kubernetes 集群的 “快捷途径” 的最佳实践。<br>
+kubeadm 通过执行必要的操作来启动和运行最小可用集群。 按照设计，它只关注启动引导，而非配置机器。同样的， 安装各种 “锦上添花” 的扩展，例如 Kubernetes Dashboard、 监控方案、以及特定云平台的扩展，都不在讨论范围内。<br>
+相反，我们希望在 kubeadm 之上构建更高级别以及更加合规的工具， 理想情况下，使用 kubeadm 作为所有部署工作的基准将会更加易于创建一致性集群。</p>
+<h2 id="22-命令介绍">2.2 命令介绍</h2>
+<ul>
+<li>kubeadm init:</li>
+</ul>
+<pre><code>初始化并启用 Kubernetes 主节点 Master (常用)
+</code></pre>
+<ul>
+<li>kubeadm join:</li>
+</ul>
+<pre><code>启动 Kubernetes 工作节点并且将其加入到集群 Node 节点 (常用)
+</code></pre>
+<ul>
+<li>kubeadm upgrade:</li>
+</ul>
+<pre><code>更新 Kubernetes 集群到新版本,用于K8S的版本升级 (常用)
+</code></pre>
+<ul>
+<li>kubeadm config:</li>
+</ul>
+<pre><code>使用 kubeadm config print 命令打印默认配置
+</code></pre>
+<ul>
+<li>kubeadm token:</li>
+</ul>
+<pre><code>管理 kubeadm join 使用的令牌，这个令牌是一个临时的字符串，有效期默认为24小时。
+超出有效期之后，要是哦那个kubeadm token这个命令重新获取，
+所以我们创建了一个K8S集群以后，后期想将一个新的node节点加进去的话会再次使用kubeadm token命令让他生成一个零时的认证，然后再加到集群中。
+</code></pre>
+<ul>
+<li>kubeadm reset:</li>
+</ul>
+<pre><code>还原 kubeadm init 或者 kubeadm join 对主机所做的任何更改，对节点环境进行初始化。
+</code></pre>
+<ul>
+<li>kubeadm version:</li>
+</ul>
+<pre><code>打印 kubeadm 版本
+</code></pre>
+<h2 id="23-集群架构解析">2.3 集群架构解析</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1642951779278.png" alt="" loading="lazy"></figure>
+<p>两个管理端实现master的高可用，当其中一个master宕机之后，k8s集群还能使用。这两个master中间通过VIP来实现高可用。用户访问K8S都是直接访问VIP的地址，这个VIP地址我们通过keepalived让它在master1和master2上，来做高可用。<br>
+默认情况下让它跑在master1上，如果master1宕机了让它飘到master2上。这个VIP在哪个master上就由那个master来提供K8S的服务，这是一种高可用的方式。<br>
+再往下就是node节点，这些node节点就是真正运行容器的地方，当我们要创建容器的时候，就先访问到VIP地址:10.1.13.171，基于这个vip地址来下发指令，让他创建各个容器，这些所有的node节点都是被这个vip地址(10.1.13.171)所管理。</p>
+<h1 id="三-系统环境初始化">三 系统环境初始化</h1>
+<ul>
+<li>操作节点：所有节点（k8s-master，k8s-node）均需执行</li>
+</ul>
+<h2 id="31-设置hosts解析">3.1 设置hosts解析</h2>
+<ul>
+<li>修改hostname hostname必须只能包含小写字母、数字、&quot;,&quot;、&quot;-&quot;，且开头结尾必须是小写字母或数字</li>
+</ul>
+<pre><code># 以其中一台master和node为例：
+
+# 在k8s-master1节点
+$ hostnamectl set-hostname K8s-Master1 #设置master节点的hostname
+
+# 在node-1节点
+$ hostnamectl set-hostname K8s-Node1 #设置node1节点的hostname
+</code></pre>
+<ul>
+<li>添加hosts解析</li>
+</ul>
+<pre><code>$ cat &gt;&gt;/etc/hosts&lt;&lt;EOF
+10.1.13.156 K8s-Mater1
+10.1.13.157 K8s-Mater2
+10.1.13.158 K8s-Node1
+10.1.13.159 K8s-Node2
+EOF
+</code></pre>
+<h2 id="32-配置网卡信息">3.2 配置网卡信息</h2>
+<pre><code>vim /etc/netplan/01-netcfg.yaml
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      addresses: [ 10.1.13.156/24 ]
+      gateway4: 10.1.13.1
+      nameservers:
+          addresses:
+              - &quot;8.8.8.8&quot;
+
+#生效网络
+netplan apply
+</code></pre>
+<h2 id="33-关闭selinux和防火墙">3.3 关闭selinux和防火墙</h2>
+<pre><code>getenforce          ##检查SELINUX状态
+setenforce 0       ##设置SELinux 成为permissive模式
+                          ##setenforce 1 设置SELinux 成为enforcing模式
+或者
+修改/etc/selinux/config 文件
+将SELINUX=enforcing改为SELINUX=disabled
+sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
+永久生效
+
+##关闭防火墙
+systemctl disable firewalld &amp;&amp; systemctl stop firewalld
+</code></pre>
+<h2 id="34-关闭swap">3.4 关闭swap</h2>
+<pre><code>swapoff -a &amp;&amp; sysctl -w vm.swappiness=0 
+# 禁止使用 swap 空间，只有当系统 OOM 时才允许使用
+
+# 防止开机自动挂载 swap 分区
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+</code></pre>
+<h2 id="35-调整内核参数">3.5 调整内核参数</h2>
+<pre><code>cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1    #开启网桥模式
+net.bridge.bridge-nf-call-iptables = 1      #开启网桥模式
+net.ipv4.ip_forward=1
+vm.max_map_count=262144 
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+fs.may_detach_mounts = 1
+vm.overcommit_memory=1
+vm.panic_on_oom=0
+fs.inotify.max_user_watches=89100
+fs.file-max=52706963
+fs.nr_open=52706963
+net.netfilter.nf_conntrack_max=2310720
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_probes = 3
+net.ipv4.tcp_keepalive_intvl =15
+net.ipv4.tcp_max_tw_buckets = 36000
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_max_orphans = 327680
+net.ipv4.tcp_orphan_retries = 3
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 16384
+net.ipv4.ip_conntrack_max = 65536
+net.ipv4.tcp_max_syn_backlog = 16384
+net.ipv4.tcp_timestamps = 0
+net.core.somaxconn = 16384
+EOF
+
+modprobe br_netfilter  #加载模块
+sysctl -p /etc/sysctl.d/k8s.conf #生效内核参数
+</code></pre>
+<h2 id="36-更换ubuntu镜像源">3.6 更换Ubuntu镜像源</h2>
+<ul>
+<li>更换为ali ubuntu镜像源<br>
+阿里开源镜像源网站地址：https://developer.aliyun.com/mirror/</li>
+</ul>
+<pre><code>cd /etc/apt
+cp sources.list sources.list.bak
+
+vim sources.list
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
+# deb-src [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
+
+#更新软件包列表
+apt-get update
+</code></pre>
+<h2 id="37-添加docker-ce软件源">3.7 添加Docker-ce软件源</h2>
+<pre><code># step 1: 安装必要的一些系统工具
+sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+
+# step 2: 安装GPG证书
+curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+
+# Step 3: 写入软件源信息
+sudo add-apt-repository &quot;deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
+
+# Step 4: 更新并安装Docker-CE
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+
+# 安装指定版本的Docker-CE:
+# Step 1: 查找Docker-CE的版本:
+  apt-cache madison docker-ce
+#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
+#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
+
+# Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)
+  sudo apt-get -y install docker-ce=[VERSION]
+  
+#卸载docker-ce
+apt-get purge docker-ce
+</code></pre>
+<h2 id="38-配置docker镜像加速器并更改docker的cgroup-driver">3.8 配置Docker镜像加速器并更改Docker的cgroup-driver</h2>
+<pre><code>cat /etc/docker/daemon.json
+{
+  &quot;registry-mirrors&quot;: [&quot;https://b9pmyelo.mirror.aliyuncs.com&quot;],
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
+}
+
+## 启动docker
+$ systemctl enable docker &amp;&amp; systemctl start docker
+</code></pre>
+<h2 id="39-添加k8s软件源">3.9 添加K8s软件源</h2>
+<pre><code>apt-get update &amp;&amp; apt-get install -y apt-transport-https
+curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
+cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
+deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+EOF  
+
+apt-get update
+</code></pre>
+<h2 id="310-安装kubeadm">3.10 安装kubeadm</h2>
+<pre><code>## 查询安装包版本
+~]# apt-cache madison kubeadm kubelet kubectl
+
+##本次kubernetes安装使用1.22.5版本
+~]# apt-get install kubectl=1.22.5 kubeadm=1.22.5 kubelet=1.22.5 -y
+
+## 查看kubeadm版本
+$ kubeadm version
+
+## 设置kubelet开机启动
+$ cat &gt;/etc/sysconfig/kubelet&lt;&lt;EOF
+KUBELET_EXTRA_ARGS=&quot;--cgroup-driver=systemd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.2&quot;
+EOF
+$ systemctl enable kubelet 
+</code></pre>
+<h1 id="四-kubeadmin部署master节点">四 Kubeadmin部署Master节点</h1>
+<h2 id="41-安装配置haproxy-keepalived">4.1 安装配置haproxy、keepalived</h2>
+<ul>
+<li>操作节点： 所有的master</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[经济机器是如何运行的]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/</id>
@@ -10321,111 +10675,6 @@ spec:
 kubectl apply -f coredns.yaml
 </code></pre>
 <p>至此部署完成。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Kubernetes 概述]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/">
-        </link>
-        <updated>2021-12-09T16:37:51.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="11-kubernetes特性">1.1 Kubernetes特性</h2>
-<p>Kubernetes是一种用于在一组主机上运行和协同容器化应用程序的系统，旨在提供可预测性、可扩展性与高可用性的方法来完全管理容器化应用程序和服务的生命周期的平台。用户可以定义应用程序的运行方式，以及与其他应用程序或外部世界交互的途径，并能实现服务的扩容和缩容，执行平滑滚动更新，以及在不同版本的应用程序之间调度流量以测试功能或回滚有问题的部署。Kubernetes提供了接口和可组合的平台原语，使得用户能够以高度的灵活性和可靠性定义及管理应用程序。简单总结起来，它具有以下几个重要特性。</p>
-<p>(1)自动装箱<br>
-建构于容器之上，基于资源依赖及其他约束自动完成容器部署且不影响其可用性，并通过调度机制混合关键型应用和非关键型应用的工作负载于同一节点以提升资源利用率。</p>
-<p>(2)自我修复（自愈）<br>
-支持容器故障后自动重启、节点故障后重新调度容器，以及其他可用节点、健康状态检查失败后关闭容器并重新创建等自我修复机制。</p>
-<p>(3)水平扩展<br>
-支持通过简单命令或UI手动水平扩展，以及基于CPU等资源负载率的自动水平扩展机制。</p>
-<p>(4)服务发现和负载均衡<br>
-Kubernetes通过其附加组件之一的KubeDNS（或CoreDNS）为系统内置了服务发现功能，它会为每个Service配置DNS名称，并允许集群内的客户端直接使用此名称发出访问请求，而Service则通过iptables或ipvs内建了负载均衡机制。</p>
-<p>(5)自动发布和回滚<br>
-Kubernetes支持“灰度”更新应用程序或其配置信息，它会监控更新过程中应用程序的健康状态，以确保它不会在同一时刻杀掉所有实例，而此过程中一旦有故障发生，就会立即自动执行回滚操作。</p>
-<p>(6)密钥和配置管理<br>
-Kubernetes的ConfigMap实现了配置数据与Docker镜像解稠，需要时，仅对配置做出变更而无须重新构建Docker镜像，这为应用开发部署带来了很大的灵活性。此外，对于应用所依赖的一些敏感数据，如用户名和密码、令牌、密钥等信息，Kubernetes专门提供了Secret对象为其解耦，既便利了应用的快速开发和交付，又提供了一定程度上的安全保障。</p>
-<p>(7)存储编排<br>
-Kubernetes支持Pod对象按需自动挂载不同类型的存储系统，这包括节点本地存储、公有云服务商的云存储（如AWS和GCP等），以及网络存储系统（例如，N陀、iSCSI、Gluster陀、Ceph、Cinder和Flocker等）。</p>
-<p>(8)批量处理执行<br>
-除了服务型应用，Kubernetes还支持批处理作业及CI（持续集成）,如果需要，一样可以实现容器故障后恢复。</p>
-<h2 id="12-kubernetes-概念和术语">1.2 Kubernetes 概念和术语</h2>
-<p>Kubernetes使用共享网络将多个物理机或虚拟机汇集到一个集群中，在各服务器之间进行通信，该集群是配置Kubernetes的所有组件、功能和工作负载的物理平台。集群中一台服务器（或高可用部署中的一组服务器）用作Master，负责管理整个集群，余下的其他机器用作Worker Node（早期版本中也称为 Minion），它们是使用本地和外部资源接收和运行工作负载的服务器。</p>
-<p>(1) Master<br>
-Master是集群的网关和中枢，负责诸如为用户和客户端暴露API，跟踪其他服务器的健康状态、以最优方式调度工作负载，以及编排其他组件之间的通信等任务，它是用户或客户端与集群之间的核心联络点，并负责Kubemetes系统的大多数集中式管控逻辑。单个Master节点即可完成其所有的功能，但出于冗余及负载均衡等目的，生产环境中通常需要协同部署多个此类主机。 Master节点类似于蜂群中的蜂王。</p>
-<p>(2) Node<br>
-Node是Kubernetes集群的工作节点，负责接收来自Master的工作指令并根据指令相应地创建或销毁Pod对象，以及调整网络规则以合理地路由和转发流量等。理论上讲，Node可以是任何形式的计算设备，不过Master会统一将其抽象为Node对象进行管理。Node类似于蜂群中的工蜂，生产环境中，它们通常数量众多。</p>
-<p>Kubernetes将所有Node的资源集结于一处形成一台更加强大的“服务器”，在用户将应用部署于其上时，Master会使用调度算法将其自动指派至某个特定的Node运行。在Node加入集群或从集群中移除时Master也会按需重新编排影响到的Pod（容器）。于是，用户无须关心其应用究竟运行于何处。</p>
-<p>从抽象的视角来讲，Kubernetes还有着众多的组件来支撑其内部的业务逻辑，包括运行应用、应用编排、服务暴露、应用恢复等，它们在Kubemetes中被抽象为Pod、Service、Controller等资源类型，下面列出了几个较为常用的资源抽象。</p>
-<p>(1) Pod<br>
-Kubernetes并不直接运行容器，而是使用一个抽象的资源对象来封装一个或者多个容器，这个抽象即为Pod，它也是Kubernetes的最小调度单元。同一Pod中的容器共享网络名称空间和存储资源，这些容器可经由本地回环节口lo直接通信，但彼此之间又在Mount、User及PID等名称空间上保持了隔离。尽管Pod中可以包含多个容器，但是作为最小调度单元，它应该尽可能地保持“小”，即通常只应该包含一个主容器，以及必要的辅助型容器（sidecar）。</p>
-<p>(2)资源标签<br>
-标签（Label）是将资源进行分类的标识符，资源标签其实就是一个键值型（key/values)数据。标签旨在指定对象（如Pod等）辨识性的属性，这些属性仅对用户存在特定的意义，对Kubernetes集群来说并不直接表达核心系统语义。标签可以在对象创建时附加其上，并能够在创建后的任意时间进行添加和修改。一个对象可以拥有多个标签，一个标签也可以附加于多个对象（通常是同一类对象）之上。</p>
-<p>(3)标签选择器<br>
-标签选择器（Selector）全称为“Label Selector&quot;，它是一种根据Label来过滤符合条件的资源对象的机制。例如，将附有标签“role: backend”的所有Pod对象挑选出来归为一组就是标签选择器的一种应用。用户通常使用标签对资源对象进行分类，而后使用标签选择器挑选出它们，例如将其创建为某Service的端点。</p>
-<p>( 4 ) Pod控制器<br>
-尽管Pod是Kubemetes的最小调度单元，但用户通常并不会直接部署及管理Pod对象，而是要借助于另一类抽象控制器（Controller）对其进行管理。用于工作负载的控制器是一种管理Pod生命周期的资源抽象，它们是Kubernetes上的一类对象，而非单个资源对象，包括 ReplicationController、ReplicaSet 、Deployment、StatefulSet、Job等。以图 1-9中所示的Deployment控制器为例，它负责确保指定的Pod对象的副本数量精确符合定义，否则“多退少补”。使用控制器之后就不再需要手动管理Pod对象了，用户只需要声明应用的期望状态，控制器就会自动对其进行进程管理。</p>
-<p>(5)服务资源(Service)<br>
-Service是建立在一组Pod对象之上的资源抽象，它通过标签选择器选定一组Pod对象，并为这组Pod对象定义一个统一的固定访问入口（通常是一个 IP 地址），若Kubemetes集群存在DNS附件，它就会在Service创建时为其自动配置一个DNS名称以便客户端进行服务发现。到达Service IP的请求将被负载均衡至其后的端点一一各个Pod对象之上，因此Service从本质上来讲是一个四层代理服务。另外，Service还可以将集群外部流量引入到集群中来。</p>
-<p>(6)存储卷<br>
-存储卷（Volume）是独立于容器文件系统之外的存储空间，常用于扩展容器的存储空间并为它提供持久存储能力。Kubemetes集群上的存储卷大体可分为临时卷、本地卷和网络卷。临时卷和本地卷都位于Node本地，一旦Pod被调度至其他Node，此种类型的存储卷将无法访问到，因此临时卷和本地卷通常用于数据缓存，持久化的数据则需要放置于持久卷(persistent volume）之上。</p>
-<p>(7) Name和Namespace<br>
-名称（Name）是Kubernetes集群中资源对象的标识符，它们的作用域通常是名称空间<br>
-(Namespace)，因此名称空间是名称的额外的限定机制。在同一个名称空间中，同一类型资源、对象的名称必须具有唯一性。名称空间通常用于实现租户或项目的资源隔离，从而形成逻辑分组，如图1-10所示。创建的Pod和Service等资源对象都属于名称空间级别，未指定时，它们都属于默认的名称空间“default”。</p>
-<p>(8) Annotation<br>
-Annotation（注解）是另一种附加在对象之上的键值类型的数据，但它拥有更大的数据<br>
-容量。Annotation常用于将各种非标识型元数据（metadata）附加到对象上，但它不能用于标识和选择对象，通常也不会被Kubernetes直接使用，其主要目的是方便工具或用户的阅读及查找等。</p>
-<p>(9) Ingress<br>
-Kubernetes将Pod对象和外部网络环境进行了隔离，Pod和Service等对象间的通信都使用其内部专用地址进行，如若需要开放某些Pod对象提供给外部用户访问，则需要为其请求流量打开一个通往Kubernetes集群内部的通道，除了Service之外，Ingress也是这类通道的实现方式之一。</p>
-<h2 id="13-kubernetes-集群组件">1.3 Kubernetes 集群组件</h2>
-<p>一个典型的Kubernetes集群由多个工作节点（worker node）和一个集群控制平面(control plane，即Master)，以及一个集群状态存储系统（etcd）组成。<br>
-其中Master节点负责整个集群的管理工作，为集群提供管理接口，并监控和编排集群中的各个工作节点。各节点负责以Pod的形式运行容器，因此，各节点需要事先配置好容器运行依赖到的所有服务和资源，如容器运行时环境等。</p>
-<p>Master节点主要由apiserver、controller-manager和scheduler三个组件，以及一个用于集群状态存储的etcd存储服务组成，而每个Node节点则主要包含kubelet、kube-proxy及容器引擎（Docker是最为常用的实现）等组件。此外，完整的集群服务还依赖于一些附加组件，如KubeDNS等。</p>
-<h3 id="131-master-组件">1.3.1 Master 组件</h3>
-<p>Kubernetes的集群控制平面由多个组件组成，这些组件可统一运行于单一Master节点，也可以以多副本的方式同时运行于多个节点，以为Master提供高可用功能，甚至还可以运行于Kubernetes集群自身之上。</p>
-<p>Master主要包含以下几个组件：</p>
-<p>(1) API Server<br>
-API Server负责输出RESTful风格的Kubemetes API，它是发往集群的所有REST操作命令的接入点，并负责接收、校验并响应所有的REST请求，结果状态被持久存储于etcd中。因此，API Server是整个集群的网关。</p>
-<p>(2）集群状态存储(Cluster State Store)<br>
-Kubernetes集群的所有状态信息都需要持久存储于存储系统etcd中，不过，etcd是由CoreOS基于Raft协议开发的分布式键值存储，可用于服务发现、共享配置以及一致性保障（如数据库主节点选择、分布式锁等）。因此，etcd是独立的服务组件，并不隶属于Kubernetes集群自身。生产环境中应该以etcd集群的方式运行以确保其服务可用性。</p>
-<p>etcd不仅能够提供键值数据存储，而且还为其提供了监听(watch)机制，用于监听和推送变更。Kubernetes集群系统中，etcd中的键值发生变化时会通知到API Server，并由其通过watch API向客户端输出。基于watch机制，Kubernetes集群的各组件实现了高效协同。</p>
-<p>(3)控制器管理器(Controller Manager)<br>
-Kubernetes中，集群级别的大多数功能都是由几个被称为控制器的进程执行实现的，这几个进程被集成于kube-controller-manager守护进程中。由控制器完成的功能主要包括生命周期功能和API业务逻辑，具体如下:</p>
-<p>生命周期功能：包括Namespace创建和生命周期、Event垃圾回收、Pod终止相关的垃圾回收、级联垃圾回收及Node垃圾回收等。<br>
-API业务逻辑：例如，由ReplicaSet执行的Pod扩展等。</p>
-<p>(4)调度器(Scheduler)<br>
-Kubernetes是用于部署和管理大规模容器应用的平台，根据集群规模的不同，其托管运行的容器很可能会数以千计甚至更多。API Server确认Pod对象的创建请求之后，便需要由Scheduler根据集群内各节点的可用资源状态，以及要运行的容器的资源需求做出调度决策， 其工作逻辑如图1-12所示。另外，Kubernetes还支持用户自定义调度器。</p>
-<h3 id="132-node-组件">1.3.2 Node 组件</h3>
-<p>Node负责提供运行容器的各种依赖环境，并接受Master的管理。 每个Node主要由以下几个组件构成。</p>
-<p>(1) Node的核心代理程序 kubelet<br>
-kubelet是运行于工作节点之上的守护进程，它从API Server接收关于Pod对象的配置信息并确保它们处于期望的状态(desired state，后文不加区别地称之为“目标状态”)。 kubelet会在API Server上注册当前工作节点，定期向Master汇报节点资源使用情况，并通过cAdvisor监控容器和节点的资源占用状况。</p>
-<p>(2)容器运行时环境<br>
-每个Node都要提供一个容器运行时(Container Runtime)环境，它负责下载镜像并运行容器。kubelet并未固定链接至某容器运行时环境，而是以插件的方式载入配置的容器环境。这种方式清晰地定义了各组件的边界。目前，Kubernetes支持的容器运行环境至少包括Docker、RKT、cri-o和Fraki等。</p>
-<p>(3) kube-proxy<br>
-每个工作节点都需要运行一个kube-proxy守护进程，它能够按需为Service资源对象生成iptables或ipvs规则，从而捕获访问当前Service的ClusterIP的流量并将其转发至正确的后端Pod对象。</p>
-<h3 id="133-核心附件">1.3.3 核心附件</h3>
-<p>Kubernetes集群还依赖于一组称为“附件”（add-ons）的组件以提供完整的功能，它们<br>
-通常是由第三方提供的特定应用程序，且托管运行于Kubernetes集群之上。</p>
-<p>下面列出的几个附件各自为集群从不同角度引用了所需的核心功能:</p>
-<p>KubeDNS：在Kubernetes集群中调度运行提供DNS服务的Pod，同一集群中的其他Pod可使用此DNS服务解决主机名。Kubernetes自1.11版本开始默认使用CoreDNS项目为集群提供服务注册和服务发现的动态名称解析服务，之前的版本中用到的是kube-dns项目，而SkyDNS则是更早一代的项目。</p>
-<p>Kubernetes Dashboard: Kubernetes集群的全部功能都要基于Web的UI，来管理集 群中的应用甚至是集群自身。</p>
-<p>Heapster：容器和节点的性能监控与分析系统，它收集并解析多种指标数据，如资源利用率、生命周期事件等。新版本的Kubernetes中，其功能会逐渐由Prometheus结合其他组件所取代。</p>
-<p>Ingress Controller: Service是一种工作于传统层的负载均衡器，而Ingress是在应用层实现的HTTP(s)负载均衡机制。不过，Ingress资源自身并不能进行“流量穿透”，它仅是一组路由规则的集合，这些规则需要通过Ingress控制器(Ingress Controller)发挥作用。目前，此类的可用项目有Nginx、Traefik、Envoy及HAProxy等。</p>
-<h2 id="14-kubernetes-网络模型基础">1.4 Kubernetes 网络模型基础</h2>
-<h3 id="141-网络模型概述">1.4.1 网络模型概述</h3>
-<p>Kubernetes的网络中主要存在四种类型的通信：同－Pod内的容器间通信、各Pod彼此之间的通信、Pod与Service间的通信以及集群外部的流量同Service之间的通信。</p>
-<p>Kubernetes为Pod和Service资源对象分别使用了各自的专用网络，Pod网络由Kubernetes的网络插件配置实现，而Service的网络则由Kubernetes集群予以指定。为了提供更灵活的解决方式，Kubernetes的网络模型需要借助于外部插件实现，它要求任何实现机制都必须满足以下需求:</p>
-<p>所有节点均可不经NAT机制而直接与所有容器通信。<br>
-容器自己使用的IP也是其他容器或节点直接看到的地址。换句话讲，所有Pod对象都位于同一平面网络中，而且可以使用Pod自身的地址直接通信。</p>
-<p>Kubernetes使用的网络插件必须能为Pod提供满足以上要求的网络，它需要为每个Pod配置至少一个特定的地址，即Pod IP。Pod IP地址实际存在于某个网卡(可以是虚拟设备)上，而Service的地址却是一个虚拟IP地址，没有任何网络接口配置此地址，它由kube proxy借助iptables规则或ipvs规则重新定向到本地端口，再将其调度至后端Pod对象。Service的IP地址是集群提供服务的接口，也称为Cluster IP。</p>
-<p>Pod网络及其IP由Kubernetes的网络插件负责配置和管理，具体使用的网络地址可在管理配置网络插件时指定，如10.244.0.0/16网络。而Cluster网络和IP则是由Kubernetes集群负责配置和管理，如10.96.0.01/12网络。</p>
-<p>总结起来，Kubernetes集群至少应该包含三个网络，如图1-13中的网络环境所示。<br>
-一个是各主机（Master、Node和etcd等）自身所属的网络，其地址配置于主机的网络接口，用于各主机之间的通信，例如，Master与各Node之间的通信。此地址配置于Kubernetes集群构建之前，它并不能由Kubernetes管理，管理员需要于集群构建之前自行确定其地址配置及管理方式。</p>
-<p>第二个是Kubernetes集群上专用于Pod资源对象的网络，它是一个虚拟网络，用于为各Pod对象设定IP地址等网络参数，其地址配置于Pod中容器的网络接口之上。Pod网络需要借助kubenet插件或CNI插件实现，该插件可独立部署于Kubernetes集群之外，亦可托管于Kubernetes之上，它需要在构建Kubernetes集群时由管理员进行定义，而后在创建Pod对象时由其自动完成各网络参数的动态配置。</p>
-<p>第三个是专用于Service资源对象的网络，它也是一个虚拟网络，用于为Kubernetes集群之中的Service配置IP地址，但此地址并不配置于任何主机或容器的网络接口之上，而是通过Node之上的kube-proxy配置为iptables或ipvs规则，从而将发往此地址的所有流量调度至其后端的各Pod对象之上。Service网络在Kubernetes集群创建时予以指定，而各Service的地址则在用户创建Service时予以动态配置。</p>
-<h3 id="142-集群上的网络通信">1.4.2 集群上的网络通信</h3>
-<p>Kubernetes集群的客户端大体可以分为两类：API Server客户端和应用程序（运行为Pod中的容器）客户端，如图1-14所示。</p>
-<p>第一类客户端通常包含人类用户和Pod对象两种，它们通过API Server访问Kubernetes集群完成管理任务，例如，管理集群上的各种资源对象。<br>
-第二类客户端一般也包含人类用户和Pod对象两种，它们的访问目标是Pod上运行于容器中的应用程序提供的各种具体的服务，如redis或nginx等，不过，这些访问请求通常要经由Service或Ingress资源对象进行。<br>
-另外，第二类客户端的访问目标对象的操作要经由第一类客户端创建和配置完成后才能进行。</p>
 ]]></content>
     </entry>
 </feed>

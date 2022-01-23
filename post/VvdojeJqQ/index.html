@@ -1,0 +1,616 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1642954486536">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1642954486536" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83">一 基础环境</a>
+<ul>
+<li><a href="#11-%E8%8A%82%E7%82%B9%E8%A7%84%E5%88%92">1.1 节点规划</a></li>
+<li><a href="#12-%E7%BB%84%E4%BB%B6%E7%89%88%E6%9C%AC">1.2 组件版本</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-kubeadmin">二 kubeadmin</a>
+<ul>
+<li><a href="#21-%E6%A6%82%E8%BF%B0">2.1 概述</a></li>
+<li><a href="#22-%E5%91%BD%E4%BB%A4%E4%BB%8B%E7%BB%8D">2.2 命令介绍</a></li>
+<li><a href="#23-%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90">2.3 集群架构解析</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96">三 系统环境初始化</a>
+<ul>
+<li><a href="#31-%E8%AE%BE%E7%BD%AEhosts%E8%A7%A3%E6%9E%90">3.1 设置hosts解析</a></li>
+<li><a href="#32-%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%E4%BF%A1%E6%81%AF">3.2 配置网卡信息</a></li>
+<li><a href="#33-%E5%85%B3%E9%97%ADselinux%E5%92%8C%E9%98%B2%E7%81%AB%E5%A2%99">3.3 关闭selinux和防火墙</a></li>
+<li><a href="#34-%E5%85%B3%E9%97%ADswap">3.4 关闭swap</a></li>
+<li><a href="#35-%E8%B0%83%E6%95%B4%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0">3.5 调整内核参数</a></li>
+<li><a href="#36-%E6%9B%B4%E6%8D%A2ubuntu%E9%95%9C%E5%83%8F%E6%BA%90">3.6 更换Ubuntu镜像源</a></li>
+<li><a href="#37-%E6%B7%BB%E5%8A%A0docker-ce%E8%BD%AF%E4%BB%B6%E6%BA%90">3.7 添加Docker-ce软件源</a></li>
+<li><a href="#38-%E9%85%8D%E7%BD%AEdocker%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%E5%99%A8%E5%B9%B6%E6%9B%B4%E6%94%B9docker%E7%9A%84cgroup-driver">3.8 配置Docker镜像加速器并更改Docker的cgroup-driver</a></li>
+<li><a href="#39-%E6%B7%BB%E5%8A%A0k8s%E8%BD%AF%E4%BB%B6%E6%BA%90">3.9 添加K8s软件源</a></li>
+<li><a href="#310-%E5%AE%89%E8%A3%85kubeadm">3.10 安装kubeadm</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-kubeadmin%E9%83%A8%E7%BD%B2master%E8%8A%82%E7%82%B9">四 Kubeadmin部署Master节点</a>
+<ul>
+<li><a href="#41-%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEhaproxy-keepalived">4.1 安装配置haproxy、keepalived</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-01-23 / 10 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/VvdojeJqQ.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="一-基础环境">一 基础环境</h1>
+<p>部署k8s集群的节点按照用途可以划分为如下2类角色：</p>
+<ul>
+<li>master：集群的master节点，集群的初始化节点，基础配置不低于2C4G</li>
+<li>node：集群的node节点，可以多台，基础配置不低于2C4G</li>
+</ul>
+<p>本次部署使用Ubuntu系统搭建高可用环境K8s,如下：</p>
+<ul>
+<li>K8s部署版本：1.22.5</li>
+<li>Ubuntu版本：18.04 Server</li>
+<li>Kernel版本：Linux version 4.15.0-55-generic (buildd@lcy01-amd64-029)</li>
+</ul>
+<h2 id="11-节点规划">1.1 节点规划</h2>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>节点IP</th>
+<th>角色</th>
+<th>部署组件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K8s-Master1</td>
+<td>10.1.13.156</td>
+<td>master</td>
+<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td>K8s-Master2</td>
+<td>10.1.13.157</td>
+<td>master</td>
+<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td></td>
+<td>10.1.13.171</td>
+<td>VIP</td>
+<td>作为2台master节点的LB使用</td>
+</tr>
+<tr>
+<td>K8s-Node1</td>
+<td>10.1.13.158</td>
+<td>node</td>
+<td>kubectl, kubelet, kube-proxy, flannel</td>
+</tr>
+<tr>
+<td>K8s-Node2</td>
+<td>10.1.13.159</td>
+<td>node</td>
+<td>kubectl, kubelet, kube-proxy, flannel</td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-组件版本">1.2 组件版本</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>etcd</td>
+<td>3.5.0-0</td>
+<td>使用Pod方式部署，默认数据挂载到本地路径</td>
+</tr>
+<tr>
+<td>coredns</td>
+<td>v1.8.4</td>
+<td></td>
+</tr>
+<tr>
+<td>kubeadm</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kubectl</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kubelet</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>kube-proxy</td>
+<td>v1.22.5</td>
+<td></td>
+</tr>
+<tr>
+<td>flannel</td>
+<td>v0.16.0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="二-kubeadmin">二 kubeadmin</h1>
+<pre><code>kubeadmin官方文档：https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/
+</code></pre>
+<h2 id="21-概述">2.1 概述</h2>
+<p>Kubeadm 是一个提供了 kubeadm init 和 kubeadm join 的工具， 作为创建 Kubernetes 集群的 “快捷途径” 的最佳实践。<br>
+kubeadm 通过执行必要的操作来启动和运行最小可用集群。 按照设计，它只关注启动引导，而非配置机器。同样的， 安装各种 “锦上添花” 的扩展，例如 Kubernetes Dashboard、 监控方案、以及特定云平台的扩展，都不在讨论范围内。<br>
+相反，我们希望在 kubeadm 之上构建更高级别以及更加合规的工具， 理想情况下，使用 kubeadm 作为所有部署工作的基准将会更加易于创建一致性集群。</p>
+<h2 id="22-命令介绍">2.2 命令介绍</h2>
+<ul>
+<li>kubeadm init:</li>
+</ul>
+<pre><code>初始化并启用 Kubernetes 主节点 Master (常用)
+</code></pre>
+<ul>
+<li>kubeadm join:</li>
+</ul>
+<pre><code>启动 Kubernetes 工作节点并且将其加入到集群 Node 节点 (常用)
+</code></pre>
+<ul>
+<li>kubeadm upgrade:</li>
+</ul>
+<pre><code>更新 Kubernetes 集群到新版本,用于K8S的版本升级 (常用)
+</code></pre>
+<ul>
+<li>kubeadm config:</li>
+</ul>
+<pre><code>使用 kubeadm config print 命令打印默认配置
+</code></pre>
+<ul>
+<li>kubeadm token:</li>
+</ul>
+<pre><code>管理 kubeadm join 使用的令牌，这个令牌是一个临时的字符串，有效期默认为24小时。
+超出有效期之后，要是哦那个kubeadm token这个命令重新获取，
+所以我们创建了一个K8S集群以后，后期想将一个新的node节点加进去的话会再次使用kubeadm token命令让他生成一个零时的认证，然后再加到集群中。
+</code></pre>
+<ul>
+<li>kubeadm reset:</li>
+</ul>
+<pre><code>还原 kubeadm init 或者 kubeadm join 对主机所做的任何更改，对节点环境进行初始化。
+</code></pre>
+<ul>
+<li>kubeadm version:</li>
+</ul>
+<pre><code>打印 kubeadm 版本
+</code></pre>
+<h2 id="23-集群架构解析">2.3 集群架构解析</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1642951779278.png" alt="" loading="lazy"></figure>
+<p>两个管理端实现master的高可用，当其中一个master宕机之后，k8s集群还能使用。这两个master中间通过VIP来实现高可用。用户访问K8S都是直接访问VIP的地址，这个VIP地址我们通过keepalived让它在master1和master2上，来做高可用。<br>
+默认情况下让它跑在master1上，如果master1宕机了让它飘到master2上。这个VIP在哪个master上就由那个master来提供K8S的服务，这是一种高可用的方式。<br>
+再往下就是node节点，这些node节点就是真正运行容器的地方，当我们要创建容器的时候，就先访问到VIP地址:10.1.13.171，基于这个vip地址来下发指令，让他创建各个容器，这些所有的node节点都是被这个vip地址(10.1.13.171)所管理。</p>
+<h1 id="三-系统环境初始化">三 系统环境初始化</h1>
+<ul>
+<li>操作节点：所有节点（k8s-master，k8s-node）均需执行</li>
+</ul>
+<h2 id="31-设置hosts解析">3.1 设置hosts解析</h2>
+<ul>
+<li>修改hostname hostname必须只能包含小写字母、数字、&quot;,&quot;、&quot;-&quot;，且开头结尾必须是小写字母或数字</li>
+</ul>
+<pre><code># 以其中一台master和node为例：
+
+# 在k8s-master1节点
+$ hostnamectl set-hostname K8s-Master1 #设置master节点的hostname
+
+# 在node-1节点
+$ hostnamectl set-hostname K8s-Node1 #设置node1节点的hostname
+</code></pre>
+<ul>
+<li>添加hosts解析</li>
+</ul>
+<pre><code>$ cat &gt;&gt;/etc/hosts&lt;&lt;EOF
+10.1.13.156 K8s-Mater1
+10.1.13.157 K8s-Mater2
+10.1.13.158 K8s-Node1
+10.1.13.159 K8s-Node2
+EOF
+</code></pre>
+<h2 id="32-配置网卡信息">3.2 配置网卡信息</h2>
+<pre><code>vim /etc/netplan/01-netcfg.yaml
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      addresses: [ 10.1.13.156/24 ]
+      gateway4: 10.1.13.1
+      nameservers:
+          addresses:
+              - &quot;8.8.8.8&quot;
+
+#生效网络
+netplan apply
+</code></pre>
+<h2 id="33-关闭selinux和防火墙">3.3 关闭selinux和防火墙</h2>
+<pre><code>getenforce          ##检查SELINUX状态
+setenforce 0       ##设置SELinux 成为permissive模式
+                          ##setenforce 1 设置SELinux 成为enforcing模式
+或者
+修改/etc/selinux/config 文件
+将SELINUX=enforcing改为SELINUX=disabled
+sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
+永久生效
+
+##关闭防火墙
+systemctl disable firewalld &amp;&amp; systemctl stop firewalld
+</code></pre>
+<h2 id="34-关闭swap">3.4 关闭swap</h2>
+<pre><code>swapoff -a &amp;&amp; sysctl -w vm.swappiness=0 
+# 禁止使用 swap 空间，只有当系统 OOM 时才允许使用
+
+# 防止开机自动挂载 swap 分区
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+</code></pre>
+<h2 id="35-调整内核参数">3.5 调整内核参数</h2>
+<pre><code>cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1    #开启网桥模式
+net.bridge.bridge-nf-call-iptables = 1      #开启网桥模式
+net.ipv4.ip_forward=1
+vm.max_map_count=262144 
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+fs.may_detach_mounts = 1
+vm.overcommit_memory=1
+vm.panic_on_oom=0
+fs.inotify.max_user_watches=89100
+fs.file-max=52706963
+fs.nr_open=52706963
+net.netfilter.nf_conntrack_max=2310720
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_probes = 3
+net.ipv4.tcp_keepalive_intvl =15
+net.ipv4.tcp_max_tw_buckets = 36000
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_max_orphans = 327680
+net.ipv4.tcp_orphan_retries = 3
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 16384
+net.ipv4.ip_conntrack_max = 65536
+net.ipv4.tcp_max_syn_backlog = 16384
+net.ipv4.tcp_timestamps = 0
+net.core.somaxconn = 16384
+EOF
+
+modprobe br_netfilter  #加载模块
+sysctl -p /etc/sysctl.d/k8s.conf #生效内核参数
+</code></pre>
+<h2 id="36-更换ubuntu镜像源">3.6 更换Ubuntu镜像源</h2>
+<ul>
+<li>更换为ali ubuntu镜像源<br>
+阿里开源镜像源网站地址：https://developer.aliyun.com/mirror/</li>
+</ul>
+<pre><code>cd /etc/apt
+cp sources.list sources.list.bak
+
+vim sources.list
+deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
+
+deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
+# deb-src [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
+
+#更新软件包列表
+apt-get update
+</code></pre>
+<h2 id="37-添加docker-ce软件源">3.7 添加Docker-ce软件源</h2>
+<pre><code># step 1: 安装必要的一些系统工具
+sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+
+# step 2: 安装GPG证书
+curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+
+# Step 3: 写入软件源信息
+sudo add-apt-repository &quot;deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
+
+# Step 4: 更新并安装Docker-CE
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+
+# 安装指定版本的Docker-CE:
+# Step 1: 查找Docker-CE的版本:
+  apt-cache madison docker-ce
+#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
+#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
+
+# Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)
+  sudo apt-get -y install docker-ce=[VERSION]
+  
+#卸载docker-ce
+apt-get purge docker-ce
+</code></pre>
+<h2 id="38-配置docker镜像加速器并更改docker的cgroup-driver">3.8 配置Docker镜像加速器并更改Docker的cgroup-driver</h2>
+<pre><code>cat /etc/docker/daemon.json
+{
+  &quot;registry-mirrors&quot;: [&quot;https://b9pmyelo.mirror.aliyuncs.com&quot;],
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
+}
+
+## 启动docker
+$ systemctl enable docker &amp;&amp; systemctl start docker
+</code></pre>
+<h2 id="39-添加k8s软件源">3.9 添加K8s软件源</h2>
+<pre><code>apt-get update &amp;&amp; apt-get install -y apt-transport-https
+curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
+cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
+deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+EOF  
+
+apt-get update
+</code></pre>
+<h2 id="310-安装kubeadm">3.10 安装kubeadm</h2>
+<pre><code>## 查询安装包版本
+~]# apt-cache madison kubeadm kubelet kubectl
+
+##本次kubernetes安装使用1.22.5版本
+~]# apt-get install kubectl=1.22.5 kubeadm=1.22.5 kubelet=1.22.5 -y
+
+## 查看kubeadm版本
+$ kubeadm version
+
+## 设置kubelet开机启动
+$ cat &gt;/etc/sysconfig/kubelet&lt;&lt;EOF
+KUBELET_EXTRA_ARGS=&quot;--cgroup-driver=systemd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.2&quot;
+EOF
+$ systemctl enable kubelet 
+</code></pre>
+<h1 id="四-kubeadmin部署master节点">四 Kubeadmin部署Master节点</h1>
+<h2 id="41-安装配置haproxy-keepalived">4.1 安装配置haproxy、keepalived</h2>
+<ul>
+<li>操作节点： 所有的master</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/">
+                <h3 class="post-title">
+                  经济机器是如何运行的
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
