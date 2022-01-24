@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-01-23T16:18:33.077Z</updated>
+    <updated>2022-01-24T14:51:02.956Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -358,10 +358,349 @@ EOF
 $ systemctl enable kubelet 
 </code></pre>
 <h1 id="四-kubeadmin部署master节点">四 Kubeadmin部署Master节点</h1>
-<h2 id="41-安装配置haproxy-keepalived">4.1 安装配置haproxy、keepalived</h2>
+<h2 id="41-master节点安装配置keepalived">4.1  Master节点安装配置keepalived</h2>
 <ul>
 <li>操作节点： 所有的master</li>
 </ul>
+<blockquote>
+<p>所有Master节点安装并配置haproxy.cfg</p>
+</blockquote>
+<pre><code>## 安装keepalived haproxy
+$ apy-get install keepalived haproxy -y
+
+## 所有master节点配置haproxy.cfg,注意替换最后的master节点IP地址
+$ cd /etc/haproxy
+$ cp haproxy.cfg haproxy.cfg.bak
+$ vim /etc/haproxy/haproxy.cfg
+global
+  maxconn  2000
+  ulimit-n  16384
+  log  127.0.0.1 local0 err
+  stats timeout 30s
+defaults
+  log global
+  mode  http
+  option  httplog
+  timeout connect 5000
+  timeout client  50000
+  timeout server  50000
+  timeout http-request 15s
+  timeout http-keep-alive 15s
+frontend monitor-in
+  bind *:33305
+  mode http
+  option httplog
+  monitor-uri /monitor
+frontend k8s-master
+  bind 0.0.0.0:7443
+  bind 127.0.0.1:7443
+  mode tcp
+  option tcplog
+  tcp-request inspect-delay 5s
+  default_backend k8s-master
+backend k8s-master
+  mode tcp
+  option tcplog
+  option tcp-check
+  balance roundrobin
+  default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn     250 maxqueue 256 weight 100
+  server k8s-master1    10.1.13.156:6443  check
+  server k8s-master2    10.1.13.157:6443   check
+</code></pre>
+<blockquote>
+<p>K8s-Mater1配置keepalived.conf</p>
+</blockquote>
+<pre><code> # 在k8s-master1节点，注意mcast_src_ip换成实际的master1ip地址，virtual_ipaddress换成lb地址
+$ vim /etc/keepalived/keepalived.conf
+! Configuration File for keepalived
+global_defs {
+    router_id LVS_DEVEL
+    script_user root
+    enable_script_security
+}
+vrrp_script chk_apiserver {
+    script &quot;/etc/keepalived/check_apiserver.sh&quot;
+    interval 5
+    weight -5
+    fall 2
+    rise 1
+}
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    mcast_src_ip 10.1.13.156
+    virtual_router_id 60
+    priority 101
+    advert_int 2
+    authentication {
+        auth_type PASS
+        auth_pass K8SHA_KA_AUTH
+    }
+    virtual_ipaddress {
+        10.1.13.171
+    }
+    track_script {
+       chk_apiserver
+    }
+}
+</code></pre>
+<blockquote>
+<p>K8s-Mater2配置keepalived.conf</p>
+</blockquote>
+<pre><code>#注意mcast_src_ip换成实际的master1ip地址，virtual_ipaddress换成lb地址
+$ vim /etc/keepalived/keepalived.conf
+! Configuration File for keepalived
+global_defs {
+    router_id LVS_DEVEL
+    script_user root
+    enable_script_security
+}
+vrrp_script chk_apiserver {
+    script &quot;/etc/keepalived/check_apiserver.sh&quot;
+    interval 5
+    weight -5
+    fall 2
+rise 1
+}
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens160
+    mcast_src_ip 10.1.13.157
+    virtual_router_id 60
+    priority 101
+    advert_int 2
+    authentication {
+        auth_type PASS
+        auth_pass K8SHA_KA_AUTH
+    }
+    virtual_ipaddress {
+        10.1.13.171
+    }
+    track_script {
+       chk_apiserver
+    }
+}
+</code></pre>
+<blockquote>
+<p>所有master节点配置Keepalived健康检查文件</p>
+</blockquote>
+<pre><code>$ cat /etc/keepalived/check_apiserver.sh
+#!/bin/bash
+err=0
+for k in $(seq 1 2)
+do
+    check_code=$(pgrep haproxy)
+    if [[ $check_code == &quot;&quot; ]]; then
+        err=$(expr $err + 1)
+        sleep 1
+        continue
+    else
+        err=0
+        break
+    fi
+done
+if [[ $err != &quot;0&quot; ]]; then
+    echo &quot;systemctl stop keepalived&quot;
+    /usr/bin/systemctl stop keepalived
+    exit 1
+else
+    exit 0
+fi
+</code></pre>
+<blockquote>
+<p>启动haproxy和keepalived----&gt;所有master节点</p>
+</blockquote>
+<pre><code>$ chmod +x /etc/keepalived/check_apiserver.sh
+$ systemctl daemon-reload
+$ systemctl enable --now haproxy
+$ systemctl enable --now keepalived 
+
+# 测试LB ip是否生效
+$ telnet 10.1.13.171 7443
+</code></pre>
+<h1 id="五-master节点初始化">五 Master节点初始化</h1>
+<p>首先基于keepalived 实现高可用VIP，然后实现基于VIP 的高可用master。<br>
+初始化仅一台master上初始化即可。master2节点主机不用初始化，在master1初始化之后再将master2节点加到里面即可。</p>
+<h2 id="51-提前准备镜像">5.1 提前准备镜像</h2>
+<p>镜像最好提前下载下来，但是镜像默认使用 Google 的镜像仓库， 所以国内无法直接下载，但是可以通过阿里云的镜像仓库把镜像先提前下载下来， 可以避免后期因镜像下载异常而导致k8s 部署异常。</p>
+<ul>
+<li>在任意一台 K8S 集群主机上查看安装指定的 K8s 1.22.5 需要哪些镜像</li>
+</ul>
+<pre><code>~# kubeadm config images list --kubernetes-version v1.22.5
+
+k8s.gcr.io/kube-apiserver:v1.22.5
+k8s.gcr.io/kube-controller-manager:v1.22.5
+k8s.gcr.io/kube-scheduler:v1.22.5
+k8s.gcr.io/kube-proxy:v1.22.5
+k8s.gcr.io/pause:3.5
+k8s.gcr.io/etcd:3.5.0-0
+k8s.gcr.io/coredns/coredns:v1.8.4
+
+#下载镜像(所有master、node节点)
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver:v1.22.5
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager:v1.22.5
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler:v1.22.5
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.22.5
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.5
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.5.0-0
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.8.4
+</code></pre>
+<h2 id="52-初始化master节点">5.2 初始化Master节点</h2>
+<ul>
+<li>操作节点：只在master1节点（k8s-master）执行</li>
+</ul>
+<pre><code>kubeadm init --apiserver-advertise-address=10.1.13.156 \
+--control-plane-endpoint=10.1.13.171 \
+--apiserver-bind-port=6443 \
+--kubernetes-version=v1.22.5 \
+--pod-network-cidr=10.244.0.0/16 \
+--service-cidr=10.10.0.0/16 \
+--service-dns-domain=linux.local \
+--image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers \
+--ignore-preflight-errors=swap
+</code></pre>
+<ul>
+<li>参数解析</li>
+</ul>
+<pre><code>--apiserver-advertise-address=10.1.13.156       #master节点主机IP
+--control-plane- endpoint=10.1.13.171      	     #用户请求访问ip(VIP)
+--apiserver-bind-port=6443                              #对外暴露端口
+--kubernetes-version=v1.22.5                           #K8S版本号
+--pod- network-cidr=10.244.0.0/16                  #后端pod服务器内部ip地址池
+--service-cidr=10.10.0.0/16    	                          #service ip地址池
+--service-dns-domain=linux.local                     #DNS解析域名
+-- image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers  #使用阿里镜像仓库
+--ignore-preflight- errors=swap                       #忽略swap分区
+</code></pre>
+<p>初始化完成之后会提示：</p>
+<pre><code>您的Kubernetes控制面板已成功初始化！
+
+要开始使用群集，您需要以普通用户身份运行以下命令：
+
+  mkdir -p $ HOME / .kube
+  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
+  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
+
+现在，您应该将Pod网络部署到群集。
+使用列出的选项之一运行“ kubectl apply -f [podnetwork] .yaml”：
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+现在，您可以通过复制证书颁发机构来加入任意数量的控制平面节点
+和每个节点上的服务帐户密钥，然后以超级用户身份运行以下命令：
+
+#这是我们 K8S 集群添加新节点的 token 值，一定要保存好
+kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw \
+	--discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e \
+	--control-plane
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1643033461867.png" alt="" loading="lazy"></figure>
+<pre><code>mkdir -p $HOME/.kube		   #在当前目录下创建一个.kube文件
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config #将admin.conf文件拷贝到.kube中
+sudo chown $(id -u):$(id -g) $HOME/.kube/config			 #添加这个用户的组和用户id信息
+</code></pre>
+<blockquote>
+<p>⚠️注意：此时使用 kubectl get nodes查看节点应该处于notReady状态，因为还未配置网络插件</p>
+</blockquote>
+<p>若执行初始化过程中出错，根据错误信息调整后，执行kubeadm reset后再次执行init操作即可</p>
+<h1 id="六-安装网络插件">六 安装网络插件</h1>
+<p>操作节点：只在master节点（k8s-master）执行，CNI</p>
+<h2 id="61-master1节点安装flannel">6.1 Master1节点安装flannel</h2>
+<ul>
+<li>下载flannel的yaml文件</li>
+</ul>
+<pre><code>wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+</code></pre>
+<ul>
+<li>修改配置，指定网卡名称，大概在文件的190行，添加一行配置：</li>
+</ul>
+<pre><code>...      
+      containers:
+      - name: kube-flannel
+        image: rancher/mirrored-flannelcni-flannel:v0.16.1
+        command:
+        - /opt/bin/flanneld
+        args:
+        - --ip-masq
+        - --kube-subnet-mgr
+        - --iface=eth0   # 如果机器存在多网卡的话，指定内网网卡的名称，默认不指定的话会找第一块网卡
+        resources:
+          requests:
+            cpu: &quot;100m&quot;
+...
+
+注：如果在Master节点初始化时，指定Pod的IP地址段不是默认的话，则需要在kube-flannel.yml更改
+···
+  net-conf.json: |
+    {
+      &quot;Network&quot;: &quot;10.244.0.0/16&quot;,   #改为初始化时指定的IP地址段，保持一致
+      &quot;Backend&quot;: {
+        &quot;Type&quot;: &quot;vxlan&quot;
+      }
+    }
+···
+</code></pre>
+<ul>
+<li>执行安装flannel网络插件</li>
+</ul>
+<pre><code># 先拉取镜像,此过程国内速度比较慢
+$ docker pull rancher/mirrored-flannelcni-flannel:v0.16.1
+
+# 执行flannel安装
+$ kubectl apply -f kube-flannel.yml
+</code></pre>
+<h1 id="七-k8s-集群加入-master2-节点">七 K8S 集群加入 Master2 节点</h1>
+<p>在已经安装好了kubeadm主机（master1）上使用下面条命令生成证书</p>
+<pre><code>~]# kubeadm init phase upload-certs --upload-certs
+</code></pre>
+<ul>
+<li>使用新 key 将Master2加入到 K8S集群中<br>
+注意：使用VIP地址添加</li>
+</ul>
+<pre><code>kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e     --control-plane --certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0
+
+##参数解析
+kubeadm join 10.1.13.171:6443   ##使用VIP 地址的6443端口
+--token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e ##初始化
+--control-plane --certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0 ##添加key验证
+</code></pre>
+<p>在Master2节点执行以下三条命令</p>
+<pre><code>  mkdir -p $ HOME / .kube
+  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
+  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
+
+三条命令加上之后才能够使用kubectl get node -A命令查看节点集群节点信息，
+起到一个验证的作用，不然会报错为连接拒绝。
+</code></pre>
+<h1 id="八-添加slave节点到集群中">八 添加Slave节点到集群中</h1>
+<p>操作节点：所有的slave节点（k8s-slave）需要执行<br>
+在每台slave节点，执行如下命令，该命令是在kubeadm init成功后提示信息中打印出来的，需要替换成实际init后打印出的命令。</p>
+<pre><code>kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e 
+</code></pre>
+<p>如果忘记添加命令，可以通过如下命令生成：</p>
+<pre><code>$ kubeadm token create --print-join-command
+</code></pre>
+<ul>
+<li>如果想要在Node节点上也可以执行kubectl命令，则需要同样执行以下三条命令：</li>
+</ul>
+<pre><code>  mkdir -p $ HOME / .kube
+  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
+  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
+
+  ## admin.conf 可以从Master节点拷贝过来
+</code></pre>
+<h1 id="九-集群设置">九 集群设置</h1>
+<h2 id="91-设置master节点是否可调度可选">9.1 设置Master节点是否可调度(可选)</h2>
+<p>操作节点：k8s-master<br>
+默认部署成功后，master节点无法调度业务pod，如需设置master节点也可以参与pod的调度，需执行：</p>
+<pre><code>$ kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
+</code></pre>
+<h2 id="92-设置kubectl自动补全">9.2 设置kubectl自动补全</h2>
+<p>操作节点：k8s-master</p>
+<pre><code>$ apt-get install bash-completion -y
+$ source /usr/share/bash-completion/bash_completion
+$ source &lt;(kubectl completion bash)
+$ echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc
+</code></pre>
 ]]></content>
     </entry>
     <entry>
