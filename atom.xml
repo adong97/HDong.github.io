@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-01-24T14:51:02.956Z</updated>
+    <updated>2022-01-25T01:30:08.444Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -358,7 +358,7 @@ EOF
 $ systemctl enable kubelet 
 </code></pre>
 <h1 id="四-kubeadmin部署master节点">四 Kubeadmin部署Master节点</h1>
-<h2 id="41-master节点安装配置keepalived">4.1  Master节点安装配置keepalived</h2>
+<h2 id="41-master节点安装配置keepalived-haproxy">4.1  Master节点安装配置keepalived、haproxy</h2>
 <ul>
 <li>操作节点： 所有的master</li>
 </ul>
@@ -660,8 +660,10 @@ $ kubectl apply -f kube-flannel.yml
 
 ##参数解析
 kubeadm join 10.1.13.171:6443   ##使用VIP 地址的6443端口
---token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e ##初始化
---control-plane --certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0 ##添加key验证
+--token fllqpu.d62apynubeyejmjw   ##对于基于令牌的发现，该令牌用于验证从 API 服务器获取的集群信息。
+--discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e ##对基于令牌的发现，验证根 CA 公钥是否与此哈希匹配
+--control-plane   ##在此节点上创建一个新的控制平面实例
+--certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0 ##添加key验证,使用此密钥可以解密由 init 上传的证书 secret。
 </code></pre>
 <p>在Master2节点执行以下三条命令</p>
 <pre><code>  mkdir -p $ HOME / .kube
