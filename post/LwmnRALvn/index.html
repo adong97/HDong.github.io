@@ -1,0 +1,1244 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644307802212">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644307802212" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%81%9A%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2%E5%8C%85">为什么做生产环境监控部署包</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景</a></li>
+<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">一 、环境准备：</a>
+<ul>
+<li><a href="#12-%E8%A2%AB%E7%9B%91%E6%8E%A7%E6%9C%8D%E5%8A%A1%E7%8E%AF%E5%A2%83">1.2  被监控服务环境：</a></li>
+<li><a href="#13-%E9%83%A8%E7%BD%B2%E5%8C%85%E4%B8%8B%E8%BD%BD%E9%93%BE%E6%8E%A5">1.3 部署包下载链接：</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-prometheus%E9%83%A8%E7%BD%B2%E5%8C%85%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">二、prometheus部署包使用说明：</a>
+<ul>
+<li><a href="#21-%E5%B7%A5%E5%85%B7%E5%8A%9F%E8%83%BD%E8%AF%B4%E6%98%8E">2.1 工具功能说明</a></li>
+<li><a href="#22-%E5%B7%A5%E5%85%B7%E7%BB%84%E6%88%90%E4%BB%8B%E7%BB%8D">2.2 工具组成介绍</a></li>
+<li><a href="#23-prometheus%E9%83%A8%E7%BD%B2%E5%8C%85%E5%8F%82%E6%95%B0">2.3 prometheus部署包参数：</a>
+<ul>
+<li><a href="#231-prometheus%E7%9B%91%E6%8E%A7%E9%83%A8%E7%BD%B2%E5%8C%85%E9%82%AE%E7%AE%B1%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">2.3.1 prometheus监控部署包邮箱配置参数：</a></li>
+<li><a href="#232-%E6%95%B4%E7%90%86%E5%B8%B8%E7%94%A8%E9%82%AE%E7%AE%B1%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9C%B0%E5%9D%80%E5%92%8C%E7%AB%AF%E5%8F%A3%E6%96%B9%E4%BE%BF%E5%A4%A7%E5%AE%B6%E4%BD%BF%E7%94%A8">2.3.2  整理常用邮箱服务器地址和端口，方便大家使用：</a></li>
+<li><a href="#233-%E9%82%AE%E7%AE%B1%E6%8E%88%E6%9D%83%E7%A0%81%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F">2.3.3  邮箱授权码获取方式：</a></li>
+</ul>
+</li>
+<li><a href="#24-%E6%B5%8B%E8%AF%95%E9%83%A8%E7%BD%B2%E6%9C%BA%E5%99%A8">2.4 测试部署机器：</a></li>
+<li><a href="#25-%E9%83%A8%E7%BD%B2%E5%AE%8C%E6%88%90%E5%90%8E%E5%9C%A8%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%80%9A%E8%BF%87systemctl%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E5%90%84%E4%B8%AA%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81">2.5 部署完成后，在机器上通过systemctl命令查看各个服务状态：</a></li>
+<li><a href="#26-%E4%BD%BF%E7%94%A8-ss-ntlp%E6%A3%80%E6%9F%A5%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">2.6  使用 ss -ntlp检查端口是否存在</a></li>
+<li><a href="#27-%E6%9F%A5%E7%9C%8B%E5%AE%89%E8%A3%85%E6%97%A5%E5%BF%97">2.7 查看安装日志</a></li>
+<li><a href="#28-%E8%AE%BF%E9%97%AE%E7%95%8C%E9%9D%A2%E6%B5%8B%E8%AF%95">2.8  访问界面测试：</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E9%83%A8%E7%BD%B2exporter%E9%83%A8%E7%BD%B2%E5%8C%85">三、部署exporter部署包</a>
+<ul>
+<li><a href="#31-%E5%B7%A5%E5%85%B7%E5%8A%9F%E8%83%BD">3.1 工具功能</a></li>
+<li><a href="#32-%E5%B7%A5%E5%85%B7%E7%BB%84%E6%88%90%E4%BB%8B%E7%BB%8D">3.2 工具组成介绍</a></li>
+<li><a href="#33-exporter%E9%83%A8%E7%BD%B2%E5%8C%85%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E">3.3 exporter部署包参数说明：</a></li>
+<li><a href="#34-%E6%B5%8B%E8%AF%95%E9%83%A8%E7%BD%B2exporter">3.4  测试部署exporter：</a></li>
+<li><a href="#35-%E9%83%A8%E7%BD%B2%E5%AE%8C%E6%88%90%E4%BB%A5%E5%90%8E%E9%80%9A%E8%BF%87systemctl%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E5%90%84%E4%B8%AA%E6%9C%8D%E5%8A%A1%E7%9A%84%E7%8A%B6%E6%80%81">3.5  部署完成以后，通过systemctl命令查看各个服务的状态：</a></li>
+<li><a href="#36-%E4%BD%BF%E7%94%A8-ss-ntlp%E6%A3%80%E6%9F%A5%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">3.6  使用 ss -ntlp检查端口是否存在</a></li>
+<li><a href="#37-%E9%AA%8C%E8%AF%81%E6%9C%8D%E5%8A%A1%E6%98%AF%E5%90%A6%E6%B3%A8%E5%86%8C%E5%88%B0consul%E4%B8%AD">3.7 验证服务是否注册到consul中</a></li>
+<li><a href="#38-%E8%AE%BF%E9%97%AEgrafana%E6%9F%A5%E7%9C%8Bnode-mysql-docker-dashboard%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%B0%E6%8D%AE">3.8  访问Grafana，查看node、mysql、docker dashboard，是否有数据。</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Prometheus+Grafana+Consul+alertmanager 生产环境监控告警</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-08 / 27 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/LwmnRALvn.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="为什么做生产环境监控部署包">为什么做生产环境监控部署包</h1>
+<p>目前我们很多部署在客户环境中的云管其实都没有配置监控，导致很多时候出现问题后，客户找到我们比较被动，还会出现磁盘满导致服务不可用。同时对于规模比较大的客户，资源数量增长比较快，也不清楚整体系统资源随资源数量增长的变化性能情况。为了能够及时了解云管的运行情况、及时发现故障并解决，制作了云管生产环境监控部署包。</p>
+<h1 id="使用场景">使用场景</h1>
+<p>在云管生产实施后，导入部署包，把Prometheus监控部署包部署到一台监控主机，把Node Exporter部署包部署到需要监控的虚拟机，把mysql exporter部署包部署到MySQL组主机，把Cadvisor部署包部署到需要监控的docker服务虚拟机，打开监控主机登录Grafana，即可看到生产云管系统的监控情况，并能在部署时指定的告警通知邮箱中收到告警。</p>
+<h1 id="一-环境准备">一 、环境准备：</h1>
+<p>1.1 监控主机硬件环境：</p>
+<table>
+<thead>
+<tr>
+<th>部署包</th>
+<th>操作系统</th>
+<th>CPU	内存</th>
+<th>磁盘</th>
+<th>主机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prometheus监控</td>
+<td>CentOS7以上版本</td>
+<td>2C</td>
+<td>4G</td>
+<td>50G	一台</td>
+</tr>
+</tbody>
+</table>
+<h2 id="12-被监控服务环境">1.2  被监控服务环境：</h2>
+<table>
+<thead>
+<tr>
+<th>部署包</th>
+<th>操作系统</th>
+<th>监控的服务版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>node_exporter</td>
+<td>CentOS7</td>
+<td>虚拟机</td>
+</tr>
+<tr>
+<td>mysql_exporter</td>
+<td>CentOS7</td>
+<td>mysql/mariaDB &gt; 5.6</td>
+</tr>
+<tr>
+<td>Cadvisor</td>
+<td>CentOS7</td>
+<td>Docker 不限制</td>
+</tr>
+</tbody>
+</table>
+<h2 id="13-部署包下载链接">1.3 部署包下载链接：</h2>
+<p>1. prometheus监控工具：https://f2c-north-rel-1251506367.cos.ap-beijing.myqcloud.com/deployment-packages/CentOS/%E9%83%A8%E7%BD%B2%E5%8C%85-prometheus%2Bgrafana%2Bconsul%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6-CentOS7-2021-10-30.zip</p>
+<p>2.exporter被监控节点数据收集工具: https://f2c-north-rel-1251506367.cos.ap-beijing.myqcloud.com/deployment-packages/CentOS/%E9%83%A8%E7%BD%B2%E5%8C%85-%E5%AE%89%E8%A3%85exporter%E5%B9%B6%E6%B3%A8%E5%86%8C%E5%88%B0consu-CentOS7-2021-10-30.zip</p>
+<h1 id="二-prometheus部署包使用说明">二、prometheus部署包使用说明：</h1>
+<p>由于proemtheus使用专为监控指标数据设计的高性能时序数据库TSDB，为保证服务器时间准确一致，部署包中安装了ntpd时间同步服务。</p>
+<p>因此如果是内网环境，请最好配置本地yum源和时间同步服务来保证时间准确一致。</p>
+<h2 id="21-工具功能说明">2.1 工具功能说明</h2>
+<p>用于监控云管环境中的机器状态和服务状态，确保出现异常及时告警维护。<br>
+已支持监控node节点的CPU、内存、磁盘、网络等，MySQL服务、docker容器，后续根据需求更新监控服务和监控指标。</p>
+<h2 id="22-工具组成介绍">2.2 工具组成介绍</h2>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>用途</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prometheus</td>
+<td>主要负责数据采集和存储</td>
+<td>2.30.3</td>
+</tr>
+<tr>
+<td>alertmanager</td>
+<td>进行报警发送邮件</td>
+<td>0.23.0</td>
+</tr>
+<tr>
+<td>consul</td>
+<td>用于服务发现，自注册</td>
+<td>1.10.3</td>
+</tr>
+<tr>
+<td>grafana</td>
+<td>数据可视化展示</td>
+<td>8.2.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="23-prometheus部署包参数">2.3 prometheus部署包参数：</h2>
+<h3 id="231-prometheus监控部署包邮箱配置参数">2.3.1 prometheus监控部署包邮箱配置参数：</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Smtp_Mail</td>
+<td>smtp邮箱+端口号</td>
+<td>smtp.exmail.qq.com:25</td>
+</tr>
+<tr>
+<td>Smtp_Username</td>
+<td>接收告警通知人的邮箱地址</td>
+<td>xiaodong.wei@fit2cloud.com</td>
+</tr>
+<tr>
+<td>Stmp_Password</td>
+<td>邮箱授权码</td>
+<td>nHdhrBDBhEqPERAP</td>
+</tr>
+</tbody>
+</table>
+<p>smtp参数用来配置Alertmanager告警通知，部署包中以邮件告警作为告警方式，支持使用QQ邮箱、企业微信邮箱、网易163邮箱等。</p>
+<h3 id="232-整理常用邮箱服务器地址和端口方便大家使用">2.3.2  整理常用邮箱服务器地址和端口，方便大家使用：</h3>
+<table>
+<thead>
+<tr>
+<th>常用邮箱</th>
+<th>邮箱服务器地址</th>
+<th>端口号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QQ邮箱</td>
+<td>smtp.qq.com</td>
+<td>25/456(加密)</td>
+</tr>
+<tr>
+<td>企业微信邮箱</td>
+<td>smtp.exmail.qq.com</td>
+<td>25/456(加密)</td>
+</tr>
+<tr>
+<td>网易163邮箱</td>
+<td>smtp.163.com</td>
+<td>25</td>
+</tr>
+</tbody>
+</table>
+<h3 id="233-邮箱授权码获取方式">2.3.3  邮箱授权码获取方式：</h3>
+<p>1.以企业微信邮箱为例：登陆企业微信邮箱 https://exmail.qq.com 进入设置页面。</p>
+<p>2.选择”微信绑定“ → &quot;开启安全登录&quot; → &quot;生成密码&quot;，复制密码即可。</p>
+<p></p>
+<h2 id="24-测试部署机器">2.4 测试部署机器：</h2>
+<p>prometheus主机IP地址： 10.1.13.172</p>
+<h2 id="25-部署完成后在机器上通过systemctl命令查看各个服务状态">2.5 部署完成后，在机器上通过systemctl命令查看各个服务状态：</h2>
+<p>systemctl status prometheus alertmanager consul grafana</p>
+<p>服务名称	默认端口号<br>
+prometheus 	9090<br>
+alertmanager 	9093(访问端口)/9094<br>
+consul 	8300/8500(访问端口)<br>
+grafana	3000</p>
+<h2 id="26-使用-ss-ntlp检查端口是否存在">2.6  使用 ss -ntlp检查端口是否存在</h2>
+<h2 id="27-查看安装日志">2.7 查看安装日志</h2>
+<p>如果部署过程中出现错误或异常，可在${install_dir}/install-tool.log（默认/opt/install-tool.log）中查看哪一步出现的错误，进行排错。</p>
+<h2 id="28-访问界面测试">2.8  访问界面测试：</h2>
+<p>prometheus: http://10.1.13.172:9090</p>
+<p>consul: http://10.1.13.172:8500</p>
+<p>grafana:http://10.1.13.172:3000<br>
+默认登陆用户名/密码：admin/admin</p>
+<p>然后更改密码，即可进入</p>
+<p>grafana已经配置好prometheus数据源和node dashboard、mysql dashboard、docker dashboard，只需使用expoter部署包部署到需要监控的机器上即可。</p>
+<p>在这里查找需要关注的dashboard</p>
+<p>到这里prometheus监控工具部署验证就结束了。</p>
+<p>如果没有问题，那就没有问题✌</p>
+<h1 id="三-部署exporter部署包">三、部署exporter部署包</h1>
+<h2 id="31-工具功能">3.1 工具功能</h2>
+<p>用于收集被监控主机上的数据，向Prometheus提供监控样本数据。<br>
+目前部署包中包含Node Exporter、Mysql Exporter、Cadvosor三种，可以任意选择。<br>
+将安装完成的服务，注册到consul中。</p>
+<h2 id="32-工具组成介绍">3.2 工具组成介绍</h2>
+<p>服务	用途	版本<br>
+Node Exporter	用于采集服务器层面的运行指标	1.2.2<br>
+Mysql Exporter	采集 MySQL/MariaDB 数据库监控指标	0.13.0<br>
+Cadvisor	采集和容器运行相关的所有指标	docker镜像</p>
+<h2 id="33-exporter部署包参数说明">3.3 exporter部署包参数说明：</h2>
+<p>参数	含义	示例<br>
+Mysqlrootpwd	mysql root用户登录密码	Test123!<br>
+Install_exportername	需要安装的exporter名称: node/mysql/cadvisor	node<br>
+Consul_IP	prometheus机器IP地址	10.1.10.127<br>
+Mysqlrootpwd：安装mysql_exporter收集mysql数据时，需要创建一个mysql普通用户用于连接。因此，需要你填写mysql root用户的密码。<br>
+tips: 这个普通用户用户名密码为exporter/Fit2cloud!,请放心，它没有登陆权限，最大连接数是5个，不会造成很大的负载。</p>
+<p>Install_exportername： 填写你需要监控的服务，<br>
+                     node为本机的cpu、内存、磁盘、网络的监控，</p>
+<p>mysql为本机mysql服务的监控，但是目前不支持docker容器启动的mysql监控，后续有需要再更新，</p>
+<p>cadvisor为本机docker容器的监控。请保证mysql和docker为running状态。</p>
+<p>tips：你可以选择部署一个或多个服务，例如：只部署node、mysql、cadvisor或者部署多个，node/mysql，mysql/cadvisor，node/cadvisor，node/mysql/cadvisor都可以。<br>
+         多个服务请使用”/“划分，和我写的保持一致，或者直接复制即可。</p>
+<p>Consul_IP：填写上面部署好的prometheus监控的IP地址，它会自动将服务注册到consul中。</p>
+<h2 id="34-测试部署exporter">3.4  测试部署exporter：</h2>
+<p>exporter部署机器IP：10.1.13.172、10.1.13.173、10.1.13.175</p>
+<p>tips：10.1.13.172机器部署了prometheus监控工具，但是想要监控自己的机器状态或服务，需要再次部署exporter部署包。</p>
+<p></p>
+<p></p>
+<h2 id="35-部署完成以后通过systemctl命令查看各个服务的状态">3.5  部署完成以后，通过systemctl命令查看各个服务的状态：</h2>
+<p>systemctl   status  node_exporter mysql_exporter</p>
+<p>cadvisor是用docker启动的，所以需要使用docker命令查看</p>
+<p>docker ps |grep cadvisor</p>
+<p>服务	默认端口号<br>
+node_exporter	9100<br>
+mysql_exporter	9104<br>
+cadvisor	8090</p>
+<h2 id="36-使用-ss-ntlp检查端口是否存在">3.6  使用 ss -ntlp检查端口是否存在</h2>
+<h2 id="37-验证服务是否注册到consul中">3.7 验证服务是否注册到consul中</h2>
+<p>再次访问consul地址：http://10.1.10.172:8500</p>
+<p>刷新界面，发现服务已经注册进来✌</p>
+<h2 id="38-访问grafana查看node-mysql-docker-dashboard是否有数据">3.8  访问Grafana，查看node、mysql、docker dashboard，是否有数据。</h2>
+<p>Grafana： http://10.1.10.172:3000</p>
+<p>node dashboard</p>
+<p>mysql dashboard</p>
+<p>docker dashboard</p>
+<p>四、测试alertmanager告警<br>
+停掉10.1.13.173、10.1.13175的mysql_exporter，这样prometheus就无法收集mysql数据，然后报警发邮件。</p>
+<p>4.1  关闭mysql_exporter服务<br>
+systemctl stop mysql_exporter</p>
+<p>4.2  promrtheus alerts界面出现告警</p>
+<p>4.3  收到告警邮件</p>
+<p>4.4  重新启动mysql_exporter</p>
+<p>4.5  告警消失</p>
+<p>#五 一键部署脚本<br>
+##5.1 监控告警一键部署脚本</p>
+<pre><code>#!/bin/bash
+
+#设置环境信息
+[ `whoami` != &quot;root&quot; ] &amp;&amp; echo &quot;######## Please Use root Install......&quot; &amp;&amp; exit 71
+IP=`ip addr |awk '/inet /' |sed -n '2p' |awk -F' ' '{print $2}' |awk -F'/' '{print $1}'`
+install_dir=${{Install_Dir}}      #安装目录  /opt
+tool_dir=${install_dir}/software  #部署包目录 /opt/software
+data_dir=${{Data_Dir}}            #prometheus数据目录  /opt
+LogFile=${{logfile}}              #日志文件  /opt/install-tool.log
+file_dir=${{file_Dir}}            #解压文件目录  /usr/local
+
+#配置告警邮箱
+Smtp_Mail=${{Smtp_Mail}}  #smtp邮箱+端口号，例:smtp.qq.com:465
+Stmp_Username=${{Smtp_Username}}  #接收告警通知人的邮箱地址，例：xxxxxxxx@qq.com
+Stmp_Password=${{Stmp_Password}}  #邮箱授权码
+
+yum install zip expect -y
+
+#检查文件目录是否存在
+if [ ! -f ${LogFile} ];then
+    touch ${LogFile}
+fi
+
+if [ ! -d ${install_dir}/Consul_Host ];then
+    mkdir -p ${install_dir}/Consul_Host
+else
+    echo &quot;目录已存在&quot; &gt;&gt; ${LogFile}
+fi
+
+#安装前初始化，检查防火墙、selinux
+function InitInstall()
+{
+echo &quot;===================开始安装前初始化，检查防火墙、selinux===================&quot; &gt;&gt; ${LogFile} 
+#Disable SeLinux
+if [ -s /etc/selinux/config ]; then
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+fi
+setenforce 0
+
+echo &quot;Selinux已关闭&quot; &gt;&gt;  ${LogFile}
+
+#关闭防火墙
+systemctl status firewalld &gt; /dev/null
+if [ $? -eq 0 ];then
+    systemctl stop firewalld &gt; /dev/null 2&gt;&amp;1
+    echo -e &quot;firewalld关闭成功！&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;未开启防火墙无需添加规则！&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+#安装ntpd
+function Install_Ntpd()
+{
+if [ -f /usr/sbin/ntpdate ];then
+    echo &quot;the ntp-service is installed&quot; &gt;&gt; ${LogFile}
+else
+    yum install -y ntp  &amp;&amp; mv /etc/ntp.conf /etc/ntp.conf.bak
+    cat &gt; /etc/ntp.conf &lt;&lt;EOF
+driftfile /var/lib/ntp/drift
+restrict default kod nomodify notrap nopeer noquery
+restrict -6 default kod nomodify notrap nopeer noquery
+restrict 127.0.0.1
+restrict -6 ::1
+#server 0.centos.pool.ntp.org iburst
+#server 1.centos.pool.ntp.org iburst
+#server 2.centos.pool.ntp.org iburst
+#server 3.centos.pool.ntp.org iburst
+#定义使用的上游 ntp服务器，将原来的注释
+server ntp1.aliyun.com
+server time1.aliyun.com
+#允许上层时间服务器主动修改本机时间
+restrict time1.aliyun.com nomodify notrap noquery
+restrict ntp1.aliyun.com nomodify notrap noquery
+
+includefile /etc/ntp/crypto/pw
+keys /etc/ntp/keys
+EOF
+    
+	#启动ntpd服务
+    systemctl start ntpd
+    if [ $? -eq 0 ];then
+        echo &quot;ntpd启动成功&quot; &gt;&gt; ${LogFile}
+    else
+        echo &quot;ntpd启动失败&quot; &gt;&gt; ${LogFile}
+    fi
+fi
+}
+
+#下载工具安装包
+function Download()
+{
+echo &quot;======================开始下载工具安装包=========================&quot; &gt;&gt;  ${LogFile} 
+cd ${install_dir}
+if [ ! -f ${{software}} ];then
+    wget ${{software}}
+	if [ $? -eq 0 ];then
+        echo -e &quot;工具包下载成功&quot; &gt;&gt; ${LogFile}
+    else
+        echo &quot;工具包下载失败&quot; &gt;&gt; ${LogFile}
+	    exit 2
+    fi
+    unzip ${{software__filename}}
+else
+    echo &quot;software文件已存在，无需下载&quot; &gt;&gt; ${LogFile}
+fi
+
+cd ${tool_dir}
+unzip rules.zip
+unzip grafana_file.zip
+}
+
+#解压并启动prometheus
+function Install_Prometheus()
+{
+echo &quot;========================开始解压并启动prometheus...===================&quot; &gt;&gt; ${LogFile}
+cd ${tool_dir}
+tar -zxvf prometheus-2.30.3.linux-amd64.tar.gz -C ${file_dir}
+ln -sv ${file_dir}/prometheus-2.30.3.linux-amd64 ${file_dir}/prometheus
+cat &gt; /etc/systemd/system/prometheus.service &lt;&lt;EOF
+[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+# 启动脚本
+ExecStart=${file_dir}/prometheus/prometheus \
+    --config.file ${file_dir}/prometheus/prometheus.yml \
+    --storage.tsdb.path ${data_dir}/prometheus/ \
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+chmod a+x /etc/systemd/system/prometheus.service
+systemctl daemon-reload &amp;&amp; systemctl start prometheus.service &amp;&amp; systemctl enable prometheus.service
+if [ $? -eq 0 ];then
+    echo -e &quot;prometheus启动成功...&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;prometheus启动失败&quot; &gt;&gt; ${LogFile}
+	exit
+fi
+}
+
+
+#安装consul
+function Install_Consul()
+{
+echo &quot;======================开始安装consul=====================&quot; &gt;&gt; ${LogFile}
+if [ ! -d ${data_dir}/consul ];then
+    mkdir -pv /etc/consul.d  &amp;&amp; mkdir -pv ${data_dir}/consul/shell
+else
+    echo &quot;consul目录已存在&quot; &gt;&gt; ${Logfile}
+fi
+
+cd ${tool_dir}
+unzip consul_1.10.3_linux_amd64.zip &amp;&amp; mv consul /usr/bin/
+
+
+#配置启动脚本
+cat &gt; /etc/consul.d/service.json &lt;&lt;EOF
+{
+&quot;server&quot;: true,
+&quot;ui&quot;:true,
+&quot;datacenter&quot;: &quot;consul&quot;,
+&quot;data_dir&quot;: &quot;${data_dir}/consul&quot;,
+&quot;node_name&quot;: &quot;consul-node&quot;,
+&quot;bootstrap_expect&quot;:1,
+&quot;client_addr&quot;: &quot;0.0.0.0&quot;,
+&quot;bind_addr&quot;: &quot;${IP}&quot;
+}
+EOF
+
+cat &gt; /etc/systemd/system/consul.service&lt;&lt;EOF
+[Unit]
+Description=consul-service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/consul agent -config-dir /etc/consul.d
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+#启动consul服务
+systemctl daemon-reload  &amp;&amp; systemctl enable consul  &amp;&amp; systemctl start consul
+sleep 10
+netstat -anp | grep consul
+if [ $? -eq 0 ];then
+    echo &quot;consul已启动&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;consul未启动&quot; &gt;&gt; ${LogFile}
+fi
+
+#将consul添加到prometheus.yml
+cat &gt;&gt; ${file_dir}/prometheus/prometheus.yml &lt;&lt;EOF
+  # consul
+  - job_name: &quot;consul-prometheus&quot;
+    consul_sd_configs:
+      - server: ${IP}:8500
+    relabel_configs:
+    - source_labels: [__meta_consul_service]
+      action: drop
+      regex: consul
+EOF
+
+#重启prometheus
+systemctl restart prometheus
+sleep 10
+}
+
+
+function Install_Alter()
+{
+echo &quot;============================开始安装Alertmanager=====================&quot; &gt;&gt; ${LogFile}
+#解压文件
+tar -zxvf ${tool_dir}/alertmanager-0.23.0.linux-amd64.tar.gz -C ${file_dir}/
+ln -sv  ${file_dir}/alertmanager-0.23.0.linux-amd64  ${file_dir}/alertmanager
+
+#修改alertmanager配置文件
+cd ${file_dir}/alertmanager
+mv alertmanager.yml alertmanager.yml.bak
+cat &gt; alertmanager-email.yml &lt;&lt;EOF
+global:
+  resolve_timeout: 10s
+  smtp_smarthost: &quot;${Smtp_Mail}&quot;
+  smtp_from: &quot;${Stmp_Username}&quot;
+  smtp_auth_username: &quot;${Stmp_Username}&quot;
+  smtp_auth_password: &quot;${Stmp_Password}&quot;
+  smtp_require_tls: false
+
+route:
+  group_by: ['altername']
+  group_wait: 10s
+  group_interval: 20m
+  repeat_interval: 1h
+  receiver: 'email'
+
+receivers:
+- name: 'email'
+  email_configs:
+    - to: &quot;${Stmp_Username}&quot;
+
+templates:
+  - &quot;/usr/local/alertmanager/template/email.tmpl&quot;
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
+EOF
+
+
+#检查alertmanager配置文件
+cd ${file_dir}/alertmanager
+./amtool check-config alertmanager-email.yml  &gt;&gt; ${LogFile}
+if [ $? -eq 0 ];then
+    echo &quot;Checking 'alertmanager-email.yml'  SUCCESS&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;Checking 'alertmanager-email.yml'  FAILED&quot; &gt;&gt; ${LogFile}
+fi
+
+#添加告警模板
+mkdir -p ${file_dir}/alertmanager/template
+cp ${tool_dir}/rules/email.tmpl  ${file_dir}/alertmanager/template/
+
+# 加入开机启动
+cat &gt; /etc/systemd/system/alertmanager.service &lt;&lt;EOF
+[Unit]
+Description=alertmanager
+After=local-fs.target network-online.target network.target
+Wants=local-fs.target network-online.target network.target
+ 
+[Service]
+ExecStart=${file_dir}/alertmanager/alertmanager --config.file=${file_dir}/alertmanager/alertmanager-email.yml
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+#启动服务
+systemctl daemon-reload  &amp;&amp; systemctl enable alertmanager  &amp;&amp; systemctl start alertmanager
+netstat -nap|grep alertmanager
+if [ $? -eq 0 ];then
+    echo &quot;alertmanager服务已启动&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;alertmanager服务启动失败&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+function Config_Alert()
+{
+#Prometheus配置
+#进入prometheus安装目录，编辑prometheus.yml,开启alertmanager监控
+sed -i &quot;s/# - alertmanager:9093/  - ${IP}:9093/g&quot;  ${file_dir}/prometheus/prometheus.yml 
+
+#开启告警配置
+sed -i '15a\    - &quot;rules/*.yml&quot;' ${file_dir}/prometheus/prometheus.yml
+
+#监控Alertmanager
+cat &gt;&gt; ${file_dir}/prometheus/prometheus.yml &lt;&lt; EOF
+
+  # alertmanager
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: [&quot;localhost:9093&quot;]
+EOF
+
+#检查并重新加载配置文件
+cd ${file_dir}/prometheus
+./promtool check config prometheus.yml  &gt;&gt; ${LogFile}
+if [ $? -eq 0 ];then
+    echo &quot;Checking prometheus.yml  SUCCESS&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;Checking prometheus.yml FAILED&quot; &gt;&gt; ${LogFile}
+fi
+
+#创建告警目录&amp;添加报警规则
+#在prometheus.yml的同级目录下，创建rules目录，在该rules目录下创建node_alerts.yml文件，内容如下：
+mkdir -p  ${file_dir}/prometheus/rules
+cp ${tool_dir}/rules/*.yml ${file_dir}/prometheus/rules/
+
+#重启Prometheus
+systemctl restart prometheus
+systemctl restart alertmanager
+
+netstat -nap|grep alertmanager
+if [ $? -eq 0 ];then
+    echo &quot;alertmanager服务已重启完成&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;alertmanager服务重启失败&quot; &gt;&gt; ${LogFile}
+fi
+
+netstat -nap|grep prometheus
+if [ $? -eq 0 ];then
+    echo &quot;prometheus服务重启完成&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;prometheus服务重启失败&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+
+#安装grafana
+function Install_Grafana()
+{
+echo &quot;============================开始安装Grafana====================&quot; &gt;&gt; ${LogFile}
+cd ${tool_dir}
+tar -zxvf grafana-enterprise-8.2.1.linux-amd64.tar.gz -C ${file_dir}
+ln -sv ${file_dir}/grafana-8.2.1 ${file_dir}/grafana
+
+#启动grafana
+cat &gt; /etc/systemd/system/grafana.service &lt;&lt;EOF
+[Unit]
+Description=Grafana Server
+After=network.target
+ 
+[Service]
+Type=simple
+User=root
+WorkingDirectory=${file_dir}/grafana
+ExecStart=${file_dir}/grafana/bin/grafana-server
+ 
+Restart=on-failure
+LimitNOFILE=65536
+ 
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload &amp;&amp; systemctl start grafana.service &amp;&amp; systemctl enable grafana.service
+sleep 10
+netstat -anp | grep grafana
+if [ $? -eq 0 ];then
+    echo &quot;Grafana已启动&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;Grafana未启动&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+function Config_Grafana()
+{
+echo &quot;=========================开始配置Grafana数据源和dashboard=================&quot; &gt;&gt; ${LogFile}
+#grafana添加数据源
+cat &gt; ${file_dir}/grafana/conf/provisioning/datasources/prometheus.yaml &lt;&lt;EOF
+# config file version
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    orgId: 1
+    url: http://localhost:9090
+    editable: true
+EOF
+
+#grafana添加仪表盘
+cd ${file_dir}/grafana/conf/provisioning/dashboards
+cat &gt; prometheus.yaml &lt;&lt;EOF
+apiVersion: 1
+providers:
+ - name: 'default'
+   orgId: 1
+   folder: ''
+   type: file
+   updateIntervalSeconds: 10
+   options:
+     path: ${file_dir}/grafana/conf/provisioning/exporter_dashboard
+EOF
+
+#导入dashboard
+mkdir -p ${file_dir}/grafana/conf/provisioning/exporter_dashboard
+cp ${tool_dir}/grafana_file/*.json ${file_dir}/grafana/conf/provisioning/exporter_dashboard/
+
+#重启grafana
+systemctl restart grafana
+if [ $? -eq 0 ];then
+    echo &quot;grafana重启成功&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;grafana重启失败&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+
+InitInstall
+Install_Ntpd
+Download
+Install_Prometheus
+Install_Consul
+Install_Alter
+Config_Alert
+Install_Grafana
+Config_Grafana
+</code></pre>
+<p>##5.2 Exporter 一键部署脚本</p>
+<pre><code>#!/bin/bash
+install_dir=${{Install_Dir}}      #安装包下载目录  /opt
+tool_dir=${install_dir}/exporter      #exporter工具目录 /opt/exporter
+file_dir=${{File_Dir}}            #解压文件目录  /usr/local
+LogFile=${{logfile}}              #日志文件  /opt/install-tool.log
+Install_exportername=${{Install_exportername}}  #需要安装的exporter,包括node\Mysql\Cadvisor
+mysqlrootpwd=${{Mysqlrootpwd}}    #mysql root用户登录密码
+
+
+host=`hostname`
+Consul_IP=${{Consul_IP}}
+Local_IP=`ip addr |awk '/inet /' |sed -n '2p' |awk -F' ' '{print $2}' |awk -F'/' '{print $1}'`
+yum update &amp;&amp; yum zip -y 
+
+cd ${install_dir}
+if [ ! -f ${{exporter}} ];then
+    wget ${{exporter}}
+    unzip ${{exporter__filename}}
+else
+    echo &quot;${{exporter}}已存在，无需下载&quot; &gt;&gt; ${LogFile}
+fi
+
+#安装前初始化，检查防火墙、selinux
+function InitInstall()
+{
+echo &quot;===================开始安装前初始化，检查防火墙、selinux===================&quot; &gt;&gt; ${LogFile}
+#Disable SeLinux
+if [ -s /etc/selinux/config ]; then
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+fi
+setenforce 0
+
+echo &quot;Selinux已关闭&quot; &gt;&gt;  ${LogFile}
+
+#关闭防火墙
+systemctl status firewalld &gt; /dev/null
+if [ $? -eq 0 ];then
+    systemctl stop firewalld &gt; /dev/null 2&gt;&amp;1
+    echo -e &quot;firewalld关闭成功！&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;未开启防火墙无需添加规则！&quot; &gt;&gt; ${LogFile}
+fi
+}
+
+
+#安装ntpd
+function Install_Ntpd()
+{
+if [ -f /usr/sbin/ntpdate ];then
+    echo &quot;the ntp-service is installed&quot; &gt;&gt; ${LogFile}
+else
+    yum install -y ntp  &amp;&amp; mv /etc/ntp.conf /etc/ntp.conf.bak
+    cat &gt; /etc/ntp.conf &lt;&lt;EOF
+driftfile /var/lib/ntp/drift
+restrict default kod nomodify notrap nopeer noquery
+restrict -6 default kod nomodify notrap nopeer noquery
+restrict 127.0.0.1
+restrict -6 ::1
+#server 0.centos.pool.ntp.org iburst
+#server 1.centos.pool.ntp.org iburst
+#server 2.centos.pool.ntp.org iburst
+#server 3.centos.pool.ntp.org iburst
+#定义使用的上游 ntp服务器，将原来的注释
+server ntp1.aliyun.com
+server time1.aliyun.com
+#允许上层时间服务器主动修改本机时间
+restrict time1.aliyun.com nomodify notrap noquery
+restrict ntp1.aliyun.com nomodify notrap noquery
+
+includefile /etc/ntp/crypto/pw
+keys /etc/ntp/keys
+EOF
+    
+	#启动ntpd服务
+    systemctl start ntpd
+    if [ $? -eq 0 ];then
+        echo &quot;ntpd启动成功&quot; &gt;&gt; ${LogFile}
+    else
+        echo &quot;ntpd启动失败&quot; &gt;&gt; ${LogFile}
+    fi
+fi
+}
+
+
+
+function Node_exporter()
+{
+echo &quot;============================开始部署Node_exporter======================&quot; &gt;&gt; ${LogFile}
+tar -zxvf  ${tool_dir}/node_exporter-1.2.2.linux-amd64.tar.gz -C ${file_dir}
+ln -sv ${file_dir}/node_exporter-1.2.2.linux-amd64 ${file_dir}/node_exporter
+
+cat &gt; /etc/systemd/system/node_exporter.service &lt;&lt;EOF
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=${file_dir}/node_exporter/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+chmod a+x /etc/systemd/system/node_exporter.service
+systemctl daemon-reload &amp;&amp; systemctl start node_exporter &amp;&amp; systemctl enable node_exporter
+if [ $? -eq 0 ];then
+    echo -e &quot;node_exporter启动成功...&quot;  &gt;&gt; ${LogFile}
+else
+    echo &quot;node_exporter启动失败&quot;  &gt;&gt; ${LogFile}
+	exit
+fi
+
+#注册node_exporter到consul
+
+curl -X PUT -d '{&quot;id&quot;: &quot;'node_exporter-${host}'&quot;,&quot;name&quot;: &quot;'node-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:9100,&quot;tags&quot;: [&quot;node-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':9100/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
+}
+
+function Mysql_exporter()
+{
+echo &quot;============================开始部署Mysql_exporter=====================&quot; &gt;&gt; ${LogFile}
+#下载安装MySQL Exporter(监控机器下载)
+tar xvf ${tool_dir}/mysqld_exporter-0.13.0.linux-amd64.tar.gz -C ${file_dir}
+ln -sv ${file_dir}/mysqld_exporter-0.13.0.linux-amd64 ${file_dir}/mysqld_exporter
+
+
+#创建Prometheus exporter数据库用户
+#创建用户并分配权限
+cat &gt; /tmp/mysql_sec_script &lt;&lt; EOF
+use mysql;
+CREATE USER 'exporter'@'localhost' IDENTIFIED BY 'Fit2cloud!';
+UPDATE mysql.user SET max_user_connections = 5 WHERE user='exporter' AND host='localhost';
+GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
+FLUSH PRIVILEGES;
+exit
+EOF
+
+#创建连接mysql_exporter用户
+mysql -u root -p${mysqlrootpwd}  &lt; /tmp/mysql_sec_script 
+if [ $? -eq 0 ];then
+    echo &quot;创建exporter用户成功&quot; &gt;&gt; ${LogFile}
+else
+    echo &quot;创建exporter用户失败&quot; &gt;&gt; ${LogFile}
+fi
+
+#配置.my.cnf
+cat &gt; ${file_dir}/mysqld_exporter/.mysqld_exporter.cnf &lt;&lt;EOF
+[client]
+user=exporter
+password=Fit2cloud!
+EOF
+
+
+#创建systemd单元文件
+cat &gt; /etc/systemd/system/mysql_exporter.service &lt;&lt;EOF
+[Unit]
+Description=Prometheus MySQL Exporter
+After=network.target
+User=root
+Group=root
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=${file_dir}/mysqld_exporter/mysqld_exporter \
+--config.my-cnf ${file_dir}/mysqld_exporter/.mysqld_exporter.cnf \
+--collect.global_status \
+--collect.info_schema.innodb_metrics \
+--collect.auto_increment.columns \
+--collect.info_schema.processlist \
+--collect.binlog_size \
+--collect.info_schema.tablestats \
+--collect.global_variables \
+--collect.info_schema.query_response_time \
+--collect.info_schema.userstats \
+--collect.info_schema.tables \
+--collect.perf_schema.tablelocks \
+--collect.perf_schema.file_events \
+--collect.perf_schema.eventswaits \
+--collect.perf_schema.indexiowaits \
+--collect.perf_schema.tableiowaits \
+--collect.slave_status \
+--web.listen-address=0.0.0.0:9104
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+#启动mysql_exporter
+systemctl daemon-reload  &amp;&amp; systemctl enable mysql_exporter  &amp;&amp; systemctl start mysql_exporter
+sleep 10
+
+ss -ntlp |grep 9104
+if [ $? -eq 0 ];then
+    echo &quot;mysql_exporter已成功启动&quot; &gt;&gt; ${Log_File}
+else
+    echo &quot;mysql_exporter未启动成功&quot; &gt;&gt; ${Log_File}
+fi
+
+#注册mysqld_exporter到consul
+curl -X PUT -d '{&quot;id&quot;: &quot;'mysql-exporter-${host}'&quot;,&quot;name&quot;: &quot;'mysql-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:9104,&quot;tags&quot;: [&quot;mysql-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':9104/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
+}
+
+function Cadvisor_exporter()
+{
+echo &quot;==============================开始部署Cadvisor_exporter=====================&quot; &gt;&gt; ${LogFile}
+#监控docker容器
+docker images |grep cadvisors
+if [ ! $? -eq 0];then
+    docker load &lt; ${tool_dir}/cadvisor.tar
+	if [ $? -eq 0 ];then
+        echo &quot;Cadvisor镜像已导入&quot; &gt;&gt; ${LogFile}
+    else
+        echo &quot;Cadvisor镜像导入失败&quot; &gt;&gt; ${LogFile}
+    fi
+else
+    echo &quot;cadvisor镜像已存在&quot; &gt;&gt; ${LogFile}
+fi
+
+#启动Cadviso服务
+docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8090:8080 \
+  --detach=true \
+  --name=cadvisor \
+  google/cadvisor:latest
+  
+docker ps |grep cadvisor
+if [ $? -eq 0 ];then
+    echo &quot;cadvisor_exporter已成功启动&quot; &gt;&gt; ${Log_File}
+else
+    echo &quot;cadvisor_exporter未启动成功&quot; &gt;&gt; ${Log_File}
+	exit
+fi
+
+#注册cadvisor_exporter到consul
+curl -X PUT -d '{&quot;id&quot;: &quot;'docker-exporter-${host}'&quot;,&quot;name&quot;: &quot;'docker-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:8090,&quot;tags&quot;: [&quot;docker-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':8090/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
+}
+
+
+InitInstall
+Install_Ntpd
+Install_name=${Install_exportername}
+case ${Install_name} in
+	Node | node)
+	    Node_exporter
+		echo &quot;已部署Node_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+	Mysql | mysql)
+	    Mysql_exporter
+		echo &quot;已部署Mysql_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+	Cadvisor | cadvisor)
+		Cadvisor_exporter
+		echo &quot;已部署Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+    node/mysql | mysql/node)
+	    Node_exporter
+		Mysql_exporter
+		echo &quot;已部署Node_exporter、Mysql_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+	node/cadvisor | cadvisor/node)
+	    Node_exporter
+		Cadvisor_exporter
+		echo &quot;已部署Node_exporter、Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+	mysql/cadvisor | cadvisor/mysql)
+	    Mysql_exporter
+		Cadvisor_exporter
+	    echo &quot;已部署Mysql_exporter、Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
+		;;
+	node/mysql/cadvisor)
+	    Node_exporter
+		Mysql_exporter
+		Cadvisor_exporter
+		echo &quot;已部署安装Node_exporter、Mysql_exporter、Cadvisor_exporter到本机&quot; &gt;&gt; ${LogFile}
+		;;
+	*)
+		echo &quot;无效的指令&quot; &gt;&gt;  ${LogFile}
+esac
+</code></pre>
+<p>以上。</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/13oNyyBgZ/">
+            <span class="flex-auto">prometheus</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/">
+                <h3 class="post-title">
+                  Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
