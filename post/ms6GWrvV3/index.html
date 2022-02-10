@@ -1,0 +1,617 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#32-pod%E6%8E%A7%E5%88%B6%E5%99%A8">3.2 Pod控制器</a>
+<ul>
+<li><a href="#321-workload-%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD">3.2.1 Workload (工作负载)</a></li>
+<li><a href="#322-deployment">3.2.2 Deployment</a></li>
+<li><a href="#323-%E5%88%9B%E5%BB%BAdeployment">3.2.3 创建Deployment</a></li>
+<li><a href="#324-%E6%9F%A5%E7%9C%8Bdeployment">3.2.4 查看Deployment</a></li>
+<li><a href="#325-%E5%89%AF%E6%9C%AC%E4%BF%9D%E9%9A%9C%E6%9C%BA%E5%88%B6">3.2.5 副本保障机制</a></li>
+<li><a href="#326-pod%E9%A9%B1%E9%80%90%E7%AD%96%E7%95%A5">3.2.6 Pod驱逐策略</a></li>
+<li><a href="#327-%E6%9C%8D%E5%8A%A1%E6%9B%B4%E6%96%B0">3.2.7 服务更新</a></li>
+<li><a href="#328-%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5">3.2.8 更新策略</a></li>
+<li><a href="#329-%E6%9C%8D%E5%8A%A1%E5%9B%9E%E6%BB%9A">3.2.9 服务回滚</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s管理业务应用--Pod控制器</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-10 / 12 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/ms6GWrvV3.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="32-pod控制器">3.2 Pod控制器</h2>
+<h3 id="321-workload-工作负载">3.2.1 Workload (工作负载)</h3>
+<p>控制器又称工作负载。是用于实现管理pod的中间层，确保pod资源符合预期的状态，pod的资源出现故障时，会尝试进行重启，当根据重启策略无效，则会重新新建pod的资源。</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840632889.png" alt="" loading="lazy"></figure>
+<ul>
+<li>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态，并且支持滚动式自动扩容和缩容功能</li>
+<li>Deployment：工作在ReplicaSet之上，用于管理无状态应用，目前来说最好的控制器。支持滚动更新和回滚功能，提供声明式配置</li>
+<li>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务</li>
+<li>Job：只要完成就立即退出，不需要重启或重建 （一次性任务）</li>
+<li>Cronjob：周期性任务控制，不需要持续后台运行 （定时任务）</li>
+<li>StatefulSet：管理有状态应用</li>
+</ul>
+<h3 id="322-deployment">3.2.2 Deployment</h3>
+<p><code>myblog/deployment/deploy-mysql.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment  #资源类型
+metadata:
+  name: mysql
+  namespace: luffy
+spec:
+  replicas: 1	#指定Pod副本数
+  selector:		#指定Pod的选择器
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:	#给Pod打label
+        app: mysql
+    spec:
+      hostNetwork: true
+      volumes:  #定义数据卷
+      - name: mysql-data
+        hostPath: 
+          path: /opt/mysql/data
+      nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
+        component: mysql
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        args:
+        - --character-set-server=utf8mb4
+        - --collation-server=utf8mb4_unicode_ci
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_USER
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_PASSWD
+        - name: MYSQL_DATABASE
+          value: &quot;myblog&quot;
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 50m
+          limits:
+            memory: 500Mi
+            cpu: 100m
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+</code></pre>
+<p>deploy-myblog.yaml:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myblog
+  namespace: luffy
+spec:
+  replicas: 1	#指定Pod副本数
+  selector:		#指定Pod的选择器
+    matchLabels:
+      app: myblog
+  template:
+    metadata:
+      labels:	#给Pod打label
+        app: myblog
+    spec:
+      containers:
+      - name: myblog
+        image: 172.21.51.143:5000/myblog:v1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: myblog
+              key: MYSQL_HOST
+        - name: MYSQL_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: myblog
+              key: MYSQL_PORT
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_USER
+        - name: MYSQL_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: myblog
+              key: MYSQL_PASSWD
+        ports:
+        - containerPort: 8002
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 50m
+          limits:
+            memory: 500Mi
+            cpu: 100m
+        livenessProbe:
+          httpGet:
+            path: /blog/index/
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+          periodSeconds: 15 	# 执行探测的频率
+          timeoutSeconds: 2		# 探测超时时间
+        readinessProbe: 
+          httpGet: 
+            path: /blog/index/
+            port: 8002
+            scheme: HTTP
+          initialDelaySeconds: 10 
+          timeoutSeconds: 2
+          periodSeconds: 15
+</code></pre>
+<h3 id="323-创建deployment">3.2.3 创建Deployment</h3>
+<pre><code class="language-powershell">$ kubectl create -f deploy.yaml
+</code></pre>
+<h3 id="324-查看deployment">3.2.4 查看Deployment</h3>
+<pre><code class="language-powershell"># kubectl api-resources
+$ kubectl -n luffy get deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+myblog   1/1     1            1           2m22s
+mysql    1/1     1            1           2d11h
+
+  * `NAME` 列出了集群中 Deployments 的名称。
+  * `READY`显示当前正在运行的副本数/期望的副本数。
+  * `UP-TO-DATE`显示已更新以实现期望状态的副本数。
+  * `AVAILABLE`显示应用程序可供用户使用的副本数。
+  * `AGE` 显示应用程序运行的时间量。
+
+# 查看pod
+$ kubectl -n luffy get po
+NAME                      READY   STATUS    RESTARTS   AGE
+myblog-7c96c9f76b-qbbg7   1/1     Running   0          109s
+mysql-85f4f65f99-w6jkj    1/1     Running   0          2m28s
+
+# 查看replicaSet
+$ kubectl -n luffy get rs
+</code></pre>
+<h3 id="325-副本保障机制">3.2.5 副本保障机制</h3>
+<p>controller实时检测pod状态，并保障副本数一直处于期望的值。</p>
+<pre><code class="language-powershell">## 删除pod，观察pod状态变化
+$ kubectl -n luffy delete pod myblog-7c96c9f76b-qbbg7
+
+# 观察pod
+$ kubectl get pods -o wide
+
+## 设置两个副本, 或者通过kubectl -n luffy edit deploy myblog的方式，
+## 最好通过修改文件，然后apply的方式，这样yaml文件可以保持同步
+$ kubectl -n luffy scale deploy myblog --replicas=2
+deployment.extensions/myblog scaled
+
+# 观察pod
+$ kubectl get pods -o wide
+NAME                      READY   STATUS    RESTARTS   AGE
+myblog-7c96c9f76b-qbbg7   1/1     Running   0          11m
+myblog-7c96c9f76b-s6brm   1/1     Running   0          55s
+mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
+</code></pre>
+<h3 id="326-pod驱逐策略">3.2.6 Pod驱逐策略</h3>
+<p>K8S 有个特色功能叫 pod eviction，它在某些场景下，如节点NotReady，或者资源不足时，把 pod 驱逐至其它节点，这也是出于业务保护的角度去考虑的。</p>
+<ol>
+<li>
+<p>Kube-controller-manager: 周期性检查所有节点状态，当节点处于 NotReady 状态超过一段时间后，驱逐该节点上所有 pod。</p>
+<ul>
+<li>
+<p><code>pod-eviction-timeout</code>：Pod驱逐时间，NotReady 状态节点超过该时间后，执行驱逐，默认 5 min，适用于k8s 1.13版本之前</p>
+</li>
+<li>
+<p>1.13版本后，集群开启<code>TaintBasedEvictions与TaintNodesByCondition</code> 功能，即<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">taint-based-evictions</a>，即节点若失联或者出现各种异常情况，k8s会自动为node打上污点，同时为pod默认添加如下容忍设置：</p>
+<pre><code class="language-yaml">  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+</code></pre>
+<p>即  <strong>各pod可以独立设置驱逐容忍时间策略</strong>。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Kubelet: 周期性检查本节点资源，当资源不足时，按照优先级驱逐部分 pod</p>
+<ul>
+<li><code>memory.available</code>：节点可用内存</li>
+<li><code>nodefs.available</code>：节点根盘可用存储空间</li>
+<li><code>nodefs.inodesFree</code>：节点inodes可用数量</li>
+<li><code>imagefs.available</code>：镜像存储盘的可用空间</li>
+<li><code>imagefs.inodesFree</code>：镜像存储盘的inodes可用数量</li>
+</ul>
+</li>
+</ol>
+<h3 id="327-服务更新">3.2.7 服务更新</h3>
+<p>修改服务，重新打tag模拟服务更新。</p>
+<p>更新方式：</p>
+<ol>
+<li>
+<p>修改yaml文件，使用<code>kubectl -n luffy apply -f deploy-myblog.yaml</code>来应用更新</p>
+</li>
+<li>
+<p><code>kubectl -n luffy edit deploy myblog</code>在线更新</p>
+</li>
+<li>
+<p><code>kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record</code></p>
+<p>#设置镜像版本为172.21.51.143:5000/myblog:v2</p>
+<p>#--record：记录本次设置</p>
+</li>
+</ol>
+<p>修改文件测试：</p>
+<pre><code class="language-powershell">#修改配置文件
+$ vi /opt/myblog/python-demo/blog/templates/index.html
+我的博客列表：V2
+
+#重新构建Dockerfile
+cd /opt/myblog/python-demo
+$ docker build . -t 172.21.51.143:5000/myblog:v2 -f Dockerfile
+$ docker push 172.21.51.143:5000/myblog:v2
+</code></pre>
+<p>滚动更新过程详解：</p>
+<pre><code class="language-shell">$ kubectl -n luffy edit deploy myblog   #将V1版本升级到V2版本
+
+#可以通过get观察	pod副本状态
+$ kubectl -n luffy get pod -owide  #当前set副本数为2
+
+先启动一个新的，当新启动的pod状态为running，但是健康检查没有过为0/1时，旧的pod状态为running，并未删除
+当新启动的pod REDAY变为1/1时，旧的pod才开始删除.
+</code></pre>
+<h3 id="328-更新策略">3.2.8 更新策略</h3>
+<pre><code class="language-yaml">...
+spec:
+  replicas: 2	#指定Pod副本数
+  selector:		#指定Pod的选择器
+    matchLabels:
+      app: myblog
+  strategy:  #默认更新策略
+    rollingUpdate:   #指定滚动更新策略，控制影响升级行为
+      maxSurge: 25%   #更新过程中，最多允许3个Pod出现
+      maxUnavailable: 25%  #最少保证2-0=2个Pod为可用状态
+    type: RollingUpdate		#指定更新方式为滚动更新，默认策略，通过get deploy yaml查看
+   ...
+
+# 策略是控制Pod的，所以更新策略说明应该在deployment.yaml配置中
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840679905.png" alt="" loading="lazy"></figure>
+<p>策略控制：</p>
+<ul>
+<li>maxSurge：最大激增数, 指更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比,默认为desired Pods数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas + maxSurge个pod</li>
+<li>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods数的25%。计算时向下取整(比如3.6，取3)</li>
+</ul>
+<p><em>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge</em>。2&lt;= pod number&lt;=3</p>
+<p>以myblog为例，使用默认的策略，更新过程:</p>
+<ol>
+<li>maxSurge 25%，2个实例，向上取整，则maxSurge为1，意味着最多可以有2+1=3个Pod，那么此时会新创建1个ReplicaSet，RS-new，把副本数置为1，此时呢，副本控制器就去创建这个新的Pod</li>
+<li>同时，maxUnavailable是25%，副本数2*25%，向下取整，则为0，意味着，滚动更新的过程中，不能有少于2个可用的Pod，因此，旧的Replica（RS-old）会先保持不动，等RS-new管理的Pod状态Ready后，此时已经有3个Ready状态的Pod了，那么由于只要保证有2个可用的Pod即可，因此，RS-old的副本数会有2个变成1个，此时，会删掉一个旧的Pod</li>
+<li>删掉旧的Pod的时候，由于总的Pod数量又变成2个了，因此，距离最大的3个还有1个Pod可以创建，所以，RS-new把管理的副本数由1改成2，此时又会创建1个新的Pod，等RS-new管理了2个Pod都ready后，那么就可以把RS-old的副本数由1置为0了，这样就完成了滚动更新</li>
+</ol>
+<pre><code class="language-powershell">#查看滚动更新事件
+$ kubectl -n luffy describe deploy myblog
+...
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled up replica set myblog-6cf56fc848 to 1
+  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled down replica set myblog-6fdcf98f9 to 1
+  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled up replica set myblog-6cf56fc848 to 2
+  Normal  ScalingReplicaSet  6s    deployment-controller  Scaled down replica set myblog-6fdcf98f9 to 0
+  
+$ kubectl get rs
+NAME                     DESIRED   CURRENT   READY   AGE
+myblog-6cf56fc848   2         2         2       16h
+myblog-6fdcf98f9    0         0         0       16h
+</code></pre>
+<p>除了滚动更新以外，还有一种策略是Recreate，直接在当前的pod基础上先删后建：</p>
+<pre><code class="language-powershell">...
+  strategy:
+    type: Recreate
+...
+</code></pre>
+<p>我们课程中的mysql服务应该使用Recreate来管理：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy edit deploy mysql
+...
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql
+...
+</code></pre>
+<h3 id="329-服务回滚">3.2.9 服务回滚</h3>
+<p>通过滚动升级的策略可以平滑的升级Deployment，若升级出现问题，需要最快且最好的方式回退到上一次能够提供正常工作的版本。为此K8S提供了回滚机制。</p>
+<p><strong>revision</strong>：更新应用时，K8S都会记录当前的版本号，即为revision，当升级出现问题时，可通过回滚到某个特定的revision，默认配置下，K8S只会保留最近的几个revision，可以通过Deployment配置文件中的spec.revisionHistoryLimit属性增加revision数量，默认是10。</p>
+<p>查看当前：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy rollout history deploy myblog ##CHANGE-CAUSE为空
+$ kubectl delete -f deploy-myblog.yaml    ## 方便演示到具体效果，删掉已有deployment
+</code></pre>
+<p>记录回滚：</p>
+<pre><code class="language-powershell">$ kubectl apply -f deploy-myblog.yaml --record
+
+$ kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record=true
+</code></pre>
+<p>查看deployment更新历史：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy rollout history deploy myblog
+deployment.extensions/myblog
+REVISION  CHANGE-CAUSE
+1         kubectl create --filename=deploy-myblog.yaml --record=true
+2         kubectl set image deploy myblog myblog=172.21.51.143:5000/demo/myblog:v1 --record=true
+</code></pre>
+<p>回滚到具体的REVISION:</p>
+<pre><code class="language-powershell">$ kubectl -n luffy rollout undo deploy myblog --to-revision=1
+
+deployment.extensions/myblog rolled back
+
+# 访问应用测试
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Kubernetes服务访问之Service
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/">
+                <h3 class="post-title">
+                  k8s管理业务应用 --Pod常用设置
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

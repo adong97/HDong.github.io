@@ -1,0 +1,1417 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%89-%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8k8s%E7%AE%A1%E7%90%86%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8">三、实践--使用k8s管理业务应用</a>
+<ul>
+<li><a href="#31-%E6%9C%80%E5%B0%8F%E8%B0%83%E5%BA%A6%E5%8D%95%E5%85%83-pod">3.1 最小调度单元 Pod</a>
+<ul>
+<li><a href="#311-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%95%E5%85%A5pod">3.1.1 为什么引入Pod</a></li>
+<li><a href="#312-%E4%BD%BF%E7%94%A8yaml%E6%A0%BC%E5%BC%8F%E5%AE%9A%E4%B9%89pod">3.1.2 使用yaml格式定义Pod</a></li>
+<li><a href="#313-%E5%88%9B%E5%BB%BA%E5%92%8C%E8%AE%BF%E9%97%AEpod">3.1.3 创建和访问Pod</a></li>
+<li><a href="#314-infra%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.1.4 Infra容器(基础设施容器)</a></li>
+<li><a href="#315-%E6%9F%A5%E7%9C%8Bpod%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">3.1.5 查看pod详细信息</a></li>
+<li><a href="#316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</a></li>
+<li><a href="#317-%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1%E7%89%88%E6%9C%AC">3.1.7 更新服务版本</a></li>
+<li><a href="#318-%E5%88%A0%E9%99%A4pod%E6%9C%8D%E5%8A%A1">3.1.8 删除Pod服务</a></li>
+<li><a href="#319-pod%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96">3.1.9 Pod数据持久化</a></li>
+<li><a href="#3110-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.1.10 服务健康检查</a></li>
+<li><a href="#3111-%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.1.11 重启策略</a></li>
+<li><a href="#3112-%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96%E7%AD%96%E7%95%A5">3.1.12 镜像拉取策略</a></li>
+<li><a href="#3113-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.1.13 Pod资源限制</a></li>
+<li><a href="#3114-yaml%E4%BC%98%E5%8C%96">3.1.14 yaml优化</a></li>
+<li><a href="#3115-configmap%E5%92%8Csecret">3.1.15 Configmap和Secret</a></li>
+<li><a href="#3116-%E5%A6%82%E4%BD%95%E7%BC%96%E5%86%99%E8%B5%84%E6%BA%90yaml">3.1.16 如何编写资源yaml</a></li>
+<li><a href="#3117-pod%E7%8A%B6%E6%80%81%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.1.17 pod状态与生命周期</a></li>
+<li><a href="#3118-%E5%B0%8F%E7%BB%93">3.1.18 小结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用 --Pod常用设置</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-10 / 30 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/tEQZvcXTx.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="三-实践-使用k8s管理业务应用">三、实践--使用k8s管理业务应用</h1>
+<h2 id="31-最小调度单元-pod">3.1 最小调度单元 Pod</h2>
+<p>docker调度的是容器，在k8s集群中，最小的调度单元是Pod（豆荚）</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840469887.png" alt="" loading="lazy"></figure>
+<h3 id="311-为什么引入pod">3.1.1 为什么引入Pod</h3>
+<ul>
+<li>
+<p>与容器引擎解耦</p>
+<p>Docker、Rkt等容器 平台设计与引擎的具体的实现解耦</p>
+</li>
+<li>
+<p>多容器共享网络|存储|进程 空间, 支持的业务场景更加灵活</p>
+</li>
+</ul>
+<h3 id="312-使用yaml格式定义pod">3.1.2 使用yaml格式定义Pod</h3>
+<p><em>myblog/one-pod/pod.yaml</em></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:   #元数据属性
+  name: myblog   #Pod名称
+  namespace: luffy  #指定命名空间	
+  labels:   #标签
+    component: myblog
+spec:
+  containers:  #定义容器属性
+  - name: myblog  #容器名称  一个&quot;-&quot;表示一个数组
+    image: 172.21.51.143:5000/myblog:v1
+    env: #变量
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;127.0.0.1&quot;
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+  - name: mysql  #第二个容器名称
+    image: mysql:5.7
+    args:  #传递参数
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    ports:
+    - containerPort: 3306
+    env:   #环境变量
+    - name: MYSQL_ROOT_PASSWORD
+      value: &quot;123456&quot;
+    - name: MYSQL_DATABASE
+      value: &quot;myblog&quot;
+
+</code></pre>
+<p>json格式定义pod</p>
+<pre><code class="language-json">{
+    &quot;apiVersion&quot;: &quot;v1&quot;,
+    &quot;kind&quot;: &quot;Pod&quot;,
+    &quot;metadata&quot;: {
+        &quot;name&quot;: &quot;myblog&quot;,
+        &quot;namespace&quot;: &quot;luffy&quot;,
+        &quot;labels&quot;: {
+            &quot;component&quot;: &quot;myblog&quot;
+        }
+    },
+    &quot;spec&quot;: {
+        &quot;containers&quot;: [
+            {
+                &quot;name&quot;: &quot;myblog&quot;,
+                &quot;image&quot;: &quot;172.21.51.143:5000/myblog:v1&quot;,
+                &quot;env&quot;: [
+                    {
+                        &quot;name&quot;: &quot;MYSQL_HOST&quot;,
+                        &quot;value&quot;: &quot;127.0.0.1&quot;
+                    }
+                ]
+            },
+            {
+                ...
+            }
+        ]
+    }
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">apiVersion</th>
+<th style="text-align:left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">alpha</td>
+<td style="text-align:left">进入K8s功能的早期候选版本，可能包含Bug，最终不一定进入K8s</td>
+</tr>
+<tr>
+<td style="text-align:left">beta</td>
+<td style="text-align:left">已经过测试的版本，最终会进入K8s，但功能、对象定义可能会发生变更。</td>
+</tr>
+<tr>
+<td style="text-align:left">stable</td>
+<td style="text-align:left">可安全使用的稳定版本</td>
+</tr>
+<tr>
+<td style="text-align:left">v1</td>
+<td style="text-align:left">stable 版本之后的首个版本，包含了更多的核心对象</td>
+</tr>
+<tr>
+<td style="text-align:left">apps/v1</td>
+<td style="text-align:left">使用最广泛的版本，像Deployment、ReplicaSets都已进入该版本</td>
+</tr>
+</tbody>
+</table>
+<p><strong>资源类型与apiVersion对照表</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Kind</th>
+<th style="text-align:left">apiVersion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ClusterRoleBinding</td>
+<td style="text-align:left">rbac.authorization.k8s.io/v1</td>
+</tr>
+<tr>
+<td style="text-align:left">ClusterRole</td>
+<td style="text-align:left">rbac.authorization.k8s.io/v1</td>
+</tr>
+<tr>
+<td style="text-align:left">ConfigMap</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">CronJob</td>
+<td style="text-align:left">batch/v1beta1</td>
+</tr>
+<tr>
+<td style="text-align:left">DaemonSet</td>
+<td style="text-align:left">extensions/v1beta1</td>
+</tr>
+<tr>
+<td style="text-align:left">Node</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">Namespace</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">Secret</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">PersistentVolume</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">PersistentVolumeClaim</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">Pod</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">Deployment</td>
+<td style="text-align:left">v1、apps/v1、apps/v1beta1、apps/v1beta2</td>
+</tr>
+<tr>
+<td style="text-align:left">Service</td>
+<td style="text-align:left">v1</td>
+</tr>
+<tr>
+<td style="text-align:left">Ingress</td>
+<td style="text-align:left">extensions/v1beta1</td>
+</tr>
+<tr>
+<td style="text-align:left">ReplicaSet</td>
+<td style="text-align:left">apps/v1、apps/v1beta2</td>
+</tr>
+<tr>
+<td style="text-align:left">Job</td>
+<td style="text-align:left">batch/v1</td>
+</tr>
+<tr>
+<td style="text-align:left">StatefulSet</td>
+<td style="text-align:left">apps/v1、apps/v1beta1、apps/v1beta2</td>
+</tr>
+</tbody>
+</table>
+<p>快速获得资源和版本</p>
+<pre><code class="language-powershell">$ kubectl explain pod
+$ kubectl explain Pod.apiVersion
+</code></pre>
+<h3 id="313-创建和访问pod">3.1.3 创建和访问Pod</h3>
+<pre><code class="language-powershell">## 创建namespace, namespace是逻辑上的资源池
+$ kubectl create namespace luffy
+
+## 使用指定文件创建Pod
+$ kubectl create -f pod.yaml
+
+## 查看pod，可以简写po
+## 所有的操作都需要指定namespace，如果是在default命名空间下，则可以省略
+$ kubectl -n luffy get pods -o wide
+NAME     READY   STATUS    RESTARTS   AGE    IP             NODE
+myblog   2/2     Running   0          3m     10.244.1.146   k8s-slave1
+
+## 回顾流程
+
+## 使用Pod Ip访问服务,3306和8002
+$ curl 10.244.1.146:8002/blog/index/
+
+## 进入容器,执行初始化, 不必到对应的主机执行docker exec
+### -c 指定进入哪一个容器里
+
+$ kubectl -n luffy exec -ti myblog -c myblog bash
+/ # env
+/ # python3 manage.py migrate
+$ kubectl -n luffy exec -ti myblog -c mysql bash
+/ # mysql -p123456
+
+## 再次访问服务,3306和8002
+$ curl 10.244.1.146:8002/blog/index/
+</code></pre>
+<h3 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h3>
+<p>登录<code>k8s-slave1</code>节点</p>
+<pre><code class="language-powershell">$ docker ps -a |grep myblog  ## 发现有三个容器
+## 其中包含mysql和myblog程序以及Infra容器
+## 为了实现Pod内部的容器可以通过localhost通信，每个Pod都会启动Infra容器，然后Pod内部的其他容器的网络空间会共享该Infra容器的网络空间(Docker网络的container模式)，Infra容器只需要hang住网络空间，不需要额外的功能，因此资源消耗极低。
+
+## 登录master节点，查看pod内部的容器ip均相同，为pod ip
+$ kubectl -n luffy exec -ti myblog -c myblog bash
+/ # ifconfig
+
+$ kubectl -n luffy exec -ti myblog -c mysql bash
+/ # ifconfig
+</code></pre>
+<p>pod容器命名: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
+<h3 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h3>
+<pre><code class="language-powershell">## 查看pod调度节点及pod_ip
+$ kubectl -n luffy get pods -o wide
+
+## 查看完整的yaml
+$ kubectl -n luffy get po myblog -o yaml
+
+## 查看pod的明细信息及事件
+$ kubectl -n luffy describe pod myblog
+
+## 查看pod的labels标签
+$ kubectl -n luffy get pod --show-lables
+</code></pre>
+<h3 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h3>
+<pre><code class="language-powershell">#进入Pod内的容器
+$ kubectl -n &lt;namespace&gt; exec &lt;pod_name&gt; -c &lt;container_name&gt; -ti /bin/sh
+
+#查看Pod内容器日志,显示标准或者错误输出日志
+$ kubectl -n &lt;namespace&gt; logs -f --tail=100 &lt;pod_name&gt; -c &lt;container_name&gt;
+</code></pre>
+<h3 id="317-更新服务版本">3.1.7 更新服务版本</h3>
+<pre><code class="language-powershell">$ kubectl apply -f demo-pod.yaml
+</code></pre>
+<h3 id="318-删除pod服务">3.1.8 删除Pod服务</h3>
+<pre><code class="language-powershell">#根据文件删除
+$ kubectl delete -f demo-pod.yaml
+
+#根据pod_name删除
+$ kubectl -n &lt;namespace&gt; delete pod &lt;pod_name&gt;
+</code></pre>
+<h3 id="319-pod数据持久化">3.1.9 Pod数据持久化</h3>
+<p>若删除了Pod，由于mysql的数据都在容器内部，会造成数据丢失，因此需要数据进行持久化。</p>
+<ul>
+<li>
+<p>定点使用hostpath挂载，nodeSelector定点(node选择器通过标签选择挂载到哪个机器上)</p>
+<p><code>myblog/one-pod/pod-with-volume.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: myblog
+  namespace: luffy
+  labels:
+    component: myblog
+spec:
+  volumes:  #定义一个卷
+  - name: mysql-data #名称
+    hostPath:  #定义类型，hostPath:映射到宿主机上
+      path: /opt/mysql/data
+  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点，标签可以打在任何资源上
+    component: mysql #把Pod调度到带有component=mysql标签的节点上去
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    env:
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;127.0.0.1&quot;
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+  - name: mysql
+    image: mysql:5.7
+    args:
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: &quot;123456&quot;
+    - name: MYSQL_DATABASE
+      value: &quot;myblog&quot;
+    volumeMounts:  #挂载数据卷
+    - name: mysql-data  #与定义的数据卷名称必须保持一致
+      mountPath: /var/lib/mysql  #容器内部路径
+</code></pre>
+<p>保存文件为<code>pod-with-volume.yaml</code>，执行创建</p>
+<pre><code class="language-powershell">## 若存在旧的同名服务，先删除掉，后创建
+$ kubectl -n luffy delete pod myblog
+
+## 创建
+$ kubectl create -f pod-with-volume.yaml
+
+## 此时pod状态Pending
+$ kubectl -n luffy get po
+NAME     READY   STATUS    RESTARTS   AGE
+myblog   0/2     Pending   0          32s
+
+## 查看原因，提示调度失败，因为节点不满足node selector
+$ kubectl -n luffy describe po myblog
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  12s (x2 over 12s)  default-scheduler  0/3 nodes are available: 3 node(s) didn't match node selector.
+  
+## 为节点打标签
+$ kubectl label node k8s-slave1 component=mysql
+
+## 再次查看，已经运行成功
+$ kubectl -n luffy get po
+NAME     READY   STATUS    RESTARTS   AGE     IP             NODE
+myblog   2/2     Running   0          3m54s   10.244.1.150   k8s-slave1
+
+## 到k8s-slave1节点，查看/opt/mysql/data
+$ ll /opt/mysql/data/
+total 188484
+-rw-r----- 1 polkitd input       56 Mar 29 09:20 auto.cnf
+-rw------- 1 polkitd input     1676 Mar 29 09:20 ca-key.pem
+-rw-r--r-- 1 polkitd input     1112 Mar 29 09:20 ca.pem
+drwxr-x--- 2 polkitd input     8192 Mar 29 09:20 sys
+...
+
+## 执行migrate，创建数据库表，然后删掉pod，再次创建后验证数据是否存在
+$ kubectl -n luffy exec -ti myblog bash
+python3 manage.py migrate
+
+## 访问服务，正常
+$ curl 10.244.1.150:8002/blog/index/ 
+
+## 删除pod
+$ kubectl delete -f pod-with-volume.yaml
+
+## 再次创建Pod
+$ kubectl create -f pod-with-volume.yaml
+
+## 查看pod ip并访问服务
+$ kubectl -n luffy get po -o wide
+NAME     READY   STATUS    RESTARTS   AGE   IP             NODE  
+myblog   2/2     Running   0          7s    10.244.1.151   k8s-slave1
+
+## 未重新做migrate，服务正常
+$ curl 10.244.1.151:8002/blog/index/
+</code></pre>
+</li>
+<li>
+<p>使用PV+PVC连接分布式存储解决方案</p>
+<ul>
+<li>ceph</li>
+<li>glusterfs</li>
+<li>nfs</li>
+</ul>
+</li>
+</ul>
+<h3 id="3110-服务健康检查">3.1.10 服务健康检查</h3>
+<p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
+<p>两种机制：</p>
+<ul>
+<li>
+<p>LivenessProbe探针<br>
+存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包含LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。</p>
+<pre><code class="language-yaml">...
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    livenessProbe:
+      httpGet:
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+      periodSeconds: 10 	# 执行探测的频率
+      timeoutSeconds: 2		# 探测超时时间
+...
+</code></pre>
+</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840513305.webp" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>ReadinessProbe探针<br>
+可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。</p>
+<pre><code class="language-yaml">...
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    readinessProbe: 
+      httpGet: 
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10 
+      timeoutSeconds: 2
+      periodSeconds: 10
+...
+</code></pre>
+</li>
+</ul>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840524981.webp" alt="" loading="lazy"></figure>
+<p>三种探测类型：</p>
+<ul>
+<li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康</li>
+<li>httpGet方式：通过发送http请求检查服务是否正常，返回200-399状态码则表明容器健康</li>
+<li>tcpSocket：通过容器的IP和Port执行TCP检查，如果能够建立TCP连接，则表明容器健康</li>
+</ul>
+<p>示例：</p>
+<p>完整文件路径 <code>myblog/one-pod/pod-with-healthcheck.yaml</code></p>
+<pre><code class="language-yaml">  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    env:
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;127.0.0.1&quot;
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+    livenessProbe:   # 存活性探测
+      httpGet:   # 探测类型
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+      periodSeconds: 10 	# 执行探测的频率
+      timeoutSeconds: 2		# 探测超时时间
+    readinessProbe:   #可用性探测
+      httpGet:  # 探测类型
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10 
+      timeoutSeconds: 2
+      periodSeconds: 10
+</code></pre>
+<ul>
+<li>initialDelaySeconds：容器启动后第一次执行探测是需要等待多少秒。</li>
+<li>periodSeconds：执行探测的频率。默认是10秒，最小1秒。</li>
+<li>timeoutSeconds：探测超时时间。默认1秒，最小1秒。</li>
+<li>successThreshold：探测失败后，最少连续探测成功多少次才被认定为成功。默认是1。</li>
+<li>failureThreshold：探测成功后，最少连续探测失败多少次才被认定为失败。默认是3，最小值是1。</li>
+</ul>
+<p>K8S将在Pod开始<strong>启动10s(initialDelaySeconds)后</strong>利用HTTP访问8002端口的/blog/index/，如果<strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
+<h3 id="3111-重启策略">3.1.11 重启策略</h3>
+<p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。<br>
+Pod的重启策略包括Always、OnFailure和Never，默认值为Always。</p>
+<ul>
+<li>Always：当容器进程退出后，由kubelet自动重启该容器；</li>
+<li>OnFailure：当容器终止运行且退出码不为0时，由kubelet自动重启该容器；</li>
+<li>Never：不论容器运行状态如何，kubelet都不会重启该容器。</li>
+</ul>
+<p>演示重启策略：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: test-restart-policy  
+spec:
+  restartPolicy: Always   #定义重启策略
+  containers:
+  - name: busybox
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - sleep 10
+</code></pre>
+<ol>
+<li>使用默认的重启策略，即 restartPolicy: Always ，无论容器是否是正常退出，都会自动重启容器</li>
+<li>使用OnFailure的策略时
+<ul>
+<li>如果把exit 1，去掉，即让容器的进程正常退出的话，则不会重启</li>
+<li>只有非正常退出状态才会重启</li>
+</ul>
+</li>
+<li>使用Never时，退出了就不再重启</li>
+</ol>
+<p>可以看出，若容器正常退出，Pod的状态会是Completed，非正常退出，状态为CrashLoopBackOff</p>
+<h3 id="3112-镜像拉取策略">3.1.12 镜像拉取策略</h3>
+<pre><code class="language-yaml">spec:
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    imagePullPolicy: IfNotPresent  #镜像拉取策略
+</code></pre>
+<p>设置镜像的拉取策略，默认为IfNotPresent</p>
+<ul>
+<li>Always，总是拉取镜像，即使本地有镜像也从仓库拉取</li>
+<li>IfNotPresent ，本地有则使用本地镜像，本地没有则去仓库拉取</li>
+<li>Never，只使用本地镜像，本地没有则报错</li>
+</ul>
+<h3 id="3113-pod资源限制">3.1.13 Pod资源限制</h3>
+<p>为了保证充分利用集群资源，且确保重要容器在运行周期内能够分配到足够的资源稳定运行，因此平台需要具备</p>
+<p>Pod的资源限制的能力。 对于一个pod来说，资源最基础的2个的指标就是：CPU和内存。</p>
+<p>Kubernetes提供了个采用requests和limits 两种类型参数对资源进行预分配和使用限制。</p>
+<p>完整文件路径：<code>myblog/one-pod/pod-with-resourcelimits.yaml</code></p>
+<pre><code class="language-yaml">...
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1    #注意更改镜像地址
+    env:
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;127.0.0.1&quot;
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+    resources:  #Pod资源限制
+      requests:  #schedule调度的时候，寻找最少有这些资源的Node(作为调度依据)（下限）
+        memory: 100Mi
+        cpu: 50m
+      limits:  #资源限制，最大可以使用多少资源（上限）
+        memory: 500Mi
+        cpu: 100m
+...
+</code></pre>
+<p><strong>requests：</strong></p>
+<ul>
+<li>容器使用的最小资源需求,作用于schedule调度阶段，作为容器调度时资源分配的判断依据</li>
+<li>只有当前节点上可分配的资源量 &gt;= request 时才允许将容器调度到该节点</li>
+<li>request参数不限制容器的最大可使用资源</li>
+<li>requests.cpu被转成docker的--cpu-shares参数，与cgroup cpu.shares功能相同 (无论宿主机有多少个cpu或者内核，--cpu-shares选项都会按照比例分配cpu资源）</li>
+<li>requests.memory没有对应的docker参数，仅作为k8s调度依据</li>
+</ul>
+<p><strong>limits：</strong></p>
+<ul>
+<li>容器能使用资源的最大值</li>
+<li>设置为0表示对使用的资源不做限制, 可无限的使用</li>
+<li>当pod 内存超过limit时，会被oom</li>
+<li>当cpu超过limit时，不会被kill，但是会限制不超过limit值</li>
+<li>limits.cpu会被转换成docker的–cpu-quota参数。与cgroup cpu.cfs_quota_us功能相同</li>
+<li>limits.memory会被转换成docker的–memory参数。用来限制容器使用的最大内存</li>
+</ul>
+<p>对于 CPU，我们知道计算机里 CPU 的资源是按<code>“时间片”</code>的方式来进行分配的，系统里的每一个操作都需要 CPU 的处理，所以，哪个任务要是申请的 CPU 时间片越多，那么它得到的 CPU 资源就越多。</p>
+<p>然后还需要了解下 CGroup 里面对于 CPU 资源的单位换算：</p>
+<pre><code class="language-shell">1 CPU =  1000 millicpu（1 Core = 1000m）
+</code></pre>
+<p>这里的 <code>m</code> 就是毫、毫核的意思，Kubernetes 集群中的每一个节点可以通过操作系统的命令来确认本节点的 CPU 内核数量，然后将这个数量乘以1000，得到的就是节点总 CPU 总毫数。比如一个节点有四核，那么该节点的 CPU 总毫量为 4000m。</p>
+<p><code>docker run</code>命令和 CPU 限制相关的所有选项如下：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--cpuset-cpus=&quot;&quot;</code></td>
+<td>允许使用的 CPU 集，值可以为 0-3,0,1</td>
+</tr>
+<tr>
+<td><code>-c</code>,<code>--cpu-shares=0</code></td>
+<td>CPU 共享权值（相对权重）</td>
+</tr>
+<tr>
+<td><code>cpu-period=0</code></td>
+<td>限制 CPU CFS 的周期，范围从 100ms~1s，即[1000, 1000000]</td>
+</tr>
+<tr>
+<td><code>--cpu-quota=0</code></td>
+<td>限制 CPU CFS 配额，必须不小于1ms，即 &gt;= 1000，绝对限制</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-shell">docker run -it --cpu-period=50000 --cpu-quota=25000 ubuntu:16.04 /bin/bash
+</code></pre>
+<p>将 CFS 调度的周期设为 50000，将容器在每个周期内的 CPU 配额设置为 25000，表示该容器每 50ms 可以得到 50% 的 CPU 运行时间。</p>
+<blockquote>
+<p>注意：若内存使用超出限制，会引发系统的OOM机制，因CPU是可压缩资源，不会引发Pod退出或重建</p>
+</blockquote>
+<h3 id="3114-yaml优化">3.1.14 yaml优化</h3>
+<p>目前完善后的yaml，<code>myblog/one-pod/pod-completed.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: myblog
+  namespace: luffy
+  labels:
+    component: myblog
+spec:
+  volumes: 
+  - name: mysql-data
+    hostPath: 
+      path: /opt/mysql/data
+  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点(前提是，Node有这个标签)
+    component: mysql
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1    # 注意更改镜像地址
+    env:
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;127.0.0.1&quot;
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+        cpu: 100m
+    livenessProbe:
+      httpGet:
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+      periodSeconds: 15 	# 执行探测的频率
+      timeoutSeconds: 2		# 探测超时时间
+    readinessProbe: 
+      httpGet: 
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10 
+      timeoutSeconds: 2
+      periodSeconds: 15
+  - name: mysql
+    image: mysql:5.7
+    args:
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: &quot;123456&quot;
+    - name: MYSQL_DATABASE
+      value: &quot;myblog&quot;
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+        cpu: 100m
+    readinessProbe:
+      tcpSocket:
+        port: 3306
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    livenessProbe:
+      tcpSocket:
+        port: 3306
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    volumeMounts:
+    - name: mysql-data
+      mountPath: /var/lib/mysql
+</code></pre>
+<p>为什么要优化</p>
+<ul>
+<li>考虑真实的使用场景，像数据库这类中间件，是作为公共资源，为多个项目提供服务，不适合和业务容器绑定在同一个Pod中，因为业务容器是经常变更的，而数据库不需要频繁迭代</li>
+<li>yaml的环境变量中存在敏感信息（账号、密码），存在安全隐患</li>
+</ul>
+<p><strong>解决问题一，需要拆分yaml</strong></p>
+<p><code>myblog/two-pod/mysql.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  namespace: luffy
+  labels:
+    component: mysql
+spec:
+  hostNetwork: true	# 声明pod的网络模式为host模式，效果同docker run --net=host
+  volumes: 
+  - name: mysql-data
+    hostPath: 
+      path: /opt/mysql/data
+  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
+    component: mysql
+  containers:
+  - name: mysql
+    image: mysql:5.7
+    args:
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: &quot;123456&quot;
+    - name: MYSQL_DATABASE
+      value: &quot;myblog&quot;
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+        cpu: 100m
+    readinessProbe:
+      tcpSocket:
+        port: 3306
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    livenessProbe:
+      tcpSocket:
+        port: 3306
+      initialDelaySeconds: 15
+      periodSeconds: 20
+    volumeMounts:
+    - name: mysql-data
+      mountPath: /var/lib/mysql
+</code></pre>
+<p>myblog.yaml</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: myblog
+  namespace: luffy
+  labels:
+    component: myblog
+spec:
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1  # 注意更改镜像地址
+    imagePullPolicy: IfNotPresent
+    env:
+    - name: MYSQL_HOST   #  指定root用户的用户名
+      value: &quot;172.21.51.67&quot;   # 更改为lable选定的地址
+    - name: MYSQL_PASSWD
+      value: &quot;123456&quot;
+    ports:
+    - containerPort: 8002
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+        cpu: 100m
+    livenessProbe:
+      httpGet:
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+      periodSeconds: 15 	# 执行探测的频率
+      timeoutSeconds: 2		# 探测超时时间
+    readinessProbe: 
+      httpGet: 
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10 
+      timeoutSeconds: 2
+      periodSeconds: 15
+</code></pre>
+<p>创建测试</p>
+<pre><code class="language-powershell">## 先删除旧pod
+$ kubectl -n luffy delete po myblog
+
+## 分别创建mysql和myblog
+$ kubectl create -f mysql.yaml
+$ kubectl create -f myblog.yaml
+
+## 查看pod，注意mysqlIP为宿主机IP，因为网络模式为host
+$ kubectl -n luffy get po -o wide 
+NAME     READY   STATUS    RESTARTS   AGE   IP                NODE
+myblog   1/1     Running   0          41s   10.244.1.152      k8s-slave1
+mysql    1/1     Running   0          52s   172.21.51.67      k8s-slave1
+
+## 访问myblog服务正常
+$ curl 10.244.1.152:8002/blog/index/
+</code></pre>
+<h3 id="3115-configmap和secret">3.1.15 Configmap和Secret</h3>
+<p><strong>解决问题二，环境变量中敏感信息带来的安全隐患</strong></p>
+<p>为什么要统一管理环境变量</p>
+<ul>
+<li>环境变量中有很多敏感的信息，比如账号密码，直接暴漏在yaml文件中存在安全性问题</li>
+<li>团队内部一般存在多个项目，这些项目直接存在配置相同环境变量的情况，因此可以统一维护管理</li>
+<li>对于开发、测试、生产环境，由于配置均不同，每套环境部署的时候都要修改yaml，带来额外的开销</li>
+</ul>
+<p>k8s提供两类资源，configMap和Secret，可以用来实现业务配置的统一管理， 允许将配置文件与镜像文件分离，以使容器化的应用程序具有可移植性 。</p>
+<p><strong>configMap和Secret的区别：</strong></p>
+<pre><code>Secret通常用来存储一些比较敏感的信息，例如账号密码、证书私钥、Token等信息。
+
+configMap通常用来存储配置文件或环境变量信息
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840559140.png" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>configMap，通常用来管理应用的配置文件或者环境变量，<code>myblog/two-pod/configmap.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myblog
+  namespace: luffy
+data:
+  MYSQL_HOST: &quot;172.21.51.67&quot;
+  MYSQL_PORT: &quot;3306&quot;
+</code></pre>
+<p>创建并查看configMap：</p>
+<pre><code class="language-powershell">$ kubectl create -f configmap.yaml
+$ kubectl -n luffy get cm myblog -oyaml
+</code></pre>
+<p>或者可以使用命令的方式，从文件中创建，比如：</p>
+<p>configmap.txt  <strong>(推荐使用)</strong></p>
+<pre><code class="language-powershell">$ cat configmap.txt
+MYSQL_HOST=172.21.51.67
+MYSQL_PORT=3306
+
+$ kubectl create configmap myblog --from-env-file=configmap.txt
+
+## --from-env-file 通常创建环境变量类型的配置文件使用，环境变量形式的配置
+## --from-file 通常用来创建配置文件,非环境变量形式的配置
+示例：
+vim config.ini
+[mysqld]
+aaa=bbb
+ccc=ddd
+
+#创建配置文件
+kubectl create configmap demo --form-file=config.ini
+
+#查看文件区别
+kubectl get configmap myblog -o yaml
+kubectl get configmap demp -o yaml
+</code></pre>
+</li>
+<li>
+<p>Secret，管理敏感类的信息，默认会base64编码存储，有三种类型</p>
+<ul>
+<li>Service Account ：用来访问Kubernetes API，由Kubernetes自动创建，并且会自动挂载到Pod的/run/secrets/kubernetes.io/serviceaccount目录中；创建ServiceAccount后，Pod中指定serviceAccount后，自动创建该ServiceAccount对应的secret；</li>
+<li>Opaque ： base64编码格式的Secret，用来存储密码、密钥等；</li>
+<li>kubernetes.io/dockerconfigjson ：用来存储私有docker registry的认证信息。</li>
+</ul>
+<p><code>myblog/two-pod/secret.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: myblog
+  namespace: luffy
+type: Opaque  #指定存储类型
+data:
+  MYSQL_USER: cm9vdA==		#注意加-n参数， echo -n root|base64
+  MYSQL_PASSWD: MTIzNDU2
+</code></pre>
+<p>创建并查看：</p>
+<pre><code class="language-powershell">$ kubectl create -f secret.yaml
+$ kubectl -n luffy get secret
+</code></pre>
+<p>如果不习惯这种方式，可以通过如下方式：<strong>（推荐使用）</strong></p>
+<pre><code class="language-powershell">$ cat secret.txt
+MYSQL_USER=root
+MYSQL_PASSWD=123456
+
+$ kubectl -n luffy create secret generic myblog --from-env-file=secret.txt 
+</code></pre>
+</li>
+</ul>
+<p>修改后的mysql的yaml，资源路径：<code>myblog/two-pod/mysql-with-config.yaml</code></p>
+<pre><code class="language-yaml">...
+spec:
+  containers:
+  - name: mysql
+    args:
+    - --character-set-server=utf8mb4
+    - --collation-server=utf8mb4_unicode_ci
+    env:
+    - name: MYSQL_USER  #获取&quot;MYSQL_USER参数&quot;
+      valueFrom:
+        secretKeyRef:  #从secret中引用
+          name: myblog
+          key: MYSQL_USER
+    - name: MYSQL_ROOT_PASSWORD  #获取&quot;MYSQL_ROOT_PASSWORD参数&quot;
+      valueFrom:  
+        secretKeyRef: #从secret中引用
+          name: myblog
+          key: MYSQL_PASSWD
+    - name: MYSQL_DATABASE
+      value: &quot;myblog&quot;
+...
+</code></pre>
+<p>整体修改后的myblog的yaml，资源路径：<code>myblog/two-pod/myblog-with-config.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: myblog
+  namespace: luffy
+  labels:
+    component: myblog
+spec:
+  containers:
+  - name: myblog
+    image: 172.21.51.143:5000/myblog:v1
+    imagePullPolicy: IfNotPresent
+    env:
+    - name: MYSQL_HOST
+      valueFrom:
+        configMapKeyRef:
+          name: myblog
+          key: MYSQL_HOST
+    - name: MYSQL_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: myblog
+          key: MYSQL_PORT
+    - name: MYSQL_USER
+      valueFrom:
+        secretKeyRef:
+          name: myblog
+          key: MYSQL_USER
+    - name: MYSQL_PASSWD
+      valueFrom:
+        secretKeyRef:
+          name: myblog
+          key: MYSQL_PASSWD
+    ports:
+    - containerPort: 8002
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 50m
+      limits:
+        memory: 500Mi
+        cpu: 100m
+    livenessProbe:
+      httpGet:
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+      periodSeconds: 15 	# 执行探测的频率
+      timeoutSeconds: 2		# 探测超时时间
+    readinessProbe: 
+      httpGet: 
+        path: /blog/index/
+        port: 8002
+        scheme: HTTP
+      initialDelaySeconds: 10 
+      timeoutSeconds: 2
+      periodSeconds: 15
+</code></pre>
+<p>在部署不同的环境时，pod的yaml无须再变化，只需要在每套环境中维护一套ConfigMap和Secret即可。但是注意configmap和secret不能跨namespace使用，且更新后，pod内的env不会自动更新，重建后方可更新。</p>
+<h3 id="3116-如何编写资源yaml">3.1.16 如何编写资源yaml</h3>
+<ol>
+<li>
+<p>拿来主义，从机器中已有的资源中拿</p>
+<pre><code class="language-powershell">$ kubectl -n kube-system get po,deployment,ds
+</code></pre>
+</li>
+<li>
+<p>学会在官网查找， https://kubernetes.io/docs/home/</p>
+</li>
+<li>
+<p>从kubernetes-api文档中查找， https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#pod-v1-core</p>
+</li>
+<li>
+<p>kubectl explain 查看具体字段含义</p>
+</li>
+</ol>
+<h3 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h3>
+<p>Pod的状态如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>状态值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pending</td>
+<td>API Server已经创建该Pod，等待调度器调度</td>
+</tr>
+<tr>
+<td>ContainerCreating</td>
+<td>拉取镜像启动容器中</td>
+</tr>
+<tr>
+<td>Running</td>
+<td>Pod内容器均已创建，且至少有一个容器处于运行状态、正在启动状态或正在重启状态</td>
+</tr>
+<tr>
+<td>Succeeded|Completed</td>
+<td>Pod内所有容器均已成功执行退出，且不再重启</td>
+</tr>
+<tr>
+<td>Failed|Error</td>
+<td>Pod内所有容器均已退出，但至少有一个容器退出为失败状态</td>
+</tr>
+<tr>
+<td>CrashLoopBackOff</td>
+<td>Pod内有容器启动失败，比如配置文件丢失导致主进程启动失败</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>由于某种原因无法获取该Pod的状态，可能由于网络通信不畅导致</td>
+</tr>
+</tbody>
+</table>
+<p>生命周期示意图：</p>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840588832.jpg" alt="" loading="lazy"></figure>
+<p>启动和关闭示意：</p>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840601236.jpg" alt="" loading="lazy"></figure>
+<pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
+Pod从开始启动得时候，先执行得就是init container里面得内容。
+initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
+init container启动完就退出了，不会持久的存在
+</code></pre>
+<p>通常用init container来做什么事情 ？</p>
+<p>初始化容器(init container)：</p>
+<ul>
+<li>验证业务应用依赖的组件是否均已启动</li>
+<li>修改目录的权限</li>
+<li>调整系统参数</li>
+<li>istio -&gt; iptables规则的设置</li>
+</ul>
+<pre><code class="language-yaml">示例：
+...
+      initContainers:
+      - command:
+        - /sbin/sysctl
+        - -w
+        - vm.max_map_count=262144
+        image: alpine:3.6
+        imagePullPolicy: IfNotPresent
+        name: elasticsearch-logging-init
+        resources: {}
+        securityContext:
+          privileged: true
+      - name: fix-permissions
+        image: alpine:3.6
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: elasticsearch-logging
+          mountPath: /usr/share/elasticsearch/data
+...
+</code></pre>
+<p>验证Pod生命周期：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-lifecycle
+  namespace: luffy
+  labels:
+    component: pod-lifecycless
+spec:
+  initContainers:
+  - name: init
+    image: busybox
+    command: ['sh', '-c', 'echo $(date +%s): INIT &gt;&gt; /loap/timing']
+    volumeMounts:
+    - mountPath: /loap
+      name: timing
+  containers:
+  - name: main
+    image: busybox
+    command: ['sh', '-c', 'echo $(date +%s): START &gt;&gt; /loap/timing;
+sleep 10; echo $(date +%s): END &gt;&gt; /loap/timing;']
+    volumeMounts:
+    - mountPath: /loap 
+      name: timing
+    livenessProbe:
+      exec:
+        command: ['sh', '-c', 'echo $(date +%s): LIVENESS &gt;&gt; /loap/timing']
+    readinessProbe:
+      exec:
+        command: ['sh', '-c', 'echo $(date +%s): READINESS &gt;&gt; /loap/timing']
+    lifecycle:
+      postStart:
+        exec:
+          command: ['sh', '-c', 'echo $(date +%s): POST-START &gt;&gt; /loap/timing']
+      preStop:
+        exec:
+          command: ['sh', '-c', 'echo $(date +%s): PRE-STOP &gt;&gt; /loap/timing']
+  volumes:
+  - name: timing
+    hostPath:
+      path: /tmp/loap
+</code></pre>
+<p>创建pod测试：</p>
+<pre><code class="language-powershell">$ kubectl create -f pod-lifecycle.yaml
+
+## 查看demo状态
+$ kubectl -n luffy get po -o wide -w
+
+## 查看调度节点的/tmp/loap/timing
+$ cat /tmp/loap/timing
+1585424708: INIT
+1585424746: START
+1585424746: POST-START
+1585424754: READINESS
+1585424756: LIVENESS
+1585424756: END
+</code></pre>
+<blockquote>
+<p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
+</blockquote>
+<h3 id="3118-小结">3.1.18 小结</h3>
+<ol>
+<li>实现k8s平台与特定的容器运行时解耦，提供更加灵活的业务部署方式，引入了Pod概念</li>
+<li>k8s使用yaml格式定义资源文件，yaml中Map与List的语法，与json做类比</li>
+<li>通过kubectl apply| get | exec | logs | delete 等操作k8s资源，必须指定namespace</li>
+<li>每启动一个Pod，为了实现网络空间共享，会先创建Infra(基础设施)容器，并把其他容器网络加入该容器</li>
+<li>通过livenessProbe(存活性探测)和readinessProbe(可用性探测)实现Pod的存活性和就绪健康检查</li>
+<li>通过requests和limit分别限定容器初始资源申请与最高上限资源申请（资源限制）</li>
+<li>Pod通过initContainer和lifecycle分别来执行初始化、pod启动和删除时候的操作，使得功能更加全面和灵活</li>
+<li>编写yaml讲究方法，学习k8s，养成从官方网站查询知识的习惯</li>
+</ol>
+<p>做了哪些工作：</p>
+<ol>
+<li>定义Pod.yaml，将myblog和mysql打包在同一个Pod中，使用myblog使用localhost访问mysql</li>
+<li>mysql数据持久化，为myblog业务应用添加了健康检查和资源限制</li>
+<li>将myblog与mysql拆分，使用独立的Pod管理</li>
+<li>yaml文件中的环境变量存在账号密码明文等敏感信息，使用configMap和Secret来统一配置，优化部署</li>
+</ol>
+<p>只使用Pod, 面临的问题:</p>
+<ol>
+<li>业务应用启动多个副本</li>
+<li>Pod重建后IP会变化，外部如何访问Pod服务</li>
+<li>运行业务Pod的某个节点挂了，可以自动帮我把Pod转移到集群中的可用节点启动起来</li>
+<li>我的业务应用功能是收集节点监控数据,需要把Pod运行在k8集群的各个节点上</li>
+</ol>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  K8s管理业务应用--Pod控制器
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/">
+                <h3 class="post-title">
+                  Prometheus+Grafana+Consul+alertmanager 生产环境监控告警
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

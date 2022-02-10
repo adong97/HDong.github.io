@@ -1,0 +1,603 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#33-kubernetes%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E4%B9%8Bservice">3.3 Kubernetes服务访问之Service</a>
+<ul>
+<li><a href="#331-service-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B9%8Bcluster-ip">3.3.1 Service 负载均衡之Cluster IP</a></li>
+<li><a href="#332-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">3.3.2 服务发现</a></li>
+<li><a href="#333-service%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B9%8Bnodeport">3.3.3 Service负载均衡之NodePort</a></li>
+<li><a href="#334-kube-proxy">3.3.4 kube-proxy</a></li>
+<li><a href="#335-%E9%9D%A2%E8%AF%95%E9%A2%98-k8s%E7%9A%84service-cluster-ip%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BDping%E9%80%9A">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</a></li>
+<li><a href="#336-iptables%E8%BD%AC%E6%8D%A2ipvs%E6%A8%A1%E5%BC%8F">3.3.6 iptables转换ipvs模式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Service</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-10 / 13 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/ddMKrICbP.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="33-kubernetes服务访问之service">3.3 Kubernetes服务访问之Service</h2>
+<p>通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：</p>
+<ul>
+<li>Pod IP 仅仅是集群内可见的虚拟IP，外部无法访问。</li>
+<li>Pod IP会随着Pod的销毁而消失，当ReplicaSet对Pod进行动态伸缩时，Pod IP可能随时随地都会变化，这样对于我们访问这个服务带来了难度。</li>
+</ul>
+<h3 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h3>
+<p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。service会为这个LB提供一个IP，一般称为cluster IP 。使用Service对象，通过selector进行标签选择，找到对应的Pod:</p>
+<p><code>myblog/deployment/svc-myblog.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: myblog
+  namespace: luffy
+spec:
+  ports:
+  - port: 80  #映射要ClusterIP上的端口
+    protocol: TCP
+    targetPort: 8002   #对应容器内的端口
+  selector:
+    app: myblog
+  type: ClusterIP
+</code></pre>
+<p>操作演示：</p>
+<pre><code class="language-powershell">## 别名
+$ alias kd='kubectl -n luffy'
+
+## 创建服务
+$ kd create -f svc-myblog.yaml
+$ kd get po --show-labels
+NAME                      READY   STATUS    RESTARTS   AGE    LABELS
+myblog-5c97d79cdb-jn7km   1/1     Running   0          6m5s   app=myblog
+mysql-85f4f65f99-w6jkj    1/1     Running   0          176m   app=mysql
+
+$ kd get svc
+NAME     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+myblog   ClusterIP   10.99.174.93   &lt;none&gt;        80/TCP    7m50s
+
+$ kd describe svc myblog
+Name:              myblog
+Namespace:         demo
+Labels:            &lt;none&gt;
+Annotations:       &lt;none&gt;
+Selector:          app=myblog
+Type:              ClusterIP
+IP:                10.99.174.93
+Port:              &lt;unset&gt;  80/TCP
+TargetPort:        8002/TCP
+Endpoints:         10.244.0.68:8002
+Session Affinity:  None
+Events:            &lt;none&gt;
+
+## 扩容myblog服务
+$ kd scale deploy myblog --replicas=2
+deployment.extensions/myblog scaled
+
+## 再次查看
+$ kd describe svc myblog
+Name:              myblog
+Namespace:         demo
+Labels:            &lt;none&gt;
+Annotations:       &lt;none&gt;
+Selector:          app=myblog
+Type:              ClusterIP
+IP:                10.99.174.93
+Port:              &lt;unset&gt;  80/TCP
+TargetPort:        8002/TCP
+Endpoints:         10.244.0.68:8002,10.244.1.158:8002
+Session Affinity:  None
+Events:            &lt;none&gt;
+</code></pre>
+<p>Service与Pod如何关联:</p>
+<p>service对象创建的同时，会创建同名的endpoints对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中</p>
+<p>选择器(Selector)选择出来的pod,是为了放在Endpoints里面</p>
+<pre><code class="language-powershell"># Endpoints也是一种资源类型，默认会与service绑定起来
+#如果readinessporbe(可用性检测)没过，则会将pod的IP地址从Endpoints列表种剔除，不在接收流量
+$ kd get endpoints myblog
+NAME     ENDPOINTS                            AGE
+myblog   10.244.0.68:8002,10.244.1.158:8002   7m
+</code></pre>
+<p>Service Cluster-IP如何访问:</p>
+<pre><code class="language-powershell">$ kd get svc myblog
+NAME   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+myblog   ClusterIP   10.99.174.93   &lt;none&gt;        80/TCP    13m
+
+$ curl 10.99.174.93/blog/index/
+</code></pre>
+<p>为mysql服务创建service：</p>
+<pre><code class="language-yaml">$ vim svc-mysql.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: luffy
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mysql
+  type: ClusterIP
+  
+#创建myql service
+$ kubectl -n luffy create -f svc-mysql.yaml
+</code></pre>
+<p>访问mysql：</p>
+<pre><code class="language-powershell">$ kd get svc mysql
+mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   3s
+$ curl 10.108.214.84:3306
+</code></pre>
+<p>目前使用hostNetwork部署，通过宿主机ip+port访问，弊端：</p>
+<ul>
+<li>服务使用hostNetwork，使得宿主机的端口大量暴漏，存在安全隐患</li>
+<li>容易引发端口冲突</li>
+</ul>
+<p>服务均属于k8s集群，尽可能使用k8s的网络访问，因此可以对目前myblog访问mysql的方式做改造：</p>
+<ul>
+<li>为mysql创建一个固定clusterIp的Service，把clusterIp配置在myblog的环境变量中</li>
+<li>利用集群服务发现的能力，组件之间通过service name来访问</li>
+</ul>
+<h3 id="332-服务发现">3.3.2 服务发现</h3>
+<p>在k8s集群中，组件之间可以通过定义的Service名称实现通信。</p>
+<p>演示服务发现：</p>
+<pre><code class="language-powershell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
+
+# 先查看服务
+$ kd get svc
+NAME     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+myblog   ClusterIP   10.99.174.93    &lt;none&gt;        80/TCP     59m
+mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   35m
+
+# 进入myblog容器
+$ kd exec -ti myblog-5c97d79cdb-j485f bash
+[root@myblog-5c97d79cdb-j485f myblog]# curl mysql:3306   
+5.7.29 )→  (mysql_native_password ot packets out of order
+[root@myblog-5c97d79cdb-j485f myblog]# curl myblog/blog/index/
+我的博客列表
+
+###curl mysql:3306可以通是因为将mysql当成了域名
+##在容器内查看域名解析文件配置
+cat /etc/resolv.conf
+nameserver 10.0.0.2   #自定义的域名服务器,用来解析
+search luffy.svc.cluster.local svc.cluster.loacl cluster.local  #search用于做匹配
+options ndots:5
+
+curl mysql:3306 相当于和search后面的域名挨个做匹配
+curl mysql.luffy.svc.cluster.local
+curl mysql.svc.cluster.loacl
+curl mysql.cluster.local
+
+mysql其实就是service的名称
+同样，可以直接curl myblog:80/blog/index/
+</code></pre>
+<p>虽然Pod ip和Cluster ip都不固定，但是service name是固定的，而且具有完全的跨集群可移植性，因此组件之间调用的同时，完全可以通过service name去通信，这样避免了大量的ip维护成本，使得服务的yaml模板更加简单。因此可以对mysql和myblog的部署进行优化改造：</p>
+<ol>
+<li>mysql可以去掉hostNetwork部署，使得服务只暴漏在k8s集群内部网络</li>
+<li>configMap中数据库地址可以换成Service名称，这样跨环境的时候，配置内容基本上可以保持不用变化</li>
+</ol>
+<p>修改deploy-mysql.yaml</p>
+<pre><code class="language-yaml">    spec:
+      hostNetwork: true	# 去掉此行
+      volumes: 
+      - name: mysql-data
+        hostPath: 
+          path: /opt/mysql/data
+
+
+        ports:
+        - containerPort: 3306
+          hostPort: 3306 	# 去掉此行
+          protocol: TCP
+</code></pre>
+<p>修改configmap.yaml</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myblog
+  namespace: luffy
+data:
+  MYSQL_HOST: &quot;mysql&quot;	# 此处替换为mysql
+  MYSQL_PORT: &quot;3306&quot;
+
+
+</code></pre>
+<p>应用修改：</p>
+<pre><code class="language-powershell">$ kubectl delete -f deployment-mysql.yaml
+
+## myblog不用动，会自动因健康检测不过而重启
+</code></pre>
+<p>服务发现实现：</p>
+<p><code>CoreDNS</code>是一个<code>Go</code>语言实现的链式插件<code>DNS服务端</code>，是CNCF成员，是一个高性能、易扩展的<code>DNS服务端</code>。</p>
+<pre><code class="language-powershell">$ kubectl -n kube-system get po -o wide|grep dns
+coredns-d4475785-2w4hk             1/1     Running   0          4d22h   10.244.0.64       
+coredns-d4475785-s49hq             1/1     Running   0          4d22h   10.244.0.65
+
+# 查看myblog的pod解析配置
+$ kubectl -n luffy exec -ti myblog-5c97d79cdb-j485f bash
+[root@myblog-5c97d79cdb-j485f myblog]# cat /etc/resolv.conf
+nameserver 10.96.0.10
+search luffy.svc.cluster.local svc.cluster.local cluster.local
+options ndots:5
+
+## 10.96.0.10 从哪来
+$ kubectl -n kube-system get svc
+NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
+kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP   51d
+
+## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
+
+$ kubectl get svc
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
+</code></pre>
+<h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
+<p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
+<p><code>myblog/deployment/svc-myblog-nodeport.yaml</code></p>
+<pre><code class="language-powershell">apiVersion: v1
+kind: Service
+metadata:
+  name: myblog-np
+  namespace: luffy
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8002
+  selector:
+    app: myblog
+  type: NodePort
+</code></pre>
+<p>查看并访问服务：</p>
+<pre><code class="language-powershell">$ kd create -f svc-myblog-nodeport.yaml
+service/myblog-np created
+$ kd get svc
+NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+myblog      ClusterIP   10.99.174.93     &lt;none&gt;        80/TCP         102m
+myblog-np   NodePort    10.105.228.101   &lt;none&gt;        80:30647/TCP   4s
+mysql       ClusterIP   10.108.214.84    &lt;none&gt;        3306/TCP       77m
+
+#集群内每个节点的NodePort端口都会进行监听
+$ curl 172.21.51.143:30647/blog/index/
+我的博客列表
+$ curl 172.21.51.143:30647/blog/index/
+我的博客列表
+## 浏览器访问
+</code></pre>
+<p>思考：</p>
+<ol>
+<li>
+<p>NodePort的端口监听如何转发到对应的Pod服务？</p>
+</li>
+<li>
+<p>CLUSTER-IP为虚拟IP，集群内如何通过虚拟IP访问到具体的Pod服务？</p>
+</li>
+</ol>
+<h3 id="334-kube-proxy">3.3.4 kube-proxy</h3>
+<p>运行在每个节点上，监听 API Server 中服务对象的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
+<p>有三种模式：</p>
+<ul>
+<li>
+<p>User space, 让 Kube-Proxy 在用户空间监听一个端口，所有的 Service 都转发到这个端口，然后 Kube-Proxy 在内部应用层对其进行转发 ， 所有报文都走一遍用户态，性能不高，<strong>k8s v1.2版本后废弃</strong>。</p>
+</li>
+<li>
+<p>Iptables， 当前默认模式，完全由 IPtables 来实现， 通过各个node节点上的iptables规则来实现service的负载均衡，但是随着service数量的增大，iptables模式由于线性查找匹配、全量更新等特点，其性能会显著下降。</p>
+</li>
+<li>
+<p>IPVS， 与iptables同样基于Netfilter，但是采用的hash表，因此当service数量达到一定规模时，hash查表的速度优势就会显现出来，从而提高service的服务性能。 k8s 1.8版本开始引入，1.11版本开始稳定，需要开启宿主机的ipvs模块。</p>
+</li>
+</ul>
+<p>IPtables模式示意图：</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840732148.svg" alt="" loading="lazy"></figure>
+<pre><code class="language-powershell">$ iptables-save |grep -v myblog-np|grep  &quot;luffy/myblog&quot;
+-A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
+-A KUBE-SERVICES -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-WQNGJ7YFZKCTKPZK
+
+$ iptables-save |grep KUBE-SVC-WQNGJ7YFZKCTKPZK
+-A KUBE-SVC-WQNGJ7YFZKCTKPZK -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GB5GNOM5CZH7ICXZ
+-A KUBE-SVC-WQNGJ7YFZKCTKPZK -j KUBE-SEP-7GWC3FN2JI5KLE47
+
+$  iptables-save |grep KUBE-SEP-GB5GNOM5CZH7ICXZ
+-A KUBE-SEP-GB5GNOM5CZH7ICXZ -p tcp -m tcp -j DNAT --to-destination 10.244.1.158:8002
+
+$ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
+-A KUBE-SEP-7GWC3FN2JI5KLE47 -p tcp -m tcp -j DNAT --to-destination 10.244.1.159:8002
+</code></pre>
+<h3 id="335-面试题-k8s的service-cluster-ip为什么不能ping通">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</h3>
+<p>先看下service IP是怎么来的？</p>
+<pre><code>service IP是serviceController生成的，参数--service-cluster-ip-range string会配置在controller-manager上，serviceController会在这个参数指定的cidr范围内取一个IP
+</code></pre>
+<p>为什么不能ping?</p>
+<pre><code>serviceIP是虚拟的地址，没有分配给任何网络接口，当数据包传输时不会把这个IP作为数据包的源IP或目的IP。
+kube-proxy在iptables模式下，这个IP没有被设置在任何的网络设备上，ping这个IP的时候，没有任何的网络协议栈会回应这个ping请求。
+
+在iptables模式时，clusterIp会在iptables的PREROUTING链里面用于nat转换规则中，而在ipvs模式下，会使用在ipvs模块的ipvs规则转换中
+
+在ipvs模式下，所有的clusterIp会被设置在node上的kube-ipvs0的虚拟网卡上，这个时候去ping是可以通的。
+</code></pre>
+<h3 id="336-iptables转换ipvs模式">3.3.6 iptables转换ipvs模式</h3>
+<pre><code class="language-powershell"># 内核开启ipvs模块，集群各节点都执行
+cat &gt; /etc/sysconfig/modules/ipvs.modules &lt;&lt;EOF
+#!/bin/bash
+ipvs_modules=&quot;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&quot;
+for kernel_module in \${ipvs_modules}; do
+    /sbin/modinfo -F filename \${kernel_module} &gt; /dev/null 2&gt;&amp;1
+    if [ $? -eq 0 ]; then
+        /sbin/modprobe \${kernel_module}
+    fi
+done
+EOF
+chmod 755 /etc/sysconfig/modules/ipvs.modules &amp;&amp; bash /etc/sysconfig/modules/ipvs.modules &amp;&amp; lsmod | grep ip_vs
+
+# 安装ipvsadm工具
+$ yum install ipset ipvsadm -y
+
+# 修改kube-proxy 模式
+$ kubectl -n kube-system edit cm kube-proxy
+...
+    kind: KubeProxyConfiguration
+    metricsBindAddress: &quot;&quot;
+    mode: &quot;ipvs&quot;
+    nodePortAddresses: null
+    oomScoreAdj: null
+...
+
+# 重建kube-proxy
+$ kubectl -n kube-system get po |grep kube-proxy|awk '{print $1}'|xargs kubectl -n kube-system delete po
+
+# 查看日志，确认使用了ipvs模式
+$ kubectl -n kube-system logs -f 
+I0605 08:47:52.334298       1 node.go:136] Successfully retrieved node IP: 172.21.51.143
+I0605 08:47:52.334430       1 server_others.go:142] kube-proxy node IP is an IPv4 address (172.21.51.143), assume IPv4 operation
+I0605 08:47:52.766314       1 server_others.go:258] Using ipvs Proxier.
+...
+
+# 清理iptables规则
+$ iptables -F -t nat
+$ iptables -F
+
+# 查看规则生效
+$ ipvsadm -ln
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/xSXZzI9mV/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Kubernetes服务访问之Ingress
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/">
+                <h3 class="post-title">
+                  K8s管理业务应用--Pod控制器
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

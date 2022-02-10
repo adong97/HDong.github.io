@@ -1,0 +1,623 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#34-kubernetes%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E4%B9%8Bingress">3.4 Kubernetes服务访问之Ingress</a>
+<ul>
+<li><a href="#341-%E7%A4%BA%E6%84%8F%E5%9B%BE">3.4.1 示意图：</a></li>
+<li><a href="#342-%E5%AE%9E%E7%8E%B0%E9%80%BB%E8%BE%91">3.4.2 实现逻辑</a></li>
+<li><a href="#343-%E5%AE%89%E8%A3%85">3.4.3 安装</a></li>
+<li><a href="#344-%E8%AE%BF%E9%97%AE">3.4.4 访问</a></li>
+<li><a href="#345-https%E8%AE%BF%E9%97%AE">3.4.5 HTTPS访问：</a></li>
+<li><a href="#346-%E5%A4%9A%E8%B7%AF%E5%BE%84%E8%BD%AC%E5%8F%91%E5%8F%8A%E9%87%8D%E5%86%99%E7%9A%84%E5%AE%9E%E7%8E%B0">3.4.6 多路径转发及重写的实现</a>
+<ul>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Ingress</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-10 / 10 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/xSXZzI9mV.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="34-kubernetes服务访问之ingress">3.4 Kubernetes服务访问之Ingress</h2>
+<p>对于Kubernetes的Service，无论是Cluster-Ip和Node Port均是四层的负载，集群内的服务如何实现七层的负载均衡，这就需要借助于Ingress，Ingress控制器的实现方式有很多，比如nginx, Contour, Haproxy, trafik, Istio。</p>
+<p>几种常用的ingress功能对比和选型可以参考<a href="https://www.kubernetes.org.cn/5948.html">这里</a></p>
+<p>Ingress-nginx是7层的负载均衡器 ，负责统一管理外部对k8s cluster中Service的请求。主要包含：</p>
+<ul>
+<li>
+<p>ingress-nginx-controller：根据用户编写的ingress规则（创建的ingress的yaml文件），动态的去更改nginx服务的配置文件，并且reload重载使其生效（是自动化的，通过lua脚本来实现）；</p>
+</li>
+<li>
+<p>Ingress资源对象：将Nginx的配置抽象成一个Ingress对象</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wildcard-host
+spec:
+  rules:
+  - host: &quot;foo.bar.com&quot;
+    http:
+      paths:
+      - pathType: Prefix
+        path: &quot;/bar&quot;
+        backend:
+          service:
+            name: service1
+            port:
+            number: 80
+  - host: &quot;bar.foo.com&quot;
+    http:
+      paths:
+      - pathType: Prefix
+        path: &quot;/foo&quot;
+        backend:
+          service:
+            name: service2
+            port:
+              number: 80
+</code></pre>
+<p>工作原理：</p>
+<pre><code>1. 先创建一个Ingress资源类型，Ingress资源可以定义一个域名。
+在访问&quot;foo.bar.com&quot;域名的时候，这个域名只要解析到Ingress上面，foo.bar.com/bar路径的访问会转发到backend中的service1的80端口上
+
+同理，在访问&quot;bar.foo.com&quot;域名的时候，bar.foo.com/foo路径的访问就会转发到service2的80端口上
+
+2.这个Ingress资源类型会被nginx-ingress-controller监听处理。
+配置文件中的spce.rules 最终是由nginx实现反向代理转发功能，但是由于nginx无法识别Ingress配置文件，所以需要nginx-ingress-controller对资源中的配置片段进行转换，放到nginx.conf中，解析成为nginx可以理解的配置。
+
+3.解析完之后，nginx再进行一次reload，即可解析生效。
+
+(同下方&quot;实现逻辑&quot;)
+</code></pre>
+</li>
+</ul>
+<h3 id="341-示意图">3.4.1 示意图：</h3>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840756401.webp" alt="" loading="lazy"></figure>
+<p>Ingress的作用：</p>
+<pre><code>目的是：集群外部的流量访问内部的Pod
+通过安装Ingress控制器，外部的流量第一步，一定是转发到Ingress控制器上。
+流量到Ingress之后，它可以根据域名或者路径，转发到Service，进而转发到具体的Pod上。
+</code></pre>
+<h3 id="342-实现逻辑">3.4.2 实现逻辑</h3>
+<p>1）ingress controller通过和kubernetes api交互，动态的去感知集群中ingress规则变化<br>
+2）然后读取ingress规则(规则就是写明了哪个域名对应哪个service)，按照自定义的规则，生成一段nginx配置<br>
+3）再写到nginx-ingress-controller的pod里，这个Ingress controller的pod里运行着一个Nginx服务，控制器把生成的nginx配置写入/etc/nginx/nginx.conf文件中<br>
+4）然后reload一下使配置生效。以此达到域名分别配置和动态更新的问题。</p>
+<h3 id="343-安装">3.4.3 安装</h3>
+<p><a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md">官方文档</a></p>
+<pre><code class="language-powershell">$ wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+## 或者使用myblog/deployment/ingress/mandatory.yaml
+
+## 修改部署节点
+$ grep -n5 nodeSelector mandatory.yaml
+212-    spec:
+213-      hostNetwork: true #添加为host模式
+214-      # wait up to five minutes for the drain of connections
+215-      terminationGracePeriodSeconds: 300
+216-      serviceAccountName: nginx-ingress-serviceaccount
+217:      nodeSelector:
+218-        ingress: &quot;true&quot;		#替换此处标签，来决定将ingress部署在哪些机器
+219-      containers:
+220-        - name: nginx-ingress-controller
+221-          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
+222-          args:
+
+</code></pre>
+<p>创建ingress</p>
+<pre><code class="language-powershell"># 为k8s-master节点添加label
+$ kubectl label node k8s-master ingress=true
+
+$ kubectl apply -f mandatory.yaml
+</code></pre>
+<p>使用示例：<code>myblog/deployment/ingress.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myblog
+  namespace: luffy
+spec:
+  rules:
+  - host: myblog.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: myblog
+            port:
+              number: 80
+
+</code></pre>
+<p>ingress-nginx动态生成upstream配置：</p>
+<pre><code class="language-yaml">$ kubectl -n ingress-nginx exec -ti nginx-ingress-xxxxxxx bash
+# ps aux
+# cat /etc/nginx/nginx.conf|grep myblog -A10 -B1
+...
+        ## start server myblog.luffy.com
+        server {
+                server_name myblog.luffy.com ;
+
+                listen 80  ;
+                listen [::]:80  ;
+                listen 443  ssl http2 ;
+                listen [::]:443  ssl http2 ;
+
+                set $proxy_upstream_name &quot;-&quot;;
+
+                ssl_certificate_by_lua_block {
+                        certificate.call()
+                }
+
+                location / {
+
+                        set $namespace      &quot;luffy&quot;;
+                        set $ingress_name   &quot;myblog&quot;;
+                        set $service_name   &quot;myblog&quot;;
+                        set $service_port   &quot;80&quot;;
+                        set $location_path  &quot;/&quot;;
+
+                        rewrite_by_lua_block {
+                                lua_ingress.rewrite({
+                                        force_ssl_redirect = false,
+                                        ssl_redirect = true,
+                                        force_no_ssl_redirect = false,
+                                        use_port_in_redirects = false,
+                                })
+--
+                                balancer.log()
+
+                                monitor.call()
+
+                                plugins.run()
+                        }
+
+                        port_in_redirect off;
+
+                        set $balancer_ewma_score -1;
+                        set $proxy_upstream_name &quot;luffy-myblog-80&quot;;
+                        set $proxy_host          $proxy_upstream_name;
+                        set $pass_access_scheme  $scheme;
+
+                        set $pass_server_port    $server_port;
+
+                        set $best_http_host      $http_host;
+                        set $pass_port           $pass_server_port;
+
+                        set $proxy_alternative_upstream_name &quot;&quot;;
+
+--
+                        proxy_next_upstream_timeout             0;
+                        proxy_next_upstream_tries               3;
+
+                        proxy_pass http://upstream_balancer;
+
+                        proxy_redirect                          off;
+
+                }
+
+        }
+        ## end server myblog.luffy.com
+ ...
+
+
+</code></pre>
+<h3 id="344-访问">3.4.4 访问</h3>
+<p>域名解析服务，将 <code>myblog.luffy.com</code>解析到ingress的地址上。ingress是支持多副本的，高可用的情况下，生产的配置是使用lb服务（内网F5设备，公网elb、slb、clb，解析到各ingress的机器，如何域名指向lb地址）</p>
+<p>本机，添加如下hosts记录来演示效果。</p>
+<pre><code class="language-json">172.21.51.143 myblog.luffy.com
+</code></pre>
+<p>然后，访问 http://myblog.luffy.com/blog/index/</p>
+<h3 id="345-https访问">3.4.5 HTTPS访问：</h3>
+<pre><code class="language-powershell">#自签名证书
+$ openssl req -x509 -nodes -days 2920 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj &quot;/CN=*.luffy.com/O=ingress-nginx&quot;
+
+# 证书信息保存到secret对象中，ingress-nginx会读取secret对象解析出证书加载到nginx配置中
+# sceret 使用tls保存
+$ kubectl -n luffy create secret tls tls-myblog --key tls.key --cert tls.crt
+</code></pre>
+<p>修改yaml</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myblog
+  namespace: luffy
+spec:
+  rules:
+  - host: myblog.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: myblog
+            port:
+              number: 80
+  tls:   #添加tls字段
+  - hosts:
+    - myblog.luffy.com
+    secretName: tls-myblog
+</code></pre>
+<p>然后，访问 https://myblog.luffy.com/blog/index/</p>
+<h3 id="346-多路径转发及重写的实现">3.4.6 多路径转发及重写的实现</h3>
+<ol>
+<li>
+<p>多path转发示例：</p>
+<p>目标：</p>
+</li>
+</ol>
+<pre><code class="language-none">myblog.luffy.com -&gt; 172.21.51.143 -&gt; /foo/aaa   service1:4200/foo/aaa
+                                      /bar      service2:8080
+                                      /		    myblog:80/
+</code></pre>
+<p>​	 实现：</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-fanout-example
+  namespace: luffy
+spec:
+  rules:
+  - host: myblog.luffy.com
+    http:
+      paths:
+      - path: /foo    #添加多个Path即可
+        pathType: Prefix
+        backend:
+          service: 
+            name: service1
+            port:
+              number: 4200
+      - path: /bar
+        pathType: Prefix
+        backend:
+          service: 
+            name: service2
+            port:
+              number: 8080
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: myblog
+            port:
+              number: 80
+</code></pre>
+<ol start="2">
+<li>
+<p>nginx的URL重写</p>
+<p>目标：</p>
+<pre><code>nginx.luffy.com -&gt; 172.21.51.143 -&gt; /api/v1   -&gt; nginx-v1 service
+                                    /api/v2   -&gt; nginx-v2 service
+</code></pre>
+<p>实现：</p>
+<pre><code class="language-powershell">$ cat nginx-v1-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v1
+  namespace: luffy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-v1
+  template:
+    metadata:
+      labels:
+        app: nginx-v1
+    spec:
+      containers:
+      - image: nginx:alpine
+         name: nginx-v1
+        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'this is nginx-v1'&gt;/usr/share/nginx/html/index.html;nginx -g 'daemon off;'&quot;]
+
+$ cat nginx-v1-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-v1
+  namespace: luffy
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-v1
+  type: ClusterIP
+
+# 创建nginx-v2
+
+$ kubectl apply -f .
+
+
+$ cat ingress-rewrite.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-rewrite
+  namespace: luffy
+  annotations:  # 声明
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # $1的参数从path：中取值
+spec:
+  rules:
+  - host: nginx.luffy.com
+    http:
+      paths:
+      - path: /api/v1/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-v1
+            port:
+              number: 80
+      - path: /api/v2/(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-v2
+            port:
+              number: 80
+              
+              
+              
+# 访问测试
+$ http://nginx.luffy.com/api/v1/
+$ http://nginx.luffy.com/api/v2/
+</code></pre>
+</li>
+</ol>
+<h4 id="小结">小结</h4>
+<ol>
+<li>核心讲如何通过k8s管理业务应用</li>
+<li>介绍k8s的架构、核心组件和工作流程，使用kubeadm快速安装k8s集群</li>
+<li>定义Pod.yaml，将myblog和mysql打包在同一个Pod中，myblog使用localhost访问mysql</li>
+<li>mysql数据持久化，为myblog业务应用添加了健康检查和资源限制</li>
+<li>将myblog与mysql拆分，使用独立的Pod管理</li>
+<li>yaml文件中的环境变量存在账号密码明文等敏感信息，使用configMap和Secret来统一配置，优化部署</li>
+<li>只用Pod去直接管理业务应用，对于多副本的需求，很难实现，因此使用Deployment Workload</li>
+<li>有了多副本，多个Pod如何去实现LB入口，因此引入了Service的资源类型，有CLusterIp和NodePort</li>
+<li>ClusterIP是四层的IP地址，不固定，不具备跨环境迁移，因此利用coredns实现集群内服务发现，组件之间直接通过Service名称通信，实现配置的去IP化</li>
+<li>对Django应用做改造，django直接使用mysql:3306实现数据库访问</li>
+<li>为了实现在集群外部对集群内服务的访问，因此创建NodePort类型的Service</li>
+<li>介绍了Service的实现原理，通过kube-proxy利用iptables或者ipvs维护服务访问规则，实现虚拟IP转发到具体Pod的需求</li>
+<li>为了实现集群外使用域名访问myblog，因此引入Ingress资源，通过定义访问规则，实现七层代理</li>
+<li>考虑真实的场景，对Ingress的使用做了拓展，介绍多path转发及nginx URL重写的实现</li>
+</ol>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/">
+                <h3 class="post-title">
+                  Kubernetes服务访问之Service
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
