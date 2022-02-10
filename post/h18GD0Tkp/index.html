@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644307802212">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644483153250">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644307802212" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644483153250" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,21 +34,17 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E4%B8%80-kubernetes%E6%A6%82%E8%BF%B0">一、 Kubernetes概述</a><br>
-*
+<li><a href="#%E4%B8%80-kubernetes%E6%A6%82%E8%BF%B0">一、 Kubernetes概述</a>
 <ul>
 <li><a href="#11-%E7%BA%AF%E5%AE%B9%E5%99%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98">1.1 纯容器模式的问题</a></li>
 <li><a href="#12-%E5%AE%B9%E5%99%A8%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0">1.2 容器调度管理平台</a></li>
 <li><a href="#13-%E6%9E%B6%E6%9E%84%E5%9B%BE">1.3 架构图</a></li>
 <li><a href="#14-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6">1.4 核心组件</a></li>
 <li><a href="#15-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B">1.5 工作流程</a></li>
-<li><a href="#17-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83">1.7 架构设计的几点思考</a></li>
+<li><a href="#16-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%87%A0%E7%82%B9%E6%80%9D%E8%80%83">1.6 架构设计的几点思考</a></li>
 </ul>
 </li>
-<li><a href="#%E4%BA%8C-%E5%AE%9E%E8%B7%B5-%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85">二、实践--集群安装</a><br>
-*
+<li><a href="#%E4%BA%8C-%E5%AE%9E%E8%B7%B5-%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85">二、实践--集群安装</a>
 <ul>
 <li><a href="#21-k8s%E9%9B%86%E7%BE%A4%E4%B8%BB%E6%B5%81%E5%AE%89%E8%A3%85%E6%96%B9%E5%BC%8F">2.1 k8s集群主流安装方式</a></li>
 <li><a href="#22-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6">2.2 核心组件</a></li>
@@ -56,8 +52,7 @@
 <li><a href="#24-kubectl%E7%9A%84%E4%BD%BF%E7%94%A8">2.4 kubectl的使用</a></li>
 </ul>
 </li>
-<li><a href="#%E4%B8%89-%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8k8s%E7%AE%A1%E7%90%86%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8">三、实践--使用k8s管理业务应用</a><br>
-*
+<li><a href="#%E4%B8%89-%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8k8s%E7%AE%A1%E7%90%86%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8">三、实践--使用k8s管理业务应用</a>
 <ul>
 <li><a href="#31-%E6%9C%80%E5%B0%8F%E8%B0%83%E5%BA%A6%E5%8D%95%E5%85%83-pod">3.1 最小调度单元 Pod</a>
 <ul>
@@ -108,11 +103,14 @@
 <ul>
 <li><a href="#341-%E7%A4%BA%E6%84%8F%E5%9B%BE">3.4.1 示意图：</a></li>
 <li><a href="#342-%E5%AE%9E%E7%8E%B0%E9%80%BB%E8%BE%91">3.4.2 实现逻辑</a></li>
+<li><a href="#343-%E5%AE%89%E8%A3%85">3.4.3 安装</a></li>
 <li><a href="#344-%E8%AE%BF%E9%97%AE">3.4.4 访问</a></li>
-<li><a href="#346-%E5%A4%9A%E8%B7%AF%E5%BE%84%E8%BD%AC%E5%8F%91%E5%8F%8A%E9%87%8D%E5%86%99%E7%9A%84%E5%AE%9E%E7%8E%B0">3.4.6 多路径转发及重写的实现</a></li>
+<li><a href="#345-https%E8%AE%BF%E9%97%AE">3.4.5 HTTPS访问：</a></li>
+<li><a href="#346-%E5%A4%9A%E8%B7%AF%E5%BE%84%E8%BD%AC%E5%8F%91%E5%8F%8A%E9%87%8D%E5%86%99%E7%9A%84%E5%AE%9E%E7%8E%B0">3.4.6 多路径转发及重写的实现</a>
+<ul>
+<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
 </ul>
 </li>
-<li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
 </ul>
 </li>
 </ul>
@@ -191,8 +189,8 @@
         <div class="post-content yue">
           <p>本章学习kubernetes的架构及工作流程，重点介绍如何使用Workload管理业务应用的生命周期，实现服务不中断的滚动更新，通过服务发现和集群内负载均衡来实现集群内部的服务间访问，并通过ingress实现外部使用域名访问集群内部的服务。</p>
 <p>学习过程中会逐步对Django项目做k8s改造，从零开始编写所需的资源文件。通过本章的学习，学员会掌握高可用k8s集群的搭建，同时Django demo项目已经可以利用k8s的控制器、服务发现、负载均衡、配置管理等特性来实现生命周期的管理。</p>
-<h2 id="一-kubernetes概述">一、 Kubernetes概述</h2>
-<h4 id="11-纯容器模式的问题">1.1 纯容器模式的问题</h4>
+<h1 id="一-kubernetes概述">一、 Kubernetes概述</h1>
+<h2 id="11-纯容器模式的问题">1.1 纯容器模式的问题</h2>
 <ol>
 <li>业务容器数量庞大，哪些容器部署在哪些节点，使用了哪些端口，如何记录、管理，需要登录到每台机器去管理？</li>
 <li>跨主机通信，多个机器中的容器之间相互调用如何做，iptables规则手动维护？</li>
@@ -202,11 +200,11 @@
 <li>如何实现滚动升级保证业务的连续性？</li>
 <li>......</li>
 </ol>
-<h4 id="12-容器调度管理平台">1.2 容器调度管理平台</h4>
+<h2 id="12-容器调度管理平台">1.2 容器调度管理平台</h2>
 <p>Docker Swarm       Mesos        Google Kubernetes</p>
 <p>2017年开始Kubernetes凭借强大的容器集群管理功能, 逐步占据市场,目前在容器编排领域一枝独秀</p>
 <p>Kubernetes官网:  https://kubernetes.io/</p>
-<h4 id="13-架构图">1.3 架构图</h4>
+<h2 id="13-架构图">1.3 架构图</h2>
 <p>如何设计一个容器管理平台？</p>
 <ul>
 <li>集群架构，管理节点 分发容器 到数据节点</li>
@@ -217,7 +215,7 @@
 </ul>
 <p>分布式系统，两类角色：管理节点(master)和工作节点(worker node)</p>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840367221.png" alt="" loading="lazy"></figure>
-<h4 id="14-核心组件">1.4 核心组件</h4>
+<h2 id="14-核心组件">1.4 核心组件</h2>
 <ul>
 <li>
 <p>ETCD：分布式高性能键值数据库,存储整个集群的所有元数据</p>
@@ -256,7 +254,7 @@
 <p>kubectl: 命令行接口，用于对 Kubernetes 集群运行命令  https://kubernetes.io/zh/docs/reference/kubectl/</p>
 </li>
 </ul>
-<h4 id="15-工作流程">1.5 工作流程</h4>
+<h2 id="15-工作流程">1.5 工作流程</h2>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840400591.png" alt="" loading="lazy"></figure>
 <ol>
 <li>用户准备一个资源文件（.yaml 记录了业务应用的名称、镜像地址等信息），通过调用APIServer执行创建Pod</li>
@@ -269,15 +267,15 @@
 <pre><code>当使用deployment控制器创建Pod时，
 controller-manager在Scheduler之前，生成Pod元数据，写道ETCD中去，Scheduler才可以进行调度。
 </code></pre>
-<h4 id="17-架构设计的几点思考">1.7 架构设计的几点思考</h4>
+<h2 id="16-架构设计的几点思考">1.6 架构设计的几点思考</h2>
 <ol>
 <li>系统各个组件分工明确(APIServer是所有请求入口，CM是控制中枢，Scheduler主管调度，而Kubelet负责运行)，配合流畅，整个运行机制一气呵成。</li>
 <li>除了配置管理和持久化组件ETCD，其他组件并不保存数据。意味<code>除ETCD外</code>其他组件都是无状态的。因此从架构设计上对kubernetes系统高可用部署提供了支撑。</li>
 <li>同时因为组件无状态，组件的升级，重启，故障等并不影响集群最终状态，只要组件恢复后就可以从中断处继续运行。</li>
 <li>各个组件和kube-apiserver之间的数据推送都是通过list-watch机制来实现。</li>
 </ol>
-<h2 id="二-实践-集群安装">二、实践--集群安装</h2>
-<h4 id="21-k8s集群主流安装方式">2.1 k8s集群主流安装方式</h4>
+<h1 id="二-实践-集群安装">二、实践--集群安装</h1>
+<h2 id="21-k8s集群主流安装方式">2.1 k8s集群主流安装方式</h2>
 <ul>
 <li>minikube</li>
 <li>二进制安装</li>
@@ -285,7 +283,7 @@ controller-manager在Scheduler之前，生成Pod元数据，写道ETCD中去，S
 </ul>
 <p>kubeadm使用文档:  https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/</p>
 <p>kubeadmin安装文档:《Kubernetes安装手册（非高可用版）》</p>
-<h4 id="22-核心组件">2.2 核心组件</h4>
+<h2 id="22-核心组件">2.2 核心组件</h2>
 <p>静态Pod的方式：</p>
 <pre><code class="language-powershell">## etcd、apiserver、controller-manager、kube-scheduler
 $ kubectl -n kube-system get pod
@@ -296,7 +294,7 @@ $ kubectl -n kube-system get pod
 <blockquote>
 <p>kubectl：二进制命令行工具</p>
 </blockquote>
-<h4 id="23-理解集群资源">2.3 理解集群资源</h4>
+<h2 id="23-理解集群资源">2.3 理解集群资源</h2>
 <p>组件是为了支撑k8s平台的运行，安装好的软件。</p>
 <p>资源是如何去使用k8s的能力的定义。比如，k8s可以使用Pod来管理业务应用，那么Pod就是k8s集群中的一类资源，集群中的所有资源可以提供如下方式查看：</p>
 <pre><code class="language-powershell">$ kubectl api-resources
@@ -317,7 +315,7 @@ kubernetes-dashboard   Active   71m
 <li>不同namespace下的同类资源可以重名</li>
 <li>通常在项目使用的时候，我们会创建带有业务含义的namespace来做逻辑上的整合</li>
 </ul>
-<h4 id="24-kubectl的使用">2.4 kubectl的使用</h4>
+<h2 id="24-kubectl的使用">2.4 kubectl的使用</h2>
 <p>类似于docker，kubectl是命令行工具，用于与APIServer交互，内置了丰富的子命令，功能极其强大。</p>
 <p>kubectl使用官方文档： https://kubernetes.io/docs/reference/kubectl/overview/</p>
 <pre><code class="language-powershell">$ kubectl -h
@@ -325,11 +323,11 @@ $ kubectl get -h
 $ kubectl create -h
 $ kubectl create namespace -h
 </code></pre>
-<h2 id="三-实践-使用k8s管理业务应用">三、实践--使用k8s管理业务应用</h2>
-<h4 id="31-最小调度单元-pod">3.1 最小调度单元 Pod</h4>
+<h1 id="三-实践-使用k8s管理业务应用">三、实践--使用k8s管理业务应用</h1>
+<h2 id="31-最小调度单元-pod">3.1 最小调度单元 Pod</h2>
 <p>docker调度的是容器，在k8s集群中，最小的调度单元是Pod（豆荚）</p>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840469887.png" alt="" loading="lazy"></figure>
-<h5 id="311-为什么引入pod">3.1.1 为什么引入Pod</h5>
+<h3 id="311-为什么引入pod">3.1.1 为什么引入Pod</h3>
 <ul>
 <li>
 <p>与容器引擎解耦</p>
@@ -339,7 +337,7 @@ $ kubectl create namespace -h
 <p>多容器共享网络|存储|进程 空间, 支持的业务场景更加灵活</p>
 </li>
 </ul>
-<h5 id="312-使用yaml格式定义pod">3.1.2 使用yaml格式定义Pod</h5>
+<h3 id="312-使用yaml格式定义pod">3.1.2 使用yaml格式定义Pod</h3>
 <p><em>myblog/one-pod/pod.yaml</em></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Pod
@@ -516,7 +514,7 @@ spec:
 <pre><code class="language-powershell">$ kubectl explain pod
 $ kubectl explain Pod.apiVersion
 </code></pre>
-<h5 id="313-创建和访问pod">3.1.3 创建和访问Pod</h5>
+<h3 id="313-创建和访问pod">3.1.3 创建和访问Pod</h3>
 <pre><code class="language-powershell">## 创建namespace, namespace是逻辑上的资源池
 $ kubectl create namespace luffy
 
@@ -546,7 +544,7 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 ## 再次访问服务,3306和8002
 $ curl 10.244.1.146:8002/blog/index/
 </code></pre>
-<h5 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h5>
+<h3 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h3>
 <p>登录<code>k8s-slave1</code>节点</p>
 <pre><code class="language-powershell">$ docker ps -a |grep myblog  ## 发现有三个容器
 ## 其中包含mysql和myblog程序以及Infra容器
@@ -560,7 +558,7 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 / # ifconfig
 </code></pre>
 <p>pod容器命名: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
-<h5 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h5>
+<h3 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h3>
 <pre><code class="language-powershell">## 查看pod调度节点及pod_ip
 $ kubectl -n luffy get pods -o wide
 
@@ -573,24 +571,24 @@ $ kubectl -n luffy describe pod myblog
 ## 查看pod的labels标签
 $ kubectl -n luffy get pod --show-lables
 </code></pre>
-<h5 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h5>
+<h3 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h3>
 <pre><code class="language-powershell">#进入Pod内的容器
 $ kubectl -n &lt;namespace&gt; exec &lt;pod_name&gt; -c &lt;container_name&gt; -ti /bin/sh
 
 #查看Pod内容器日志,显示标准或者错误输出日志
 $ kubectl -n &lt;namespace&gt; logs -f --tail=100 &lt;pod_name&gt; -c &lt;container_name&gt;
 </code></pre>
-<h5 id="317-更新服务版本">3.1.7 更新服务版本</h5>
+<h3 id="317-更新服务版本">3.1.7 更新服务版本</h3>
 <pre><code class="language-powershell">$ kubectl apply -f demo-pod.yaml
 </code></pre>
-<h5 id="318-删除pod服务">3.1.8 删除Pod服务</h5>
+<h3 id="318-删除pod服务">3.1.8 删除Pod服务</h3>
 <pre><code class="language-powershell">#根据文件删除
 $ kubectl delete -f demo-pod.yaml
 
 #根据pod_name删除
 $ kubectl -n &lt;namespace&gt; delete pod &lt;pod_name&gt;
 </code></pre>
-<h5 id="319-pod数据持久化">3.1.9 Pod数据持久化</h5>
+<h3 id="319-pod数据持久化">3.1.9 Pod数据持久化</h3>
 <p>若删除了Pod，由于mysql的数据都在容器内部，会造成数据丢失，因此需要数据进行持久化。</p>
 <ul>
 <li>
@@ -703,7 +701,7 @@ $ curl 10.244.1.151:8002/blog/index/
 </ul>
 </li>
 </ul>
-<h5 id="3110-服务健康检查">3.1.10 服务健康检查</h5>
+<h3 id="3110-服务健康检查">3.1.10 服务健康检查</h3>
 <p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
 <p>两种机制：</p>
 <ul>
@@ -791,7 +789,7 @@ $ curl 10.244.1.151:8002/blog/index/
 <li>failureThreshold：探测成功后，最少连续探测失败多少次才被认定为失败。默认是3，最小值是1。</li>
 </ul>
 <p>K8S将在Pod开始<strong>启动10s(initialDelaySeconds)后</strong>利用HTTP访问8002端口的/blog/index/，如果<strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
-<h5 id="3111-重启策略">3.1.11 重启策略</h5>
+<h3 id="3111-重启策略">3.1.11 重启策略</h3>
 <p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。<br>
 Pod的重启策略包括Always、OnFailure和Never，默认值为Always。</p>
 <ul>
@@ -825,7 +823,7 @@ spec:
 <li>使用Never时，退出了就不再重启</li>
 </ol>
 <p>可以看出，若容器正常退出，Pod的状态会是Completed，非正常退出，状态为CrashLoopBackOff</p>
-<h5 id="3112-镜像拉取策略">3.1.12 镜像拉取策略</h5>
+<h3 id="3112-镜像拉取策略">3.1.12 镜像拉取策略</h3>
 <pre><code class="language-yaml">spec:
   containers:
   - name: myblog
@@ -838,7 +836,7 @@ spec:
 <li>IfNotPresent ，本地有则使用本地镜像，本地没有则去仓库拉取</li>
 <li>Never，只使用本地镜像，本地没有则报错</li>
 </ul>
-<h5 id="3113-pod资源限制">3.1.13 Pod资源限制</h5>
+<h3 id="3113-pod资源限制">3.1.13 Pod资源限制</h3>
 <p>为了保证充分利用集群资源，且确保重要容器在运行周期内能够分配到足够的资源稳定运行，因此平台需要具备</p>
 <p>Pod的资源限制的能力。 对于一个pod来说，资源最基础的2个的指标就是：CPU和内存。</p>
 <p>Kubernetes提供了个采用requests和limits 两种类型参数对资源进行预分配和使用限制。</p>
@@ -918,7 +916,7 @@ spec:
 <blockquote>
 <p>注意：若内存使用超出限制，会引发系统的OOM机制，因CPU是可压缩资源，不会引发Pod退出或重建</p>
 </blockquote>
-<h5 id="3114-yaml优化">3.1.14 yaml优化</h5>
+<h3 id="3114-yaml优化">3.1.14 yaml优化</h3>
 <p>目前完善后的yaml，<code>myblog/one-pod/pod-completed.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Pod
@@ -1117,7 +1115,7 @@ mysql    1/1     Running   0          52s   172.21.51.67      k8s-slave1
 ## 访问myblog服务正常
 $ curl 10.244.1.152:8002/blog/index/
 </code></pre>
-<h5 id="3115-configmap和secret">3.1.15 Configmap和Secret</h5>
+<h3 id="3115-configmap和secret">3.1.15 Configmap和Secret</h3>
 <p><strong>解决问题二，环境变量中敏感信息带来的安全隐患</strong></p>
 <p>为什么要统一管理环境变量</p>
 <ul>
@@ -1287,7 +1285,7 @@ spec:
       periodSeconds: 15
 </code></pre>
 <p>在部署不同的环境时，pod的yaml无须再变化，只需要在每套环境中维护一套ConfigMap和Secret即可。但是注意configmap和secret不能跨namespace使用，且更新后，pod内的env不会自动更新，重建后方可更新。</p>
-<h5 id="3116-如何编写资源yaml">3.1.16 如何编写资源yaml</h5>
+<h3 id="3116-如何编写资源yaml">3.1.16 如何编写资源yaml</h3>
 <ol>
 <li>
 <p>拿来主义，从机器中已有的资源中拿</p>
@@ -1304,7 +1302,7 @@ spec:
 <p>kubectl explain 查看具体字段含义</p>
 </li>
 </ol>
-<h5 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h5>
+<h3 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h3>
 <p>Pod的状态如下表所示：</p>
 <table>
 <thead>
@@ -1444,7 +1442,7 @@ $ cat /tmp/loap/timing
 <blockquote>
 <p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
 </blockquote>
-<h5 id="3118-小结">3.1.18 小结</h5>
+<h3 id="3118-小结">3.1.18 小结</h3>
 <ol>
 <li>实现k8s平台与特定的容器运行时解耦，提供更加灵活的业务部署方式，引入了Pod概念</li>
 <li>k8s使用yaml格式定义资源文件，yaml中Map与List的语法，与json做类比</li>
@@ -1469,8 +1467,8 @@ $ cat /tmp/loap/timing
 <li>运行业务Pod的某个节点挂了，可以自动帮我把Pod转移到集群中的可用节点启动起来</li>
 <li>我的业务应用功能是收集节点监控数据,需要把Pod运行在k8集群的各个节点上</li>
 </ol>
-<h4 id="32-pod控制器">3.2 Pod控制器</h4>
-<h5 id="321-workload-工作负载">3.2.1 Workload (工作负载)</h5>
+<h2 id="32-pod控制器">3.2 Pod控制器</h2>
+<h3 id="321-workload-工作负载">3.2.1 Workload (工作负载)</h3>
 <p>控制器又称工作负载。是用于实现管理pod的中间层，确保pod资源符合预期的状态，pod的资源出现故障时，会尝试进行重启，当根据重启策略无效，则会重新新建pod的资源。</p>
 <figure data-type="image" tabindex="9"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840632889.png" alt="" loading="lazy"></figure>
 <ul>
@@ -1481,7 +1479,7 @@ $ cat /tmp/loap/timing
 <li>Cronjob：周期性任务控制，不需要持续后台运行 （定时任务）</li>
 <li>StatefulSet：管理有状态应用</li>
 </ul>
-<h5 id="322-deployment">3.2.2 Deployment</h5>
+<h3 id="322-deployment">3.2.2 Deployment</h3>
 <p><code>myblog/deployment/deploy-mysql.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment  #资源类型
@@ -1614,10 +1612,10 @@ spec:
           timeoutSeconds: 2
           periodSeconds: 15
 </code></pre>
-<h5 id="323-创建deployment">3.2.3 创建Deployment</h5>
+<h3 id="323-创建deployment">3.2.3 创建Deployment</h3>
 <pre><code class="language-powershell">$ kubectl create -f deploy.yaml
 </code></pre>
-<h5 id="324-查看deployment">3.2.4 查看Deployment</h5>
+<h3 id="324-查看deployment">3.2.4 查看Deployment</h3>
 <pre><code class="language-powershell"># kubectl api-resources
 $ kubectl -n luffy get deploy
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
@@ -1639,7 +1637,7 @@ mysql-85f4f65f99-w6jkj    1/1     Running   0          2m28s
 # 查看replicaSet
 $ kubectl -n luffy get rs
 </code></pre>
-<h5 id="325-副本保障机制">3.2.5 副本保障机制</h5>
+<h3 id="325-副本保障机制">3.2.5 副本保障机制</h3>
 <p>controller实时检测pod状态，并保障副本数一直处于期望的值。</p>
 <pre><code class="language-powershell">## 删除pod，观察pod状态变化
 $ kubectl -n luffy delete pod myblog-7c96c9f76b-qbbg7
@@ -1659,7 +1657,7 @@ myblog-7c96c9f76b-qbbg7   1/1     Running   0          11m
 myblog-7c96c9f76b-s6brm   1/1     Running   0          55s
 mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
 </code></pre>
-<h5 id="326-pod驱逐策略">3.2.6 Pod驱逐策略</h5>
+<h3 id="326-pod驱逐策略">3.2.6 Pod驱逐策略</h3>
 <p>K8S 有个特色功能叫 pod eviction，它在某些场景下，如节点NotReady，或者资源不足时，把 pod 驱逐至其它节点，这也是出于业务保护的角度去考虑的。</p>
 <ol>
 <li>
@@ -1695,7 +1693,7 @@ mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
 </ul>
 </li>
 </ol>
-<h5 id="327-服务更新">3.2.7 服务更新</h5>
+<h3 id="327-服务更新">3.2.7 服务更新</h3>
 <p>修改服务，重新打tag模拟服务更新。</p>
 <p>更新方式：</p>
 <ol>
@@ -1730,7 +1728,7 @@ $ kubectl -n luffy get pod -owide  #当前set副本数为2
 先启动一个新的，当新启动的pod状态为running，但是健康检查没有过为0/1时，旧的pod状态为running，并未删除
 当新启动的pod REDAY变为1/1时，旧的pod才开始删除.
 </code></pre>
-<h5 id="328-更新策略">3.2.8 更新策略</h5>
+<h3 id="328-更新策略">3.2.8 更新策略</h3>
 <pre><code class="language-yaml">...
 spec:
   replicas: 2	#指定Pod副本数
@@ -1796,7 +1794,7 @@ myblog-6fdcf98f9    0         0         0       16h
         app: mysql
 ...
 </code></pre>
-<h5 id="329-服务回滚">3.2.9 服务回滚</h5>
+<h3 id="329-服务回滚">3.2.9 服务回滚</h3>
 <p>通过滚动升级的策略可以平滑的升级Deployment，若升级出现问题，需要最快且最好的方式回退到上一次能够提供正常工作的版本。为此K8S提供了回滚机制。</p>
 <p><strong>revision</strong>：更新应用时，K8S都会记录当前的版本号，即为revision，当升级出现问题时，可通过回滚到某个特定的revision，默认配置下，K8S只会保留最近的几个revision，可以通过Deployment配置文件中的spec.revisionHistoryLimit属性增加revision数量，默认是10。</p>
 <p>查看当前：</p>
@@ -1822,13 +1820,13 @@ deployment.extensions/myblog rolled back
 
 # 访问应用测试
 </code></pre>
-<h4 id="33-kubernetes服务访问之service">3.3 Kubernetes服务访问之Service</h4>
+<h2 id="33-kubernetes服务访问之service">3.3 Kubernetes服务访问之Service</h2>
 <p>通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：</p>
 <ul>
 <li>Pod IP 仅仅是集群内可见的虚拟IP，外部无法访问。</li>
 <li>Pod IP会随着Pod的销毁而消失，当ReplicaSet对Pod进行动态伸缩时，Pod IP可能随时随地都会变化，这样对于我们访问这个服务带来了难度。</li>
 </ul>
-<h5 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h5>
+<h3 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h3>
 <p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。service会为这个LB提供一个IP，一般称为cluster IP 。使用Service对象，通过selector进行标签选择，找到对应的Pod:</p>
 <p><code>myblog/deployment/svc-myblog.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
@@ -1943,7 +1941,7 @@ $ curl 10.108.214.84:3306
 <li>为mysql创建一个固定clusterIp的Service，把clusterIp配置在myblog的环境变量中</li>
 <li>利用集群服务发现的能力，组件之间通过service name来访问</li>
 </ul>
-<h5 id="332-服务发现">3.3.2 服务发现</h5>
+<h3 id="332-服务发现">3.3.2 服务发现</h3>
 <p>在k8s集群中，组件之间可以通过定义的Service名称实现通信。</p>
 <p>演示服务发现：</p>
 <pre><code class="language-powershell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
@@ -2036,7 +2034,7 @@ $ kubectl get svc
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
 </code></pre>
-<h5 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h5>
+<h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
 <p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
 <p><code>myblog/deployment/svc-myblog-nodeport.yaml</code></p>
 <pre><code class="language-powershell">apiVersion: v1
@@ -2078,7 +2076,7 @@ $ curl 172.21.51.143:30647/blog/index/
 <p>CLUSTER-IP为虚拟IP，集群内如何通过虚拟IP访问到具体的Pod服务？</p>
 </li>
 </ol>
-<h5 id="334-kube-proxy">3.3.4 kube-proxy</h5>
+<h3 id="334-kube-proxy">3.3.4 kube-proxy</h3>
 <p>运行在每个节点上，监听 API Server 中服务对象的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
 <p>有三种模式：</p>
 <ul>
@@ -2108,7 +2106,7 @@ $  iptables-save |grep KUBE-SEP-GB5GNOM5CZH7ICXZ
 $ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
 -A KUBE-SEP-7GWC3FN2JI5KLE47 -p tcp -m tcp -j DNAT --to-destination 10.244.1.159:8002
 </code></pre>
-<h5 id="335-面试题-k8s的service-cluster-ip为什么不能ping通">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</h5>
+<h3 id="335-面试题-k8s的service-cluster-ip为什么不能ping通">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</h3>
 <p>先看下service IP是怎么来的？</p>
 <pre><code>service IP是serviceController生成的，参数--service-cluster-ip-range string会配置在controller-manager上，serviceController会在这个参数指定的cidr范围内取一个IP
 </code></pre>
@@ -2120,7 +2118,7 @@ kube-proxy在iptables模式下，这个IP没有被设置在任何的网络设备
 
 在ipvs模式下，所有的clusterIp会被设置在node上的kube-ipvs0的虚拟网卡上，这个时候去ping是可以通的。
 </code></pre>
-<h5 id="336-iptables转换ipvs模式">3.3.6 iptables转换ipvs模式</h5>
+<h3 id="336-iptables转换ipvs模式">3.3.6 iptables转换ipvs模式</h3>
 <pre><code class="language-powershell"># 内核开启ipvs模块，集群各节点都执行
 cat &gt; /etc/sysconfig/modules/ipvs.modules &lt;&lt;EOF
 #!/bin/bash
@@ -2164,7 +2162,7 @@ $ iptables -F
 # 查看规则生效
 $ ipvsadm -ln
 </code></pre>
-<h4 id="34-kubernetes服务访问之ingress">3.4 Kubernetes服务访问之Ingress</h4>
+<h2 id="34-kubernetes服务访问之ingress">3.4 Kubernetes服务访问之Ingress</h2>
 <p>对于Kubernetes的Service，无论是Cluster-Ip和Node Port均是四层的负载，集群内的服务如何实现七层的负载均衡，这就需要借助于Ingress，Ingress控制器的实现方式有很多，比如nginx, Contour, Haproxy, trafik, Istio。</p>
 <p>几种常用的ingress功能对比和选型可以参考<a href="https://www.kubernetes.org.cn/5948.html">这里</a></p>
 <p>Ingress-nginx是7层的负载均衡器 ，负责统一管理外部对k8s cluster中Service的请求。主要包含：</p>
@@ -2216,19 +2214,19 @@ spec:
 </code></pre>
 </li>
 </ul>
-<h5 id="341-示意图">3.4.1 示意图：</h5>
+<h3 id="341-示意图">3.4.1 示意图：</h3>
 <figure data-type="image" tabindex="12"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840756401.webp" alt="" loading="lazy"></figure>
 <p>Ingress的作用：</p>
 <pre><code>目的是：集群外部的流量访问内部的Pod
 通过安装Ingress控制器，外部的流量第一步，一定是转发到Ingress控制器上。
 流量到Ingress之后，它可以根据域名或者路径，转发到Service，进而转发到具体的Pod上。
 </code></pre>
-<h5 id="342-实现逻辑">3.4.2 实现逻辑</h5>
+<h3 id="342-实现逻辑">3.4.2 实现逻辑</h3>
 <p>1）ingress controller通过和kubernetes api交互，动态的去感知集群中ingress规则变化<br>
 2）然后读取ingress规则(规则就是写明了哪个域名对应哪个service)，按照自定义的规则，生成一段nginx配置<br>
 3）再写到nginx-ingress-controller的pod里，这个Ingress controller的pod里运行着一个Nginx服务，控制器把生成的nginx配置写入/etc/nginx/nginx.conf文件中<br>
 4）然后reload一下使配置生效。以此达到域名分别配置和动态更新的问题。</p>
-<p>#####3.4.3 安装</p>
+<h3 id="343-安装">3.4.3 安装</h3>
 <p><a href="https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md">官方文档</a></p>
 <pre><code class="language-powershell">$ wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
 ## 或者使用myblog/deployment/ingress/mandatory.yaml
@@ -2347,13 +2345,13 @@ spec:
 
 
 </code></pre>
-<h5 id="344-访问">3.4.4 访问</h5>
+<h3 id="344-访问">3.4.4 访问</h3>
 <p>域名解析服务，将 <code>myblog.luffy.com</code>解析到ingress的地址上。ingress是支持多副本的，高可用的情况下，生产的配置是使用lb服务（内网F5设备，公网elb、slb、clb，解析到各ingress的机器，如何域名指向lb地址）</p>
 <p>本机，添加如下hosts记录来演示效果。</p>
 <pre><code class="language-json">172.21.51.143 myblog.luffy.com
 </code></pre>
 <p>然后，访问 http://myblog.luffy.com/blog/index/</p>
-<p>#####3.4.5 HTTPS访问：</p>
+<h3 id="345-https访问">3.4.5 HTTPS访问：</h3>
 <pre><code class="language-powershell">#自签名证书
 $ openssl req -x509 -nodes -days 2920 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj &quot;/CN=*.luffy.com/O=ingress-nginx&quot;
 
@@ -2385,7 +2383,7 @@ spec:
     secretName: tls-myblog
 </code></pre>
 <p>然后，访问 https://myblog.luffy.com/blog/index/</p>
-<h5 id="346-多路径转发及重写的实现">3.4.6 多路径转发及重写的实现</h5>
+<h3 id="346-多路径转发及重写的实现">3.4.6 多路径转发及重写的实现</h3>
 <ol>
 <li>
 <p>多path转发示例：</p>
