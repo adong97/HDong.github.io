@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-10T09:27:05.857Z</updated>
+    <updated>2022-02-10T15:04:35.959Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -407,11 +407,11 @@ metadata:
   namespace: luffy
 spec:
   ports:
-  - port: 80  #映射要ClusterIP上的端口
+  - port: 80  #映射到ClusterIP上的端口
     protocol: TCP
-    targetPort: 8002   #对应容器内的端口
+    targetPort: 8002   #对应Pod内的端口
   selector:
-    app: myblog
+    app: myblog   #选择标签
   type: ClusterIP
 </code></pre>
 <p>操作演示：</p>
@@ -599,11 +599,18 @@ $ kubectl -n kube-system get svc
 NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
 kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP   51d
 
-## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
+## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 
+##因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
 
 $ kubectl get svc
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
+</code></pre>
+<h3 id="endpoints-资源类型">endpoints 资源类型</h3>
+<pre><code>kubectl -n luffy get endpoints
+
+每次创建service的时候，实际上会创建一个对应的endpoints.
+endpoint controller负责把endpoints下要关联的Pod IP list添加进来
 </code></pre>
 <h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
 <p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
@@ -968,21 +975,17 @@ mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
 </li>
 </ol>
 <h3 id="327-服务更新">3.2.7 服务更新</h3>
-<p>修改服务，重新打tag模拟服务更新。</p>
-<p>更新方式：</p>
-<ol>
-<li>
-<p>修改yaml文件，使用<code>kubectl -n luffy apply -f deploy-myblog.yaml</code>来应用更新</p>
-</li>
-<li>
-<p><code>kubectl -n luffy edit deploy myblog</code>在线更新</p>
-</li>
-<li>
-<p><code>kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record</code></p>
-<p>#设置镜像版本为172.21.51.143:5000/myblog:v2</p>
-<p>#--record：记录本次设置</p>
-</li>
-</ol>
+<p>问题：K8s是如何实现滚动更新的？</p>
+<p>修改服务，重新打tag,模拟服务更新。</p>
+<pre><code>更新方式：
+
+1. 修改yaml文件，使用`kubectl -n luffy apply -f deploy-myblog.yaml` 来应用更新
+2. `kubectl -n luffy edit deploy myblog` 在线更新  
+3. `kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record` 
+
+# 设置镜像版本为172.21.51.143:5000/myblog:v2  
+# --record：记录本次设置
+</code></pre>
 <p>修改文件测试：</p>
 <pre><code class="language-powershell">#修改配置文件
 $ vi /opt/myblog/python-demo/blog/templates/index.html
@@ -1009,7 +1012,7 @@ spec:
   selector:		#指定Pod的选择器
     matchLabels:
       app: myblog
-  strategy:  #默认更新策略
+  strategy:  # 默认更新策略
     rollingUpdate:   #指定滚动更新策略，控制影响升级行为
       maxSurge: 25%   #更新过程中，最多允许3个Pod出现
       maxUnavailable: 25%  #最少保证2-0=2个Pod为可用状态
@@ -1021,10 +1024,16 @@ spec:
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840679905.png" alt="" loading="lazy"></figure>
 <p>策略控制：</p>
 <ul>
-<li>maxSurge：最大激增数, 指更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比,默认为desired Pods数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas + maxSurge个pod</li>
-<li>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods数的25%。计算时向下取整(比如3.6，取3)</li>
+<li>
+<p>maxSurge：最大激增数, 指pod更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比。默认为desired Pods(副本)数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas + maxSurge个pod</p>
+</li>
+<li>
+<p>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods数的25%。计算时向下取整(比如3.6，取3)</p>
+</li>
 </ul>
-<p><em>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge</em>。2&lt;= pod number&lt;=3</p>
+<blockquote>
+<p>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge。 2&lt;= pod number&lt;=3</p>
+</blockquote>
 <p>以myblog为例，使用默认的策略，更新过程:</p>
 <ol>
 <li>maxSurge 25%，2个实例，向上取整，则maxSurge为1，意味着最多可以有2+1=3个Pod，那么此时会新创建1个ReplicaSet，RS-new，把副本数置为1，此时呢，副本控制器就去创建这个新的Pod</li>
@@ -1053,7 +1062,7 @@ myblog-6fdcf98f9    0         0         0       16h
     type: Recreate
 ...
 </code></pre>
-<p>我们课程中的mysql服务应该使用Recreate来管理：</p>
+<p>mysql服务应该使用Recreate来管理：</p>
 <pre><code class="language-powershell">$ kubectl -n luffy edit deploy mysql
 ...
   selector:
@@ -1067,6 +1076,8 @@ myblog-6fdcf98f9    0         0         0       16h
       labels:
         app: mysql
 ...
+
+如果mysql也做滚动更新的话，它数据不支持多个副本同时访问
 </code></pre>
 <h3 id="329-服务回滚">3.2.9 服务回滚</h3>
 <p>通过滚动升级的策略可以平滑的升级Deployment，若升级出现问题，需要最快且最好的方式回退到上一次能够提供正常工作的版本。为此K8S提供了回滚机制。</p>

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644505462267">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644505462267" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -40,6 +40,7 @@
 <ul>
 <li><a href="#331-service-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B9%8Bcluster-ip">3.3.1 Service 负载均衡之Cluster IP</a></li>
 <li><a href="#332-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">3.3.2 服务发现</a></li>
+<li><a href="#endpoints-%E8%B5%84%E6%BA%90%E7%B1%BB%E5%9E%8B">endpoints 资源类型</a></li>
 <li><a href="#333-service%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B9%8Bnodeport">3.3.3 Service负载均衡之NodePort</a></li>
 <li><a href="#334-kube-proxy">3.3.4 kube-proxy</a></li>
 <li><a href="#335-%E9%9D%A2%E8%AF%95%E9%A2%98-k8s%E7%9A%84service-cluster-ip%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BDping%E9%80%9A">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</a></li>
@@ -136,11 +137,11 @@ metadata:
   namespace: luffy
 spec:
   ports:
-  - port: 80  #映射要ClusterIP上的端口
+  - port: 80  #映射到ClusterIP上的端口
     protocol: TCP
-    targetPort: 8002   #对应容器内的端口
+    targetPort: 8002   #对应Pod内的端口
   selector:
-    app: myblog
+    app: myblog   #选择标签
   type: ClusterIP
 </code></pre>
 <p>操作演示：</p>
@@ -328,11 +329,18 @@ $ kubectl -n kube-system get svc
 NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
 kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP   51d
 
-## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
+## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 
+##因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
 
 $ kubectl get svc
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
+</code></pre>
+<h3 id="endpoints-资源类型">endpoints 资源类型</h3>
+<pre><code>kubectl -n luffy get endpoints
+
+每次创建service的时候，实际上会创建一个对应的endpoints.
+endpoint controller负责把endpoints下要关联的Pod IP list添加进来
 </code></pre>
 <h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
 <p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>

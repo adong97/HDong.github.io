@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644485132773">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644505462267">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644485132773" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644505462267" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -350,21 +350,17 @@ mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
 </li>
 </ol>
 <h3 id="327-服务更新">3.2.7 服务更新</h3>
-<p>修改服务，重新打tag模拟服务更新。</p>
-<p>更新方式：</p>
-<ol>
-<li>
-<p>修改yaml文件，使用<code>kubectl -n luffy apply -f deploy-myblog.yaml</code>来应用更新</p>
-</li>
-<li>
-<p><code>kubectl -n luffy edit deploy myblog</code>在线更新</p>
-</li>
-<li>
-<p><code>kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record</code></p>
-<p>#设置镜像版本为172.21.51.143:5000/myblog:v2</p>
-<p>#--record：记录本次设置</p>
-</li>
-</ol>
+<p>问题：K8s是如何实现滚动更新的？</p>
+<p>修改服务，重新打tag,模拟服务更新。</p>
+<pre><code>更新方式：
+
+1. 修改yaml文件，使用`kubectl -n luffy apply -f deploy-myblog.yaml` 来应用更新
+2. `kubectl -n luffy edit deploy myblog` 在线更新  
+3. `kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record` 
+
+# 设置镜像版本为172.21.51.143:5000/myblog:v2  
+# --record：记录本次设置
+</code></pre>
 <p>修改文件测试：</p>
 <pre><code class="language-powershell">#修改配置文件
 $ vi /opt/myblog/python-demo/blog/templates/index.html
@@ -391,7 +387,7 @@ spec:
   selector:		#指定Pod的选择器
     matchLabels:
       app: myblog
-  strategy:  #默认更新策略
+  strategy:  # 默认更新策略
     rollingUpdate:   #指定滚动更新策略，控制影响升级行为
       maxSurge: 25%   #更新过程中，最多允许3个Pod出现
       maxUnavailable: 25%  #最少保证2-0=2个Pod为可用状态
@@ -403,10 +399,16 @@ spec:
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840679905.png" alt="" loading="lazy"></figure>
 <p>策略控制：</p>
 <ul>
-<li>maxSurge：最大激增数, 指更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比,默认为desired Pods数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas + maxSurge个pod</li>
-<li>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods数的25%。计算时向下取整(比如3.6，取3)</li>
+<li>
+<p>maxSurge：最大激增数, 指pod更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比。默认为desired Pods(副本)数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas + maxSurge个pod</p>
+</li>
+<li>
+<p>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods数的25%。计算时向下取整(比如3.6，取3)</p>
+</li>
 </ul>
-<p><em>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge</em>。2&lt;= pod number&lt;=3</p>
+<blockquote>
+<p>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge。 2&lt;= pod number&lt;=3</p>
+</blockquote>
 <p>以myblog为例，使用默认的策略，更新过程:</p>
 <ol>
 <li>maxSurge 25%，2个实例，向上取整，则maxSurge为1，意味着最多可以有2+1=3个Pod，那么此时会新创建1个ReplicaSet，RS-new，把副本数置为1，此时呢，副本控制器就去创建这个新的Pod</li>
@@ -435,7 +437,7 @@ myblog-6fdcf98f9    0         0         0       16h
     type: Recreate
 ...
 </code></pre>
-<p>我们课程中的mysql服务应该使用Recreate来管理：</p>
+<p>mysql服务应该使用Recreate来管理：</p>
 <pre><code class="language-powershell">$ kubectl -n luffy edit deploy mysql
 ...
   selector:
@@ -449,6 +451,8 @@ myblog-6fdcf98f9    0         0         0       16h
       labels:
         app: mysql
 ...
+
+如果mysql也做滚动更新的话，它数据不支持多个副本同时访问
 </code></pre>
 <h3 id="329-服务回滚">3.2.9 服务回滚</h3>
 <p>通过滚动升级的策略可以平滑的升级Deployment，若升级出现问题，需要最快且最好的方式回退到上一次能够提供正常工作的版本。为此K8S提供了回滚机制。</p>
