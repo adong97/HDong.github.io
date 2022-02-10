@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-10T08:58:50.475Z</updated>
+    <updated>2022-02-10T09:03:38.246Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -238,16 +238,16 @@ cadvisor	8090</p>
 <p>node dashboard</p>
 <p>mysql dashboard</p>
 <p>docker dashboard</p>
-<p>四、测试alertmanager告警<br>
-停掉10.1.13.173、10.1.13175的mysql_exporter，这样prometheus就无法收集mysql数据，然后报警发邮件。</p>
-<p>4.1  关闭mysql_exporter服务<br>
-systemctl stop mysql_exporter</p>
-<p>4.2  promrtheus alerts界面出现告警</p>
-<p>4.3  收到告警邮件</p>
-<p>4.4  重新启动mysql_exporter</p>
-<p>4.5  告警消失</p>
-<p>#五 一键部署脚本<br>
-##5.1 监控告警一键部署脚本</p>
+<h1 id="四-测试alertmanager告警">四、测试alertmanager告警</h1>
+<p>停掉10.1.13.173、10.1.13175的mysql_exporter，这样prometheus就无法收集mysql数据，然后报警发邮件。</p>
+<h2 id="41-关闭mysql_exporter服务">4.1  关闭mysql_exporter服务</h2>
+<p>systemctl stop mysql_exporter</p>
+<h2 id="42-promrtheus-alerts界面出现告警">4.2  promrtheus alerts界面出现告警</h2>
+<h2 id="43-收到告警邮件">4.3  收到告警邮件</h2>
+<h2 id="44-重新启动mysql_exporter">4.4  重新启动mysql_exporter</h2>
+<h2 id="45-告警消失">4.5  告警消失</h2>
+<h1 id="五-一键部署脚本">五 一键部署脚本</h1>
+<h2 id="51-监控告警一键部署脚本">5.1 监控告警一键部署脚本</h2>
 <pre><code>#!/bin/bash
 
 #设置环境信息
@@ -694,7 +694,7 @@ Config_Alert
 Install_Grafana
 Config_Grafana
 </code></pre>
-<p>##5.2 Exporter 一键部署脚本</p>
+<h2 id="52-exporter-一键部署脚本">5.2 Exporter 一键部署脚本</h2>
 <pre><code>#!/bin/bash
 install_dir=${{Install_Dir}}      #安装包下载目录  /opt
 tool_dir=${install_dir}/exporter      #exporter工具目录 /opt/exporter
