@@ -1,0 +1,364 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644554655325">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644554655325" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%AE%B9%E5%99%A8%E7%9A%84%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8">容器的磁盘占用</a></li>
+<li><a href="#%E9%95%9C%E5%83%8F%E7%9A%84%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8">镜像的磁盘占用</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%8D%B7%E7%9A%84%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8">数据卷的磁盘占用</a></li>
+<li><a href="#build-cache-%E7%9A%84%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8">Build Cache 的磁盘占用</a></li>
+<li><a href="#%E4%B8%80%E9%94%AE%E6%B8%85%E7%90%86">一键清理</a></li>
+<li><a href="#docker%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E6%B8%85%E7%90%86">Docker容器日志清理</a>
+<ul>
+<li><a href="#%E5%88%A0%E9%99%A4%E6%97%A5%E5%BF%97">删除日志</a></li>
+<li><a href="#%E4%BB%8E%E6%A0%B9%E6%9C%AC%E4%B8%8A%E8%A7%A3%E5%86%B3docker%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E7%A9%BA%E9%97%B4%E5%8D%A0%E7%94%A8%E9%97%AE%E9%A2%98">从根本上解决Docker容器日志空间占用问题</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">清理 Docker 占用的磁盘空间</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-11 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/eryZMLlpZ.png" alt="">
+        
+        <div class="post-content yue">
+          <p>每当我们运行容器、拉取镜像、部署应用、构建自己的镜像时，我们的磁盘空间会被大量占用。</p>
+<p>docker 占用的空间可以通过下面的命令查看：</p>
+<pre><code>$ docker system df
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1644547079674.png" alt="" loading="lazy"></figure>
+<p><code>TYPE</code> 列出了docker 使用磁盘的 4 种类型：</p>
+<ul>
+<li>Images：所有镜像占用的空间，包括拉取下来的镜像，和本地构建的。</li>
+<li>Containers：运行的容器占用的空间，表示每个容器的读写层的空间。</li>
+<li>Local Volumes：容器挂载本地数据卷的空间。</li>
+<li>Build Cache：镜像构建过程中产生的缓存空间（只有在使用 BuildKit 时才有，Docker 18.09 以后可用）。</li>
+</ul>
+<p>最后的 <code>RECLAIMABLE</code> 是可回收大小。</p>
+<p>下面就分别了解一下这几个类型。</p>
+<h1 id="容器的磁盘占用">容器的磁盘占用</h1>
+<p>每次创建一个容器时，都会有一些文件和目录被创建，例如：</p>
+<ul>
+<li><code>/var/lib/docker/containers/ID</code>目录，如果容器使用了默认的日志模式，他的所有日志都会以JSON形式保存到此目录下。</li>
+<li><code>/var/lib/docker/overlay2</code> 目录下含有容器的读写层，如果容器使用自己的文件系统保存了数据，那么就会写到此目录下。</li>
+</ul>
+<p>首先，我们启动一个 NGINX 容器：</p>
+<pre><code>$ docker container run --name nginx -d -p 8000:80 nginx:1.16
+</code></pre>
+<p>运行 df 命令后，就会看到：</p>
+<ul>
+<li>一个镜像，126MB</li>
+<li>一个容器<br>
+此时没有可回收空间，因为容器在运行，镜像正被使用。</li>
+</ul>
+<p>现在，我们在容器内创建一个 100MB 的空文件：</p>
+<pre><code>$ docker exec -it nginx dd if=/dev/zero of=test.img bs=1024 count=0 seek=$[1024*100]
+</code></pre>
+<p>再次查看空间：</p>
+<pre><code>$ docker system df 
+</code></pre>
+<p>可以看到容器占用的空间增加了.查找文件保存在哪里。</p>
+<pre><code>$ find /var/lib/docker -type f -name test.img
+</code></pre>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644548455779.png" alt="" loading="lazy"><br>
+查询发现是保存在容器的读写层。</p>
+<p>当停止容器后，容器占用的空间就会变为可回收的：</p>
+<pre><code>$ docker stop nginx
+$ docker system df 
+</code></pre>
+<p>如何回收呢？删除容器时会删除其关联的读写层占用的空间。</p>
+<p>也可以一键删除所有已经停止的容器：</p>
+<pre><code>$ docker container prune
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644550161562.png" alt="" loading="lazy"></figure>
+<p>删除容器后，镜像也可以回收了。</p>
+<p>上面的 docker container prune 命令是删除停止的容器，如果想删除所有容器（包括停止的、正在运行的），可以使用下面这2个命令：</p>
+<pre><code>$ docker rm -f $(docker ps -aq)
+
+$ docker container rm -f $(docker container ls -aq)
+</code></pre>
+<h1 id="镜像的磁盘占用">镜像的磁盘占用</h1>
+<p>有一些镜像是隐形的：</p>
+<ul>
+<li>子镜像，就是被其他镜像引用的中间镜像，不能被删除。</li>
+<li>悬挂状态的镜像，就是不会再被使用的镜像，可以被删除。</li>
+</ul>
+<p>下面的命令列出所有悬挂状态的镜像：</p>
+<pre><code>$ docker image ls -f dangling=true
+</code></pre>
+<p>删除这类镜像：</p>
+<pre><code>$ docker image rm $(docker image ls -f dangling=true -q)
+或者：
+$ docker image prune
+</code></pre>
+<p>如果想删除所有镜像，可以使用下面的命令：</p>
+<pre><code>$ docker image rm $(docker image ls -q)
+</code></pre>
+<p>注意，正在被容器使用的镜像是不能被删除的。</p>
+<h1 id="数据卷的磁盘占用">数据卷的磁盘占用</h1>
+<p>数据卷是容器自身文件体统之外的数据存储。</p>
+<p>例如容器中的应用有上传图片的功能，上传之后肯定不能保存在容器内部，因为容器内部的数据会随着容器的死掉而被删除，所以，这些图片要保存在容器之外，也就是数据卷。</p>
+<p>比如我们运行了一个 MongoDB 容器做测试，导入了很多测试数据，这些数据就不是在容器内部的，是在数据卷中，因为 MongoDB 的 Dockerfile 中使用了数据卷。</p>
+<p>测试完成后，删除了这个 MongoDB 容器，但测试数据还在，没被删除。</p>
+<p>删除不再使用的数据卷：</p>
+<pre><code>$ docker volume rm $(docker volume ls -q)
+或者：
+$ docker volume prune
+</code></pre>
+<h1 id="build-cache-的磁盘占用">Build Cache 的磁盘占用</h1>
+<p>Docker 18.09 引入了 BuildKit，提升了构建过程的性能、安全、存储管理等能力。</p>
+<p>删除 build cache 可以使用命令：</p>
+<pre><code>$ docker builder prune
+</code></pre>
+<h1 id="一键清理">一键清理</h1>
+<p>通过上面的说明，我们知道了像容器、镜像、数据卷都提供了 prune这个子命令，帮助我们回收空间。</p>
+<p>其实，docker 系统层面也有 prune 这个子命令，可以一键清理没用的空间：</p>
+<pre><code>$ docker system prune
+</code></pre>
+<p>定期执行这个命令是个好习惯。</p>
+<h1 id="docker容器日志清理">Docker容器日志清理</h1>
+<h2 id="删除日志">删除日志</h2>
+<p>在linux上，容器日志一般存放在<code>/var/lib/docker/containers/container_id/</code> 下， 以json.log结尾，找到这些文件，删除即可，需要注意的是如果容器处在运行状态，使用<code>rm -rf</code>方式删除日志后，通过<code>df -h</code>会发现磁盘空间并没有释放，原因是在Linux或者Unix系统中，通过<code>rm -rf</code>或者文件管理器删除文件，将会从文件系统的目录结构上解除链接（unlink）；如果文件此时是被打开的（有一个进程正在使用），那么进程将仍然可以读取该文件，磁盘空间也一直被占用；所以通过rm -rf删除日志时需要重启docker，以释放资源，这样非常不方便。</p>
+<p>所以清理docker日志的正确方法是：</p>
+<pre><code>cat /dev/null &gt; *-json.log
+</code></pre>
+<h2 id="从根本上解决docker容器日志空间占用问题">从根本上解决Docker容器日志空间占用问题</h2>
+<p>通过以上两种方式清理之后，随着时间的推移，容器日志又会逐渐增大，可谓指标不治本，要从根本上解决问题，需要限制容器服务的日志大小上限；这个通过修改docker的配置文件来实现。</p>
+<p>在docker的配置文件<code>/etc/docker/daemon.json</code>(默认路径)中添加以下内容即可</p>
+<pre><code>    &quot;log-opts&quot;: {
+       &quot;max-size&quot;: &quot;500m&quot;,
+       &quot;max-file&quot;: &quot;3&quot;
+    }
+</code></pre>
+<ul>
+<li>max-size=500m，意味着一个容器日志大小上限是500M</li>
+<li>max-file=3，意味着一个容器有三个日志，分别是id+.json、id+1.json、id+2.json</li>
+</ul>
+<p>重启docker进程</p>
+<pre><code>$ systemctl daemon-reload  &amp;&amp; systemctl restart docker
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/xSXZzI9mV/">
+                <h3 class="post-title">
+                  Kubernetes服务访问之Ingress
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
