@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644554972917">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644769904238">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644554972917" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644769904238" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -118,7 +118,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Ingress</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 10 min read
+          2022-02-10 / 11 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/xSXZzI9mV.png" alt="">
@@ -213,6 +213,21 @@ $ grep -n5 nodeSelector mandatory.yaml
 $ kubectl label node k8s-master ingress=true
 
 $ kubectl apply -f mandatory.yaml
+
+##进入nginx-ingress-controller Pod查看nginx进程
+$ kubectl -n ingress-nginx exec -it nginx-ingress-controller-58b5c4bd64-rbj9z bash
+bash-5.0$ ps aux
+PID   USER     TIME  COMMAND
+    1 www-data  0:00 /usr/bin/dumb-init -- /nginx-ingress-controller --configmap=ingress-nginx/nginx-configuration --tcp-services-configmap=ingress-nginx/tcp-services
+    8 www-data  0:00 /nginx-ingress-controller --configmap=ingress-nginx/nginx-configuration --tcp-services-configmap=ingress-nginx/tcp-services --udp-services-configm
+   28 www-data  0:00 bash
+   34 www-data  0:00 /wait-shutdown
+   44 www-data  0:00 nginx: master process /usr/local/nginx/sbin/nginx -c /etc/nginx/nginx.conf
+   47 www-data  0:00 nginx: worker process
+   48 www-data  0:00 ps aux
+
+##/nginx-ingress-controller 进程就是用来把ingress yaml转化成nginx.conf的。
+转化成nginx.conf以后，由于nginx本身支持reload,所以做一次reload即可生效
 </code></pre>
 <p>使用示例：<code>myblog/deployment/ingress.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
@@ -233,6 +248,24 @@ spec:
             port:
               number: 80
 
+$ kubectl create -f ingress.yaml
+
+$ kubectl -n luffy get ing
+
+$ kubectl -n luffy describe ing myblog
+Name:             myblog
+Namespace:        luffy
+Address:
+Default backend:  default-http-backend:80 (&lt;error: endpoints &quot;default-http-backend&quot; not found&gt;)
+Rules:
+  Host              Path  Backends
+  ----              ----  --------
+  myblog.luffy.com
+                    /   myblog:80 (10.244.3.48:8002,10.244.3.49:8002,10.244.4.16:8002)
+Annotations:        &lt;none&gt;
+Events:             &lt;none&gt;
+
+## 访问myblog.luffy.com域名的&quot;/&quot;路径（curl http://myblog.luffy.com/）会转换到 myblog:80端口上去。
 </code></pre>
 <p>ingress-nginx动态生成upstream配置：</p>
 <pre><code class="language-yaml">$ kubectl -n ingress-nginx exec -ti nginx-ingress-xxxxxxx bash

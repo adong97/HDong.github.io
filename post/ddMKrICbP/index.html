@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644554972917">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644769904238">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644554972917" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644769904238" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -115,7 +115,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Service</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 13 min read
+          2022-02-10 / 16 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/ddMKrICbP.png" alt="">
@@ -142,7 +142,7 @@ spec:
     targetPort: 8002   #对应Pod内的端口
   selector:
     app: myblog   #选择标签
-  type: ClusterIP
+  type: ClusterIP  #集群内的虚拟IP
 </code></pre>
 <p>操作演示：</p>
 <pre><code class="language-powershell">## 别名
@@ -191,9 +191,11 @@ TargetPort:        8002/TCP
 Endpoints:         10.244.0.68:8002,10.244.1.158:8002
 Session Affinity:  None
 Events:            &lt;none&gt;
+
+# ClusterIP(10.99.174.93)的80端口转到了Endpoints中podIP的TargetPort(8002)端口上。
 </code></pre>
 <p>Service与Pod如何关联:</p>
-<p>service对象创建的同时，会创建同名的endpoints对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中</p>
+<p>service对象创建的同时，会通过选择器(app=myblog)创建同名的endpoints(端点)对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中。</p>
 <p>选择器(Selector)选择出来的pod,是为了放在Endpoints里面</p>
 <pre><code class="language-powershell"># Endpoints也是一种资源类型，默认会与service绑定起来
 #如果readinessporbe(可用性检测)没过，则会将pod的IP地址从Endpoints列表种剔除，不在接收流量
@@ -230,6 +232,7 @@ $ kubectl -n luffy create -f svc-mysql.yaml
 <p>访问mysql：</p>
 <pre><code class="language-powershell">$ kd get svc mysql
 mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   3s
+
 $ curl 10.108.214.84:3306
 </code></pre>
 <p>目前使用hostNetwork部署，通过宿主机ip+port访问，弊端：</p>
@@ -243,7 +246,25 @@ $ curl 10.108.214.84:3306
 <li>利用集群服务发现的能力，组件之间通过service name来访问</li>
 </ul>
 <h3 id="332-服务发现">3.3.2 服务发现</h3>
-<p>在k8s集群中，组件之间可以通过定义的Service名称实现通信。</p>
+<p>在k8s集群中，Pod之间可以通过定义的Service名称实现通信。<br>
+原理：</p>
+<blockquote>
+<p>各个pod之间，通过<code>/etc/resolv.conf</code>文件进行域名解析。</p>
+</blockquote>
+<pre><code>$ kubectl -n luffy exec -it myblog-55d66f7b89-2h4kc  bash
+
+$ cat /etc/resolv.conf
+nameserver 10.96.0.10   # 域名解析服务器
+search luffy.svc.linux.local svc.linux.local linux.local  # search用来搜索路径
+options ndots:5
+
+curl mysql.luffy.svc.linux.local:3306
+挨个拼接配置域名，然后通过nameserver解析
+</code></pre>
+<p>在mysql或者myblog容器内部通过<code>/etc/resolv.conf</code>配置文件，找到一个域名解析服务器nameserver 10.96.0.10</p>
+<p>在宿主机中，通过命令<code>kubectl get svc -A|grep 10.96.0.10</code>查找发现，10.96.0.10是kube-system命令空间下，一个叫做<code>kube-dns</code>的service产生的Cluster IP。</p>
+<p>通过命令<code>kubectl -n kube-system describe svc kube-dns</code>发现这个service关联了带有<code>k8s-app=kube-dns</code>标签的Pod。</p>
+<p>通过标签过滤<code>kubectl -n kube-system get po -owide -l k8s-app=kube-dns</code>发现,使用的是coredns。</p>
 <p>演示服务发现：</p>
 <pre><code class="language-powershell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
 
@@ -337,13 +358,14 @@ NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
 </code></pre>
 <h3 id="endpoints-资源类型">endpoints 资源类型</h3>
-<pre><code>kubectl -n luffy get endpoints
+<pre><code>$ kubectl -n luffy get endpoints
 
 每次创建service的时候，实际上会创建一个对应的endpoints.
-endpoint controller负责把endpoints下要关联的Pod IP list添加进来
+endpoint controller负责把endpoints下要关联的Pod IP 添加到list中。
 </code></pre>
 <h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
-<p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
+<p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。<br>
+NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
 <p><code>myblog/deployment/svc-myblog-nodeport.yaml</code></p>
 <pre><code class="language-powershell">apiVersion: v1
 kind: Service
@@ -371,9 +393,13 @@ mysql       ClusterIP   10.108.214.84    &lt;none&gt;        3306/TCP       77m
 #集群内每个节点的NodePort端口都会进行监听
 $ curl 172.21.51.143:30647/blog/index/
 我的博客列表
+
 $ curl 172.21.51.143:30647/blog/index/
 我的博客列表
+
 ## 浏览器访问
+nodePort 包含   cluster ip:port + nodeip+nodeport。
+所以在宿主机访问cluster ip:port也可以访问成功
 </code></pre>
 <p>思考：</p>
 <ol>
@@ -385,7 +411,7 @@ $ curl 172.21.51.143:30647/blog/index/
 </li>
 </ol>
 <h3 id="334-kube-proxy">3.3.4 kube-proxy</h3>
-<p>运行在每个节点上，监听 API Server 中服务对象的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
+<p>运行在每个节点上，监听 API Server 中服务对象(service)的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
 <p>有三种模式：</p>
 <ul>
 <li>
@@ -399,22 +425,44 @@ $ curl 172.21.51.143:30647/blog/index/
 </li>
 </ul>
 <p>IPtables模式示意图：</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840732148.svg" alt="" loading="lazy"></figure>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1639840732148.svg" alt="" loading="lazy"><br>
+图中kube-proxy指向clusterIP意思是：kube-proxy会去拿到clusterIP的地址，然后创建iptables规则，来让clusterIP能够通过iptables的转发，转到具体的pod上去。</p>
 <pre><code class="language-powershell">$ iptables-save |grep -v myblog-np|grep  &quot;luffy/myblog&quot;
 -A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
--A KUBE-SERVICES -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-WQNGJ7YFZKCTKPZK
+## -j KUBE-MARK-MASQ  指定自定义链，为了做内容记录的一个链，并不产生实际作用
 
+-A KUBE-SERVICES -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-WQNGJ7YFZKCTKPZK
+## 真正产生实际作用的规则
+
+##k8s会为每一个service指定一个&quot;KUBE-SVC-WQNGJ7YFZKCTKPZK&quot;这样的自定义链
+
+## 查询&quot;KUBE-SVC-WQNGJ7YFZKCTKPZK&quot;链的内容
 $ iptables-save |grep KUBE-SVC-WQNGJ7YFZKCTKPZK
 -A KUBE-SVC-WQNGJ7YFZKCTKPZK -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GB5GNOM5CZH7ICXZ
 -A KUBE-SVC-WQNGJ7YFZKCTKPZK -j KUBE-SEP-7GWC3FN2JI5KLE47
 
+## --mode random  ##模式：随机
+## --probability 0.50000000000  ##可能性的概率是50%
+#这条规则的意思是：访问10.99.174.93clusterIP80端口的流量有50%的概率会转向&quot;KUBE-SEP-7GWC3FN2JI5KLE47&quot;链
+
+## 查询&quot;KUBE-SEP-7GWC3FN2JI5KLE47&quot;链
 $  iptables-save |grep KUBE-SEP-GB5GNOM5CZH7ICXZ
 -A KUBE-SEP-GB5GNOM5CZH7ICXZ -p tcp -m tcp -j DNAT --to-destination 10.244.1.158:8002
 
 $ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
 -A KUBE-SEP-7GWC3FN2JI5KLE47 -p tcp -m tcp -j DNAT --to-destination 10.244.1.159:8002
+
+发现直接到pod的IP地址
 </code></pre>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644742300061.png" alt="" loading="lazy"><br>
+curl mysql:80 先将mysql域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
+<ul>
+<li>50%流量转发到10.244.1.158:8002</li>
+<li>另50%流量转发到10.244.1.159:8002</li>
+</ul>
+<p>kube-proxy才是让业务pod的请求能够实现的核心。</p>
 <h3 id="335-面试题-k8s的service-cluster-ip为什么不能ping通">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</h3>
+<p>可以ping通的前提是：要绑定到具体的网卡上，通过要有流量能够访问到网卡上去</p>
 <p>先看下service IP是怎么来的？</p>
 <pre><code>service IP是serviceController生成的，参数--service-cluster-ip-range string会配置在controller-manager上，serviceController会在这个参数指定的cidr范围内取一个IP
 </code></pre>
@@ -448,7 +496,7 @@ $ kubectl -n kube-system edit cm kube-proxy
 ...
     kind: KubeProxyConfiguration
     metricsBindAddress: &quot;&quot;
-    mode: &quot;ipvs&quot;
+    mode: &quot;ipvs&quot;   #更改为ipvs
     nodePortAddresses: null
     oomScoreAdj: null
 ...
@@ -470,6 +518,9 @@ $ iptables -F
 # 查看规则生效
 $ ipvsadm -ln
 </code></pre>
+<p>如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
+如果k8s集群规模不是很大，则使用iptables，iptables的性能会比ipvs好一些；<br>
+ipvs的查找模式为hash模式，量越大，ipvs的优势越明显。</p>
 
         </div>
 
