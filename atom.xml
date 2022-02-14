@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-13T16:32:00.334Z</updated>
+    <updated>2022-02-14T08:26:46.006Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -837,7 +837,7 @@ nodePort 包含   cluster ip:port + nodeip+nodeport。
 </li>
 </ol>
 <h3 id="334-kube-proxy">3.3.4 kube-proxy</h3>
-<p>运行在每个节点上，监听 API Server 中服务对象(service)的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
+<p>kube-proxy 运行在每个节点上，监听 API Server 中服务对象(service)的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
 <p>有三种模式：</p>
 <ul>
 <li>
