@@ -30,30 +30,14 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#docker-images%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E8%84%9A%E6%9C%AC">Docker images批量导出脚本</a></li>
+<li><a href="#docker-images%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5">Docker images批量导入</a></li>
+</ul>
+
           </div>
         </div>
       
@@ -115,71 +99,92 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> Kubernetes
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/carenzheng/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/carenzheng.png'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Docker images批量导入导出</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-14 / 2 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/carenzheng/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">CA认证原理及CFSSL证书生成工具的使用</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-11 / 21 min read</div>
-    </div>
-  </section>
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/8wMXd7F36.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="docker-images批量导出脚本">Docker images批量导出脚本</h1>
+<p>vim save-images.sh</p>
+<pre><code>#!/bin/bash
+#Output the information of images to images.txt
+sudo docker image ls &gt;images.txt
+#Get the number of images according to the total of content's rows
+N=$(awk 'END{print NR}' images.txt)
+echo The total of images is $N
+#Get names and tags of images
+for ((i=2; i&lt;=$N; i++))
+ do
+   image=$(awk 'NR==&quot;'&quot;$i&quot;'&quot; {print $1}' images.txt)
+   version=$(awk 'NR==&quot;'&quot;$i&quot;'&quot; {print $2}' images.txt)
+#Modify the name of files which will be saved in local , otherwise you will be failed to save images.
+   shortname=`echo $image | sed 's/.*\///g'`
+#filename is name of the file that will be saved
+   filename=&quot;${shortname}-${version}.tar&quot;
+   imagename=&quot;${image}:${version}&quot;
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/erjinzhibushu/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/erjinzhibushu.png'">
+#Output the value of variable
+   echo image=$image
+   echo version=$version
+   echo filename=$filename
+   echo imagename=$imagename
+   echo shortname=$shortname
+
+#Save the image as a local tar file
+   sudo docker save -o $filename $imagename
+#Modify the permission of the file
+   sudo chmod 755 $filename
+#Output the result!
+   echo No.$i $shortname is saved successfully！
+ done
+#Delete file
+rm images.txt
+保存退出
+</code></pre>
+<p>执行脚本</p>
+<pre><code>chmod a+x save-images.sh
+bash save-images.sh
+</code></pre>
+<h1 id="docker-images批量导入">Docker images批量导入</h1>
+<pre><code># 使用sed 拼接命令 借助管道符 交给bash（注意修改成你对应的文件后缀）
+ls *.tar|awk '{print $NF}'|sed -r 's#(.*)#sudo docker load -i \1#' |bash
+ 
+或者使用脚本
+#!/bin/bash
+for i in *.tar
+  do sudo docker load -i $i
+done
+</code></pre>
+
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/erjinzhibushu/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">二进制部署kubernets 1.20</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-11 / 160 min read</div>
-    </div>
-  </section>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/kubernetes-gai-shu.png'">
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+            <span class="flex-auto">Docker</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/eryZMLlpZ/">
+                <h3 class="post-title">
+                  清理 Docker 占用的磁盘空间
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Kubernetes 概述</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-10 / 20 min read</div>
-    </div>
-  </section>
 
-        <div class="pagination-container animated fadeIn">
-  
-    <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="page-btn"><i class="ri-arrow-left-line"></i> 上一页</a>
-  
-  
-</div>
+        
 
       </div>
     </div>
