@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-15T05:31:36.732Z</updated>
+    <updated>2022-02-15T10:05:53.578Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,329 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Kubernetes调度]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/sn0OllrL_/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
+        </link>
+        <updated>2022-02-15T09:45:09.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="为何要控制pod应该如何调度">为何要控制Pod应该如何调度</h1>
+<ul>
+<li>集群中有些机器的配置高（SSD，更好的内存等），我们希望核心的服务（比如说数据库）运行在上面</li>
+<li>某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上</li>
+<li>......</li>
+</ul>
+<p>Kubernetes Scheduler 的作用是将待调度的 Pod 按照一定的调度算法和策略绑定到集群中一个合适的 Worker Node 上，并将绑定信息写入到 etcd 中，之后目标 Node 中 kubelet 服务通过 API Server 监听到 Scheduler 产生的 Pod 绑定事件获取 Pod 信息，然后下载镜像启动容器。</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918439871.jpg" alt="" loading="lazy"></figure>
+<h1 id="调度的过程">调度的过程</h1>
+<p>Scheduler 提供的调度流程分为预选 (Predicates) 和优选 (Priorities) 两个步骤：</p>
+<ul>
+<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选</li>
+<li>优选，K8S将对候选的 Node 进行打分</li>
+</ul>
+<p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1644918490773.png" alt="" loading="lazy"></p>
+<h2 id="预选">预选：</h2>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
+<h2 id="优选">优选：</h2>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
+<h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
+<p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，POD 的调度可以根据节点的 label 进行特定的部署。</p>
+<p>查看节点的label：</p>
+<pre><code>$ kubectl get nodes --show-labels
+</code></pre>
+<p>为节点打label：</p>
+<pre><code>$ kubectl label node k8s-master disktype=ssd
+</code></pre>
+<p>当 node 被打上了相关标签后，在调度的时候就可以使用这些标签了，只需要在spec 字段中添加nodeSelector字段，里面是我们需要被调度的节点的 label。</p>
+<pre><code>spec:
+  hostNetwork: true    # 声明pod的网络模式为host模式，效果通docker run --net=host
+  volumes: 
+  - name: mysql-data
+    hostPath: 
+      path: /opt/mysql/data
+  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
+    component: mysql
+  containers:
+  - name: mysql
+      image: 172.21.51.143:5000/demo/mysql:5.7
+</code></pre>
+<h1 id="nodeaffinitynode亲和性">nodeAffinity(Node亲和性)</h1>
+<p>Pod -&gt; Node的标签做出选择</p>
+<p>节点亲和性 ， 比上面的nodeSelector更加灵活，它可以进行一些简单的逻辑组合，不只是简单的相等匹配 。分为两种，硬策略和软策略。</p>
+<p>**requiredDuringSchedulingIgnoredDuringExecution **： 硬策略，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然我就不会调度Pod。</p>
+<p><strong>preferredDuringSchedulingIgnoredDuringExecution</strong>：软策略，如果你没有满足调度要求的节点的话，Pod就会忽略这条规则，继续完成调度过程，说白了就是满足条件最好了，没有满足就忽略掉的策略。</p>
+<pre><code>#要求 Pod 不能运行在128和132两个节点上，如果有节点满足disktype=ssd或者sas的话就优先调度到这类节点上
+...
+spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+        ports:
+        - containerPort: 8002
+      affinity:
+          nodeAffinity:  #亲和性
+            requiredDuringSchedulingIgnoredDuringExecution:  #硬策略
+                nodeSelectorTerms: #节点选择器
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: NotIn  #label 的值不在某个列表中
+                      values:
+                        - 192.168.136.128
+                        - 192.168.136.132
+                        
+            preferredDuringSchedulingIgnoredDuringExecution:  #软策略
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: disktype  #满足disktype=ssd或者sas的值在某个列表中
+                      operator: In
+                      values:
+                        - ssd
+                        - sas
+...
+</code></pre>
+<p>这里的匹配逻辑是 label 的值在某个列表中，现在Kubernetes提供的操作符有下面的几种：</p>
+<ul>
+<li>In：label 的值在某个列表中</li>
+<li>NotIn：label 的值不在某个列表中</li>
+<li>Gt：label 的值大于某个值</li>
+<li>Lt：label 的值小于某个值</li>
+<li>Exists：某个 label 存在</li>
+<li>DoesNotExist：某个 label 不存在</li>
+</ul>
+<p>如果nodeSelectorTerms下面有多个选项的话，满足任何一个条件就可以了；如果matchExpressions有多个选项的话，则必须同时满足这些条件才能正常调度 Pod</p>
+<h1 id="pod亲和性和反亲和性">pod亲和性和反亲和性</h1>
+<p>Pod -&gt; Pod的标签</p>
+<p>场景：</p>
+<blockquote>
+<p>myblog 启动多副本，但是期望可以尽量分散到集群的可用节点中</p>
+</blockquote>
+<p>分析：为了让myblog应用的多个pod尽量分散部署在集群中，可以利用pod的反亲和性，告诉调度器，如果某个节点中存在了myblog的pod，则可以根据实际情况，实现如下调度策略：</p>
+<ul>
+<li>不允许同一个node节点，调度两个myblog的副本</li>
+<li>可以允许同一个node节点中调度两个myblog的副本，前提是尽量把pod分散部署在集群中</li>
+</ul>
+<pre><code>...
+    spec:
+      affinity:
+        podAntiAffinity:  #Anti 反亲和性，满足一下条件则不做调度
+          requiredDuringSchedulingIgnoredDuringExecution:  #硬策略，一定要满足的条件
+          - labelSelector:
+              matchExpressions:
+              - key: app  #带有app=myblog标签的Pod
+                operator: In
+                values:
+                - myblog
+            topologyKey: kubernetes.io/hostname
+      containers:
+...
+# 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么 调度器一定不要给我调度过去
+
+...
+    spec:
+      affinity:
+        podAntiAffinity: #反亲和性
+          preferredDuringSchedulingIgnoredDuringExecution: #软策略，
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myblog
+              topologyKey: kubernetes.io/hostname
+      containers:
+...
+# 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么调度器尽量不要调度过去
+</code></pre>
+<p>** https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/**</p>
+<h1 id="污点taints与容忍tolerations">污点（Taints）与容忍（tolerations）</h1>
+<p>对于nodeAffinity无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而Taints恰好与之相反，如果一个节点标记为 Taints ，除非 Pod 也被标识为可以容忍污点节点，否则该 Taints 节点不会被调度Pod。</p>
+<p>Taints(污点)是Node的一个属性，设置了Taints(污点)后，因为有了污点，所以Kubernetes是不会将Pod调度到这个Node上的。于是Kubernetes就给Pod设置了个属性Tolerations(容忍)，只要Pod能够容忍Node上的污点，那么Kubernetes就会忽略Node上的污点，就能够(不是必须)把Pod调度过去。</p>
+<p>场景一：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
+<p>场景二：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
+<p>设置污点：</p>
+<pre><code>$ kubectl taint node [node_name] key=value:[effect]   
+      其中[effect] 可取值： [ NoSchedule | PreferNoSchedule | NoExecute ]
+       NoSchedule：一定不能被调度。
+       PreferNoSchedule：尽量不要调度。
+       NoExecute：不仅不会调度，还会驱逐Node上已有的Pod。
+  示例：kubectl taint node k8s-slave1 smoke=true:NoSchedule
+            #不能容忍k8s-slave1抽烟的Pod就不要调度过来了
+</code></pre>
+<p>去除污点：</p>
+<pre><code>去除指定key及其effect：
+     kubectl taint nodes [node_name] key:[effect]-    #这里的key不用指定value
+     kubectl taint node k8s-slave1 smoke-
+
+ 去除指定key所有的effect: 
+     kubectl taint nodes node_name key-
+ 
+ 示例：
+     #打污点 smoke=true:NoSchedule
+     kubectl taint node k8s-master smoke=true:NoSchedule
+     #去除污点，去除指定key及其effect
+     kubectl taint node k8s-master smoke:NoExecute-
+     #去除污点，去除指定key所有的effect
+     kubectl taint node k8s-master smoke-
+</code></pre>
+<p>污点演示：</p>
+<pre><code>## 给k8s-slave1打上污点，smoke=true:NoSchedule
+$ kubectl taint node k8s-master gamble=true:NoSchedule
+$ kubectl taint node k8s-slave1 drunk=true:NoSchedule
+$ kubectl taint node k8s-slave2 smoke=true:NoSchedule
+
+
+
+## 扩容myblog的Pod，观察新Pod的调度情况
+$ kuebctl -n luffy scale deploy myblog --replicas=3
+$ kubectl -n luffy get po -w    ## pending
+
+</code></pre>
+<p>Pod容忍污点示例：myblog/deployment/deploy-myblog-taint.yaml</p>
+<pre><code>##污点是给Node打的，容忍是给业务设置的
+...
+spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+      tolerations: #设置容忍性
+      - key: &quot;smoke&quot; 
+        operator: &quot;Equal&quot;  #不指定operator，默认为Equal
+        value: &quot;true&quot;
+        effect: &quot;NoSchedule&quot;
+      - key: &quot;drunk&quot; 
+        operator: &quot;Exists&quot;  #如果操作符为Exists，那么value属性可省略,不指定operator，默认为Equal
+      #意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
+      #tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+</code></pre>
+<pre><code>$ kubectl apply -f deploy-myblog-taint.yaml
+</code></pre>
+<pre><code>spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+      tolerations:
+        - operator: &quot;Exists&quot;  #只要存在污点，都可以容忍 
+</code></pre>
+<blockquote>
+<p>NoExecute</p>
+</blockquote>
+<h1 id="cordon-and-drain">Cordon and Drain</h1>
+<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现</p>
+<p>drain：驱逐。drain包含cordon. drain会首先将节点变成不可调度</p>
+<pre><code>#标记k8s-slave2是可调度的
+$ kubectl cordon k8s-slave2
+
+#驱逐k8s-slave2上的Pod
+$ kubectl drain k8s-slave2
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ETCD数据的访问]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/">
+        </link>
+        <updated>2022-02-15T05:47:17.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="etcd常用操作">ETCD常用操作</h1>
+<p>拷贝etcdctl命令行工具：</p>
+<pre><code class="language-powershell">#将Etcd容器中的etcdctl命令拷贝到本机/usr/bin/etcdctl
+$ docker cp etcd_container:/usr/local/bin/etcdctl /usr/bin/etcdctl
+
+#如果etcd没有使用Docker容器，则将Etcd安装目录下的etcdctl拷贝到/usr/bin/etcdctl目录下
+$ cp /opt/etcd/bin/etcdctl /usr/bin/etcdctl
+</code></pre>
+<p>查看etcd集群的成员节点：</p>
+<pre><code class="language-powershell">#声明通过ETCDCTL_API=3这个版本拿去数据
+$ export ETCDCTL_API=3
+
+$ etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
+
+## --endpoints指定要访问哪个ETCD的server
+## 2379为客户端连接端口，2380为service端通信端口
+## --cacert指定根证书
+## --cert根据根证书签发的证书	
+## --key签发证书的私钥
+
+#设置别名，方便操作
+$ alias etcdctl='etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
+
+#查看ETCD集群成员节点
+$ etcdctl member list -w table
+</code></pre>
+<p>查看etcd集群节点状态：</p>
+<pre><code class="language-powershell">$ etcdctl endpoint status -w table
+
+$ etcdctl endpoint health -w table
+</code></pre>
+<p>设置key值:</p>
+<pre><code class="language-powershell">#设置值
+$ etcdctl put luffy 1
+
+#查询值
+$ etcdctl get luffy
+
+#我们可以按照目录结构的方式存储数据，这样的好处就是，组件存储数据可以按照目录区分，不会重复
+$ etcdctl put /luffy/key1 val1
+</code></pre>
+<p>查看所有key值：</p>
+<pre><code class="language-powershell">$  etcdctl get / --prefix --keys-only
+## --prefix 前缀，把所有使用/前缀的key读出来
+## --keys-only 只取key值
+
+###取值含义
+示例：
+/registry/services/specs/kube-system/kubelet
+&gt; /registry 第一层，固定的
+&gt; /services 第二层，资源类型
+</code></pre>
+<p>查看具体的key对应的数据：</p>
+<pre><code class="language-powershell">$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
+</code></pre>
+<p>list-watch:</p>
+<pre><code class="language-powershell">$ etcdctl watch /luffy/ --prefix
+$ etcdctl put /luffy/key1 val1
+</code></pre>
+<p>添加定时任务做数据快照（重要！）</p>
+<pre><code class="language-powershell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
+</code></pre>
+<p>恢复快照：</p>
+<ol>
+<li>
+<p>停止etcd和apiserver</p>
+</li>
+<li>
+<p>移走当前数据目录</p>
+<pre><code class="language-powershell">$ mv /var/lib/etcd/ /tmp
+</code></pre>
+</li>
+<li>
+<p>恢复快照</p>
+<pre><code class="language-powershell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
+</code></pre>
+</li>
+<li>
+<p>集群恢复</p>
+<p>https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>namespace删除问题</p>
+<p>很多情况下，会出现namespace删除卡住的问题，此时可以通过操作etcd来删除数据：</p>
+<pre><code class="language-shell">#查询数据
+$ etcdctl get /registry/namespace --prefix	--keys-only
+
+#删除数据，确保namespace下没有pod等数据
+$ etcdctl del /registry/namespace/luffy
+</code></pre>
+</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Docker images批量导入导出]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/8wMXd7F36/</id>
@@ -235,21 +558,16 @@ spec:
             port:
               number: 80
 </code></pre>
-<p>工作原理：</p>
-<pre><code>1. 先创建一个Ingress资源类型，Ingress资源可以定义一个域名。
-在访问&quot;foo.bar.com&quot;域名的时候，这个域名只要解析到Ingress上面，foo.bar.com/bar路径的访问会转发到backend中的service1的80端口上
-
-同理，在访问&quot;bar.foo.com&quot;域名的时候，bar.foo.com/foo路径的访问就会转发到service2的80端口上
-
-2.这个Ingress资源类型会被nginx-ingress-controller监听处理。
-配置文件中的spce.rules 最终是由nginx实现反向代理转发功能，但是由于nginx无法识别Ingress配置文件，所以需要nginx-ingress-controller对资源中的配置片段进行转换，放到nginx.conf中，解析成为nginx可以理解的配置。
-
-3.解析完之后，nginx再进行一次reload，即可解析生效。
-
-(同下方&quot;实现逻辑&quot;)
-</code></pre>
 </li>
 </ul>
+<p>工作原理：</p>
+<p>1  先创建一个Ingress资源类型，Ingress资源可以定义一个域名。<br>
+在访问&quot;foo.bar.com&quot;域名的时候，这个域名只要解析到Ingress上面，foo.bar.com/bar路径的访问会转发到backend中的service1的80端口上。<br>
+同理，在访问&quot;bar.foo.com&quot;域名的时候，bar.foo.com/foo路径的访问就会转发到service2的80端口上。</p>
+<p>2.这个Ingress资源类型会被nginx-ingress-controller监听处理。<br>
+配置文件中的spce.rules 最终是由nginx实现反向代理转发功能，但是由于nginx无法识别Ingress配置文件，所以需要nginx-ingress-controller对资源中的配置片段进行转换，放到nginx.conf中，解析成为nginx可以理解的配置。</p>
+<p>3.解析完之后，nginx再进行一次reload，即可解析生效。<br>
+(同下方&quot;实现逻辑&quot;)</p>
 <h3 id="341-示意图">3.4.1 示意图：</h3>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840756401.webp" alt="" loading="lazy"></figure>
 <p>Ingress的作用：</p>
@@ -282,6 +600,652 @@ $ grep -n5 nodeSelector mandatory.yaml
 221-          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
 222-          args:
 
+</code></pre>
+<ul>
+<li>k8s 1.22.x版本使用以下nginx-ingress-controller.yaml文件</li>
+</ul>
+<pre><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+
+---
+# Source: ingress-nginx/templates/controller-serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx
+  namespace: ingress-nginx
+automountServiceAccountToken: true
+---
+# Source: ingress-nginx/templates/controller-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+data:
+---
+# Source: ingress-nginx/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+  name: ingress-nginx
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - configmaps
+      - endpoints
+      - nodes
+      - pods
+      - secrets
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ''
+    resources:
+      - nodes
+    verbs:
+      - get
+  - apiGroups:
+      - ''
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ''
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Source: ingress-nginx/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+  name: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-nginx
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx
+    namespace: ingress-nginx
+---
+# Source: ingress-nginx/templates/controller-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx
+  namespace: ingress-nginx
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ''
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ''
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ''
+    resources:
+      - configmaps
+    resourceNames:
+      - ingress-controller-leader
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ''
+    resources:
+      - configmaps
+    verbs:
+      - create
+  - apiGroups:
+      - ''
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+---
+# Source: ingress-nginx/templates/controller-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx
+  namespace: ingress-nginx
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-nginx
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx
+    namespace: ingress-nginx
+---
+# Source: ingress-nginx/templates/controller-service-webhook.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx-controller-admission
+  namespace: ingress-nginx
+spec:
+  type: ClusterIP
+  ports:
+    - name: https-webhook
+      port: 443
+      targetPort: webhook
+      appProtocol: https
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/component: controller
+---
+# Source: ingress-nginx/templates/controller-deployment.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/instance: ingress-nginx
+      app.kubernetes.io/component: controller
+  revisionHistoryLimit: 10
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/component: controller
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: controller
+          image: registry.cn-beijing.aliyuncs.com/kole_chang/controller:v1.0.0
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /wait-shutdown
+          args:
+            - /nginx-ingress-controller
+            - --election-id=ingress-controller-leader
+            - --controller-class=k8s.io/ingress-nginx
+            - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
+            - --validating-webhook=:8443
+            - --validating-webhook-certificate=/usr/local/certificates/cert
+            - --validating-webhook-key=/usr/local/certificates/key
+            - --watch-ingress-without-class=true
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+            runAsUser: 101
+            allowPrivilegeEscalation: true
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LD_PRELOAD
+              value: /usr/local/lib/libmimalloc.so
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: webhook
+              containerPort: 8443
+              protocol: TCP
+          volumeMounts:
+            - name: webhook-cert
+              mountPath: /usr/local/certificates/
+              readOnly: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 90Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: ingress-nginx
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: webhook-cert
+          secret:
+            secretName: ingress-nginx-admission
+---
+# Source: ingress-nginx/templates/controller-ingressclass.yaml
+# We don't support namespaced ingressClass yet
+# So a ClusterRole and a ClusterRoleBinding is required
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: controller
+  name: nginx
+  namespace: ingress-nginx
+spec:
+  controller: k8s.io/ingress-nginx
+---
+# Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
+# before changing this value, check the required kubernetes version
+# https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#prerequisites
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+  name: ingress-nginx-admission
+webhooks:
+  - name: validate.nginx.ingress.kubernetes.io
+    matchPolicy: Equivalent
+    rules:
+      - apiGroups:
+          - networking.k8s.io
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - ingresses
+    failurePolicy: Fail
+    sideEffects: None
+    admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        namespace: ingress-nginx
+        name: ingress-nginx-controller-admission
+        path: /networking/v1/ingresses
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ingress-nginx-admission
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+rules:
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - validatingwebhookconfigurations
+    verbs:
+      - get
+      - update
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ingress-nginx-admission
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-nginx-admission
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx-admission
+    namespace: ingress-nginx
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+rules:
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ingress-nginx-admission
+  namespace: ingress-nginx
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-nginx-admission
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx-admission
+    namespace: ingress-nginx
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/job-createSecret.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingress-nginx-admission-create
+  namespace: ingress-nginx
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+spec:
+  template:
+    metadata:
+      name: ingress-nginx-admission-create
+      labels:
+        helm.sh/chart: ingress-nginx-4.0.1
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/version: 1.0.0
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: admission-webhook
+    spec:
+      containers:
+        - name: create
+          image: registry.cn-beijing.aliyuncs.com/kole_chang/kube-webhook-certgen:v1.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - create
+            - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
+            - --namespace=$(POD_NAMESPACE)
+            - --secret-name=ingress-nginx-admission
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      restartPolicy: OnFailure
+      serviceAccountName: ingress-nginx-admission
+      nodeSelector:
+        kubernetes.io/os: linux
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000
+---
+# Source: ingress-nginx/templates/admission-webhooks/job-patch/job-patchWebhook.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingress-nginx-admission-patch
+  namespace: ingress-nginx
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+  labels:
+    helm.sh/chart: ingress-nginx-4.0.1
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: admission-webhook
+spec:
+  template:
+    metadata:
+      name: ingress-nginx-admission-patch
+      labels:
+        helm.sh/chart: ingress-nginx-4.0.1
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/version: 1.0.0
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: admission-webhook
+    spec:
+      containers:
+        - name: patch
+          image: registry.cn-beijing.aliyuncs.com/kole_chang/kube-webhook-certgen:v1.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - patch
+            - --webhook-name=ingress-nginx-admission
+            - --namespace=$(POD_NAMESPACE)
+            - --patch-mutating=false
+            - --secret-name=ingress-nginx-admission
+            - --patch-failure-policy=Fail
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+      restartPolicy: OnFailure
+      serviceAccountName: ingress-nginx-admission
+      nodeSelector:
+        kubernetes.io/os: linux
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000
 </code></pre>
 <p>创建ingress</p>
 <pre><code class="language-powershell"># 为k8s-master节点添加label
@@ -4201,330 +5165,6 @@ kubeadm join 10.1.13.171:6443   ##使用VIP 地址的6443端口
 $ source /usr/share/bash-completion/bash_completion
 $ source &lt;(kubectl completion bash)
 $ echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[经济机器是如何运行的]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/">
-        </link>
-        <updated>2022-01-03T03:46:59.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="概述">概述</h2>
-<p>经济就像一部简单的机器那样运行，本课分享简单、适用的经济分析模式，虽然不符合常规传统经济学，但帮作者预测和躲避全球金融危机，30年来一直受益。</p>
-<p>经济由几个简单的零部件和无数次重复的简单交易组成，这些交易首先由人的天性所驱动，因而形成三股主要的经济动力：</p>
-<ul>
-<li>生产率的提高</li>
-<li>短期债务周期</li>
-<li>长期债务周期</li>
-</ul>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1641182349920.png" alt="" loading="lazy"></figure>
-<p>下面我们谈一下这三股动力，并介绍如何把它们组合在一起，得出一个良好的模型，便于我们跟踪经济走势，并理解当前正在发生的事情。</p>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1641182363697.png" alt="" loading="lazy"></figure>
-<h3 id="11-交易">1.1 交易</h3>
-<p>经济不过是无数交易的总和，它无时无刻都在发生。</p>
-<p>在每次交易中，买方使用<code>货币或信用</code> 向卖方交换<code>商品、服务或金融资产</code>。</p>
-<pre><code>信用在使用时，和货币一样。因此，把花费的货币和信用加在一起，就可以得出支出的总额。
-货币+信用=支出总额 (支出总额是经济的驱动力)
-
-如果用支出总额除以销量，就得出价格。
-支出总额/销量=价格
-</code></pre>
-<p>交易是经济机器最基本的零件，所有的经济周期和动力都是交易造成的。理解了交易，也就理解整个经济。</p>
-<h3 id="12-市场">1.2 市场</h3>
-<p>一个市场由买卖同一种商品的所有买方和卖方组成，例如，小麦市场、汽车市场等。经济就是由所有市场内的全部交易构成。把全部市场的总支出和销量加在一起，就得到了了解经济运行所需要的全部信息。</p>
-<pre><code>个人、企业、银行和政府都在以上述方式从事交易。
-用货币和信用，交换商品、服务和金融资产。
-
-政府是最大的买方和卖方，而政府有两个组成部分：即收税和花钱的中央政府和中央银行。
-央行控制着经济中的货币和信贷数量，因此不同于其他买方和卖方。
-央行通过影响利率和发行更多的货币来实现这种控制。
-</code></pre>
-<h3 id="13-信贷">1.3 信贷</h3>
-<p>信贷是经济中最重要的组成部分。因为它是经济中最大且最为变幻莫测的一部分。</p>
-<p>贷款人及借款人与市场中买方及卖方一样，贷款人希望钱生出更多的钱，借款人想购买当前无法负担的某样东西(房子、汽车、投资、创办企业)。</p>
-<p>借款人保证偿还借款，称为本金，并支付额外的款额，称为利息。</p>
-<pre><code>利率高时，借贷就会减少，原因是贷款变得昂贵。
-利率低时，借贷就会增加，原因是贷款变得便宜。
-如果借款人保证偿还债务，而且贷款人相信这一承诺，信贷就产生了。
-</code></pre>
-<p>信贷一旦产生，立即形成债务。</p>
-<p>债务是贷款人的资产，是借款人的负债。等到借款人今后偿还了贷款并支付了利息，这些资产和负债将消失。 交易得以完成。</p>
-<pre><code>借款人一旦获得信贷，便可以增加自己的支出。
-而支出是经济的驱动力，一个人的支出是另一个人的收入。你花的越多，别人就挣得越多。
-也就是：借款人获得信贷 → 借款人增加支出 → 收款人产生收入
-
-而如果某人的收入增加，其信用度就会提高，贷款人就会更愿意把钱借给他。
-收入增加 → 信用度提高 → 贷款人愿意借钱
-
-信用良好的借款人具备2个条件：
-1&gt; 偿还能力：收入债务比率高，借款人就具备偿还能力；
-2&gt; 抵押物: 如果无法偿还，可用有价值可出售资产作为抵押物，贷款人也放心借款。
-
-收入增加 → 借贷增加 → 支出增加 → 收入增加（一个人支出为另一个人收入） → 借贷增加（循环），自我驱动模式导致经济增长，产生经济周期。
-</code></pre>
-<p><strong>在一项交易中为了获得某样东西，你必须付出另一样东西。长期来看，你得到多少取决于你生产多少。</strong></p>
-<h3 id="14-生产率及信贷产生的经济效应">1.4  生产率及信贷产生的经济效应</h3>
-<p>我们的知识随时间而逐渐增多，知识的积累会提高我们的生活水平，我们将此称为<strong>生产率的提高</strong></p>
-<p>善于创新和勤奋的人比那些自满和懒惰的人，更快的提高生产率和生活水平，但在短期内不一定体现出来。</p>
-<p>生产率在长期内最关键，但信贷在短期内最重要。</p>
-<p>因为生产率的提高不会剧烈波动，因此不是经济起伏的一个重要动力。但是债务是这种动力，因为我们能够通过借债，让消费超过产出，但是在还债是不得不让消费低于产出。</p>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1641182383252.png" alt="" loading="lazy"></figure>
-<p>债务量波动的两大周期：</p>
-<pre><code>1&gt; 一个周期大约持续5-8年；
-2&gt; 另一个周期大约持续75-100年。
-大部分人虽然能感受到波动，但由于离波动太近，每天、每周都身临其境，通常并不认为这是周期。
-</code></pre>
-<p>经济的上下起伏不是取决于人们多么善于创新或勤奋工作，而是主要看信贷的总量。</p>
-<p>无信贷的经济运行：<strong>增加支出的唯一办法是增加收入，因此需要提高生产率和工作量，提高生产率是经济增长的唯一途径。</strong></p>
-<p>由于我的支出是另一个人的收入，当我或者另一个人的提高生产率的时候，经济就会增长。将各种交易加以总结，得到类似生产率增长轨迹的渐近线。</p>
-<p>由于借债，产生了周期。原因并不是任何法规，而是人的天性和信贷的运作方式。</p>
-<pre><code>借债不过是提前消费，为了购买现在买不起的东西，你的支出必然超过收入。
-因此你需要借钱，实质上是向未来的自己借钱。
-为自己的未来设定了一个时间，支出必须少于收入，以便于偿还债务。
-便形成了一个周期。
-
-一旦你借钱，就制造了一个周期。对于个人是这样，对于整个经济运行也是这样。
-信贷触发了一系列机械和可以预料的、将在未来发生的事件。
-</code></pre>
-<p>这就是信贷和货币的不同之处，例如：完成交易需使用货币，你在酒吧现金买一瓶啤酒时，交易立即完成；你用信用来买一瓶啤酒，比如赊账，相当于承诺今后为这瓶啤酒付钱，你和酒吧一起创造了一笔资产和负债，凭空制造出了信贷，今后清偿这笔赊账，上述资产负债才会消失，债务还清，交易了结。</p>
-<p>在没有信贷的经济运行中，增加支出唯一的办法是增加生产。在有信贷的的经济运行中，还可以通过借债来增加支出。因此有信贷的经济运行能增加支出，使得收入的增长速度在短期内超过生产率的增长，但在长期内并非如此，它只是会导致周期性变化。</p>
-<p>信贷如果造成超过偿还能力的过度消费，为不良信贷；但信贷如果高效率分配资源和产生收入，让你能偿还债务，为良好信贷。例如，如果你借钱买一台大彩电，电视机不会带来任何收入让你偿还债务，但是，如果你借钱买一台拖拉机，用它来收获更多的庄稼，赚更多的钱，你就能够偿还债务，提高生活水平。</p>
-<h3 id="25-短期债务周期">2.5 短期债务周期</h3>
-<p>借债形成周期，周期会上升，也会下降。</p>
-<pre><code>随着经济活动增加，出现了&quot;扩张&quot; (短期债务周期第一阶段)
-借债增加，支出继续增加，价格开始上涨。原因是：导致支出增加的是信贷，而信贷可以即刻凭空产生。
-如果支出和收入的增长速度超过所出售的商品的生产速度(供不应求)，价格就会上涨，价格上涨即为&quot;通货膨胀&quot;。
-</code></pre>
-<pre><code>央行不希望通货膨胀过高，看到价格上涨时，就会提高利率。
-随着利率的上升，有能力借钱的人会减少，同时现有债务成本也会上升。
-由于人们减少借债，还款额度增长，剩下来用于支出的资金将减少，因此支出速度放慢。
-
-而由于一个人的支出是另一个人的收入，环环相扣，人们的收入将下降。
-由于支出减少，价格将下跌，我们称之为&quot;通货紧缩&quot;。
-经济活动减少，经济进入衰退。
-</code></pre>
-<p>如果衰退过于严重，而且通货膨胀不再成为问题，央行将降低利率，使经济活动重新加速。</p>
-<p>随着利率降低，偿债和支出增加，出现另一次经济扩张。</p>
-<p>在短期债务周期中，限制支出的唯一因素是贷款人和借款人的贷款和借款意愿。如果信贷易于获得，经济就会扩张，如果信贷不易获得，经济就会衰退。这个周期主要由央行控制。短期债务周期通常持续5-8年，在几十年里不断重复。</p>
-<p>但是在每个周期的低谷和高峰后，经济增长和债务都超过前一个周期。</p>
-<p>原因：</p>
-<pre><code>是由人促成的。
-人具有借更多钱和花更多钱的倾向，而不喜欢偿还债务。这是人的天性。
-</code></pre>
-<p>因此，在长期内，债务增加的速度超过收入，从而形成长期债务周期。</p>
-<h3 id="26-长期债务周期">2.6 长期债务周期</h3>
-<p>尽管人们的债务增加，但贷款人会提供更宽松的信贷条件。（因为大家都认为形势一片大好，仅注意最近出现的情况，最近收入一直在增加，资产价值不断上升，股票市场欣欣向荣，现在是繁荣时期；用借来的钱购买商品、服务、金融资产很划算）</p>
-<p>当人们过度借贷消费时，泡沫便产生了。因此，尽管债务一直增加，但收入也以相近的速度增加，从而抵消了债务。</p>
-<pre><code>我们把债务与收入比率称为债务负担。(债务负担=债务/收入)
-只要收入继续上升，债务负担就可以承受。
-于此同时，资产价值迅猛上升，人们大量借钱来购买资产，因为投资促使资产价格日益升高。
-因此，尽管积累了大量债务，收入和资产价值的上升，帮助借款人在长期内保持良好的信用度。
-</code></pre>
-<p>几十年来，债务负担缓慢增加，使偿债成本越来越高，到了一定时候，偿债成本增加速度超过收入，迫使人们削减支出。由于一个人的支出是另一个人的收入，收入开始下降。人们的信用因此降低，致使借贷减少。偿债成本继续增加，使得支出进一步减少，周期开始逆转。这时到达长期债务的顶峰，债务负担变得过重。</p>
-<p>美国、欧洲，世界很多地区2008年发生这一情况；日本1989年和美国1929年因同样原因发生这一情况。</p>
-<h3 id="27-去杠杆化">2.7 去杠杆化</h3>
-<p>现在，经济进入去杠杆化时期。</p>
-<p>在去杠杆化过程中，人们削减支出，收入下降，信贷消失，资产价格下降，股票市场暴跌，银行发生挤兑，社会紧张加剧，收入下降及偿贷成本增加，借款人变得拮据。随着信用消失，信贷枯竭，借款人无法借到足够钱偿还债务。借款人开始出售资产，出售热潮使市场充斥待售资产，股票暴跌，不动产市场一蹶不振，银行陷入困境。资产价格下跌，借款人提供抵押物价格下降，进一步降低借款人信用，信贷迅速消失。</p>
-<p>削减支出 → 收入减少 → 财富减少 → 信贷减少 → 借贷减少，恶性循环。</p>
-<p>与衰退相似，<strong>但无法通过降低利率挽回局面</strong>。</p>
-<pre><code>在衰退中，可以通过降低利率来刺激借贷。
-但是在去杠杆化过程中，由于利率已经很低，接近0，从而丧失刺激功能，因此降低利率不起作用。
-</code></pre>
-<p>衰退和去杠杆化之间的区别在于：</p>
-<p>在去杠杆化过程中，借款人的债务负担<strong>变得过重，无法通过降低利率来减轻</strong>；贷款人意识到，债务过于庞大，根本无法足额偿还，借款人失去偿贷能力，抵押物失去价值，<strong>贷款人受到债务极大伤害，不想再介入过多债务，贷款人停止放贷，借款人停止借贷，整个经济体也失去信用度</strong>。</p>
-<p><strong>如何应对去杠杆化？</strong></p>
-<p>问题在于债务负担过重，必须减轻。可采取四种办法：</p>
-<pre><code>1. 个人、企业和政府削减支出
-当借款人不再借入新的债务，并开始减少旧的债务的时候，支出减少，收入下降（因为一个人支出是另一个人收入）。收入下降速度超过还债速度，债务负担实际更为沉重，导致通货紧缩，企业开始削减成本，工作机会减少，失业率上升。
-这导致下一个步骤，即必须减少债务。
-
-2. 通过债务违约和重组来减少债务
-借款人的债务是贷款人的资产，借款人无法偿还银行贷款，人们会担心银行无法返还存款，因此纷纷从银行取出存款，银行受到挤兑，个人、企业和银行出现债务违约，这种严重的经济收缩就是萧条。
-萧条的一个主要特征是：人们发现原来属于自己的财富中，有很大一部分实际不存在（存在债务违约）。
-贷款人不希望自己资产消失，同意债务重组，债务重组以为着贷款人得到的还款减少或偿还期延长，或利率低于当初商定的水平。无论如何，合约被破坏，结果是债务减少。
-债务重组使债务消失，但它导致收入和资产价值已更快的速度消失，债务负担日趋严重。
-削减债务与减少支出一样，令人痛苦和导致通货紧缩。
-
-3. 财富再分配，将财富从富人转给穷人
-上述均对中央政府产生影响，收入降低、失业增加，政府税收减少；同时失业率上升，中央政府需要增加支出，失业者储蓄不足需要政府的财务支柱；
-另外，政府制定刺激计划和增加支出来弥补经济活动的减少，在去杠杆化过程中，政府的预算赤字飙升（因为政府支出超过税收）。
-政府必须加税、举债来填补赤字，但收入下降和很多人失业的时候，应该向谁融资？富人。
-由于政府需要更多的钱，而且大量财富集中在少数人的手中，政府自然而然地增加对富人的征税，以帮助经济中的财富再分配。把财富由富人转给穷人。
-穷人（困苦）、富人（承受经济疲弱、资产贬值、增税压力）互相怨恨，萧条继续，会爆发社会动荡，国家内部及国家之间也会（债务国、债权国）
-这样就可能导致政治变革（1930年代希特勒掌权、欧洲爆发战争，美国大萧条）。
-
-4. 央行发行更多货币
-急需采取行动结束萧条。人们心目中的货币大多数是信贷，信贷消失，人们的钱会不够花，人们迫切需要钱，而央行可以发行货币，央行已将利率降低为0，现不得不发行更多货币，发行货币会引起通货膨胀、刺激经济。
-中央银行发行货币，并用这些货币来购买资产和政府债券（美国2008年，中央银行即联邦储备委员会，增加发行2万多亿美元）；央行通过这些货币，购买金融资产帮助推升资产价格，从而提高了人们信用，但仅有助于拥有资产的人。
-央行可以发行货币，但是只能购买金融资产，中央政府可以购买商品和服务，可以向人民送钱，但是无法印钞票。因此，为了刺激经济，央行和政府必须合作。
-央行通过购买政府债券，借钱给政府，使政府运行赤字预算，政府通过刺激计划和失业救济金，来增加购买商品和服务的支出，增加了人们的收入，也增加了政府的债务，可以降低经济中的总债务负担。
-
-决策者需要平衡考虑降低债务的四种办法，必须平衡兼顾通货紧缩的办法和通货膨胀的办法以便保持稳定，取成适当的平衡，可以带来和谐的去杠杆化。
-</code></pre>
-<p>这四种办法被用于现代历史上的每一次去杠杆化过程。</p>
-<p>和谐去杠杆化过程中，债务收入比率下降，经济开始正增长。</p>
-<p>发行货币是否加剧通货膨胀？若增发的货币抵消信贷的降幅就不会引发通货膨胀。</p>
-<p>支出无论支付的是货币还是信用，对价格影响是一样的，<strong>央行通过增加货币发行量弥补消失的信贷</strong>。</p>
-<p>央行不仅需推动收入增加，而且需要让收入增加值超过所积累债务的利率，<strong>意思是收入一定要比债务增长快</strong>。</p>
-<p>经济增长速度缓慢，但债务负担会下降，这就是和谐的去杠杆化。当收入上升的时候，借款人信用度提高，贷款人开始恢复贷款，债务负担开始下降，人们借到钱，开始增加消费，经济恢复增长，长期债务周期进入通货再膨胀阶段。</p>
-<p>为使债务负担下降和经济活动恢复正常，大约需要10年或更长时间，因此有<strong>失去的10年</strong>这种说法。</p>
-<h3 id="总结">总结</h3>
-<p>综上所述，经济比这个模式要复杂一点，但把短期债务周期、长期债务周期和生产率增长轨迹结合起来分析，会得到一个不错的模式，可以看清过去和当前的处境、以及未来可能的发展方向。</p>
-<h4 id="三条经验法则">三条经验法则：</h4>
-<p><strong>（1）不要让债务的增长速度超过收入，因为债务负担最终会把你压垮。<br>
-（2）不要让收入增加速度超过生产率，因为这最终将使你失去竞争力<br>
-（3）尽一切努力提高生产力，因为生产力在长期起最关键作用</strong></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Kubernetes架构及核心组件]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/">
-        </link>
-        <updated>2021-12-18T15:55:38.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="一-kubernetes概述">一、 Kubernetes概述</h1>
-<h2 id="11-纯容器模式的问题">1.1 纯容器模式的问题</h2>
-<ol>
-<li>业务容器数量庞大，哪些容器部署在哪些节点，使用了哪些端口，如何记录、管理，需要登录到每台机器去管理？</li>
-<li>跨主机通信，多个机器中的容器之间相互调用如何做，iptables规则手动维护？</li>
-<li>跨主机容器间互相调用，配置如何写？写死固定IP+端口？</li>
-<li>如何实现业务高可用？多个容器对外提供服务如何实现负载均衡？</li>
-<li>容器的业务中断了，如何可以感知到，感知到以后，如何自动启动新的容器?</li>
-<li>如何实现滚动升级保证业务的连续性？</li>
-<li>......</li>
-</ol>
-<h2 id="12-容器调度管理平台">1.2 容器调度管理平台</h2>
-<p>Docker Swarm       Mesos        Google Kubernetes</p>
-<p>2017年开始Kubernetes凭借强大的容器集群管理功能, 逐步占据市场,目前在容器编排领域一枝独秀</p>
-<p>Kubernetes官网:  https://kubernetes.io/</p>
-<h2 id="13-架构图">1.3 架构图</h2>
-<p>如何设计一个容器管理平台？</p>
-<ul>
-<li>集群架构，管理节点分发容器到数据节点</li>
-<li>如何部署业务容器到各数据节点</li>
-<li>N个数据节点，业务容器如何选择部署在最合理的节点</li>
-<li>容器如何实现多副本，如何满足每个机器部署一个容器的模型</li>
-<li>多副本如何实现集群内负载均衡</li>
-</ul>
-<p>分布式系统，两类角色：管理节点(master)和工作节点(worker node)</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840367221.png" alt="" loading="lazy"></figure>
-<h2 id="14-核心组件">1.4 核心组件</h2>
-<ul>
-<li>
-<p>ETCD：分布式高性能键值数据库,存储整个集群的所有元数据</p>
-</li>
-<li>
-<p>ApiServer:  API服务器,集群资源访问控制入口,提供restAPI及安全访问控制</p>
-</li>
-<li>
-<p>Scheduler：调度器,负责把业务容器调度到最合适的Node节点</p>
-</li>
-<li>
-<p>Controller Manager：控制器管理,确保集群资源按照期望的方式运行</p>
-<ul>
-<li>Replication Controller</li>
-<li>Node controller</li>
-<li>ResourceQuota Controller</li>
-<li>Namespace Controller</li>
-<li>ServiceAccount Controller</li>
-<li>Token Controller</li>
-<li>Service Controller</li>
-<li>Endpoints Controller</li>
-</ul>
-</li>
-<li>
-<p>kubelet：运行在每个节点上的主要的“节点代理”，脏活累活</p>
-<ul>
-<li>pod 管理：kubelet 定期从所监听的数据源获取节点上 pod/container 的期望状态（运行什么容器、运行的副本数量、网络或者存储如何配置等等），并调用对应的容器平台接口达到这个状态。</li>
-<li>容器健康检查：kubelet 创建了容器之后还要查看容器是否正常运行，如果容器运行出错，就要根据 pod 设置的重启策略进行处理.</li>
-<li>容器监控：kubelet 会监控所在节点的资源使用情况，并定时向 master 报告，资源使用数据都是通过 cAdvisor 获取的。知道整个集群所有节点的资源情况，对于 pod 的调度和正常运行至关重要</li>
-</ul>
-</li>
-<li>
-<p>kube-proxy：维护节点中的iptables或者ipvs规则</p>
-</li>
-<li>
-<p>kubectl: 命令行接口，用于对 Kubernetes 集群运行命令<br>
-https://kubernetes.io/zh/docs/reference/kubectl/</p>
-</li>
-</ul>
-<h2 id="15-工作流程">1.5 工作流程</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840400591.png" alt="" loading="lazy"></figure>
-<ol>
-<li>用户准备一个资源文件（.yaml 记录了业务应用的名称、镜像地址等信息），通过调用APIServer执行创建Pod</li>
-<li>APIServer收到用户的Pod创建请求，将Pod信息写入到etcd中</li>
-<li>调度器通过list-watch的方式，发现有新的pod数据，但是这个pod还没有绑定到某一个节点中</li>
-<li>调度器通过调度算法，计算出最适合该pod运行的节点，并调用APIServer，把信息更新到etcd中</li>
-<li>kubelet同样通过list-watch方式，发现有新的pod调度到本机的节点了，因此调用容器运行时，去根据pod的描述信息，拉取镜像，启动容器，同时生成事件信息</li>
-<li>同时，把容器的信息、事件及状态也通过APIServer写入到etcd中</li>
-</ol>
-<pre><code>当使用deployment控制器创建Pod时，
-controller-manager在Scheduler之前，生成Pod元数据，写道ETCD中去，Scheduler才可以进行调度。
-</code></pre>
-<p>问题1：当用户创建deployment时，是如何转换成pod的？通过怎样的流程？<br>
-问题2：controller-manager和scheduler谁工作在前？谁工作在后？</p>
-<pre><code>controller-manager工作在scheduler前面，
-deployment通过controller-manager生成pod，然后pod通过scheduler调度到最合适的工作节点。
-
-controller-manager根据定义的deployment yaml文件来生成pod的模板，
-例如pod名称等都是controller-manager生成出来的
-</code></pre>
-<h2 id="16-架构设计的几点思考">1.6 架构设计的几点思考</h2>
-<ol>
-<li>系统各个组件分工明确(APIServer是所有请求入口，CM是控制中枢，Scheduler主管调度，而Kubelet负责运行)，配合流畅，整个运行机制一气呵成。</li>
-<li>除了配置管理和持久化组件ETCD，其他组件并不保存数据。意味<code>除ETCD外</code>其他组件都是无状态的。因此从架构设计上对kubernetes系统高可用部署提供了支撑。</li>
-<li>同时因为组件无状态，组件的升级，重启，故障等并不影响集群最终状态，只要组件恢复后就可以从中断处继续运行。</li>
-<li>各个组件和kube-apiserver之间的数据推送都是通过list-watch机制来实现。</li>
-</ol>
-<h1 id="二-实践-集群安装">二、实践--集群安装</h1>
-<h2 id="21-k8s集群主流安装方式">2.1 k8s集群主流安装方式</h2>
-<ul>
-<li>minikube</li>
-<li>二进制安装</li>
-<li>kubeadm等安装工具</li>
-</ul>
-<p>kubeadm使用文档:  https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/</p>
-<p>kubeadmin安装文档:《Kubernetes安装手册（非高可用版）》</p>
-<h2 id="22-核心组件">2.2 核心组件</h2>
-<p>静态Pod的方式：</p>
-<pre><code class="language-powershell">## etcd、apiserver、controller-manager、kube-scheduler
-$ kubectl -n kube-system get pod
-</code></pre>
-<p>systemd服务方式：</p>
-<pre><code class="language-powershell">$ systemctl status kubelet
-</code></pre>
-<blockquote>
-<p>kubectl：二进制命令行工具</p>
-</blockquote>
-<h2 id="23-理解集群资源">2.3 理解集群资源</h2>
-<p>组件是为了支撑k8s平台的运行，安装好的软件。</p>
-<p>资源是如何去使用k8s的能力的定义。比如，k8s可以使用Pod来管理业务应用，那么Pod就是k8s集群中的一类资源，集群中的所有资源可以提供如下方式查看：</p>
-<pre><code class="language-powershell">$ kubectl api-resources
-</code></pre>
-<p><strong>如何理解namespace：</strong></p>
-<p>命名空间，集群内一个虚拟的概念，类似于资源池的概念，一个池子里可以有各种资源类型，绝大多数的资源都必须属于某一个namespace。集群初始化安装好之后，会默认有如下几个namespace：</p>
-<pre><code class="language-powershell">$ kubectl get namespaces
-NAME                   STATUS   AGE
-default                Active   84m
-kube-node-lease        Active   84m
-kube-public            Active   84m
-kube-system            Active   84m
-kubernetes-dashboard   Active   71m
-</code></pre>
-<ul>
-<li>所有NAMESPACED的资源，在创建的时候都需要指定namespace，若不指定，默认会在default命名空间下</li>
-<li>相同namespace下的同类资源不可以重名，不同类型的资源可以重名</li>
-<li>不同namespace下的同类资源可以重名</li>
-<li>通常在项目使用的时候，我们会创建带有业务含义的namespace来做逻辑上的整合</li>
-</ul>
-<h2 id="24-kubectl的使用">2.4 kubectl的使用</h2>
-<p>类似于docker，kubectl是命令行工具，用于与APIServer交互，内置了丰富的子命令，功能极其强大。</p>
-<p>kubectl使用官方文档： https://kubernetes.io/docs/reference/kubectl/overview/</p>
-<pre><code class="language-powershell">$ kubectl -h
-$ kubectl get -h
-$ kubectl create -h
-$ kubectl create namespace -h
 </code></pre>
 ]]></content>
     </entry>

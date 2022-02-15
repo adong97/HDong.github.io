@@ -30,30 +30,13 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#etcd%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C">ETCD常用操作</a></li>
+</ul>
+
           </div>
         </div>
       
@@ -115,33 +98,145 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-2-line"></i> 标签云
-        </h2>
-        <div class="tags-container">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">ETCD数据的访问</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-15 / 3 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/TcpMtOSFQ.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="etcd常用操作">ETCD常用操作</h1>
+<p>拷贝etcdctl命令行工具：</p>
+<pre><code class="language-powershell">#将Etcd容器中的etcdctl命令拷贝到本机/usr/bin/etcdctl
+$ docker cp etcd_container:/usr/local/bin/etcdctl /usr/bin/etcdctl
+
+#如果etcd没有使用Docker容器，则将Etcd安装目录下的etcdctl拷贝到/usr/bin/etcdctl目录下
+$ cp /opt/etcd/bin/etcdctl /usr/bin/etcdctl
+</code></pre>
+<p>查看etcd集群的成员节点：</p>
+<pre><code class="language-powershell">#声明通过ETCDCTL_API=3这个版本拿去数据
+$ export ETCDCTL_API=3
+
+$ etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
+
+## --endpoints指定要访问哪个ETCD的server
+## 2379为客户端连接端口，2380为service端通信端口
+## --cacert指定根证书
+## --cert根据根证书签发的证书	
+## --key签发证书的私钥
+
+#设置别名，方便操作
+$ alias etcdctl='etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
+
+#查看ETCD集群成员节点
+$ etcdctl member list -w table
+</code></pre>
+<p>查看etcd集群节点状态：</p>
+<pre><code class="language-powershell">$ etcdctl endpoint status -w table
+
+$ etcdctl endpoint health -w table
+</code></pre>
+<p>设置key值:</p>
+<pre><code class="language-powershell">#设置值
+$ etcdctl put luffy 1
+
+#查询值
+$ etcdctl get luffy
+
+#我们可以按照目录结构的方式存储数据，这样的好处就是，组件存储数据可以按照目录区分，不会重复
+$ etcdctl put /luffy/key1 val1
+</code></pre>
+<p>查看所有key值：</p>
+<pre><code class="language-powershell">$  etcdctl get / --prefix --keys-only
+## --prefix 前缀，把所有使用/前缀的key读出来
+## --keys-only 只取key值
+
+###取值含义
+示例：
+/registry/services/specs/kube-system/kubelet
+&gt; /registry 第一层，固定的
+&gt; /services 第二层，资源类型
+</code></pre>
+<p>查看具体的key对应的数据：</p>
+<pre><code class="language-powershell">$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
+</code></pre>
+<p>list-watch:</p>
+<pre><code class="language-powershell">$ etcdctl watch /luffy/ --prefix
+$ etcdctl put /luffy/key1 val1
+</code></pre>
+<p>添加定时任务做数据快照（重要！）</p>
+<pre><code class="language-powershell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
+</code></pre>
+<p>恢复快照：</p>
+<ol>
+<li>
+<p>停止etcd和apiserver</p>
+</li>
+<li>
+<p>移走当前数据目录</p>
+<pre><code class="language-powershell">$ mv /var/lib/etcd/ /tmp
+</code></pre>
+</li>
+<li>
+<p>恢复快照</p>
+<pre><code class="language-powershell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
+</code></pre>
+</li>
+<li>
+<p>集群恢复</p>
+<p>https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>namespace删除问题</p>
+<p>很多情况下，会出现namespace删除卡住的问题，此时可以通过操作etcd来删除数据：</p>
+<pre><code class="language-shell">#查询数据
+$ etcdctl get /registry/namespace --prefix	--keys-only
+
+#删除数据，确保namespace下没有pod等数据
+$ etcdctl del /registry/namespace/luffy
+</code></pre>
+</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-              <span class="flex-auto">Kubernetes</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">15</span>
-            </a>
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Kubernetes调度
+                </h3>
+              </a>
+            </div>
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-              <span class="flex-auto">Docker</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">9</span>
-            </a>
+
           
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/13oNyyBgZ/" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-              <span class="flex-auto">prometheus</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
-          
-            <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr/" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-              <span class="flex-auto">推荐书籍</span>
-              <span class="flex rounded-full bg-gray-200 px-2 py-1 text-xs ml-1">2</span>
-            </a>
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/8wMXd7F36/">
+                <h3 class="post-title">
+                  Docker images批量导入导出
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
+
+        
+
       </div>
     </div>
 

@@ -1,0 +1,463 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644919390173">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644919390173" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%BA%E4%BD%95%E8%A6%81%E6%8E%A7%E5%88%B6pod%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%B0%83%E5%BA%A6">为何要控制Pod应该如何调度</a></li>
+<li><a href="#%E8%B0%83%E5%BA%A6%E7%9A%84%E8%BF%87%E7%A8%8B">调度的过程</a>
+<ul>
+<li><a href="#%E9%A2%84%E9%80%89">预选：</a></li>
+<li><a href="#%E4%BC%98%E9%80%89">优选：</a></li>
+</ul>
+</li>
+<li><a href="#nodeselector%E8%8A%82%E7%82%B9%E9%80%89%E6%8B%A9%E5%99%A8">NodeSelector(节点选择器)</a></li>
+<li><a href="#nodeaffinitynode%E4%BA%B2%E5%92%8C%E6%80%A7">nodeAffinity(Node亲和性)</a></li>
+<li><a href="#pod%E4%BA%B2%E5%92%8C%E6%80%A7%E5%92%8C%E5%8F%8D%E4%BA%B2%E5%92%8C%E6%80%A7">pod亲和性和反亲和性</a></li>
+<li><a href="#%E6%B1%A1%E7%82%B9taints%E4%B8%8E%E5%AE%B9%E5%BF%8Dtolerations">污点（Taints）与容忍（tolerations）</a></li>
+<li><a href="#cordon-and-drain">Cordon and Drain</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Kubernetes调度</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-15 / 9 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/sn0OllrL_.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="为何要控制pod应该如何调度">为何要控制Pod应该如何调度</h1>
+<ul>
+<li>集群中有些机器的配置高（SSD，更好的内存等），我们希望核心的服务（比如说数据库）运行在上面</li>
+<li>某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上</li>
+<li>......</li>
+</ul>
+<p>Kubernetes Scheduler 的作用是将待调度的 Pod 按照一定的调度算法和策略绑定到集群中一个合适的 Worker Node 上，并将绑定信息写入到 etcd 中，之后目标 Node 中 kubelet 服务通过 API Server 监听到 Scheduler 产生的 Pod 绑定事件获取 Pod 信息，然后下载镜像启动容器。</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918439871.jpg" alt="" loading="lazy"></figure>
+<h1 id="调度的过程">调度的过程</h1>
+<p>Scheduler 提供的调度流程分为预选 (Predicates) 和优选 (Priorities) 两个步骤：</p>
+<ul>
+<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选</li>
+<li>优选，K8S将对候选的 Node 进行打分</li>
+</ul>
+<p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1644918490773.png" alt="" loading="lazy"></p>
+<h2 id="预选">预选：</h2>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
+<h2 id="优选">优选：</h2>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
+<h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
+<p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，POD 的调度可以根据节点的 label 进行特定的部署。</p>
+<p>查看节点的label：</p>
+<pre><code>$ kubectl get nodes --show-labels
+</code></pre>
+<p>为节点打label：</p>
+<pre><code>$ kubectl label node k8s-master disktype=ssd
+</code></pre>
+<p>当 node 被打上了相关标签后，在调度的时候就可以使用这些标签了，只需要在spec 字段中添加nodeSelector字段，里面是我们需要被调度的节点的 label。</p>
+<pre><code>spec:
+  hostNetwork: true    # 声明pod的网络模式为host模式，效果通docker run --net=host
+  volumes: 
+  - name: mysql-data
+    hostPath: 
+      path: /opt/mysql/data
+  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
+    component: mysql
+  containers:
+  - name: mysql
+      image: 172.21.51.143:5000/demo/mysql:5.7
+</code></pre>
+<h1 id="nodeaffinitynode亲和性">nodeAffinity(Node亲和性)</h1>
+<p>Pod -&gt; Node的标签做出选择</p>
+<p>节点亲和性 ， 比上面的nodeSelector更加灵活，它可以进行一些简单的逻辑组合，不只是简单的相等匹配 。分为两种，硬策略和软策略。</p>
+<p>**requiredDuringSchedulingIgnoredDuringExecution **： 硬策略，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然我就不会调度Pod。</p>
+<p><strong>preferredDuringSchedulingIgnoredDuringExecution</strong>：软策略，如果你没有满足调度要求的节点的话，Pod就会忽略这条规则，继续完成调度过程，说白了就是满足条件最好了，没有满足就忽略掉的策略。</p>
+<pre><code>#要求 Pod 不能运行在128和132两个节点上，如果有节点满足disktype=ssd或者sas的话就优先调度到这类节点上
+...
+spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+        ports:
+        - containerPort: 8002
+      affinity:
+          nodeAffinity:  #亲和性
+            requiredDuringSchedulingIgnoredDuringExecution:  #硬策略
+                nodeSelectorTerms: #节点选择器
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: NotIn  #label 的值不在某个列表中
+                      values:
+                        - 192.168.136.128
+                        - 192.168.136.132
+                        
+            preferredDuringSchedulingIgnoredDuringExecution:  #软策略
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                    - key: disktype  #满足disktype=ssd或者sas的值在某个列表中
+                      operator: In
+                      values:
+                        - ssd
+                        - sas
+...
+</code></pre>
+<p>这里的匹配逻辑是 label 的值在某个列表中，现在Kubernetes提供的操作符有下面的几种：</p>
+<ul>
+<li>In：label 的值在某个列表中</li>
+<li>NotIn：label 的值不在某个列表中</li>
+<li>Gt：label 的值大于某个值</li>
+<li>Lt：label 的值小于某个值</li>
+<li>Exists：某个 label 存在</li>
+<li>DoesNotExist：某个 label 不存在</li>
+</ul>
+<p>如果nodeSelectorTerms下面有多个选项的话，满足任何一个条件就可以了；如果matchExpressions有多个选项的话，则必须同时满足这些条件才能正常调度 Pod</p>
+<h1 id="pod亲和性和反亲和性">pod亲和性和反亲和性</h1>
+<p>Pod -&gt; Pod的标签</p>
+<p>场景：</p>
+<blockquote>
+<p>myblog 启动多副本，但是期望可以尽量分散到集群的可用节点中</p>
+</blockquote>
+<p>分析：为了让myblog应用的多个pod尽量分散部署在集群中，可以利用pod的反亲和性，告诉调度器，如果某个节点中存在了myblog的pod，则可以根据实际情况，实现如下调度策略：</p>
+<ul>
+<li>不允许同一个node节点，调度两个myblog的副本</li>
+<li>可以允许同一个node节点中调度两个myblog的副本，前提是尽量把pod分散部署在集群中</li>
+</ul>
+<pre><code>...
+    spec:
+      affinity:
+        podAntiAffinity:  #Anti 反亲和性，满足一下条件则不做调度
+          requiredDuringSchedulingIgnoredDuringExecution:  #硬策略，一定要满足的条件
+          - labelSelector:
+              matchExpressions:
+              - key: app  #带有app=myblog标签的Pod
+                operator: In
+                values:
+                - myblog
+            topologyKey: kubernetes.io/hostname
+      containers:
+...
+# 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么 调度器一定不要给我调度过去
+
+...
+    spec:
+      affinity:
+        podAntiAffinity: #反亲和性
+          preferredDuringSchedulingIgnoredDuringExecution: #软策略，
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - myblog
+              topologyKey: kubernetes.io/hostname
+      containers:
+...
+# 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么调度器尽量不要调度过去
+</code></pre>
+<p>** https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/**</p>
+<h1 id="污点taints与容忍tolerations">污点（Taints）与容忍（tolerations）</h1>
+<p>对于nodeAffinity无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而Taints恰好与之相反，如果一个节点标记为 Taints ，除非 Pod 也被标识为可以容忍污点节点，否则该 Taints 节点不会被调度Pod。</p>
+<p>Taints(污点)是Node的一个属性，设置了Taints(污点)后，因为有了污点，所以Kubernetes是不会将Pod调度到这个Node上的。于是Kubernetes就给Pod设置了个属性Tolerations(容忍)，只要Pod能够容忍Node上的污点，那么Kubernetes就会忽略Node上的污点，就能够(不是必须)把Pod调度过去。</p>
+<p>场景一：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
+<p>场景二：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
+<p>设置污点：</p>
+<pre><code>$ kubectl taint node [node_name] key=value:[effect]   
+      其中[effect] 可取值： [ NoSchedule | PreferNoSchedule | NoExecute ]
+       NoSchedule：一定不能被调度。
+       PreferNoSchedule：尽量不要调度。
+       NoExecute：不仅不会调度，还会驱逐Node上已有的Pod。
+  示例：kubectl taint node k8s-slave1 smoke=true:NoSchedule
+            #不能容忍k8s-slave1抽烟的Pod就不要调度过来了
+</code></pre>
+<p>去除污点：</p>
+<pre><code>去除指定key及其effect：
+     kubectl taint nodes [node_name] key:[effect]-    #这里的key不用指定value
+     kubectl taint node k8s-slave1 smoke-
+
+ 去除指定key所有的effect: 
+     kubectl taint nodes node_name key-
+ 
+ 示例：
+     #打污点 smoke=true:NoSchedule
+     kubectl taint node k8s-master smoke=true:NoSchedule
+     #去除污点，去除指定key及其effect
+     kubectl taint node k8s-master smoke:NoExecute-
+     #去除污点，去除指定key所有的effect
+     kubectl taint node k8s-master smoke-
+</code></pre>
+<p>污点演示：</p>
+<pre><code>## 给k8s-slave1打上污点，smoke=true:NoSchedule
+$ kubectl taint node k8s-master gamble=true:NoSchedule
+$ kubectl taint node k8s-slave1 drunk=true:NoSchedule
+$ kubectl taint node k8s-slave2 smoke=true:NoSchedule
+
+
+
+## 扩容myblog的Pod，观察新Pod的调度情况
+$ kuebctl -n luffy scale deploy myblog --replicas=3
+$ kubectl -n luffy get po -w    ## pending
+
+</code></pre>
+<p>Pod容忍污点示例：myblog/deployment/deploy-myblog-taint.yaml</p>
+<pre><code>##污点是给Node打的，容忍是给业务设置的
+...
+spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+      tolerations: #设置容忍性
+      - key: &quot;smoke&quot; 
+        operator: &quot;Equal&quot;  #不指定operator，默认为Equal
+        value: &quot;true&quot;
+        effect: &quot;NoSchedule&quot;
+      - key: &quot;drunk&quot; 
+        operator: &quot;Exists&quot;  #如果操作符为Exists，那么value属性可省略,不指定operator，默认为Equal
+      #意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
+      #tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+</code></pre>
+<pre><code>$ kubectl apply -f deploy-myblog-taint.yaml
+</code></pre>
+<pre><code>spec:
+      containers:
+      - name: demo
+        image: 172.21.51.143:5000/myblog:v1
+      tolerations:
+        - operator: &quot;Exists&quot;  #只要存在污点，都可以容忍 
+</code></pre>
+<blockquote>
+<p>NoExecute</p>
+</blockquote>
+<h1 id="cordon-and-drain">Cordon and Drain</h1>
+<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现</p>
+<p>drain：驱逐。drain包含cordon. drain会首先将节点变成不可调度</p>
+<pre><code>#标记k8s-slave2是可调度的
+$ kubectl cordon k8s-slave2
+
+#驱逐k8s-slave2上的Pod
+$ kubectl drain k8s-slave2
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/">
+                <h3 class="post-title">
+                  ETCD数据的访问
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
