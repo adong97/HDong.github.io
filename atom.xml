@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-14T15:54:35.070Z</updated>
+    <updated>2022-02-15T05:31:36.732Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -258,6 +258,7 @@ spec:
 流量到Ingress之后，它可以根据域名或者路径，转发到Service，进而转发到具体的Pod上。
 </code></pre>
 <h3 id="342-实现逻辑">3.4.2 实现逻辑</h3>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644902212395.jpg" alt="" loading="lazy"></figure>
 <p>1）ingress controller通过和kubernetes api交互，动态的去感知集群中ingress规则变化<br>
 2）然后读取ingress规则(规则就是写明了哪个域名对应哪个service)，按照自定义的规则，生成一段nginx配置<br>
 3）再写到nginx-ingress-controller的pod里，这个Ingress controller的pod里运行着一个Nginx服务，控制器把生成的nginx配置写入/etc/nginx/nginx.conf文件中<br>
@@ -939,8 +940,9 @@ $ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
 
 发现直接到pod的IP地址
 </code></pre>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644742300061.png" alt="" loading="lazy"><br>
-curl mysql:80 先将mysql域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900545943.png" alt="" loading="lazy"><br>
+curl myblog:80 先将域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。<br>
+由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
 <ul>
 <li>50%流量转发到10.244.1.158:8002</li>
 <li>另50%流量转发到10.244.1.159:8002</li>
@@ -1003,7 +1005,8 @@ $ iptables -F
 # 查看规则生效
 $ ipvsadm -ln
 </code></pre>
-<p>如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900655682.png" alt="" loading="lazy"><br>
+如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
 如果k8s集群规模不是很大，则使用iptables，iptables的性能会比ipvs好一些；<br>
 ipvs的查找模式为hash模式，量越大，ipvs的优势越明显。</p>
 ]]></content>

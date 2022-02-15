@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644854060760">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644903076809">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644854060760" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644903076809" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -454,8 +454,9 @@ $ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
 
 发现直接到pod的IP地址
 </code></pre>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644742300061.png" alt="" loading="lazy"><br>
-curl mysql:80 先将mysql域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900545943.png" alt="" loading="lazy"><br>
+curl myblog:80 先将域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。<br>
+由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
 <ul>
 <li>50%流量转发到10.244.1.158:8002</li>
 <li>另50%流量转发到10.244.1.159:8002</li>
@@ -518,7 +519,8 @@ $ iptables -F
 # 查看规则生效
 $ ipvsadm -ln
 </code></pre>
-<p>如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900655682.png" alt="" loading="lazy"><br>
+如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
 如果k8s集群规模不是很大，则使用iptables，iptables的性能会比ipvs好一些；<br>
 ipvs的查找模式为hash模式，量越大，ipvs的优势越明显。</p>
 
