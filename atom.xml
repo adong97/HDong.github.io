@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-15T10:05:53.578Z</updated>
+    <updated>2022-02-16T03:09:13.052Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -246,10 +246,13 @@ $ docker cp etcd_container:/usr/local/bin/etcdctl /usr/bin/etcdctl
 $ cp /opt/etcd/bin/etcdctl /usr/bin/etcdctl
 </code></pre>
 <p>查看etcd集群的成员节点：</p>
-<pre><code class="language-powershell">#声明通过ETCDCTL_API=3这个版本拿去数据
+<pre><code class="language-powershell">#声明通过ETCDCTL_API=3这个版本拿取数据
 $ export ETCDCTL_API=3
 
-$ etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
+$ etcdctl --endpoints=https://[127.0.0.1]:2379 \
+              --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+              --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
+              --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
 
 ## --endpoints指定要访问哪个ETCD的server
 ## 2379为客户端连接端口，2380为service端通信端口
@@ -258,7 +261,7 @@ $ etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd
 ## --key签发证书的私钥
 
 #设置别名，方便操作
-$ alias etcdctl='etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
+$ alias etcdctl='etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
 
 #查看ETCD集群成员节点
 $ etcdctl member list -w table
@@ -1466,7 +1469,7 @@ spec:
 <p>nginx的URL重写</p>
 <p>目标：</p>
 <pre><code>nginx.luffy.com -&gt; 172.21.51.143 -&gt; /api/v1   -&gt; nginx-v1 service
-                                    /api/v2   -&gt; nginx-v2 service
+                                                          /api/v2   -&gt; nginx-v2 service
 </code></pre>
 <p>实现：</p>
 <pre><code class="language-powershell">$ cat nginx-v1-dpl.yaml
@@ -1563,6 +1566,7 @@ $ http://nginx.luffy.com/api/v2/
 <li>为了实现集群外使用域名访问myblog，因此引入Ingress资源，通过定义访问规则，实现七层代理</li>
 <li>考虑真实的场景，对Ingress的使用做了拓展，介绍多path转发及nginx URL重写的实现</li>
 </ol>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644931750740.jpg" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
