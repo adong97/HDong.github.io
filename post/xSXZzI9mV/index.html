@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1644980908302">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645028389283">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1644980908302" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645028389283" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -43,8 +43,9 @@
 <li><a href="#343-%E5%AE%89%E8%A3%85">3.4.3 安装</a></li>
 <li><a href="#344-%E8%AE%BF%E9%97%AE">3.4.4 访问</a></li>
 <li><a href="#345-https%E8%AE%BF%E9%97%AE">3.4.5 HTTPS访问：</a></li>
-<li><a href="#346-%E5%A4%9A%E8%B7%AF%E5%BE%84%E8%BD%AC%E5%8F%91%E5%8F%8A%E9%87%8D%E5%86%99%E7%9A%84%E5%AE%9E%E7%8E%B0">3.4.6 多路径转发及重写的实现</a>
+<li><a href="#346-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E">3.4.6 常用注解说明</a>
 <ul>
+<li><a href="#3472-nginx%E7%9A%84url%E9%87%8D%E5%86%99">3.4.7.2 nginx的URL重写</a></li>
 <li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
 </ul>
 </li>
@@ -118,7 +119,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Ingress</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 24 min read
+          2022-02-10 / 28 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/xSXZzI9mV.png" alt="">
@@ -1020,42 +1021,23 @@ spec:
     secretName: tls-myblog
 </code></pre>
 <p>然后，访问 https://myblog.luffy.com/blog/index/</p>
-<h3 id="346-多路径转发及重写的实现">3.4.6 多路径转发及重写的实现</h3>
-<ol>
-<li>
-<p>多path转发示例：</p>
-<p>目标：</p>
-</li>
-</ol>
-<pre><code class="language-none">myblog.luffy.com -&gt; 172.21.51.143 -&gt; /foo/aaa   service1:4200/foo/aaa
-                                      /bar      service2:8080
-                                      /		    myblog:80/
-</code></pre>
-<p>​	 实现：</p>
-<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+<h3 id="346-常用注解说明">3.4.6 常用注解说明</h3>
+<p>nginx端存在很多可配置的参数，通常这些参数在ingress的定义中被放在annotations中实现，如下为常用的一些：</p>
+<pre><code>apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: simple-fanout-example
+  name: myblog
   namespace: luffy
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: &quot;false&quot;  #是否默认跳转https
+    nginx.ingress.kubernetes.io/proxy-body-size: 1000m  #上传文件大小
+    nginx.ingress.kubernetes.io/ssl-redirect: &quot;false&quot;   #
+    nginx.org/client-max-body-size: 1000m   #
 spec:
   rules:
   - host: myblog.luffy.com
     http:
       paths:
-      - path: /foo    #添加多个Path即可
-        pathType: Prefix
-        backend:
-          service: 
-            name: service1
-            port:
-              number: 4200
-      - path: /bar
-        pathType: Prefix
-        backend:
-          service: 
-            name: service2
-            port:
-              number: 8080
       - path: /
         pathType: Prefix
         backend:
@@ -1063,92 +1045,236 @@ spec:
             name: myblog
             port:
               number: 80
+  tls:
+  - hosts:
+    - myblog.luffy.com
+    secretName: tls-myblog
+
+
+    或者使用edit添加配置
+    $ kubectl -n luffy edit ingress myblog
+    ...
+    annotations:
+        nginx.ingress.kubernetes.io/force-ssl-redirect: &quot;false&quot;  #是否默认跳转https
+        nginx.ingress.kubernetes.io/proxy-body-size: 1000m  #上传文件大小
+        nginx.ingress.kubernetes.io/ssl-redirect: &quot;false&quot;   #
+        nginx.org/client-max-body-size: 1000m   #
+        kubectl.kubernetes.io/last-applied-configuration:
+    ...
+    ```
+
+### 3.4.7 多路径转发及重写的实现
+使用同一个域名，根据不同的路径转发到不同的服务上去。
+
+#### 3.4.7.1 多path转发示例：
+
+目标：
+
+```none
+myblog.luffy.com -&gt; 172.21.51.143 -&gt; /foo/aaa   service1:4200/foo/aaa
+                                      /bar   service2:8080
+                                      /         myblog:80/
 </code></pre>
-<ol start="2">
-<li>
-<p>nginx的URL重写</p>
-<p>目标：</p>
-<pre><code>nginx.luffy.com -&gt; 172.21.51.143 -&gt; /api/v1   -&gt; nginx-v1 service
-                                                          /api/v2   -&gt; nginx-v2 service
-</code></pre>
-<p>实现：</p>
-<pre><code class="language-powershell">$ cat nginx-v1-dpl.yaml
+<p>​实现：<br>
+1&gt; 创建第一个服务 detail</p>
+<pre><code class="language-yaml">$ cat detail.dpl.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-v1
-  namespace: luffy
+  name: details
+  labels:
+    app: details
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx-v1
+      app: details
   template:
     metadata:
       labels:
-        app: nginx-v1
+        app: details
     spec:
       containers:
-      - image: nginx:alpine
-         name: nginx-v1
-        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'this is nginx-v1'&gt;/usr/share/nginx/html/index.html;nginx -g 'daemon off;'&quot;]
+      - name: details
+        image: docker.io/istio/examples-bookinfo-details-v1:1.16.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
 
-$ cat nginx-v1-svc.yaml
+$ cat detail.svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-v1
-  namespace: luffy
+  name: details
+  labels:
+    app: details
 spec:
   ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
+  - port: 9080
+    name: http
   selector:
-    app: nginx-v1
-  type: ClusterIP
+    app: details
+</code></pre>
+<p>创建资源并查看</p>
+<pre><code class="language-shell">$ kubectl create -f detail.dpl.yaml
+$ kubectl create -f detail.svc.yaml
+$ kubectl get pod -owide
+NAME                       READY   STATUS    RESTARTS      AGE   IP            NODE        NOMINATED NODE   READINESS GATES
+counter                    3/3     Running   3 (78m ago)   18d   10.244.4.20   k8s-node1   &lt;none&gt;           &lt;none&gt;
+details-7cd4cb8d54-nnk66   1/1     Running   0             28m   10.244.3.71   k8s-node2   &lt;none&gt;           &lt;none&gt;
+reviews-75d7bdcc65-xxblm   1/1     Running   0             28m   10.244.3.72   k8s-node2   &lt;none&gt;           &lt;none&gt;
 
-# 创建nginx-v2
+##验证
+$ curl 10.244.3.71:9080/details/0
+{&quot;id&quot;:0,&quot;author&quot;:&quot;William Shakespeare&quot;,&quot;year&quot;:1595,&quot;type&quot;:&quot;paperback&quot;,&quot;pages&quot;:200,&quot;publisher&quot;:&quot;PublisherA&quot;,&quot;language&quot;:&quot;English&quot;,&quot;ISBN-10&quot;:&quot;1234567890&quot;,&quot;ISBN-13&quot;:&quot;123-1234567890&quot;}
+</code></pre>
+<p>2&gt; 创建第二个服务 reviews</p>
+<pre><code class="language-yaml">$ cat  reviews.dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews
+  labels:
+    app: reviews
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews
+  template:
+    metadata:
+      labels:
+        app: reviews
+    spec:
+      containers:
+      - name: reviews
+        image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: LOG_DIR
+          value: &quot;/tmp/logs&quot;
+        ports:
+        - containerPort: 9080
 
-$ kubectl apply -f .
+$ cat reviews.svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: reviews
+  labels:
+    app: reviews
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: reviews
+</code></pre>
+<p>创建并查看资源</p>
+<pre><code class="language-shell">$ kubectl create -f reviews.dpl.yaml
+$ kubectl create -f reviews.svc.yaml
+$ kubectl get pod -owide
 
-
-$ cat ingress-rewrite.yaml
+##验证
+$ curl 10.244.3.72:9080/reviews/0
+{&quot;id&quot;: &quot;0&quot;,&quot;reviews&quot;: [{  &quot;reviewer&quot;: &quot;Reviewer1&quot;,  &quot;text&quot;: &quot;An extremely entertaining play by Shakespeare. The slapstick humour is refreshing!&quot;, &quot;rating&quot;: {&quot;error&quot;: &quot;Ratings service is currently unavailable&quot;}},{  &quot;reviewer&quot;: &quot;Reviewer2&quot;,  &quot;text&quot;: &quot;Absolutely fun and entertaining. The play lacks thematic depth when compared to other plays by Shakespeare.&quot;, &quot;rating&quot;: {&quot;error&quot;: &quot;Ratings service is currently unavailable&quot;}}]}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645025793902.png" alt="" loading="lazy"></figure>
+<p>准备Ingress文件</p>
+<pre><code class="language-yaml">$ cat  bookstore.ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-rewrite
-  namespace: luffy
-  annotations:  # 声明
-    nginx.ingress.kubernetes.io/rewrite-target: /$1 # $1的参数从path：中取值
+  name: bookstore
+  namespace: default
 spec:
   rules:
-  - host: nginx.luffy.com
+  - host: bookstore.luffy.com
     http:
       paths:
-      - path: /api/v1/(.*)
+      - path: /reviews
         pathType: Prefix
         backend:
-          service:
-            name: nginx-v1
+          service: 
+            name: reviews
             port:
-              number: 80
-      - path: /api/v2/(.*)
+              number: 9080  #与svc的port保持一致
+      - path: /details
         pathType: Prefix
         backend:
-          service:
-            name: nginx-v2
+          service: 
+            name: details
             port:
-              number: 80
-              
-              
-              
-# 访问测试
-$ http://nginx.luffy.com/api/v1/
-$ http://nginx.luffy.com/api/v2/
+              number: 9080
 </code></pre>
-</li>
-</ol>
+<p>创建并查看资源</p>
+<pre><code class="language-shell">$ kubectl create -f  bookstore.ingress.yaml
+$ kubectk get ing
+$ kubectl describe ingress bookstore
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645026018607.png" alt="" loading="lazy"></figure>
+<p>在本机host文件中添加解析：10.1.13.156  myblog.luffy.com bookstore.luffy.com<br>
+访问测试：</p>
+<pre><code>http://bookstore.luffy.com/reviews/0   #最终解析到reviews pod上去
+
+http://bookstore.luffy.com/details/0  #最终解析到details pod上去
+</code></pre>
+<h4 id="3472-nginx的url重写">3.4.7.2 nginx的URL重写</h4>
+<p>目标：</p>
+<pre><code>bookstore.luffy.com -&gt; 172.21.51.67 -&gt; /api/reviews   -&gt; reviews service
+                                   /details   -&gt; details service
+</code></pre>
+<p>实现：</p>
+<pre><code class="language-yaml">$ cat bookstore.reviews.ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookstore-reviews
+  namespace: default
+  annotations:  # 声明
+    nginx.ingress.kubernetes.io/rewrite-target: /reviews/$1  # $1的参数从path:(.*)取值
+spec:
+  rules:
+  - host: bookstore.luffy.com
+    http:
+      paths:
+      - path: /api/reviews/(.*) # 正则表达式，分组匹配
+        pathType: Prefix
+        backend:
+          service: 
+            name: reviews
+            port:
+              number: 9080
+
+ 注： # nginx.ingress.kubernetes.io/rewrite-target: /reviews/$1 转发是全局的。
+ 有重写的ingress和没有重写的ingress不能放在一起
+</code></pre>
+<pre><code class="language-yaml">$ cat bookstore.details.ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookstore-details
+  namespace: default
+spec:
+  rules:
+  - host: bookstore.luffy.com
+    http:
+      paths:
+      - path: /details
+        pathType: Prefix
+        backend:
+          service: 
+            name: details
+            port:
+              number: 9080
+</code></pre>
+<pre><code>$ kubectl create -f bookstore.reviews.ingress.yaml
+
+# 访问测试
+$ http://bookstore.luffy.com/api/reviews/0
+
+$ http://bookstore.luffy.com/details/0
+</code></pre>
 <h4 id="小结">小结</h4>
 <ol>
 <li>核心讲如何通过k8s管理业务应用</li>
@@ -1166,7 +1292,7 @@ $ http://nginx.luffy.com/api/v2/
 <li>为了实现集群外使用域名访问myblog，因此引入Ingress资源，通过定义访问规则，实现七层代理</li>
 <li>考虑真实的场景，对Ingress的使用做了拓展，介绍多path转发及nginx URL重写的实现</li>
 </ol>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644931750740.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1644931750740.jpg" alt="" loading="lazy"></figure>
 
         </div>
 
