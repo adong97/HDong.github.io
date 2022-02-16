@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645028389283">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645028585401">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645028389283" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645028585401" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -43,8 +43,10 @@
 <li><a href="#343-%E5%AE%89%E8%A3%85">3.4.3 安装</a></li>
 <li><a href="#344-%E8%AE%BF%E9%97%AE">3.4.4 访问</a></li>
 <li><a href="#345-https%E8%AE%BF%E9%97%AE">3.4.5 HTTPS访问：</a></li>
-<li><a href="#346-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E">3.4.6 常用注解说明</a>
+<li><a href="#346-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3%E8%AF%B4%E6%98%8E">3.4.6 常用注解说明</a></li>
+<li><a href="#347-%E5%A4%9A%E8%B7%AF%E5%BE%84%E8%BD%AC%E5%8F%91%E5%8F%8A%E9%87%8D%E5%86%99%E7%9A%84%E5%AE%9E%E7%8E%B0">3.4.7 多路径转发及重写的实现</a>
 <ul>
+<li><a href="#3471-%E5%A4%9Apath%E8%BD%AC%E5%8F%91%E7%A4%BA%E4%BE%8B">3.4.7.1 多path转发示例：</a></li>
 <li><a href="#3472-nginx%E7%9A%84url%E9%87%8D%E5%86%99">3.4.7.2 nginx的URL重写</a></li>
 <li><a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
 </ul>
@@ -1061,17 +1063,12 @@ spec:
         nginx.org/client-max-body-size: 1000m   #
         kubectl.kubernetes.io/last-applied-configuration:
     ...
-    ```
-
-### 3.4.7 多路径转发及重写的实现
-使用同一个域名，根据不同的路径转发到不同的服务上去。
-
-#### 3.4.7.1 多path转发示例：
-
-目标：
-
-```none
-myblog.luffy.com -&gt; 172.21.51.143 -&gt; /foo/aaa   service1:4200/foo/aaa
+</code></pre>
+<h3 id="347-多路径转发及重写的实现">3.4.7 多路径转发及重写的实现</h3>
+<p>使用同一个域名，根据不同的路径转发到不同的服务上去。</p>
+<h4 id="3471-多path转发示例">3.4.7.1 多path转发示例：</h4>
+<p>目标：</p>
+<pre><code class="language-none">myblog.luffy.com -&gt; 172.21.51.143 -&gt; /foo/aaa   service1:4200/foo/aaa
                                       /bar   service2:8080
                                       /         myblog:80/
 </code></pre>
