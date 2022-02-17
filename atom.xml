@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-17T14:18:45.288Z</updated>
+    <updated>2022-02-17T15:41:06.045Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -16,23 +16,25 @@
         <link href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
         </link>
         <updated>2022-02-17T07:37:53.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="apiserver安全控制">APIServer安全控制</h1>
-<figure data-type="image" tabindex="1"><img src="images/k8s-apiserver-access-control-overview.svg" alt="" loading="lazy"></figure>
+        <content type="html"><![CDATA[<p>其实就是k8s去写入ETCD,要经过的一个认证环节。</p>
+<h1 id="apiserver安全控制">APIServer安全控制</h1>
+<p>所有的外部请求要通过API server写入etcd,都会经过以下的环节。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645108108270.svg" alt="" loading="lazy"></p>
 <ul>
 <li>
-<p>Authentication：身份认证</p>
+<p><strong>Authentication：身份认证</strong></p>
 <ol>
 <li>
 <p>这个环节它面对的输入是整个<code>http request</code>，负责对来自client的请求进行身份校验，支持的方法包括:</p>
 <ul>
 <li>
-<p><code>basic auth</code></p>
+<p><code>basic auth</code> (基础认证，已经废弃)</p>
 </li>
 <li>
-<p>client证书验证（https双向验证）</p>
+<p>client证书验证（https双向验证）(常用)</p>
 </li>
 <li>
-<p><code>jwt token</code>(用于serviceaccount)</p>
+<p><code>jwt token</code>(用于serviceaccount) (常用)</p>
 </li>
 </ul>
 </li>
@@ -48,20 +50,26 @@
 </ol>
 </li>
 <li>
-<p>Authorization：鉴权，你可以访问哪些资源</p>
+<p><strong>Authorization：鉴权，你可以访问哪些资源</strong></p>
 <ol>
-<li>这个环节面对的输入是<code>http request context</code>中的各种属性，包括：<code>user</code>、<code>group</code>、<code>request path</code>（比如：<code>/api/v1</code>、<code>/healthz</code>、<code>/version</code>等）、 <code>request verb</code>(比如：<code>get</code>、<code>list</code>、<code>create</code>等)。</li>
-<li>APIServer会将这些属性值与事先配置好的访问策略(<code>access policy</code>）相比较。APIServer支持多种<code>authorization mode</code>，包括<code>Node、RBAC、Webhook</code>等。</li>
-<li>APIServer启动时，可以指定一种<code>authorization mode</code>，也可以指定多种<code>authorization mode</code>，如果是后者，只要Request通过了其中一种mode的授权， 那么该环节的最终结果就是授权成功。在较新版本kubeadm引导启动的k8s集群的apiserver初始配置中，<code>authorization-mode</code>的默认配置是<code>”Node,RBAC”</code>。</li>
+<li>
+<p>这个环节面对的输入是<code>http request context</code>中的各种属性，包括：<code>user</code>、<code>group</code>、<code>request path</code>（比如：<code>/api/v1</code>、<code>/healthz</code>、<code>/version</code>等）、 <code>request verb</code>(比如：<code>get</code>、<code>list</code>、<code>create</code>等)。</p>
+</li>
+<li>
+<p>APIServer会将这些属性值与事先配置好的访问策略(<code>access policy</code>）相比较。APIServer支持多种<code>authorization mode</code>，包括<code>Node、RBAC、Webhook</code>等。</p>
+</li>
+<li>
+<p>APIServer启动时，可以指定一种<code>authorization mode</code>，也可以指定多种<code>authorization mode</code>，如果是后者，只要Request通过了其中一种mode的授权， 那么该环节的最终结果就是授权成功。在较新版本kubeadm引导启动的k8s集群的apiserver初始配置中，<code>authorization-mode</code>的默认配置是<code>”Node,RBAC”</code>。</p>
+</li>
 </ol>
 </li>
 <li>
-<p>Admission Control：<a href="http://docs.kubernetes.org.cn/144.html">准入控制</a>，一个控制链(层层关卡)，用于拦截请求的一种方式。偏集群安全控制、管理方面。</p>
+<p><strong>Admission Control：准入控制</strong>，一个控制链(层层关卡)，用于拦截请求的一种方式。偏集群安全控制、管理方面。</p>
 <ul>
 <li>
-<p>为什么需要？</p>
-<p>认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。</p>
-<p>Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</p>
+<p>为什么需要？<br>
+认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。<br>
+Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</p>
 </li>
 <li>
 <p>举个栗子</p>
@@ -166,7 +174,7 @@ spec:
 </tbody>
 </table>
 <pre><code class="language-powershell">$ kubectl get nodes -v=7
-I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config
+I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config   ##配置文件从哪里加载
 I0329 20:20:08.633797    3979 round_trippers.go:416] GET https://172.21.51.143:6443/api/v1/nodes?limit=500
 </code></pre>
 <p><code>kubeadm init</code>启动完master节点后，会默认输出类似下面的提示内容：</p>
@@ -212,7 +220,7 @@ Certificate:
 </code></pre>
 <p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
 <p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
-<figure data-type="image" tabindex="2"><img src="images/kubeadm-default-clusterrole-list.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="images/kubeadm-default-clusterrole-list.png" alt="" loading="lazy"></figure>
 <p>其中第一个cluster-admin这个cluster role binding绑定了system:masters group，这和authentication环节传递过来的身份信息不谋而合。 沿着system:masters group对应的cluster-admin clusterrolebinding“追查”下去，真相就会浮出水面。</p>
 <p>我们查看一下这一binding：</p>
 <pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
@@ -240,7 +248,7 @@ PolicyRule:
              [*]                []              [*]
 </code></pre>
 <p>非资源类，如查看集群健康状态。</p>
-<figure data-type="image" tabindex="3"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
 <h1 id="rbac">RBAC</h1>
 <p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
 <p>查看开启：</p>
@@ -353,7 +361,7 @@ roleRef:
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="4"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubelet的认证授权">kubelet的认证授权</h1>
 <p>查看kubelet进程</p>
 <pre><code class="language-powershell">$ systemctl status kubelet
@@ -524,7 +532,7 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2V
 
 
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
 <p>只允许访问luffy命名空间的pod资源：</p>
 <pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
 apiVersion: v1
