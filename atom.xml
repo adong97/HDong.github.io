@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-17T14:13:10.839Z</updated>
+    <updated>2022-02-17T14:18:45.288Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -664,7 +664,7 @@ roleRef:
 <h2 id="优选">优选：</h2>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
 <h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
-<p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，POD 的调度可以根据节点的 label 进行特定的部署。</p>
+<p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，Pod 的调度可以根据节点的 label 进行特定的部署。</p>
 <p>查看节点的label：</p>
 <pre><code>$ kubectl get nodes --show-labels
 </code></pre>
@@ -687,7 +687,7 @@ roleRef:
 <h1 id="nodeaffinitynode亲和性">nodeAffinity(Node亲和性)</h1>
 <p>Pod -&gt; Node的标签做出选择</p>
 <p>节点亲和性 ， 比上面的nodeSelector更加灵活，它可以进行一些简单的逻辑组合，不只是简单的相等匹配 。分为两种，硬策略和软策略。</p>
-<p>**requiredDuringSchedulingIgnoredDuringExecution **： 硬策略，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然我就不会调度Pod。</p>
+<p><strong>requiredDuringSchedulingIgnoredDuringExecution</strong>： 硬策略，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然我就不会调度Pod。</p>
 <p><strong>preferredDuringSchedulingIgnoredDuringExecution</strong>：软策略，如果你没有满足调度要求的节点的话，Pod就会忽略这条规则，继续完成调度过程，说白了就是满足条件最好了，没有满足就忽略掉的策略。</p>
 <pre><code>#要求 Pod 不能运行在128和132两个节点上，如果有节点满足disktype=ssd或者sas的话就优先调度到这类节点上
 ...
