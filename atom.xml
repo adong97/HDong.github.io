@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-16T16:23:08.049Z</updated>
+    <updated>2022-02-17T14:13:10.839Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,633 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Kubernetes认证与授权 ]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
+        </link>
+        <updated>2022-02-17T07:37:53.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="apiserver安全控制">APIServer安全控制</h1>
+<figure data-type="image" tabindex="1"><img src="images/k8s-apiserver-access-control-overview.svg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>Authentication：身份认证</p>
+<ol>
+<li>
+<p>这个环节它面对的输入是整个<code>http request</code>，负责对来自client的请求进行身份校验，支持的方法包括:</p>
+<ul>
+<li>
+<p><code>basic auth</code></p>
+</li>
+<li>
+<p>client证书验证（https双向验证）</p>
+</li>
+<li>
+<p><code>jwt token</code>(用于serviceaccount)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>APIServer启动时，可以指定一种Authentication方法，也可以指定多种方法。如果指定了多种方法，那么APIServer将会逐个使用这些方法对客户端请求进行验证， 只要请求数据通过其中一种方法的验证，APIServer就会认为Authentication成功；</p>
+</li>
+<li>
+<p>使用kubeadm引导启动的k8s集群，apiserver的初始配置中，默认支持<code>client证书</code>验证和<code>serviceaccount</code>两种身份验证方式。 证书认证通过设置<code>--client-ca-file</code>根证书以及<code>--tls-cert-file</code>和<code>--tls-private-key-file</code>来开启。</p>
+</li>
+<li>
+<p>在这个环节，apiserver会通过client证书或 <code>http header</code>中的字段(比如serviceaccount的<code>jwt token</code>)来识别出请求的<code>用户身份</code>，包括”user”、”group”等，这些信息将在后面的<code>authorization</code>环节用到。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Authorization：鉴权，你可以访问哪些资源</p>
+<ol>
+<li>这个环节面对的输入是<code>http request context</code>中的各种属性，包括：<code>user</code>、<code>group</code>、<code>request path</code>（比如：<code>/api/v1</code>、<code>/healthz</code>、<code>/version</code>等）、 <code>request verb</code>(比如：<code>get</code>、<code>list</code>、<code>create</code>等)。</li>
+<li>APIServer会将这些属性值与事先配置好的访问策略(<code>access policy</code>）相比较。APIServer支持多种<code>authorization mode</code>，包括<code>Node、RBAC、Webhook</code>等。</li>
+<li>APIServer启动时，可以指定一种<code>authorization mode</code>，也可以指定多种<code>authorization mode</code>，如果是后者，只要Request通过了其中一种mode的授权， 那么该环节的最终结果就是授权成功。在较新版本kubeadm引导启动的k8s集群的apiserver初始配置中，<code>authorization-mode</code>的默认配置是<code>”Node,RBAC”</code>。</li>
+</ol>
+</li>
+<li>
+<p>Admission Control：<a href="http://docs.kubernetes.org.cn/144.html">准入控制</a>，一个控制链(层层关卡)，用于拦截请求的一种方式。偏集群安全控制、管理方面。</p>
+<ul>
+<li>
+<p>为什么需要？</p>
+<p>认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。</p>
+<p>Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</p>
+</li>
+<li>
+<p>举个栗子</p>
+<ul>
+<li>
+<p>以NamespaceLifecycle为例， 该插件确保处于Termination状态的Namespace不再接收新的对象创建请求，并拒绝请求不存在的Namespace。该插件还可以防止删除系统保留的Namespace:default，kube-system，kube-public</p>
+</li>
+<li>
+<p>LimitRanger，若集群的命名空间设置了LimitRange对象，若Pod声明时未设置资源值，则按照LimitRange的定义来未Pod添加默认值</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-limit-range
+  namespace: demo
+spec:
+  limits:
+  - default:
+      memory: 512Mi
+    defaultRequest:
+      memory: 256Mi
+    type: Container
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: default-mem-demo
+  namespace: demo
+spec:
+  containers:
+  - name: default-mem-demo
+    image: nginx:alpine
+
+</code></pre>
+</li>
+</ul>
+<pre><code class="language-powershell">$ kubectl apply -f .
+</code></pre>
+</li>
+<li>
+<p>NodeRestriction， 此插件限制kubelet修改Node和Pod对象，这样的kubelets只允许修改绑定到Node的Pod API对象，以后版本可能会增加额外的限制 。开启Node授权策略后，默认会打开该项</p>
+</li>
+</ul>
+</li>
+<li>
+<p>怎么用？</p>
+<p>APIServer启动时通过 <code>--enable-admission-plugins --disable-admission-plugins</code> 指定需要打开或者关闭的 Admission Controller</p>
+</li>
+<li>
+<p>场景</p>
+<ul>
+<li>自动注入sidecar容器或者initContainer容器</li>
+<li>webhook admission，实现业务自定义的控制需求</li>
+</ul>
+</li>
+</ul>
+<h1 id="kubectl的认证授权">kubectl的认证授权</h1>
+<p>kubectl的日志调试级别：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">信息</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">v=0</td>
+<td style="text-align:left">通常，这对操作者来说总是可见的。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=1</td>
+<td style="text-align:left">当您不想要很详细的输出时，这个是一个合理的默认日志级别。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=2</td>
+<td style="text-align:left">有关服务和重要日志消息的有用稳定状态信息，这些信息可能与系统中的重大更改相关。这是大多数系统推荐的默认日志级别。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=3</td>
+<td style="text-align:left">关于更改的扩展信息。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=4</td>
+<td style="text-align:left">调试级别信息。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=6</td>
+<td style="text-align:left">显示请求资源。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=7</td>
+<td style="text-align:left">显示 HTTP 请求头。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=8</td>
+<td style="text-align:left">显示 HTTP 请求内容。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=9</td>
+<td style="text-align:left">显示 HTTP 请求内容，并且不截断内容。</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell">$ kubectl get nodes -v=7
+I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config
+I0329 20:20:08.633797    3979 round_trippers.go:416] GET https://172.21.51.143:6443/api/v1/nodes?limit=500
+</code></pre>
+<p><code>kubeadm init</code>启动完master节点后，会默认输出类似下面的提示内容：</p>
+<pre><code class="language-bash">... ...
+Your Kubernetes master has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+... ...
+</code></pre>
+<p>这些信息是在告知我们如何配置<code>kubeconfig</code>文件。按照上述命令配置后，master节点上的<code>kubectl</code>就可以直接使用<code>$HOME/.kube/config</code>的信息访问<code>k8s cluster</code>了。 并且，通过这种配置方式，<code>kubectl</code>也拥有了整个集群的管理员(root)权限。</p>
+<p>很多K8s初学者在这里都会有疑问：</p>
+<ul>
+<li>当<code>kubectl</code>使用这种<code>kubeconfig</code>方式访问集群时，<code>Kubernetes</code>的<code>kube-apiserver</code>是如何对来自<code>kubectl</code>的访问进行身份验证(<code>authentication</code>)和授权(<code>authorization</code>)的呢？</li>
+<li>为什么来自<code>kubectl</code>的请求拥有最高的管理员权限呢？</li>
+</ul>
+<p>查看<code>/root/.kube/config</code>文件：</p>
+<p>前面提到过apiserver的authentication支持通过<code>tls client certificate、basic auth、token</code>等方式对客户端发起的请求进行身份校验， 从kubeconfig信息来看，kubectl显然在请求中使用了<code>tls client certificate</code>的方式，即客户端的证书。</p>
+<p>证书base64解码：</p>
+<pre><code class="language-powershell">$ echo xxxxxxxxxxxxxx |base64 -d &gt; kubectl.crt
+
+</code></pre>
+<p>说明在认证阶段，<code>apiserver</code>会首先使用<code>--client-ca-file</code>配置的CA证书去验证kubectl提供的证书的有效性,基本的方式 ：</p>
+<pre><code class="language-powershell">$  openssl verify -CAfile /etc/kubernetes/pki/ca.crt kubectl.crt
+kubectl.crt: OK
+
+</code></pre>
+<p>除了认证身份，还会取出必要的信息供授权阶段使用，文本形式查看证书内容：</p>
+<pre><code class="language-powershell">$ openssl x509 -in kubectl.crt -text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4736260165981664452 (0x41ba9386f52b74c4)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=kubernetes
+        Validity
+            Not Before: Feb 10 07:33:39 2020 GMT
+            Not After : Feb  9 07:33:40 2021 GMT
+        Subject: O=system:masters, CN=kubernetes-admin
+        ...
+</code></pre>
+<p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
+<p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
+<figure data-type="image" tabindex="2"><img src="images/kubeadm-default-clusterrole-list.png" alt="" loading="lazy"></figure>
+<p>其中第一个cluster-admin这个cluster role binding绑定了system:masters group，这和authentication环节传递过来的身份信息不谋而合。 沿着system:masters group对应的cluster-admin clusterrolebinding“追查”下去，真相就会浮出水面。</p>
+<p>我们查看一下这一binding：</p>
+<pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
+Name:         cluster-admin
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+Role:
+  Kind:  ClusterRole
+  Name:  cluster-admin
+Subjects:
+  Kind   Name            Namespace
+  ----   ----            ---------
+  Group  system:masters
+</code></pre>
+<p>我们看到在kube-system名字空间中，一个名为cluster-admin的clusterrolebinding将cluster-admin cluster role与system:masters Group绑定到了一起， 赋予了所有归属于system:masters Group中用户cluster-admin角色所拥有的权限。</p>
+<p>我们再来查看一下cluster-admin这个role的具体权限信息：</p>
+<pre><code class="language-powershell">$ kubectl describe clusterrole cluster-admin
+Name:         cluster-admin
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources  Non-Resource URLs  Resource Names  Verbs
+  ---------  -----------------  --------------  -----
+  *.*        []                 []              [*]
+             [*]                []              [*]
+</code></pre>
+<p>非资源类，如查看集群健康状态。</p>
+<figure data-type="image" tabindex="3"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
+<h1 id="rbac">RBAC</h1>
+<p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
+<p>查看开启：</p>
+<pre><code class="language-powershell"># master节点查看apiserver进程
+$ ps aux |grep apiserver
+</code></pre>
+<p>RBAC模式引入了4个资源类型：</p>
+<ul>
+<li>
+<p>Role，角色</p>
+<p>一个Role只能授权访问单个namespace</p>
+<pre><code class="language-yaml">## 示例定义一个名为pod-reader的角色，该角色具有读取default这个命名空间下的pods的权限
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: demo
+  name: pod-reader
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group
+  resources: [&quot;pods&quot;]
+  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+  
+## apiGroups: &quot;&quot;,&quot;apps&quot;, &quot;autoscaling&quot;, &quot;batch&quot;, kubectl api-versions
+## resources: &quot;services&quot;, &quot;pods&quot;,&quot;deployments&quot;... kubectl api-resources
+## verbs: &quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;, &quot;exec&quot;
+
+## https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/
+
+</code></pre>
+</li>
+<li>
+<p>ClusterRole</p>
+<p>一个ClusterRole能够授予和Role一样的权限，但是它是集群范围内的。</p>
+<pre><code class="language-yaml">## 定义一个集群角色，名为secret-reader，该角色可以读取所有的namespace中的secret资源
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  # &quot;namespace&quot; omitted since ClusterRoles are not namespaced
+  name: secret-reader
+rules:
+- apiGroups: [&quot;&quot;]
+  resources: [&quot;secrets&quot;]
+  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+
+# User,Group,ServiceAccount
+</code></pre>
+</li>
+<li>
+<p>Rolebinding</p>
+<p>将role中定义的权限分配给用户和用户组。RoleBinding包含主题（users,groups,或service accounts）和授予角色的引用。对于namespace内的授权使用RoleBinding，集群范围内使用ClusterRoleBinding。</p>
+<pre><code class="language-yaml">## 定义一个角色绑定，将pod-reader这个role的权限授予给jane这个User，使得jane可以在读取default这个命名空间下的所有的pod数据
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: demo
+subjects:
+- kind: User   #这里可以是User,Group,ServiceAccount
+  name: jane 
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #这里可以是Role或者ClusterRole,若是ClusterRole，则权限也仅限于rolebinding的内部
+  name: pod-reader # match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+
+
+</code></pre>
+<p><em>注意：rolebinding既可以绑定role，也可以绑定clusterrole，当绑定clusterrole的时候，subject的权限也会被限定于rolebinding定义的namespace内部，若想跨namespace，需要使用clusterrolebinding</em></p>
+<pre><code class="language-yaml">## 定义一个角色绑定，将dave这个用户和secret-reader这个集群角色绑定，虽然secret-reader是集群角色，但是因为是使用rolebinding绑定的，因此dave的权限也会被限制在development这个命名空间内
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows &quot;dave&quot; to read secrets in the &quot;development&quot; namespace.
+# You need to already have a ClusterRole named &quot;secret-reader&quot;.
+kind: RoleBinding
+metadata:
+  name: read-secrets
+  #
+  # The namespace of the RoleBinding determines where the permissions are granted.
+  # This only grants permissions within the &quot;development&quot; namespace.
+  namespace: development
+subjects:
+- kind: User
+  name: dave # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: dave # Name is case sensitive
+  namespace: luffy
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p>考虑一个场景：  如果集群中有多个namespace分配给不同的管理员，每个namespace的权限是一样的，就可以只定义一个clusterrole，然后通过rolebinding将不同的namespace绑定到管理员身上，否则就需要每个namespace定义一个Role，然后做一次rolebinding。</p>
+</li>
+<li>
+<p>ClusterRolebingding</p>
+<p>允许跨namespace进行授权</p>
+<pre><code class="language-yaml">apiVersion: rbac.authorization.k8s.io/v1
+# This cluster role binding allows anyone in the &quot;manager&quot; group to read secrets in any namespace.
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: Group
+  name: manager # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
+<h1 id="kubelet的认证授权">kubelet的认证授权</h1>
+<p>查看kubelet进程</p>
+<pre><code class="language-powershell">$ systemctl status kubelet
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+  Drop-In: /usr/lib/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: active (running) since Sun 2020-07-05 19:33:36 EDT; 1 day 12h ago
+     Docs: https://kubernetes.io/docs/
+ Main PID: 10622 (kubelet)
+    Tasks: 24
+   Memory: 60.5M
+   CGroup: /system.slice/kubelet.service
+           └─851 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf
+</code></pre>
+<p>查看<code>/etc/kubernetes/kubelet.conf</code>，解析证书：</p>
+<pre><code class="language-powershell">$ echo xxxxx |base64 -d &gt;kubelet.crt
+$ openssl x509 -in kubelet.crt -text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 9059794385454520113 (0x7dbadafe23185731)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=kubernetes
+        Validity
+            Not Before: Feb 10 07:33:39 2020 GMT
+            Not After : Feb  9 07:33:40 2021 GMT
+        Subject: O=system:nodes, CN=system:node:master-1
+</code></pre>
+<p>得到我们期望的内容：</p>
+<pre><code class="language-bash">Subject: O=system:nodes, CN=system:node:k8s-master
+</code></pre>
+<p>我们知道，k8s会把O作为Group来进行请求，因此如果有权限绑定给这个组，肯定在clusterrolebinding的定义中可以找得到。因此尝试去找一下绑定了system:nodes组的clusterrolebinding</p>
+<pre><code class="language-powershell">$ kubectl get clusterrolebinding -oyaml|grep -n10 system:nodes
+178-    resourceVersion: &quot;225&quot;
+179-    selfLink: /apis/rbac.authorization.k8s.io/v1/clusterrolebindings/kubeadm%3Anode-autoapprove-certificate-rotation
+180-    uid: b4303542-d383-4b62-a1e9-02f2cefa2c20
+181-  roleRef:
+182-    apiGroup: rbac.authorization.k8s.io
+183-    kind: ClusterRole
+184-    name: system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+185-  subjects:
+186-  - apiGroup: rbac.authorization.k8s.io
+187-    kind: Group
+188:    name: system:nodes
+189-- apiVersion: rbac.authorization.k8s.io/v1
+190-  kind: ClusterRoleBinding
+191-  metadata:
+192-    creationTimestamp: &quot;2021-06-06T02:39:46Z&quot;
+193-    managedFields:
+194-    - apiVersion: rbac.authorization.k8s.io/v1
+195-      fieldsType: FieldsV1
+196-      fieldsV1:
+197-        f:roleRef:
+198-          f:apiGroup: {}
+
+$ kubectl describe clusterrole system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+Name:         system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources                                                      Non-Resource URLs  Resource Names  Verbs
+  ---------                                                      -----------------  --------------  -----
+  certificatesigningrequests.certificates.k8s.io/selfnodeclient  []                 []              [create]
+
+</code></pre>
+<p>结局有点意外，除了<code>system:certificates.k8s.io:certificatesigningrequests:selfnodeclient</code>外，没有找到system相关的rolebindings，显然和我们的理解不一样。 尝试去找<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#core-component-roles">资料</a>，发现了这么一段 :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Default ClusterRole</th>
+<th style="text-align:left">Default ClusterRoleBinding</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">system:kube-scheduler</td>
+<td style="text-align:left">system:kube-scheduler user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/generated/kube-scheduler/">scheduler</a>component.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:volume-scheduler</td>
+<td style="text-align:left">system:kube-scheduler user</td>
+<td style="text-align:left">Allows access to the volume resources required by the kube-scheduler component.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:kube-controller-manager</td>
+<td style="text-align:left">system:kube-controller-manager user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/">controller manager</a> component. The permissions required by individual controllers are detailed in the <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#controller-roles">controller roles</a>.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:node</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">Allows access to resources required by the kubelet, <strong>including read access to all secrets, and write access to all pod status objects</strong>. You should use the <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Node authorizer</a> and <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#noderestriction">NodeRestriction admission plugin</a> instead of the <code>system:node</code> role, and allow granting API access to kubelets based on the Pods scheduled to run on them. The <code>system:node</code> role only exists for compatibility with Kubernetes clusters upgraded from versions prior to v1.8.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:node-proxier</td>
+<td style="text-align:left">system:kube-proxy user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/">kube-proxy</a>component.</td>
+</tr>
+</tbody>
+</table>
+<p>大致意思是说：之前会定义system:node这个角色，目的是为了kubelet可以访问到必要的资源，包括所有secret的读权限及更新pod状态的写权限。如果1.8版本后，是建议使用 <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Node authorizer</a> and <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#noderestriction">NodeRestriction admission plugin</a> 来代替这个角色的。</p>
+<p>我们目前使用1.19，查看一下授权策略：</p>
+<pre><code class="language-powershell">$ ps axu|grep apiserver
+kube-apiserver --authorization-mode=Node,RBAC  --enable-admission-plugins=NodeRestriction
+</code></pre>
+<p>查看一下官网对Node authorizer的介绍：</p>
+<p><em>Node authorization is a special-purpose authorization mode that specifically authorizes API requests made by kubelets.</em></p>
+<p><em>In future releases, the node authorizer may add or remove permissions to ensure kubelets have the minimal set of permissions required to operate correctly.</em></p>
+<p><em>In order to be authorized by the Node authorizer, kubelets must use a credential that identifies them as being in the <code>system:nodes</code> group, with a username of <code>system:node:&lt;nodeName&gt;</code></em></p>
+<h1 id="service-account及k8s-api调用">Service Account及K8S Api调用</h1>
+<p>前面说，认证可以通过证书，也可以通过使用ServiceAccount（服务账户）的方式来做认证。大多数时候，我们在基于k8s做二次开发时都是选择通过ServiceAccount + RBAC 的方式。我们之前访问dashboard的时候，是如何做的？</p>
+<pre><code class="language-yaml">## 新建一个名为admin的serviceaccount，并且把名为cluster-admin的这个集群角色的权限授予新建的
+#serviceaccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin
+  namespace: kubernetes-dashboard
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: admin
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: &quot;true&quot;
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: admin
+  namespace: kubernetes-dashboard
+</code></pre>
+<p>我们查看一下：</p>
+<pre><code class="language-powershell">$ kubectl -n kubernetes-dashboard get sa admin -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: &quot;2020-04-01T11:59:21Z&quot;
+  name: admin
+  namespace: kubernetes-dashboard
+  resourceVersion: &quot;1988878&quot;
+  selfLink: /api/v1/namespaces/kubernetes-dashboard/serviceaccounts/admin
+  uid: 639ecc3e-74d9-11ea-a59b-000c29dfd73f
+secrets:
+- name: admin-token-lfsrf
+
+
+</code></pre>
+<p>注意到serviceaccount上默认绑定了一个名为admin-token-lfsrf的secret，我们查看一下secret</p>
+<pre><code class="language-powershell">$ kubectl -n kubernetes-dashboard describe secret admin-token-lfsrf
+Name:         admin-token-lfsrf
+Namespace:    kubernetes-dashboard
+Labels:       &lt;none&gt;
+Annotations:  kubernetes.io/service-account.name: admin
+              kubernetes.io/service-account.uid: 639ecc3e-74d9-11ea-a59b-000c29dfd73f
+
+Type:  kubernetes.io/service-account-token
+Data
+====
+ca.crt:     1025 bytes
+namespace:  4 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLWxmc3JmIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNjM5ZWNjM2UtNzRkOS0xMWVhLWE1OWItMDAwYzI5ZGZkNzNmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlbW86YWRtaW4ifQ.ffGCU4L5LxTsMx3NcNixpjT6nLBi-pmstb4I-W61nLOzNaMmYSEIwAaugKMzNR-2VwM14WbuG04dOeO67niJeP6n8-ALkl-vineoYCsUjrzJ09qpM3TNUPatHFqyjcqJ87h4VKZEqk2qCCmLxB6AGbEHpVFkoge40vHs56cIymFGZLe53JZkhu3pwYuS4jpXytV30Ad-HwmQDUu_Xqcifni6tDYPCfKz2CZlcOfwqHeGIHJjDGVBKqhEeo8PhStoofBU6Y4OjObP7HGuTY-Foo4QindNnpp0QU6vSb7kiOiQ4twpayybH8PTf73dtdFt46UF6mGjskWgevgolvmO8A
+
+
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
+<p>只允许访问luffy命名空间的pod资源：</p>
+<pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: luffy-pods-admin
+  namespace: luffy
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: luffy
+  name: pods-reader-writer
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group
+  resources: [&quot;pods&quot;]
+  verbs: [&quot;*&quot;]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pods-reader-writer
+  namespace: luffy
+subjects:
+- kind: ServiceAccount   #这里可以是User,Group,ServiceAccount
+  name: luffy-pods-admin
+  namespace: luffy
+roleRef:
+  kind: Role #这里可以是Role或者ClusterRole,若是ClusterRole，则权限也仅限于rolebinding的内部
+  name: pods-reader-writer
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p>演示权限：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy describe secrets luffy-pods-admin-token-prr25
+...
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl8ycC03TTBYaUUwTnJVZGpvQWU0cXZ5M2FFbjR2ZjkzZVcxOE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJsdWZmeSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJsdWZmeS1hZG1pbi10b2tlbi1wcnIyNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJsdWZmeS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFhZDA0MTU3LTliNzMtNDJhZC1hMGU4LWVmOTZlZDU3Yzg1ZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdWZmeTpsdWZmeS1hZG1pbiJ9.YWckylE5wlKITKrVltXY4VPKvZP9ar5quIT5zq9N-0_FnDkLIBX7xOyFvZA5Wef0wSFSZe3e9FwrO1UbPsmK7cZn74bhH8cNdoH_YVbIVT3-6tIOlCA_Bc8YypGE1gl-ZvLOIPV7WnRQsWpWtZtqfKBSkwLAHgWoxcx_d1bOcyTOdPmsW224xcBxjYwi6iRUtjTJST0LzOcAOCPDZq6-lqYUwnxLO_afxwg71BGX4etE48Iny8TxSEIs1VJRahoabC7hVOs17ujEm5loTDSpfuhae51qSDg8xeYwRHdM42aLUmc-wOvBWauHa5EHbH9rWPAnpaGIwF8QvnLszqp4QQ
+...
+$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl8ycC03TTBYaUUwTnJVZGpvQWU0cXZ5M2FFbjR2ZjkzZVcxOE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJsdWZmeSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJsdWZmeS1hZG1pbi10b2tlbi1wcnIyNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJsdWZmeS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFhZDA0MTU3LTliNzMtNDJhZC1hMGU4LWVmOTZlZDU3Yzg1ZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdWZmeTpsdWZmeS1hZG1pbiJ9.YWckylE5wlKITKrVltXY4VPKvZP9ar5quIT5zq9N-0_FnDkLIBX7xOyFvZA5Wef0wSFSZe3e9FwrO1UbPsmK7cZn74bhH8cNdoH_YVbIVT3-6tIOlCA_Bc8YypGE1gl-ZvLOIPV7WnRQsWpWtZtqfKBSkwLAHgWoxcx_d1bOcyTOdPmsW224xcBxjYwi6iRUtjTJST0LzOcAOCPDZq6-lqYUwnxLO_afxwg71BGX4etE48Iny8TxSEIs1VJRahoabC7hVOs17ujEm5loTDSpfuhae51qSDg8xeYwRHdM42aLUmc-wOvBWauHa5EHbH9rWPAnpaGIwF8QvnLszqp4QQ&quot; https://172.21.51.143:6443/api/v1/namespaces/luffy/pods?limit=500
+
+# https://172.21.51.143:6443/api/v1/nodes
+</code></pre>
+<h1 id="创建用户认证授权的kubeconfig文件">创建用户认证授权的kubeconfig文件</h1>
+<p>签发证书对：</p>
+<pre><code class="language-powershell"># 生成私钥
+$ openssl genrsa -out luffy.key 2048
+
+# 生成证书请求文件
+$ openssl req -new -key luffy.key -out luffy.csr -subj &quot;/O=admin:luffy/CN=luffy-admin&quot;
+
+# 证书拓展属性
+$ cat extfile.conf
+[ v3_ca ]
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+
+# 生成luffy.crt证书
+$ openssl x509 -req -in luffy.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -sha256 -out luffy.crt -extensions v3_ca -extfile extfile.conf -days 3650
+</code></pre>
+<p>配置kubeconfig文件：</p>
+<pre><code class="language-powershell"># 创建kubeconfig文件，指定集群名称和地址
+$ kubectl config set-cluster luffy-cluster --certificate-authority=/etc/kubernetes/pki/ca.crt --embed-certs=true --server=https://172.21.51.143:6443 --kubeconfig=luffy.kubeconfig
+
+# 为kubeconfig文件添加认证信息
+$ kubectl config set-credentials luffy-admin --client-certificate=luffy.crt --client-key=luffy.key --embed-certs=true --kubeconfig=luffy.kubeconfig
+
+# 为kubeconfig添加上下文配置
+$ kubectl config set-context luffy-context --cluster=luffy-cluster --user=luffy-admin --kubeconfig=luffy.kubeconfig
+
+# 设置默认的上下文
+$ kubectl config use-context luffy-context --kubeconfig=luffy.kubeconfig
+</code></pre>
+<p>验证：</p>
+<pre><code class="language-powershell"># 设置当前kubectl使用的config文件
+$ export KUBECONFIG=luffy.kubeconfig
+
+# 当前不具有任何权限，因为没有为用户或者组设置RBAC规则
+$ kubectl get po
+Error from server (Forbidden): pods is forbidden: User &quot;luffy-admin&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;default&quot;
+
+</code></pre>
+<p>为luffy用户添加luffy命名空间访问权限：</p>
+<pre><code class="language-powershell"># 定义role，具有luffy命名空间的所有权限
+$ cat luffy-admin-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: luffy
+  name: luffy-admin
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; 指定核心 API 组
+  resources: [&quot;*&quot;]
+  verbs: [&quot;*&quot;]
+  
+#定义rolebinding，为luffy用户绑定luffy-admin这个role，这样luffy用户就有操作luffy命名空间的所有权限
+$ cat luffy-admin-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: luffy-admin
+  namespace: luffy
+subjects:
+- kind: User
+  name: luffy-admin # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: luffy-admin # 这里的名称必须与你想要绑定的 Role 或 ClusterRole 名称一致
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Kubernetes调度]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/sn0OllrL_/</id>
@@ -27,8 +654,8 @@
 <h1 id="调度的过程">调度的过程</h1>
 <p>Scheduler 提供的调度流程分为预选 (Predicates) 和优选 (Priorities) 两个步骤：</p>
 <ul>
-<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选</li>
-<li>优选，K8S将对候选的 Node 进行打分</li>
+<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选 （不满足就踢掉）</li>
+<li>优选，K8S将对候选的 Node 进行打分 （都满足，选一个最优得）</li>
 </ul>
 <p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1644918490773.png" alt="" loading="lazy"></p>
@@ -116,7 +743,7 @@ spec:
 <pre><code>...
     spec:
       affinity:
-        podAntiAffinity:  #Anti 反亲和性，满足一下条件则不做调度
+        podAntiAffinity:  #Anti 反亲和性，满足以下条件则不做调度
           requiredDuringSchedulingIgnoredDuringExecution:  #硬策略，一定要满足的条件
           - labelSelector:
               matchExpressions:
@@ -129,11 +756,12 @@ spec:
 ...
 # 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么 调度器一定不要给我调度过去
 
+
 ...
     spec:
       affinity:
         podAntiAffinity: #反亲和性
-          preferredDuringSchedulingIgnoredDuringExecution: #软策略，
+          preferredDuringSchedulingIgnoredDuringExecution: #软策略，尽量不要调度
           - weight: 100
             podAffinityTerm:
               labelSelector:
@@ -147,23 +775,25 @@ spec:
 ...
 # 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么调度器尽量不要调度过去
 </code></pre>
-<p>** https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/**</p>
+<p>官方文档：https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/</p>
 <h1 id="污点taints与容忍tolerations">污点（Taints）与容忍（tolerations）</h1>
-<p>对于nodeAffinity无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而Taints恰好与之相反，如果一个节点标记为 Taints ，除非 Pod 也被标识为可以容忍污点节点，否则该 Taints 节点不会被调度Pod。</p>
+<p>对于<code>nodeAffinity</code>(node亲和性)无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而<code>Taints</code>恰好与之相反，如果一个节点标记为<code>Taints</code>，除非 Pod 也被标识为可以容忍污点节点，否则该 <code>Taints</code> 节点不会被调度Pod。<br>
+<code>Taints</code>是打给Node的，<code>Tolerations</code>是给Pod设置的。污点是让Node默认不接受调度，容忍是说怎么样把Pod调度到带有污点的Node上。</p>
 <p>Taints(污点)是Node的一个属性，设置了Taints(污点)后，因为有了污点，所以Kubernetes是不会将Pod调度到这个Node上的。于是Kubernetes就给Pod设置了个属性Tolerations(容忍)，只要Pod能够容忍Node上的污点，那么Kubernetes就会忽略Node上的污点，就能够(不是必须)把Pod调度过去。</p>
 <p>场景一：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
 <p>场景二：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
 <p>设置污点：</p>
-<pre><code>$ kubectl taint node [node_name] key=value:[effect]   
+<pre><code class="language-shell">$ kubectl taint node [node_name] key=value:[effect]   
       其中[effect] 可取值： [ NoSchedule | PreferNoSchedule | NoExecute ]
        NoSchedule：一定不能被调度。
        PreferNoSchedule：尽量不要调度。
        NoExecute：不仅不会调度，还会驱逐Node上已有的Pod。
+
   示例：kubectl taint node k8s-slave1 smoke=true:NoSchedule
             #不能容忍k8s-slave1抽烟的Pod就不要调度过来了
 </code></pre>
 <p>去除污点：</p>
-<pre><code>去除指定key及其effect：
+<pre><code class="language-shell">去除指定key及其effect：
      kubectl taint nodes [node_name] key:[effect]-    #这里的key不用指定value
      kubectl taint node k8s-slave1 smoke-
 
@@ -179,7 +809,7 @@ spec:
      kubectl taint node k8s-master smoke-
 </code></pre>
 <p>污点演示：</p>
-<pre><code>## 给k8s-slave1打上污点，smoke=true:NoSchedule
+<pre><code class="language-shell">## 给k8s-slave1打上污点，smoke=true:NoSchedule
 $ kubectl taint node k8s-master gamble=true:NoSchedule
 $ kubectl taint node k8s-slave1 drunk=true:NoSchedule
 $ kubectl taint node k8s-slave2 smoke=true:NoSchedule
@@ -192,7 +822,7 @@ $ kubectl -n luffy get po -w    ## pending
 
 </code></pre>
 <p>Pod容忍污点示例：myblog/deployment/deploy-myblog-taint.yaml</p>
-<pre><code>##污点是给Node打的，容忍是给业务设置的
+<pre><code class="language-yaml">##污点是给Node打的，容忍是给业务设置的
 ...
 spec:
       containers:
@@ -205,24 +835,26 @@ spec:
         effect: &quot;NoSchedule&quot;
       - key: &quot;drunk&quot; 
         operator: &quot;Exists&quot;  #如果操作符为Exists，那么value属性可省略,不指定operator，默认为Equal
-      #意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
-      #tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+...
+#意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
+#tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+
 </code></pre>
 <pre><code>$ kubectl apply -f deploy-myblog-taint.yaml
 </code></pre>
-<pre><code>spec:
+<pre><code class="language-yaml">spec:
       containers:
       - name: demo
         image: 172.21.51.143:5000/myblog:v1
       tolerations:
-        - operator: &quot;Exists&quot;  #只要存在污点，都可以容忍 
+        - operator: &quot;Exists&quot;  #表示只要存在污点，都可以容忍。
 </code></pre>
 <blockquote>
 <p>NoExecute</p>
 </blockquote>
 <h1 id="cordon-and-drain">Cordon and Drain</h1>
-<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现</p>
-<p>drain：驱逐。drain包含cordon. drain会首先将节点变成不可调度</p>
+<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现。</p>
+<p>drain：驱逐。drain包含cordon。drain会首先将节点变成不可调度</p>
 <pre><code>#标记k8s-slave2是可调度的
 $ kubectl cordon k8s-slave2
 
@@ -4595,701 +5227,6 @@ case ${Install_name} in
 esac
 </code></pre>
 <p>以上。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/">
-        </link>
-        <updated>2022-01-23T14:31:01.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="一-基础环境">一 基础环境</h1>
-<p>部署k8s集群的节点按照用途可以划分为如下2类角色：</p>
-<ul>
-<li>master：集群的master节点，集群的初始化节点，基础配置不低于2C4G</li>
-<li>node：集群的node节点，可以多台，基础配置不低于2C4G</li>
-</ul>
-<p>本次部署使用Ubuntu系统搭建高可用环境K8s,如下：</p>
-<ul>
-<li>K8s部署版本：1.22.5</li>
-<li>Ubuntu版本：18.04 Server</li>
-<li>Kernel版本：Linux version 4.15.0-55-generic (buildd@lcy01-amd64-029)</li>
-</ul>
-<h2 id="11-节点规划">1.1 节点规划</h2>
-<table>
-<thead>
-<tr>
-<th>主机名</th>
-<th>节点IP</th>
-<th>角色</th>
-<th>部署组件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>K8s-Master1</td>
-<td>10.1.13.156</td>
-<td>master</td>
-<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
-</tr>
-<tr>
-<td>K8s-Master2</td>
-<td>10.1.13.157</td>
-<td>master</td>
-<td>etcd, kube-apiserver, kube-controller-manager, kubectl, kubeadm, kubelet, kube-proxy, flannel</td>
-</tr>
-<tr>
-<td></td>
-<td>10.1.13.171</td>
-<td>VIP</td>
-<td>作为2台master节点的LB使用</td>
-</tr>
-<tr>
-<td>K8s-Node1</td>
-<td>10.1.13.158</td>
-<td>node</td>
-<td>kubectl, kubelet, kube-proxy, flannel</td>
-</tr>
-<tr>
-<td>K8s-Node2</td>
-<td>10.1.13.159</td>
-<td>node</td>
-<td>kubectl, kubelet, kube-proxy, flannel</td>
-</tr>
-</tbody>
-</table>
-<h2 id="12-组件版本">1.2 组件版本</h2>
-<table>
-<thead>
-<tr>
-<th>组件</th>
-<th>版本</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>etcd</td>
-<td>3.5.0-0</td>
-<td>使用Pod方式部署，默认数据挂载到本地路径</td>
-</tr>
-<tr>
-<td>coredns</td>
-<td>v1.8.4</td>
-<td></td>
-</tr>
-<tr>
-<td>kubeadm</td>
-<td>v1.22.5</td>
-<td></td>
-</tr>
-<tr>
-<td>kubectl</td>
-<td>v1.22.5</td>
-<td></td>
-</tr>
-<tr>
-<td>kubelet</td>
-<td>v1.22.5</td>
-<td></td>
-</tr>
-<tr>
-<td>kube-proxy</td>
-<td>v1.22.5</td>
-<td></td>
-</tr>
-<tr>
-<td>flannel</td>
-<td>v0.16.0</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h1 id="二-kubeadmin">二 kubeadmin</h1>
-<pre><code>kubeadmin官方文档：https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/
-</code></pre>
-<h2 id="21-概述">2.1 概述</h2>
-<p>Kubeadm 是一个提供了 kubeadm init 和 kubeadm join 的工具， 作为创建 Kubernetes 集群的 “快捷途径” 的最佳实践。<br>
-kubeadm 通过执行必要的操作来启动和运行最小可用集群。 按照设计，它只关注启动引导，而非配置机器。同样的， 安装各种 “锦上添花” 的扩展，例如 Kubernetes Dashboard、 监控方案、以及特定云平台的扩展，都不在讨论范围内。<br>
-相反，我们希望在 kubeadm 之上构建更高级别以及更加合规的工具， 理想情况下，使用 kubeadm 作为所有部署工作的基准将会更加易于创建一致性集群。</p>
-<h2 id="22-命令介绍">2.2 命令介绍</h2>
-<ul>
-<li>kubeadm init:</li>
-</ul>
-<pre><code>初始化并启用 Kubernetes 主节点 Master (常用)
-</code></pre>
-<ul>
-<li>kubeadm join:</li>
-</ul>
-<pre><code>启动 Kubernetes 工作节点并且将其加入到集群 Node 节点 (常用)
-</code></pre>
-<ul>
-<li>kubeadm upgrade:</li>
-</ul>
-<pre><code>更新 Kubernetes 集群到新版本,用于K8S的版本升级 (常用)
-</code></pre>
-<ul>
-<li>kubeadm config:</li>
-</ul>
-<pre><code>使用 kubeadm config print 命令打印默认配置
-</code></pre>
-<ul>
-<li>kubeadm token:</li>
-</ul>
-<pre><code>管理 kubeadm join 使用的令牌，这个令牌是一个临时的字符串，有效期默认为24小时。
-超出有效期之后，要是哦那个kubeadm token这个命令重新获取，
-所以我们创建了一个K8S集群以后，后期想将一个新的node节点加进去的话会再次使用kubeadm token命令让他生成一个零时的认证，然后再加到集群中。
-</code></pre>
-<ul>
-<li>kubeadm reset:</li>
-</ul>
-<pre><code>还原 kubeadm init 或者 kubeadm join 对主机所做的任何更改，对节点环境进行初始化。
-</code></pre>
-<ul>
-<li>kubeadm version:</li>
-</ul>
-<pre><code>打印 kubeadm 版本
-</code></pre>
-<h2 id="23-集群架构解析">2.3 集群架构解析</h2>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1642951779278.png" alt="" loading="lazy"></figure>
-<p>两个管理端实现master的高可用，当其中一个master宕机之后，k8s集群还能使用。这两个master中间通过VIP来实现高可用。用户访问K8S都是直接访问VIP的地址，这个VIP地址我们通过keepalived让它在master1和master2上，来做高可用。<br>
-默认情况下让它跑在master1上，如果master1宕机了让它飘到master2上。这个VIP在哪个master上就由那个master来提供K8S的服务，这是一种高可用的方式。<br>
-再往下就是node节点，这些node节点就是真正运行容器的地方，当我们要创建容器的时候，就先访问到VIP地址:10.1.13.171，基于这个vip地址来下发指令，让他创建各个容器，这些所有的node节点都是被这个vip地址(10.1.13.171)所管理。</p>
-<h1 id="三-系统环境初始化">三 系统环境初始化</h1>
-<ul>
-<li>操作节点：所有节点（k8s-master，k8s-node）均需执行</li>
-</ul>
-<h2 id="31-设置hosts解析">3.1 设置hosts解析</h2>
-<ul>
-<li>修改hostname hostname必须只能包含小写字母、数字、&quot;,&quot;、&quot;-&quot;，且开头结尾必须是小写字母或数字</li>
-</ul>
-<pre><code># 以其中一台master和node为例：
-
-# 在k8s-master1节点
-$ hostnamectl set-hostname K8s-Master1 #设置master节点的hostname
-
-# 在node-1节点
-$ hostnamectl set-hostname K8s-Node1 #设置node1节点的hostname
-</code></pre>
-<ul>
-<li>添加hosts解析</li>
-</ul>
-<pre><code>$ cat &gt;&gt;/etc/hosts&lt;&lt;EOF
-10.1.13.156 K8s-Mater1
-10.1.13.157 K8s-Mater2
-10.1.13.158 K8s-Node1
-10.1.13.159 K8s-Node2
-EOF
-</code></pre>
-<h2 id="32-配置网卡信息">3.2 配置网卡信息</h2>
-<pre><code>vim /etc/netplan/01-netcfg.yaml
-# This file describes the network interfaces available on your system
-# For more information, see netplan(5).
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    ens160:
-      addresses: [ 10.1.13.156/24 ]
-      gateway4: 10.1.13.1
-      nameservers:
-          addresses:
-              - &quot;8.8.8.8&quot;
-
-#生效网络
-netplan apply
-</code></pre>
-<h2 id="33-关闭selinux和防火墙">3.3 关闭selinux和防火墙</h2>
-<pre><code>getenforce          ##检查SELINUX状态
-setenforce 0       ##设置SELinux 成为permissive模式
-                          ##setenforce 1 设置SELinux 成为enforcing模式
-或者
-修改/etc/selinux/config 文件
-将SELINUX=enforcing改为SELINUX=disabled
-sed -ri 's#(SELINUX=).*#\1disabled#' /etc/selinux/config
-永久生效
-
-##关闭防火墙
-systemctl disable firewalld &amp;&amp; systemctl stop firewalld
-</code></pre>
-<h2 id="34-关闭swap">3.4 关闭swap</h2>
-<pre><code>swapoff -a &amp;&amp; sysctl -w vm.swappiness=0 
-# 禁止使用 swap 空间，只有当系统 OOM 时才允许使用
-
-# 防止开机自动挂载 swap 分区
-sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-</code></pre>
-<h2 id="35-调整内核参数">3.5 调整内核参数</h2>
-<pre><code>cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1    #开启网桥模式
-net.bridge.bridge-nf-call-iptables = 1      #开启网桥模式
-net.ipv4.ip_forward=1
-vm.max_map_count=262144 
-net.ipv4.ip_forward = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-fs.may_detach_mounts = 1
-vm.overcommit_memory=1
-vm.panic_on_oom=0
-fs.inotify.max_user_watches=89100
-fs.file-max=52706963
-fs.nr_open=52706963
-net.netfilter.nf_conntrack_max=2310720
-net.ipv4.tcp_keepalive_time = 600
-net.ipv4.tcp_keepalive_probes = 3
-net.ipv4.tcp_keepalive_intvl =15
-net.ipv4.tcp_max_tw_buckets = 36000
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_max_orphans = 327680
-net.ipv4.tcp_orphan_retries = 3
-net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_max_syn_backlog = 16384
-net.ipv4.ip_conntrack_max = 65536
-net.ipv4.tcp_max_syn_backlog = 16384
-net.ipv4.tcp_timestamps = 0
-net.core.somaxconn = 16384
-EOF
-
-modprobe br_netfilter  #加载模块
-sysctl -p /etc/sysctl.d/k8s.conf #生效内核参数
-</code></pre>
-<h2 id="36-更换ubuntu镜像源">3.6 更换Ubuntu镜像源</h2>
-<ul>
-<li>更换为ali ubuntu镜像源<br>
-阿里开源镜像源网站地址：https://developer.aliyun.com/mirror/</li>
-</ul>
-<pre><code>cd /etc/apt
-cp sources.list sources.list.bak
-
-vim sources.list
-deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse
-
-deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse
-
-deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse
-
-deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse
-
-deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse
-deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
-# deb-src [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu bionic stable
-
-#更新软件包列表
-apt-get update
-</code></pre>
-<h2 id="37-添加docker-ce软件源">3.7 添加Docker-ce软件源</h2>
-<pre><code># step 1: 安装必要的一些系统工具
-sudo apt-get update
-sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
-
-# step 2: 安装GPG证书
-curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-
-# Step 3: 写入软件源信息
-sudo add-apt-repository &quot;deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
-
-# Step 4: 更新并安装Docker-CE
-sudo apt-get -y update
-sudo apt-get -y install docker-ce
-
-# 安装指定版本的Docker-CE:
-# Step 1: 查找Docker-CE的版本:
-  apt-cache madison docker-ce
-#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-
-# Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)
-  sudo apt-get -y install docker-ce=[VERSION]
-  
-#卸载docker-ce
-apt-get purge docker-ce
-</code></pre>
-<h2 id="38-配置docker镜像加速器并更改docker的cgroup-driver">3.8 配置Docker镜像加速器并更改Docker的cgroup-driver</h2>
-<pre><code>cat /etc/docker/daemon.json
-{
-  &quot;registry-mirrors&quot;: [&quot;https://b9pmyelo.mirror.aliyuncs.com&quot;],
-  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
-}
-
-## 启动docker
-$ systemctl enable docker &amp;&amp; systemctl start docker
-</code></pre>
-<h2 id="39-添加k8s软件源">3.9 添加K8s软件源</h2>
-<pre><code>apt-get update &amp;&amp; apt-get install -y apt-transport-https
-curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
-cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list
-deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
-EOF  
-
-apt-get update
-</code></pre>
-<h2 id="310-安装kubeadm">3.10 安装kubeadm</h2>
-<pre><code>## 查询安装包版本
-~]# apt-cache madison kubeadm kubelet kubectl
-
-##本次kubernetes安装使用1.22.5版本
-~]# apt-get install kubectl=1.22.5 kubeadm=1.22.5 kubelet=1.22.5 -y
-
-## 查看kubeadm版本
-$ kubeadm version
-
-## 设置kubelet开机启动
-$ cat &gt;/etc/sysconfig/kubelet&lt;&lt;EOF
-KUBELET_EXTRA_ARGS=&quot;--cgroup-driver=systemd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.2&quot;
-EOF
-$ systemctl enable kubelet 
-</code></pre>
-<h1 id="四-kubeadmin部署master节点">四 Kubeadmin部署Master节点</h1>
-<h2 id="41-master节点安装配置keepalived-haproxy">4.1  Master节点安装配置keepalived、haproxy</h2>
-<ul>
-<li>操作节点： 所有的master</li>
-</ul>
-<blockquote>
-<p>所有Master节点安装并配置haproxy.cfg</p>
-</blockquote>
-<pre><code>## 安装keepalived haproxy
-$ apy-get install keepalived haproxy -y
-
-## 所有master节点配置haproxy.cfg,注意替换最后的master节点IP地址
-$ cd /etc/haproxy
-$ cp haproxy.cfg haproxy.cfg.bak
-$ vim /etc/haproxy/haproxy.cfg
-global
-  maxconn  2000
-  ulimit-n  16384
-  log  127.0.0.1 local0 err
-  stats timeout 30s
-defaults
-  log global
-  mode  http
-  option  httplog
-  timeout connect 5000
-  timeout client  50000
-  timeout server  50000
-  timeout http-request 15s
-  timeout http-keep-alive 15s
-frontend monitor-in
-  bind *:33305
-  mode http
-  option httplog
-  monitor-uri /monitor
-frontend k8s-master
-  bind 0.0.0.0:7443
-  bind 127.0.0.1:7443
-  mode tcp
-  option tcplog
-  tcp-request inspect-delay 5s
-  default_backend k8s-master
-backend k8s-master
-  mode tcp
-  option tcplog
-  option tcp-check
-  balance roundrobin
-  default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn     250 maxqueue 256 weight 100
-  server k8s-master1    10.1.13.156:6443  check
-  server k8s-master2    10.1.13.157:6443   check
-</code></pre>
-<blockquote>
-<p>K8s-Mater1配置keepalived.conf</p>
-</blockquote>
-<pre><code> # 在k8s-master1节点，注意mcast_src_ip换成实际的master1ip地址，virtual_ipaddress换成lb地址
-$ vim /etc/keepalived/keepalived.conf
-! Configuration File for keepalived
-global_defs {
-    router_id LVS_DEVEL
-    script_user root
-    enable_script_security
-}
-vrrp_script chk_apiserver {
-    script &quot;/etc/keepalived/check_apiserver.sh&quot;
-    interval 5
-    weight -5
-    fall 2
-    rise 1
-}
-vrrp_instance VI_1 {
-    state MASTER
-    interface eth0
-    mcast_src_ip 10.1.13.156
-    virtual_router_id 60
-    priority 101
-    advert_int 2
-    authentication {
-        auth_type PASS
-        auth_pass K8SHA_KA_AUTH
-    }
-    virtual_ipaddress {
-        10.1.13.171
-    }
-    track_script {
-       chk_apiserver
-    }
-}
-</code></pre>
-<blockquote>
-<p>K8s-Mater2配置keepalived.conf</p>
-</blockquote>
-<pre><code>#注意mcast_src_ip换成实际的master1ip地址，virtual_ipaddress换成lb地址
-$ vim /etc/keepalived/keepalived.conf
-! Configuration File for keepalived
-global_defs {
-    router_id LVS_DEVEL
-    script_user root
-    enable_script_security
-}
-vrrp_script chk_apiserver {
-    script &quot;/etc/keepalived/check_apiserver.sh&quot;
-    interval 5
-    weight -5
-    fall 2
-rise 1
-}
-vrrp_instance VI_1 {
-    state BACKUP
-    interface ens160
-    mcast_src_ip 10.1.13.157
-    virtual_router_id 60
-    priority 101
-    advert_int 2
-    authentication {
-        auth_type PASS
-        auth_pass K8SHA_KA_AUTH
-    }
-    virtual_ipaddress {
-        10.1.13.171
-    }
-    track_script {
-       chk_apiserver
-    }
-}
-</code></pre>
-<blockquote>
-<p>所有master节点配置Keepalived健康检查文件</p>
-</blockquote>
-<pre><code>$ cat /etc/keepalived/check_apiserver.sh
-#!/bin/bash
-err=0
-for k in $(seq 1 2)
-do
-    check_code=$(pgrep haproxy)
-    if [[ $check_code == &quot;&quot; ]]; then
-        err=$(expr $err + 1)
-        sleep 1
-        continue
-    else
-        err=0
-        break
-    fi
-done
-if [[ $err != &quot;0&quot; ]]; then
-    echo &quot;systemctl stop keepalived&quot;
-    /usr/bin/systemctl stop keepalived
-    exit 1
-else
-    exit 0
-fi
-</code></pre>
-<blockquote>
-<p>启动haproxy和keepalived----&gt;所有master节点</p>
-</blockquote>
-<pre><code>$ chmod +x /etc/keepalived/check_apiserver.sh
-$ systemctl daemon-reload
-$ systemctl enable --now haproxy
-$ systemctl enable --now keepalived 
-
-# 测试LB ip是否生效
-$ telnet 10.1.13.171 7443
-</code></pre>
-<h1 id="五-master节点初始化">五 Master节点初始化</h1>
-<p>首先基于keepalived 实现高可用VIP，然后实现基于VIP 的高可用master。<br>
-初始化仅一台master上初始化即可。master2节点主机不用初始化，在master1初始化之后再将master2节点加到里面即可。</p>
-<h2 id="51-提前准备镜像">5.1 提前准备镜像</h2>
-<p>镜像最好提前下载下来，但是镜像默认使用 Google 的镜像仓库， 所以国内无法直接下载，但是可以通过阿里云的镜像仓库把镜像先提前下载下来， 可以避免后期因镜像下载异常而导致k8s 部署异常。</p>
-<ul>
-<li>在任意一台 K8S 集群主机上查看安装指定的 K8s 1.22.5 需要哪些镜像</li>
-</ul>
-<pre><code>~# kubeadm config images list --kubernetes-version v1.22.5
-
-k8s.gcr.io/kube-apiserver:v1.22.5
-k8s.gcr.io/kube-controller-manager:v1.22.5
-k8s.gcr.io/kube-scheduler:v1.22.5
-k8s.gcr.io/kube-proxy:v1.22.5
-k8s.gcr.io/pause:3.5
-k8s.gcr.io/etcd:3.5.0-0
-k8s.gcr.io/coredns/coredns:v1.8.4
-
-#下载镜像(所有master、node节点)
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver:v1.22.5
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager:v1.22.5
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler:v1.22.5
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.22.5
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.5
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.5.0-0
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.8.4
-</code></pre>
-<h2 id="52-初始化master节点">5.2 初始化Master节点</h2>
-<ul>
-<li>操作节点：只在master1节点（k8s-master）执行</li>
-</ul>
-<pre><code>kubeadm init --apiserver-advertise-address=10.1.13.156 \
---control-plane-endpoint=10.1.13.171 \
---apiserver-bind-port=6443 \
---kubernetes-version=v1.22.5 \
---pod-network-cidr=10.244.0.0/16 \
---service-cidr=10.10.0.0/16 \
---service-dns-domain=linux.local \
---image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers \
---ignore-preflight-errors=swap
-</code></pre>
-<ul>
-<li>参数解析</li>
-</ul>
-<pre><code>--apiserver-advertise-address=10.1.13.156       #master节点主机IP
---control-plane- endpoint=10.1.13.171      	     #用户请求访问ip(VIP)
---apiserver-bind-port=6443                              #对外暴露端口
---kubernetes-version=v1.22.5                           #K8S版本号
---pod- network-cidr=10.244.0.0/16                  #后端pod服务器内部ip地址池
---service-cidr=10.10.0.0/16    	                          #service ip地址池
---service-dns-domain=linux.local                     #DNS解析域名
--- image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers  #使用阿里镜像仓库
---ignore-preflight- errors=swap                       #忽略swap分区
-</code></pre>
-<p>初始化完成之后会提示：</p>
-<pre><code>您的Kubernetes控制面板已成功初始化！
-
-要开始使用群集，您需要以普通用户身份运行以下命令：
-
-  mkdir -p $ HOME / .kube
-  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
-  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
-
-现在，您应该将Pod网络部署到群集。
-使用列出的选项之一运行“ kubectl apply -f [podnetwork] .yaml”：
-  https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-现在，您可以通过复制证书颁发机构来加入任意数量的控制平面节点
-和每个节点上的服务帐户密钥，然后以超级用户身份运行以下命令：
-
-#这是我们 K8S 集群添加新节点的 token 值，一定要保存好
-kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw \
-	--discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e \
-	--control-plane
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1643033461867.png" alt="" loading="lazy"></figure>
-<pre><code>mkdir -p $HOME/.kube		   #在当前目录下创建一个.kube文件
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config #将admin.conf文件拷贝到.kube中
-sudo chown $(id -u):$(id -g) $HOME/.kube/config			 #添加这个用户的组和用户id信息
-</code></pre>
-<blockquote>
-<p>⚠️注意：此时使用 kubectl get nodes查看节点应该处于notReady状态，因为还未配置网络插件</p>
-</blockquote>
-<p>若执行初始化过程中出错，根据错误信息调整后，执行kubeadm reset后再次执行init操作即可</p>
-<h1 id="六-安装网络插件">六 安装网络插件</h1>
-<p>操作节点：只在master节点（k8s-master）执行，CNI</p>
-<h2 id="61-master1节点安装flannel">6.1 Master1节点安装flannel</h2>
-<ul>
-<li>下载flannel的yaml文件</li>
-</ul>
-<pre><code>wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-</code></pre>
-<ul>
-<li>修改配置，指定网卡名称，大概在文件的190行，添加一行配置：</li>
-</ul>
-<pre><code>...      
-      containers:
-      - name: kube-flannel
-        image: rancher/mirrored-flannelcni-flannel:v0.16.1
-        command:
-        - /opt/bin/flanneld
-        args:
-        - --ip-masq
-        - --kube-subnet-mgr
-        - --iface=eth0   # 如果机器存在多网卡的话，指定内网网卡的名称，默认不指定的话会找第一块网卡
-        resources:
-          requests:
-            cpu: &quot;100m&quot;
-...
-
-注：如果在Master节点初始化时，指定Pod的IP地址段不是默认的话，则需要在kube-flannel.yml更改
-···
-  net-conf.json: |
-    {
-      &quot;Network&quot;: &quot;10.244.0.0/16&quot;,   #改为初始化时指定的IP地址段，保持一致
-      &quot;Backend&quot;: {
-        &quot;Type&quot;: &quot;vxlan&quot;
-      }
-    }
-···
-</code></pre>
-<ul>
-<li>执行安装flannel网络插件</li>
-</ul>
-<pre><code># 先拉取镜像,此过程国内速度比较慢
-$ docker pull rancher/mirrored-flannelcni-flannel:v0.16.1
-
-# 执行flannel安装
-$ kubectl apply -f kube-flannel.yml
-</code></pre>
-<h1 id="七-k8s-集群加入-master2-节点">七 K8S 集群加入 Master2 节点</h1>
-<p>在已经安装好了kubeadm主机（master1）上使用下面条命令生成证书</p>
-<pre><code>~]# kubeadm init phase upload-certs --upload-certs
-</code></pre>
-<ul>
-<li>使用新 key 将Master2加入到 K8S集群中<br>
-注意：使用VIP地址添加</li>
-</ul>
-<pre><code>kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e     --control-plane --certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0
-
-##参数解析
-kubeadm join 10.1.13.171:6443   ##使用VIP 地址的6443端口
---token fllqpu.d62apynubeyejmjw   ##对于基于令牌的发现，该令牌用于验证从 API 服务器获取的集群信息。
---discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e ##对基于令牌的发现，验证根 CA 公钥是否与此哈希匹配
---control-plane   ##在此节点上创建一个新的控制平面实例
---certificate-key a70be54de91a4c3a7d263aa49e49e1d5e518ee27ca85bdb3d858f0ae9151f7c0 ##添加key验证,使用此密钥可以解密由 init 上传的证书 secret。
-</code></pre>
-<p>在Master2节点执行以下三条命令</p>
-<pre><code>  mkdir -p $ HOME / .kube
-  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
-  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
-
-三条命令加上之后才能够使用kubectl get node -A命令查看节点集群节点信息，
-起到一个验证的作用，不然会报错为连接拒绝。
-</code></pre>
-<h1 id="八-添加slave节点到集群中">八 添加Slave节点到集群中</h1>
-<p>操作节点：所有的slave节点（k8s-slave）需要执行<br>
-在每台slave节点，执行如下命令，该命令是在kubeadm init成功后提示信息中打印出来的，需要替换成实际init后打印出的命令。</p>
-<pre><code>kubeadm join 10.1.13.171:6443 --token fllqpu.d62apynubeyejmjw   --discovery-token-ca-cert-hash sha256:7fd592ed7363097924c1674ec0b85e335457e92bdee683f0addad99c327b853e 
-</code></pre>
-<p>如果忘记添加命令，可以通过如下命令生成：</p>
-<pre><code>$ kubeadm token create --print-join-command
-</code></pre>
-<ul>
-<li>如果想要在Node节点上也可以执行kubectl命令，则需要同样执行以下三条命令：</li>
-</ul>
-<pre><code>  mkdir -p $ HOME / .kube
-  sudo cp -i /etc/kubernetes/admin.conf $ HOME / .kube / config
-  sudo chown $ {id -u）：$ {id -g）$ HOME / .kube / config
-
-  ## admin.conf 可以从Master节点拷贝过来
-</code></pre>
-<h1 id="九-集群设置">九 集群设置</h1>
-<h2 id="91-设置master节点是否可调度可选">9.1 设置Master节点是否可调度(可选)</h2>
-<p>操作节点：k8s-master<br>
-默认部署成功后，master节点无法调度业务pod，如需设置master节点也可以参与pod的调度，需执行：</p>
-<pre><code>$ kubectl taint node k8s-master node-role.kubernetes.io/master:NoSchedule-
-</code></pre>
-<h2 id="92-设置kubectl自动补全">9.2 设置kubectl自动补全</h2>
-<p>操作节点：k8s-master</p>
-<pre><code>$ apt-get install bash-completion -y
-$ source /usr/share/bash-completion/bash_completion
-$ source &lt;(kubectl completion bash)
-$ echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc
-</code></pre>
 ]]></content>
     </entry>
 </feed>

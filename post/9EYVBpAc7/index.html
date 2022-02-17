@@ -1,0 +1,863 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645107188035">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645107188035" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#apiserver%E5%AE%89%E5%85%A8%E6%8E%A7%E5%88%B6">APIServer安全控制</a></li>
+<li><a href="#kubectl%E7%9A%84%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83">kubectl的认证授权</a></li>
+<li><a href="#rbac">RBAC</a></li>
+<li><a href="#kubelet%E7%9A%84%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83">kubelet的认证授权</a></li>
+<li><a href="#service-account%E5%8F%8Ak8s-api%E8%B0%83%E7%94%A8">Service Account及K8S Api调用</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83%E7%9A%84kubeconfig%E6%96%87%E4%BB%B6">创建用户认证授权的kubeconfig文件</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.6000000000000001s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 0.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.2000000000000002s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Kubernetes认证与授权 </h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-17 / 21 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/9EYVBpAc7.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="apiserver安全控制">APIServer安全控制</h1>
+<figure data-type="image" tabindex="1"><img src="images/k8s-apiserver-access-control-overview.svg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>Authentication：身份认证</p>
+<ol>
+<li>
+<p>这个环节它面对的输入是整个<code>http request</code>，负责对来自client的请求进行身份校验，支持的方法包括:</p>
+<ul>
+<li>
+<p><code>basic auth</code></p>
+</li>
+<li>
+<p>client证书验证（https双向验证）</p>
+</li>
+<li>
+<p><code>jwt token</code>(用于serviceaccount)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>APIServer启动时，可以指定一种Authentication方法，也可以指定多种方法。如果指定了多种方法，那么APIServer将会逐个使用这些方法对客户端请求进行验证， 只要请求数据通过其中一种方法的验证，APIServer就会认为Authentication成功；</p>
+</li>
+<li>
+<p>使用kubeadm引导启动的k8s集群，apiserver的初始配置中，默认支持<code>client证书</code>验证和<code>serviceaccount</code>两种身份验证方式。 证书认证通过设置<code>--client-ca-file</code>根证书以及<code>--tls-cert-file</code>和<code>--tls-private-key-file</code>来开启。</p>
+</li>
+<li>
+<p>在这个环节，apiserver会通过client证书或 <code>http header</code>中的字段(比如serviceaccount的<code>jwt token</code>)来识别出请求的<code>用户身份</code>，包括”user”、”group”等，这些信息将在后面的<code>authorization</code>环节用到。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Authorization：鉴权，你可以访问哪些资源</p>
+<ol>
+<li>这个环节面对的输入是<code>http request context</code>中的各种属性，包括：<code>user</code>、<code>group</code>、<code>request path</code>（比如：<code>/api/v1</code>、<code>/healthz</code>、<code>/version</code>等）、 <code>request verb</code>(比如：<code>get</code>、<code>list</code>、<code>create</code>等)。</li>
+<li>APIServer会将这些属性值与事先配置好的访问策略(<code>access policy</code>）相比较。APIServer支持多种<code>authorization mode</code>，包括<code>Node、RBAC、Webhook</code>等。</li>
+<li>APIServer启动时，可以指定一种<code>authorization mode</code>，也可以指定多种<code>authorization mode</code>，如果是后者，只要Request通过了其中一种mode的授权， 那么该环节的最终结果就是授权成功。在较新版本kubeadm引导启动的k8s集群的apiserver初始配置中，<code>authorization-mode</code>的默认配置是<code>”Node,RBAC”</code>。</li>
+</ol>
+</li>
+<li>
+<p>Admission Control：<a href="http://docs.kubernetes.org.cn/144.html">准入控制</a>，一个控制链(层层关卡)，用于拦截请求的一种方式。偏集群安全控制、管理方面。</p>
+<ul>
+<li>
+<p>为什么需要？</p>
+<p>认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。</p>
+<p>Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</p>
+</li>
+<li>
+<p>举个栗子</p>
+<ul>
+<li>
+<p>以NamespaceLifecycle为例， 该插件确保处于Termination状态的Namespace不再接收新的对象创建请求，并拒绝请求不存在的Namespace。该插件还可以防止删除系统保留的Namespace:default，kube-system，kube-public</p>
+</li>
+<li>
+<p>LimitRanger，若集群的命名空间设置了LimitRange对象，若Pod声明时未设置资源值，则按照LimitRange的定义来未Pod添加默认值</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-limit-range
+  namespace: demo
+spec:
+  limits:
+  - default:
+      memory: 512Mi
+    defaultRequest:
+      memory: 256Mi
+    type: Container
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: default-mem-demo
+  namespace: demo
+spec:
+  containers:
+  - name: default-mem-demo
+    image: nginx:alpine
+
+</code></pre>
+</li>
+</ul>
+<pre><code class="language-powershell">$ kubectl apply -f .
+</code></pre>
+</li>
+<li>
+<p>NodeRestriction， 此插件限制kubelet修改Node和Pod对象，这样的kubelets只允许修改绑定到Node的Pod API对象，以后版本可能会增加额外的限制 。开启Node授权策略后，默认会打开该项</p>
+</li>
+</ul>
+</li>
+<li>
+<p>怎么用？</p>
+<p>APIServer启动时通过 <code>--enable-admission-plugins --disable-admission-plugins</code> 指定需要打开或者关闭的 Admission Controller</p>
+</li>
+<li>
+<p>场景</p>
+<ul>
+<li>自动注入sidecar容器或者initContainer容器</li>
+<li>webhook admission，实现业务自定义的控制需求</li>
+</ul>
+</li>
+</ul>
+<h1 id="kubectl的认证授权">kubectl的认证授权</h1>
+<p>kubectl的日志调试级别：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">信息</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">v=0</td>
+<td style="text-align:left">通常，这对操作者来说总是可见的。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=1</td>
+<td style="text-align:left">当您不想要很详细的输出时，这个是一个合理的默认日志级别。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=2</td>
+<td style="text-align:left">有关服务和重要日志消息的有用稳定状态信息，这些信息可能与系统中的重大更改相关。这是大多数系统推荐的默认日志级别。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=3</td>
+<td style="text-align:left">关于更改的扩展信息。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=4</td>
+<td style="text-align:left">调试级别信息。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=6</td>
+<td style="text-align:left">显示请求资源。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=7</td>
+<td style="text-align:left">显示 HTTP 请求头。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=8</td>
+<td style="text-align:left">显示 HTTP 请求内容。</td>
+</tr>
+<tr>
+<td style="text-align:left">v=9</td>
+<td style="text-align:left">显示 HTTP 请求内容，并且不截断内容。</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell">$ kubectl get nodes -v=7
+I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config
+I0329 20:20:08.633797    3979 round_trippers.go:416] GET https://172.21.51.143:6443/api/v1/nodes?limit=500
+</code></pre>
+<p><code>kubeadm init</code>启动完master节点后，会默认输出类似下面的提示内容：</p>
+<pre><code class="language-bash">... ...
+Your Kubernetes master has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+... ...
+</code></pre>
+<p>这些信息是在告知我们如何配置<code>kubeconfig</code>文件。按照上述命令配置后，master节点上的<code>kubectl</code>就可以直接使用<code>$HOME/.kube/config</code>的信息访问<code>k8s cluster</code>了。 并且，通过这种配置方式，<code>kubectl</code>也拥有了整个集群的管理员(root)权限。</p>
+<p>很多K8s初学者在这里都会有疑问：</p>
+<ul>
+<li>当<code>kubectl</code>使用这种<code>kubeconfig</code>方式访问集群时，<code>Kubernetes</code>的<code>kube-apiserver</code>是如何对来自<code>kubectl</code>的访问进行身份验证(<code>authentication</code>)和授权(<code>authorization</code>)的呢？</li>
+<li>为什么来自<code>kubectl</code>的请求拥有最高的管理员权限呢？</li>
+</ul>
+<p>查看<code>/root/.kube/config</code>文件：</p>
+<p>前面提到过apiserver的authentication支持通过<code>tls client certificate、basic auth、token</code>等方式对客户端发起的请求进行身份校验， 从kubeconfig信息来看，kubectl显然在请求中使用了<code>tls client certificate</code>的方式，即客户端的证书。</p>
+<p>证书base64解码：</p>
+<pre><code class="language-powershell">$ echo xxxxxxxxxxxxxx |base64 -d &gt; kubectl.crt
+
+</code></pre>
+<p>说明在认证阶段，<code>apiserver</code>会首先使用<code>--client-ca-file</code>配置的CA证书去验证kubectl提供的证书的有效性,基本的方式 ：</p>
+<pre><code class="language-powershell">$  openssl verify -CAfile /etc/kubernetes/pki/ca.crt kubectl.crt
+kubectl.crt: OK
+
+</code></pre>
+<p>除了认证身份，还会取出必要的信息供授权阶段使用，文本形式查看证书内容：</p>
+<pre><code class="language-powershell">$ openssl x509 -in kubectl.crt -text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4736260165981664452 (0x41ba9386f52b74c4)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=kubernetes
+        Validity
+            Not Before: Feb 10 07:33:39 2020 GMT
+            Not After : Feb  9 07:33:40 2021 GMT
+        Subject: O=system:masters, CN=kubernetes-admin
+        ...
+</code></pre>
+<p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
+<p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
+<figure data-type="image" tabindex="2"><img src="images/kubeadm-default-clusterrole-list.png" alt="" loading="lazy"></figure>
+<p>其中第一个cluster-admin这个cluster role binding绑定了system:masters group，这和authentication环节传递过来的身份信息不谋而合。 沿着system:masters group对应的cluster-admin clusterrolebinding“追查”下去，真相就会浮出水面。</p>
+<p>我们查看一下这一binding：</p>
+<pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
+Name:         cluster-admin
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+Role:
+  Kind:  ClusterRole
+  Name:  cluster-admin
+Subjects:
+  Kind   Name            Namespace
+  ----   ----            ---------
+  Group  system:masters
+</code></pre>
+<p>我们看到在kube-system名字空间中，一个名为cluster-admin的clusterrolebinding将cluster-admin cluster role与system:masters Group绑定到了一起， 赋予了所有归属于system:masters Group中用户cluster-admin角色所拥有的权限。</p>
+<p>我们再来查看一下cluster-admin这个role的具体权限信息：</p>
+<pre><code class="language-powershell">$ kubectl describe clusterrole cluster-admin
+Name:         cluster-admin
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources  Non-Resource URLs  Resource Names  Verbs
+  ---------  -----------------  --------------  -----
+  *.*        []                 []              [*]
+             [*]                []              [*]
+</code></pre>
+<p>非资源类，如查看集群健康状态。</p>
+<figure data-type="image" tabindex="3"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
+<h1 id="rbac">RBAC</h1>
+<p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
+<p>查看开启：</p>
+<pre><code class="language-powershell"># master节点查看apiserver进程
+$ ps aux |grep apiserver
+</code></pre>
+<p>RBAC模式引入了4个资源类型：</p>
+<ul>
+<li>
+<p>Role，角色</p>
+<p>一个Role只能授权访问单个namespace</p>
+<pre><code class="language-yaml">## 示例定义一个名为pod-reader的角色，该角色具有读取default这个命名空间下的pods的权限
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: demo
+  name: pod-reader
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group
+  resources: [&quot;pods&quot;]
+  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+  
+## apiGroups: &quot;&quot;,&quot;apps&quot;, &quot;autoscaling&quot;, &quot;batch&quot;, kubectl api-versions
+## resources: &quot;services&quot;, &quot;pods&quot;,&quot;deployments&quot;... kubectl api-resources
+## verbs: &quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;, &quot;exec&quot;
+
+## https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/
+
+</code></pre>
+</li>
+<li>
+<p>ClusterRole</p>
+<p>一个ClusterRole能够授予和Role一样的权限，但是它是集群范围内的。</p>
+<pre><code class="language-yaml">## 定义一个集群角色，名为secret-reader，该角色可以读取所有的namespace中的secret资源
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  # &quot;namespace&quot; omitted since ClusterRoles are not namespaced
+  name: secret-reader
+rules:
+- apiGroups: [&quot;&quot;]
+  resources: [&quot;secrets&quot;]
+  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+
+# User,Group,ServiceAccount
+</code></pre>
+</li>
+<li>
+<p>Rolebinding</p>
+<p>将role中定义的权限分配给用户和用户组。RoleBinding包含主题（users,groups,或service accounts）和授予角色的引用。对于namespace内的授权使用RoleBinding，集群范围内使用ClusterRoleBinding。</p>
+<pre><code class="language-yaml">## 定义一个角色绑定，将pod-reader这个role的权限授予给jane这个User，使得jane可以在读取default这个命名空间下的所有的pod数据
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: demo
+subjects:
+- kind: User   #这里可以是User,Group,ServiceAccount
+  name: jane 
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #这里可以是Role或者ClusterRole,若是ClusterRole，则权限也仅限于rolebinding的内部
+  name: pod-reader # match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+
+
+</code></pre>
+<p><em>注意：rolebinding既可以绑定role，也可以绑定clusterrole，当绑定clusterrole的时候，subject的权限也会被限定于rolebinding定义的namespace内部，若想跨namespace，需要使用clusterrolebinding</em></p>
+<pre><code class="language-yaml">## 定义一个角色绑定，将dave这个用户和secret-reader这个集群角色绑定，虽然secret-reader是集群角色，但是因为是使用rolebinding绑定的，因此dave的权限也会被限制在development这个命名空间内
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows &quot;dave&quot; to read secrets in the &quot;development&quot; namespace.
+# You need to already have a ClusterRole named &quot;secret-reader&quot;.
+kind: RoleBinding
+metadata:
+  name: read-secrets
+  #
+  # The namespace of the RoleBinding determines where the permissions are granted.
+  # This only grants permissions within the &quot;development&quot; namespace.
+  namespace: development
+subjects:
+- kind: User
+  name: dave # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: dave # Name is case sensitive
+  namespace: luffy
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p>考虑一个场景：  如果集群中有多个namespace分配给不同的管理员，每个namespace的权限是一样的，就可以只定义一个clusterrole，然后通过rolebinding将不同的namespace绑定到管理员身上，否则就需要每个namespace定义一个Role，然后做一次rolebinding。</p>
+</li>
+<li>
+<p>ClusterRolebingding</p>
+<p>允许跨namespace进行授权</p>
+<pre><code class="language-yaml">apiVersion: rbac.authorization.k8s.io/v1
+# This cluster role binding allows anyone in the &quot;manager&quot; group to read secrets in any namespace.
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: Group
+  name: manager # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+</li>
+</ul>
+<figure data-type="image" tabindex="4"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
+<h1 id="kubelet的认证授权">kubelet的认证授权</h1>
+<p>查看kubelet进程</p>
+<pre><code class="language-powershell">$ systemctl status kubelet
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+  Drop-In: /usr/lib/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: active (running) since Sun 2020-07-05 19:33:36 EDT; 1 day 12h ago
+     Docs: https://kubernetes.io/docs/
+ Main PID: 10622 (kubelet)
+    Tasks: 24
+   Memory: 60.5M
+   CGroup: /system.slice/kubelet.service
+           └─851 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf
+</code></pre>
+<p>查看<code>/etc/kubernetes/kubelet.conf</code>，解析证书：</p>
+<pre><code class="language-powershell">$ echo xxxxx |base64 -d &gt;kubelet.crt
+$ openssl x509 -in kubelet.crt -text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 9059794385454520113 (0x7dbadafe23185731)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=kubernetes
+        Validity
+            Not Before: Feb 10 07:33:39 2020 GMT
+            Not After : Feb  9 07:33:40 2021 GMT
+        Subject: O=system:nodes, CN=system:node:master-1
+</code></pre>
+<p>得到我们期望的内容：</p>
+<pre><code class="language-bash">Subject: O=system:nodes, CN=system:node:k8s-master
+</code></pre>
+<p>我们知道，k8s会把O作为Group来进行请求，因此如果有权限绑定给这个组，肯定在clusterrolebinding的定义中可以找得到。因此尝试去找一下绑定了system:nodes组的clusterrolebinding</p>
+<pre><code class="language-powershell">$ kubectl get clusterrolebinding -oyaml|grep -n10 system:nodes
+178-    resourceVersion: &quot;225&quot;
+179-    selfLink: /apis/rbac.authorization.k8s.io/v1/clusterrolebindings/kubeadm%3Anode-autoapprove-certificate-rotation
+180-    uid: b4303542-d383-4b62-a1e9-02f2cefa2c20
+181-  roleRef:
+182-    apiGroup: rbac.authorization.k8s.io
+183-    kind: ClusterRole
+184-    name: system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+185-  subjects:
+186-  - apiGroup: rbac.authorization.k8s.io
+187-    kind: Group
+188:    name: system:nodes
+189-- apiVersion: rbac.authorization.k8s.io/v1
+190-  kind: ClusterRoleBinding
+191-  metadata:
+192-    creationTimestamp: &quot;2021-06-06T02:39:46Z&quot;
+193-    managedFields:
+194-    - apiVersion: rbac.authorization.k8s.io/v1
+195-      fieldsType: FieldsV1
+196-      fieldsV1:
+197-        f:roleRef:
+198-          f:apiGroup: {}
+
+$ kubectl describe clusterrole system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+Name:         system:certificates.k8s.io:certificatesigningrequests:selfnodeclient
+Labels:       kubernetes.io/bootstrapping=rbac-defaults
+Annotations:  rbac.authorization.kubernetes.io/autoupdate: true
+PolicyRule:
+  Resources                                                      Non-Resource URLs  Resource Names  Verbs
+  ---------                                                      -----------------  --------------  -----
+  certificatesigningrequests.certificates.k8s.io/selfnodeclient  []                 []              [create]
+
+</code></pre>
+<p>结局有点意外，除了<code>system:certificates.k8s.io:certificatesigningrequests:selfnodeclient</code>外，没有找到system相关的rolebindings，显然和我们的理解不一样。 尝试去找<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#core-component-roles">资料</a>，发现了这么一段 :</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Default ClusterRole</th>
+<th style="text-align:left">Default ClusterRoleBinding</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">system:kube-scheduler</td>
+<td style="text-align:left">system:kube-scheduler user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/generated/kube-scheduler/">scheduler</a>component.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:volume-scheduler</td>
+<td style="text-align:left">system:kube-scheduler user</td>
+<td style="text-align:left">Allows access to the volume resources required by the kube-scheduler component.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:kube-controller-manager</td>
+<td style="text-align:left">system:kube-controller-manager user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/">controller manager</a> component. The permissions required by individual controllers are detailed in the <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/#controller-roles">controller roles</a>.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:node</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">Allows access to resources required by the kubelet, <strong>including read access to all secrets, and write access to all pod status objects</strong>. You should use the <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Node authorizer</a> and <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#noderestriction">NodeRestriction admission plugin</a> instead of the <code>system:node</code> role, and allow granting API access to kubelets based on the Pods scheduled to run on them. The <code>system:node</code> role only exists for compatibility with Kubernetes clusters upgraded from versions prior to v1.8.</td>
+</tr>
+<tr>
+<td style="text-align:left">system:node-proxier</td>
+<td style="text-align:left">system:kube-proxy user</td>
+<td style="text-align:left">Allows access to the resources required by the <a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/">kube-proxy</a>component.</td>
+</tr>
+</tbody>
+</table>
+<p>大致意思是说：之前会定义system:node这个角色，目的是为了kubelet可以访问到必要的资源，包括所有secret的读权限及更新pod状态的写权限。如果1.8版本后，是建议使用 <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Node authorizer</a> and <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#noderestriction">NodeRestriction admission plugin</a> 来代替这个角色的。</p>
+<p>我们目前使用1.19，查看一下授权策略：</p>
+<pre><code class="language-powershell">$ ps axu|grep apiserver
+kube-apiserver --authorization-mode=Node,RBAC  --enable-admission-plugins=NodeRestriction
+</code></pre>
+<p>查看一下官网对Node authorizer的介绍：</p>
+<p><em>Node authorization is a special-purpose authorization mode that specifically authorizes API requests made by kubelets.</em></p>
+<p><em>In future releases, the node authorizer may add or remove permissions to ensure kubelets have the minimal set of permissions required to operate correctly.</em></p>
+<p><em>In order to be authorized by the Node authorizer, kubelets must use a credential that identifies them as being in the <code>system:nodes</code> group, with a username of <code>system:node:&lt;nodeName&gt;</code></em></p>
+<h1 id="service-account及k8s-api调用">Service Account及K8S Api调用</h1>
+<p>前面说，认证可以通过证书，也可以通过使用ServiceAccount（服务账户）的方式来做认证。大多数时候，我们在基于k8s做二次开发时都是选择通过ServiceAccount + RBAC 的方式。我们之前访问dashboard的时候，是如何做的？</p>
+<pre><code class="language-yaml">## 新建一个名为admin的serviceaccount，并且把名为cluster-admin的这个集群角色的权限授予新建的
+#serviceaccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin
+  namespace: kubernetes-dashboard
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: admin
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: &quot;true&quot;
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: admin
+  namespace: kubernetes-dashboard
+</code></pre>
+<p>我们查看一下：</p>
+<pre><code class="language-powershell">$ kubectl -n kubernetes-dashboard get sa admin -o yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: &quot;2020-04-01T11:59:21Z&quot;
+  name: admin
+  namespace: kubernetes-dashboard
+  resourceVersion: &quot;1988878&quot;
+  selfLink: /api/v1/namespaces/kubernetes-dashboard/serviceaccounts/admin
+  uid: 639ecc3e-74d9-11ea-a59b-000c29dfd73f
+secrets:
+- name: admin-token-lfsrf
+
+
+</code></pre>
+<p>注意到serviceaccount上默认绑定了一个名为admin-token-lfsrf的secret，我们查看一下secret</p>
+<pre><code class="language-powershell">$ kubectl -n kubernetes-dashboard describe secret admin-token-lfsrf
+Name:         admin-token-lfsrf
+Namespace:    kubernetes-dashboard
+Labels:       &lt;none&gt;
+Annotations:  kubernetes.io/service-account.name: admin
+              kubernetes.io/service-account.uid: 639ecc3e-74d9-11ea-a59b-000c29dfd73f
+
+Type:  kubernetes.io/service-account-token
+Data
+====
+ca.crt:     1025 bytes
+namespace:  4 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZW1vIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXRva2VuLWxmc3JmIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNjM5ZWNjM2UtNzRkOS0xMWVhLWE1OWItMDAwYzI5ZGZkNzNmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlbW86YWRtaW4ifQ.ffGCU4L5LxTsMx3NcNixpjT6nLBi-pmstb4I-W61nLOzNaMmYSEIwAaugKMzNR-2VwM14WbuG04dOeO67niJeP6n8-ALkl-vineoYCsUjrzJ09qpM3TNUPatHFqyjcqJ87h4VKZEqk2qCCmLxB6AGbEHpVFkoge40vHs56cIymFGZLe53JZkhu3pwYuS4jpXytV30Ad-HwmQDUu_Xqcifni6tDYPCfKz2CZlcOfwqHeGIHJjDGVBKqhEeo8PhStoofBU6Y4OjObP7HGuTY-Foo4QindNnpp0QU6vSb7kiOiQ4twpayybH8PTf73dtdFt46UF6mGjskWgevgolvmO8A
+
+
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
+<p>只允许访问luffy命名空间的pod资源：</p>
+<pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: luffy-pods-admin
+  namespace: luffy
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: luffy
+  name: pods-reader-writer
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group
+  resources: [&quot;pods&quot;]
+  verbs: [&quot;*&quot;]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pods-reader-writer
+  namespace: luffy
+subjects:
+- kind: ServiceAccount   #这里可以是User,Group,ServiceAccount
+  name: luffy-pods-admin
+  namespace: luffy
+roleRef:
+  kind: Role #这里可以是Role或者ClusterRole,若是ClusterRole，则权限也仅限于rolebinding的内部
+  name: pods-reader-writer
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p>演示权限：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy describe secrets luffy-pods-admin-token-prr25
+...
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl8ycC03TTBYaUUwTnJVZGpvQWU0cXZ5M2FFbjR2ZjkzZVcxOE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJsdWZmeSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJsdWZmeS1hZG1pbi10b2tlbi1wcnIyNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJsdWZmeS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFhZDA0MTU3LTliNzMtNDJhZC1hMGU4LWVmOTZlZDU3Yzg1ZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdWZmeTpsdWZmeS1hZG1pbiJ9.YWckylE5wlKITKrVltXY4VPKvZP9ar5quIT5zq9N-0_FnDkLIBX7xOyFvZA5Wef0wSFSZe3e9FwrO1UbPsmK7cZn74bhH8cNdoH_YVbIVT3-6tIOlCA_Bc8YypGE1gl-ZvLOIPV7WnRQsWpWtZtqfKBSkwLAHgWoxcx_d1bOcyTOdPmsW224xcBxjYwi6iRUtjTJST0LzOcAOCPDZq6-lqYUwnxLO_afxwg71BGX4etE48Iny8TxSEIs1VJRahoabC7hVOs17ujEm5loTDSpfuhae51qSDg8xeYwRHdM42aLUmc-wOvBWauHa5EHbH9rWPAnpaGIwF8QvnLszqp4QQ
+...
+$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl8ycC03TTBYaUUwTnJVZGpvQWU0cXZ5M2FFbjR2ZjkzZVcxOE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJsdWZmeSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJsdWZmeS1hZG1pbi10b2tlbi1wcnIyNSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJsdWZmeS1hZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFhZDA0MTU3LTliNzMtNDJhZC1hMGU4LWVmOTZlZDU3Yzg1ZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpsdWZmeTpsdWZmeS1hZG1pbiJ9.YWckylE5wlKITKrVltXY4VPKvZP9ar5quIT5zq9N-0_FnDkLIBX7xOyFvZA5Wef0wSFSZe3e9FwrO1UbPsmK7cZn74bhH8cNdoH_YVbIVT3-6tIOlCA_Bc8YypGE1gl-ZvLOIPV7WnRQsWpWtZtqfKBSkwLAHgWoxcx_d1bOcyTOdPmsW224xcBxjYwi6iRUtjTJST0LzOcAOCPDZq6-lqYUwnxLO_afxwg71BGX4etE48Iny8TxSEIs1VJRahoabC7hVOs17ujEm5loTDSpfuhae51qSDg8xeYwRHdM42aLUmc-wOvBWauHa5EHbH9rWPAnpaGIwF8QvnLszqp4QQ&quot; https://172.21.51.143:6443/api/v1/namespaces/luffy/pods?limit=500
+
+# https://172.21.51.143:6443/api/v1/nodes
+</code></pre>
+<h1 id="创建用户认证授权的kubeconfig文件">创建用户认证授权的kubeconfig文件</h1>
+<p>签发证书对：</p>
+<pre><code class="language-powershell"># 生成私钥
+$ openssl genrsa -out luffy.key 2048
+
+# 生成证书请求文件
+$ openssl req -new -key luffy.key -out luffy.csr -subj &quot;/O=admin:luffy/CN=luffy-admin&quot;
+
+# 证书拓展属性
+$ cat extfile.conf
+[ v3_ca ]
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+
+# 生成luffy.crt证书
+$ openssl x509 -req -in luffy.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -sha256 -out luffy.crt -extensions v3_ca -extfile extfile.conf -days 3650
+</code></pre>
+<p>配置kubeconfig文件：</p>
+<pre><code class="language-powershell"># 创建kubeconfig文件，指定集群名称和地址
+$ kubectl config set-cluster luffy-cluster --certificate-authority=/etc/kubernetes/pki/ca.crt --embed-certs=true --server=https://172.21.51.143:6443 --kubeconfig=luffy.kubeconfig
+
+# 为kubeconfig文件添加认证信息
+$ kubectl config set-credentials luffy-admin --client-certificate=luffy.crt --client-key=luffy.key --embed-certs=true --kubeconfig=luffy.kubeconfig
+
+# 为kubeconfig添加上下文配置
+$ kubectl config set-context luffy-context --cluster=luffy-cluster --user=luffy-admin --kubeconfig=luffy.kubeconfig
+
+# 设置默认的上下文
+$ kubectl config use-context luffy-context --kubeconfig=luffy.kubeconfig
+</code></pre>
+<p>验证：</p>
+<pre><code class="language-powershell"># 设置当前kubectl使用的config文件
+$ export KUBECONFIG=luffy.kubeconfig
+
+# 当前不具有任何权限，因为没有为用户或者组设置RBAC规则
+$ kubectl get po
+Error from server (Forbidden): pods is forbidden: User &quot;luffy-admin&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;default&quot;
+
+</code></pre>
+<p>为luffy用户添加luffy命名空间访问权限：</p>
+<pre><code class="language-powershell"># 定义role，具有luffy命名空间的所有权限
+$ cat luffy-admin-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: luffy
+  name: luffy-admin
+rules:
+- apiGroups: [&quot;&quot;] # &quot;&quot; 指定核心 API 组
+  resources: [&quot;*&quot;]
+  verbs: [&quot;*&quot;]
+  
+#定义rolebinding，为luffy用户绑定luffy-admin这个role，这样luffy用户就有操作luffy命名空间的所有权限
+$ cat luffy-admin-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: luffy-admin
+  namespace: luffy
+subjects:
+- kind: User
+  name: luffy-admin # Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: luffy-admin # 这里的名称必须与你想要绑定的 Role 或 ClusterRole 名称一致
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
+                <h3 class="post-title">
+                  Kubernetes调度
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

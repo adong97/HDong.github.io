@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645028585401">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645107188035">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645028585401" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645107188035" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -129,8 +129,8 @@
 <h1 id="调度的过程">调度的过程</h1>
 <p>Scheduler 提供的调度流程分为预选 (Predicates) 和优选 (Priorities) 两个步骤：</p>
 <ul>
-<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选</li>
-<li>优选，K8S将对候选的 Node 进行打分</li>
+<li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选 （不满足就踢掉）</li>
+<li>优选，K8S将对候选的 Node 进行打分 （都满足，选一个最优得）</li>
 </ul>
 <p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1644918490773.png" alt="" loading="lazy"></p>
@@ -218,7 +218,7 @@ spec:
 <pre><code>...
     spec:
       affinity:
-        podAntiAffinity:  #Anti 反亲和性，满足一下条件则不做调度
+        podAntiAffinity:  #Anti 反亲和性，满足以下条件则不做调度
           requiredDuringSchedulingIgnoredDuringExecution:  #硬策略，一定要满足的条件
           - labelSelector:
               matchExpressions:
@@ -231,11 +231,12 @@ spec:
 ...
 # 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么 调度器一定不要给我调度过去
 
+
 ...
     spec:
       affinity:
         podAntiAffinity: #反亲和性
-          preferredDuringSchedulingIgnoredDuringExecution: #软策略，
+          preferredDuringSchedulingIgnoredDuringExecution: #软策略，尽量不要调度
           - weight: 100
             podAffinityTerm:
               labelSelector:
@@ -249,23 +250,25 @@ spec:
 ...
 # 字段解析: 如果某个节点中，存在了app=myblog的label的pod，那么调度器尽量不要调度过去
 </code></pre>
-<p>** https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/**</p>
+<p>官方文档：https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/</p>
 <h1 id="污点taints与容忍tolerations">污点（Taints）与容忍（tolerations）</h1>
-<p>对于nodeAffinity无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而Taints恰好与之相反，如果一个节点标记为 Taints ，除非 Pod 也被标识为可以容忍污点节点，否则该 Taints 节点不会被调度Pod。</p>
+<p>对于<code>nodeAffinity</code>(node亲和性)无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而<code>Taints</code>恰好与之相反，如果一个节点标记为<code>Taints</code>，除非 Pod 也被标识为可以容忍污点节点，否则该 <code>Taints</code> 节点不会被调度Pod。<br>
+<code>Taints</code>是打给Node的，<code>Tolerations</code>是给Pod设置的。污点是让Node默认不接受调度，容忍是说怎么样把Pod调度到带有污点的Node上。</p>
 <p>Taints(污点)是Node的一个属性，设置了Taints(污点)后，因为有了污点，所以Kubernetes是不会将Pod调度到这个Node上的。于是Kubernetes就给Pod设置了个属性Tolerations(容忍)，只要Pod能够容忍Node上的污点，那么Kubernetes就会忽略Node上的污点，就能够(不是必须)把Pod调度过去。</p>
 <p>场景一：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
 <p>场景二：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
 <p>设置污点：</p>
-<pre><code>$ kubectl taint node [node_name] key=value:[effect]   
+<pre><code class="language-shell">$ kubectl taint node [node_name] key=value:[effect]   
       其中[effect] 可取值： [ NoSchedule | PreferNoSchedule | NoExecute ]
        NoSchedule：一定不能被调度。
        PreferNoSchedule：尽量不要调度。
        NoExecute：不仅不会调度，还会驱逐Node上已有的Pod。
+
   示例：kubectl taint node k8s-slave1 smoke=true:NoSchedule
             #不能容忍k8s-slave1抽烟的Pod就不要调度过来了
 </code></pre>
 <p>去除污点：</p>
-<pre><code>去除指定key及其effect：
+<pre><code class="language-shell">去除指定key及其effect：
      kubectl taint nodes [node_name] key:[effect]-    #这里的key不用指定value
      kubectl taint node k8s-slave1 smoke-
 
@@ -281,7 +284,7 @@ spec:
      kubectl taint node k8s-master smoke-
 </code></pre>
 <p>污点演示：</p>
-<pre><code>## 给k8s-slave1打上污点，smoke=true:NoSchedule
+<pre><code class="language-shell">## 给k8s-slave1打上污点，smoke=true:NoSchedule
 $ kubectl taint node k8s-master gamble=true:NoSchedule
 $ kubectl taint node k8s-slave1 drunk=true:NoSchedule
 $ kubectl taint node k8s-slave2 smoke=true:NoSchedule
@@ -294,7 +297,7 @@ $ kubectl -n luffy get po -w    ## pending
 
 </code></pre>
 <p>Pod容忍污点示例：myblog/deployment/deploy-myblog-taint.yaml</p>
-<pre><code>##污点是给Node打的，容忍是给业务设置的
+<pre><code class="language-yaml">##污点是给Node打的，容忍是给业务设置的
 ...
 spec:
       containers:
@@ -307,24 +310,26 @@ spec:
         effect: &quot;NoSchedule&quot;
       - key: &quot;drunk&quot; 
         operator: &quot;Exists&quot;  #如果操作符为Exists，那么value属性可省略,不指定operator，默认为Equal
-      #意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
-      #tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+...
+#意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
+#tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
+
 </code></pre>
 <pre><code>$ kubectl apply -f deploy-myblog-taint.yaml
 </code></pre>
-<pre><code>spec:
+<pre><code class="language-yaml">spec:
       containers:
       - name: demo
         image: 172.21.51.143:5000/myblog:v1
       tolerations:
-        - operator: &quot;Exists&quot;  #只要存在污点，都可以容忍 
+        - operator: &quot;Exists&quot;  #表示只要存在污点，都可以容忍。
 </code></pre>
 <blockquote>
 <p>NoExecute</p>
 </blockquote>
 <h1 id="cordon-and-drain">Cordon and Drain</h1>
-<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现</p>
-<p>drain：驱逐。drain包含cordon. drain会首先将节点变成不可调度</p>
+<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现。</p>
+<p>drain：驱逐。drain包含cordon。drain会首先将节点变成不可调度</p>
 <pre><code>#标记k8s-slave2是可调度的
 $ kubectl cordon k8s-slave2
 
@@ -342,6 +347,15 @@ $ kubectl drain k8s-slave2
 
 
         <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Kubernetes认证与授权 
+                </h3>
+              </a>
+            </div>
           
 
           
