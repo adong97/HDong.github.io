@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-18T03:19:43.060Z</updated>
+    <updated>2022-02-18T03:31:47.888Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,945 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[使用Helm3管理复杂应用的部署]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/7We4vZ_36/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/7We4vZ_36/">
+        </link>
+        <updated>2022-02-18T03:27:27.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="认识helm">认识Helm</h1>
+<ol>
+<li>
+<p>为什么有helm？</p>
+</li>
+<li>
+<p>Helm是什么？</p>
+<p>kubernetes的包管理器，“可以将Helm看作Linux系统下的apt-get/yum”。</p>
+<ul>
+<li>
+<p>对于应用发布者而言，可以通过Helm打包应用，管理应用依赖关系，管理应用版本并发布应用到软件仓库。</p>
+</li>
+<li>
+<p>对于使用者而言，使用Helm后不用需要了解Kubernetes的Yaml语法并编写应用部署文件，可以通过Helm下载并在kubernetes上安装需要的应用。</p>
+</li>
+</ul>
+<p>除此以外，Helm还提供了kubernetes上的软件部署，删除，升级，回滚应用的强大功能。</p>
+</li>
+<li>
+<p>Helm的版本</p>
+<ul>
+<li>
+<p>helm2</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154935395.jpg" alt="" loading="lazy"></figure>
+<p>C/S架构，helm通过Tiller与k8s交互</p>
+</li>
+<li>
+<p>helm3</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154947798.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>从安全性和易用性方面考虑，移除了Tiller服务端，helm3直接使用kubeconfig文件鉴权访问APIServer服务器</p>
+</li>
+<li>
+<p>由二路合并升级成为三路合并补丁策略（ 旧的配置，线上状态，新的配置 ）</p>
+<pre><code>helm install very_important_app ./very_important_app
+</code></pre>
+<p>这个应用的副本数量设置为 3 。现在，如果有人不小心执行了 <code>kubectl edit</code> 或：</p>
+<pre><code>kubectl scale -replicas=0 deployment/very_important_app
+</code></pre>
+<p>然后，团队中的某个人发现 very_important_app 莫名其妙宕机了，尝试执行命令：</p>
+<pre><code>helm rollback very_important_app
+</code></pre>
+<p>在 Helm 2 中，这个操作将比较旧的配置与新的配置，然后生成一个更新补丁。由于，误操作的人仅修改了应用的线上状态（旧的配置并未更新）。Helm 在回滚时，什么事情也不会做。因为旧的配置与新的配置没有差别（都是 3 个副本）。然后，Helm 不执行回滚，副本数继续保持为 0</p>
+</li>
+<li>
+<p>移除了helm server本地repo仓库</p>
+</li>
+<li>
+<p>创建应用时必须指定名字（或者--generate-name随机生成）</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Helm的重要概念</p>
+<ul>
+<li>chart，应用的信息集合，包括各种对象的配置模板、参数定义、依赖关系、文档说明等</li>
+<li>Repoistory，chart仓库，存储chart的地方，并且提供了一个该 Repository 的 Chart 包的清单文件以供查询。Helm 可以同时管理多个不同的 Repository。</li>
+<li>release， 当 chart 被安装到 kubernetes 集群，就生成了一个 release ， 是 chart 的运行实例，代表了一个正在运行的应用</li>
+</ul>
+</li>
+</ol>
+<p>helm 是包管理工具，包就是指 chart，helm 能够：</p>
+<ul>
+<li>从零创建chart</li>
+<li>与仓库交互，拉取、保存、更新 chart</li>
+<li>在kubernetes集群中安装、卸载 release</li>
+<li>更新、回滚、测试 release</li>
+</ul>
+<h5 id="安装与快速入门实践">安装与快速入门实践</h5>
+<p>下载最新的稳定版本：https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz</p>
+<p>更多版本可以参考： https://github.com/helm/helm/releases</p>
+<pre><code class="language-powershell"># k8s-master节点
+$ wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+$ tar -zxf helm-v3.2.4-linux-amd64.tar.gz
+
+$ cp linux-amd64/helm /usr/local/bin/
+
+# 验证安装
+$ helm version
+version.BuildInfo{Version:&quot;v3.2.4&quot;, GitCommit:&quot;0ad800ef43d3b826f31a5ad8dfbb4fe05d143688&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.12&quot;}
+$ helm env
+
+# 添加仓库
+$ helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+# 同步最新charts信息到本地
+$ helm repo update
+</code></pre>
+<p>快速入门实践：</p>
+<p>示例一：使用helm安装mysql应用</p>
+<pre><code class="language-powershell"># helm 搜索chart包
+$ helm search repo mysql
+
+# 从仓库安装
+$ helm install  mysql --set mysqlRootPassword=root,mysqlUser=luffy,mysqlPassword=luffy,mysqlDatabase=my-database --set persistence.storageClass=dynamic-cephfs  stable/mysql
+
+$ helm ls
+$ kubectl get all 
+
+# 从chart仓库中把chart包下载到本地
+$ helm pull stable/mysql
+$ tree mysql
+</code></pre>
+<p>示例二：新建nginx的chart并安装</p>
+<pre><code class="language-powershell">$ helm create nginx
+
+# 从本地安装
+$ helm install nginx ./nginx
+
+# 安装到别的命名空间luffy
+$ helm -n luffy install nginx ./nginx --set replicaCount=2 --set image.tag=alpine
+
+# 查看
+$ helm ls
+$ helm -n luffy ls
+
+#
+$ kubectl -n luffy get all
+</code></pre>
+<h5 id="chart的模板语法及开发">Chart的模板语法及开发</h5>
+<h6 id="nginx的chart实现分析">nginx的chart实现分析</h6>
+<p>格式：</p>
+<pre><code class="language-powershell">$ tree nginx/
+nginx/
+├── charts						# 存放子chart
+├── Chart.yaml					# 该chart的全局定义信息
+├── templates					# chart运行所需的资源清单模板，用于和values做渲染
+│   ├── deployment.yaml
+│   ├── _helpers.tpl			# 定义全局的命名模板，方便在其他模板中引入使用
+│   ├── hpa.yaml
+│   ├── ingress.yaml
+│   ├── NOTES.txt				# helm安装完成后终端的提示信息
+│   ├── serviceaccount.yaml
+│   ├── service.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml					# 模板使用的默认值信息
+</code></pre>
+<p>很明显，资源清单都在templates中，数据来源于values.yaml，安装的过程就是将模板与数据融合成k8s可识别的资源清单，然后部署到k8s环境中。</p>
+<pre><code class="language-powershell">$ helm install debug-nginx ./ --dry-run --set replicaCount=2 --debug
+</code></pre>
+<p>分析模板文件的实现：</p>
+<ul>
+<li>
+<p>引用命名模板并传递作用域</p>
+<pre><code class="language-go">{{ include &quot;nginx.fullname&quot; . }}
+</code></pre>
+<p>include从_helpers.tpl中引用命名模板，并传递顶级作用域.</p>
+</li>
+<li>
+<p>内置对象</p>
+<pre><code class="language-go">.Values
+.Release.Name
+
+</code></pre>
+<ul>
+<li><code>Release</code>：该对象描述了 release 本身的相关信息，它内部有几个对象：
+<ul>
+<li><code>Release.Name</code>：release 名称</li>
+<li><code>Release.Namespace</code>：release 安装到的命名空间</li>
+<li><code>Release.IsUpgrade</code>：如果当前操作是升级或回滚，则该值为 true</li>
+<li><code>Release.IsInstall</code>：如果当前操作是安装，则将其设置为 true</li>
+<li><code>Release.Revision</code>：release 的 revision 版本号，在安装的时候，值为1，每次升级或回滚都会增加</li>
+<li><code>Release.Service</code>：渲染当前模板的服务，在 Helm 上，实际上该值始终为 Helm</li>
+</ul>
+</li>
+<li><code>Values</code>：从 <code>values.yaml</code> 文件和用户提供的 values 文件传递到模板的 Values 值</li>
+<li><code>Chart</code>：获取 <code>Chart.yaml</code> 文件的内容，该文件中的任何数据都可以访问，例如 <code>{{ .Chart.Name }}-{{ .Chart.Version}}</code> 可以渲染成 <code>mychart-0.1.0</code></li>
+</ul>
+</li>
+<li>
+<p>模板定义</p>
+<pre><code class="language-go">{{- define &quot;nginx.fullname&quot; -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- printf &quot;%s-%s&quot; .Release.Name $name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- end }}
+{{- end }}
+{{- end }}
+</code></pre>
+<ul>
+<li>
+<p>{{-  去掉左边的空格及换行，-}}  去掉右侧的空格及换行</p>
+</li>
+<li>
+<p>示例</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  myvalue: &quot;Hello World&quot;
+  drink: {{ .Values.favorite.drink | default &quot;tea&quot; | quote }}
+  food: {{ .Values.favorite.food | upper | quote }}
+  {{ if eq .Values.favorite.drink &quot;coffee&quot; }}
+  mug: true
+  {{ end }}
+</code></pre>
+<p>渲染完后是：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mychart-1575971172-configmap
+data:
+  myvalue: &quot;Hello World&quot;
+  drink: &quot;coffee&quot;
+  food: &quot;PIZZA&quot;
+
+  mug: true
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>管道及方法</p>
+<ul>
+<li>
+<p>trunc表示字符串截取，63作为参数传递给trunc方法，trimSuffix表示去掉<code>-</code>后缀</p>
+<pre><code class="language-go">{{- .Values.fullnameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+</code></pre>
+</li>
+<li>
+<p>nindent表示前面的空格数</p>
+<pre><code class="language-go">  selector:
+    matchLabels:
+      {{- include &quot;nginx.selectorLabels&quot; . | nindent 6 }}
+</code></pre>
+</li>
+<li>
+<p>lower表示将内容小写，quote表示用双引号引起来</p>
+<pre><code class="language-go">value: {{ include &quot;mytpl&quot; . | lower | quote }}
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>条件判断语句每个if对应一个end</p>
+<pre><code class="language-go">{{- if .Values.fullnameOverride }}
+...
+{{- else }}
+...
+{{- end }}
+</code></pre>
+<p>通常用来根据values.yaml中定义的开关来控制模板中的显示：</p>
+<pre><code class="language-go">{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+</code></pre>
+</li>
+<li>
+<p>定义变量，模板中可以通过变量名字去引用</p>
+<pre><code class="language-go">{{- $name := default .Chart.Name .Values.nameOverride }}
+</code></pre>
+</li>
+<li>
+<p>遍历values的数据</p>
+<pre><code class="language-go">      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+</code></pre>
+<p>toYaml处理值中的转义及特殊字符， &quot;kubernetes.io/role&quot;=master ， name=&quot;value1,value2&quot; 类似的情况</p>
+</li>
+<li>
+<p>default设置默认值</p>
+<pre><code class="language-go">image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}&quot;
+</code></pre>
+</li>
+</ul>
+<p>Helm template</p>
+<p>hpa.yaml</p>
+<pre><code class="language-yaml">{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include &quot;nginx.fullname&quot; . }}
+  labels:
+    {{- include &quot;nginx.labels&quot; . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include &quot;nginx.fullname&quot; . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}
+</code></pre>
+<h6 id="创建应用的时候赋值">创建应用的时候赋值</h6>
+<ul>
+<li>set的方式</li>
+</ul>
+<pre><code class="language-powershell"># 改变副本数和resource值
+$ helm install nginx-2 ./nginx --set replicaCount=2 --set resources.limits.cpu=200m --set resources.limits.memory=256Mi
+
+</code></pre>
+<ul>
+<li>
+<p>value文件的方式</p>
+<pre><code class="language-powershell">$ cat nginx-values.yaml
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+ingress:
+  enabled: true
+  hosts:
+    - host: chart-example.luffy.com
+      paths:
+      - /
+
+$ helm install -f nginx-values.yaml nginx-3 ./nginx
+</code></pre>
+</li>
+</ul>
+<p>更多语法参考：</p>
+<p>https://helm.sh/docs/topics/charts/</p>
+<h5 id="实战使用helm部署harbor镜像及chart仓库">实战：使用Helm部署Harbor镜像及chart仓库</h5>
+<h6 id="harbor部署">harbor部署</h6>
+<p>架构 https://github.com/goharbor/harbor/wiki/Architecture-Overview-of-Harbor</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154979580.png" alt="" loading="lazy"></figure>
+<ul>
+<li>Core，核心组件
+<ul>
+<li>API Server，接收处理用户请求</li>
+<li>Config Manager ：所有系统的配置，比如认证、邮件、证书配置等</li>
+<li>Project Manager：项目管理</li>
+<li>Quota Manager ：配额管理</li>
+<li>Chart Controller：chart管理</li>
+<li>Replication Controller ：镜像副本控制器，可以与不同类型的仓库实现镜像同步</li>
+<li>Distribution (docker registry)</li>
+<li>Docker Hub</li>
+<li>...</li>
+<li>Scan Manager ：扫描管理，引入第三方组件，进行镜像安全扫描</li>
+<li>Registry Driver ：镜像仓库驱动，目前使用docker registry</li>
+</ul>
+</li>
+<li>Job Service，执行异步任务，如同步镜像信息</li>
+<li>Log Collector，统一日志收集器，收集各模块日志</li>
+<li>GC Controller</li>
+<li>Chart Museum，chart仓库服务，第三方</li>
+<li>Docker Registry，镜像仓库服务</li>
+<li>kv-storage，redis缓存服务，job service使用，存储job metadata</li>
+<li>local/remote storage，存储服务，比较镜像存储</li>
+<li>SQL Database，postgresl，存储用户、项目等元数据</li>
+</ul>
+<p>通常用作企业级镜像仓库服务，实际功能强大很多。</p>
+<p>组件众多，因此使用helm部署</p>
+<pre><code class="language-powershell"># 添加harbor chart仓库
+$ helm repo add harbor https://helm.goharbor.io
+
+# 搜索harbor的chart
+$ helm search repo harbor
+
+# 不知道如何部署，因此拉到本地
+$ helm pull harbor/harbor
+</code></pre>
+<p>创建pvc</p>
+<pre><code class="language-powershell">$ kubectl create namespace harbor
+$ cat harbor-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cephfs-pv
+  labels:
+    pv: cephfs-pv
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  cephfs:
+    monitors:
+      - 172.21.51.55:6789
+    user: admin
+    secretRef:
+      name: ceph-admin-secret
+	  namespace: kube-system
+    readOnly: false
+  persistentVolumeReclaimPolicy: Retain
+$ cat harbor-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: harbor-data-pvc
+  namespace: harbor
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+</code></pre>
+<p>修改harbor配置：</p>
+<ul>
+<li>开启ingress访问</li>
+<li>externalURL，web访问入口，和ingress的域名相同</li>
+<li>持久化，使用PVC对接的cephfs</li>
+<li>harborAdminPassword: &quot;Harbor12345&quot;，管理员默认账户 admin/Harbor12345</li>
+<li>开启chartmuseum</li>
+<li>clair和trivy漏洞扫描组件，暂不启用</li>
+</ul>
+<p>helm创建：</p>
+<pre><code class="language-powershell"># 使用本地chart安装
+$ helm install harbor ./harbor -n harbor
+</code></pre>
+<p>数据权限问题：</p>
+<ul>
+<li>数据库目录初始化无权限</li>
+<li>redis持久化数据目录权限导致无法登录</li>
+<li>registry组件的镜像存储目录权限导致镜像推送失败</li>
+<li>chartmuseum存储目录权限，导致chart推送失败</li>
+</ul>
+<p>解决：</p>
+<pre><code class="language-powershell">$ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
+
+$ chown -R 999:999 database
+$ chown -R 999:999 redis
+$ chown -R 10000:10000 chartmuseum
+$ chown -R 10000:10000 registry
+</code></pre>
+<h6 id="推送镜像到harbor仓库">推送镜像到Harbor仓库</h6>
+<p>配置hosts及docker非安全仓库：</p>
+<pre><code class="language-powershell">$ cat /etc/hosts
+...
+172.21.51.143 k8s-master harbor.luffy.com
+...
+
+$ cat /etc/docker/daemon.json
+{                                            
+  &quot;insecure-registries&quot;: [                   
+    &quot;172.21.51.143:5000&quot;,                   
+    &quot;harbor.luffy.com&quot;                     
+  ],                                         
+  &quot;registry-mirrors&quot; : [                     
+    &quot;https://8xpk5wnt.mirror.aliyuncs.com&quot;   
+  ]                                          
+}                           
+
+#
+$ systemctl restart docker
+
+# 使用账户密码登录admin/Harbor12345
+$ docker login harbor.luffy.com
+
+$ docker tag nginx:alpine harbor.luffy.com/library/nginx:alpine
+$ docker push harbor.luffy.com/library/nginx:alpine
+</code></pre>
+<h6 id="推送chart到harbor仓库">推送chart到Harbor仓库</h6>
+<p>helm3默认没有安装helm push插件，需要手动安装。插件地址 https://github.com/chartmuseum/helm-push</p>
+<p>安装插件：</p>
+<pre><code class="language-powershell">$ helm plugin install https://github.com/chartmuseum/helm-push
+</code></pre>
+<p>离线安装：</p>
+<pre><code class="language-powershell">$ mkdir helm-push
+$ wget https://github.com/chartmuseum/helm-push/releases/download/v0.8.1/helm-push_0.8.1_linux_amd64.tar.gz
+$ tar zxf helm-push_0.8.1_linux_amd64.tar.gz -C helm-push
+$ helm plugin install ./helm-push
+</code></pre>
+<p>添加repo</p>
+<pre><code class="language-powershell">$ helm repo add myharbor https://harbor.luffy.com/chartrepo/luffy
+# x509错误
+
+# 添加证书信任，根证书为配置给ingress使用的证书
+$ kubectl get secret harbor-harbor-ingress -n harbor -o jsonpath=&quot;{.data.ca\.crt}&quot; | base64 -d &gt;harbor.ca.crt
+
+$ cp harbor.ca.crt /etc/pki/ca-trust/source/anchors
+$ update-ca-trust enable; update-ca-trust extract
+
+# 再次添加
+$ helm repo add luffy https://harbor.luffy.com/chartrepo/luffy --ca-file=harbor.ca.crt  --username admin --password Harbor12345
+
+$ helm repo ls
+
+</code></pre>
+<p>推送chart到仓库：</p>
+<pre><code class="language-powershell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
+</code></pre>
+<h4 id="课程小结">课程小结</h4>
+<p>使用k8s的进阶内容。</p>
+<ol>
+<li>
+<p>学习k8s在etcd中数据的存储，掌握etcd的基本操作命令</p>
+</li>
+<li>
+<p>理解k8s调度的过程，预选及优先。影响调度策略的设置</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155005132.png" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>
+<p>Flannel网络的原理学习，了解网络的流向，帮助定位问题</p>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155022677.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>认证与授权，掌握kubectl、kubelet、rbac及二次开发如何调度API</p>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155037341.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>利用HPA进行业务动态扩缩容，通过metrics-server了解整个k8s的监控体系</p>
+<figure data-type="image" tabindex="7"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155053288.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>PV + PVC</p>
+<figure data-type="image" tabindex="8"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155069117.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>Helm</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="9"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155081947.jpg" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Kubernetes集群的网络实现]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/5VA_pluXP/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/5VA_pluXP/">
+        </link>
+        <updated>2022-02-18T03:20:35.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="cni介绍及集群网络选型">CNI介绍及集群网络选型</h1>
+<p>容器网络接口（Container Network Interface），实现kubernetes集群的Pod网络通信及管理。包括：</p>
+<ul>
+<li>CNI Plugin负责给容器配置网络，它包括两个基本的接口：<br>
+配置网络: AddNetwork(net NetworkConfig, rt RuntimeConf) (types.Result, error)<br>
+清理网络: DelNetwork(net NetworkConfig, rt RuntimeConf) error</li>
+<li>IPAM Plugin负责给容器分配IP地址，主要实现包括host-local和dhcp。</li>
+</ul>
+<p>以上两种插件的支持，使得k8s的网络可以支持各式各样的管理模式，当前在业界也出现了大量的支持方案，其中比较流行的比如flannel、calico等。</p>
+<p><strong>网络创建流程</strong></p>
+<p>kubernetes配置了cni网络插件后，其容器网络创建流程为：</p>
+<ul>
+<li>kubelet先创建pause容器生成对应的network namespace</li>
+<li>调用网络driver，因为配置的是CNI，所以会调用CNI相关代码，识别CNI的配置目录为/etc/cni/net.d</li>
+<li>CNI driver根据配置调用具体的CNI插件，二进制调用，可执行文件目录为/opt/cni/bin,<a href="https://github.com/containernetworking/plugins">项目</a></li>
+<li>CNI插件给pause容器配置正确的网络，pod中其他的容器都是用pause的网络</li>
+</ul>
+<p>可以在此查看社区中的CNI实现，https://github.com/containernetworking/cni</p>
+<p>通用类型：flannel、calico等，部署使用简单</p>
+<p>其他：根据具体的网络环境及网络需求选择，比如</p>
+<ul>
+<li>公有云机器，可以选择厂商与网络插件的定制Backend，如AWS、阿里、腾讯针对flannel均有自己的插件，也有AWS ECS CNI</li>
+<li>私有云厂商，比如Vmware NSX-T等</li>
+<li>网络性能等，MacVlan</li>
+</ul>
+<h1 id="flannel网络模型实现剖析">Flannel网络模型实现剖析</h1>
+<p>flannel的网络有多种实现：</p>
+<ul>
+<li>udp (已废弃)</li>
+<li>vxlan</li>
+<li>host-gw</li>
+<li>...</li>
+</ul>
+<p>网络插件是为了解决K8s环境中容器之间相互通信的。</p>
+<p>不特殊指定的话，默认会使用vxlan技术作为Backend，可以通过如下查看：</p>
+<pre><code class="language-powershell">$ kubectl -n kube-system exec  kube-flannel-ds-amd64-cb7hs 
+$ cat /etc/kube-flannel/net-conf.json
+{
+  &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
+  &quot;Backend&quot;: {
+    &quot;Type&quot;: &quot;vxlan&quot;
+  }
+}
+
+</code></pre>
+<h2 id="vxlan介绍及点对点通信的实现">vxlan介绍及点对点通信的实现</h2>
+<p>VXLAN 全称是虚拟可扩展的局域网（ Virtual eXtensible Local Area Network），它是一种 overlay 技术，通过三层的网络来搭建虚拟的二层网络。</p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154618510.png" alt="" loading="lazy"></figure>
+<p>它创建在原来的 IP 网络（三层）上，只要是三层可达（能够通过 IP 互相通信）的网络就能部署 vxlan。在每个端点上都有一个 vtep(端点) 负责 vxlan 协议报文的封包和解包，也就是在虚拟报文上封装 vtep 通信的报文头部。物理网络上可以创建多个 vxlan 网络，这些 vxlan 网络可以认为是一个隧道，不同节点的虚拟机能够通过隧道直连。每个 vxlan 网络由唯一的 VNI 标识，不同的 vxlan 可以不相互影响。</p>
+<ul>
+<li>VTEP（VXLAN Tunnel Endpoints,VXLAN隧道的端点）：vxlan 网络的边缘设备，用来进行 vxlan 报文的处理（封包和解包）。vtep 可以是网络设备（比如交换机），也可以是一台机器（比如虚拟化集群中的宿主机）</li>
+<li>VNI（VXLAN Network Identifier）：VNI 是每个 vxlan 的标识，一共有 2^24 = 16,777,216，一般每个 VNI 对应一个租户，也就是说使用 vxlan 搭建的公有云可以理论上可以支撑千万级别的租户</li>
+</ul>
+<p>演示：在k8s-slave1和k8s-slave2两台机器间，利用vxlan的点对点能力，实现虚拟二层网络的通信</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154641023.jpg" alt="" loading="lazy"></figure>
+<p><code>172.21.51.55</code>节点：</p>
+<pre><code class="language-powershell"># 创建vTEP设备，对端指向172.21.52.84节点，指定VNI及underlay网络使用的网卡
+$ ip link add vxlan20 type vxlan id 20 remote 172.21.52.84 dstport 4789 dev eth0
+
+$ ip -d link show vxlan20
+
+# 启动设备
+$ ip link set vxlan20 up 
+
+# 设置ip地址
+$ ip addr add 10.0.51.55/24 dev vxlan20
+
+</code></pre>
+<p><code>172.21.52.84</code>节点：</p>
+<pre><code class="language-powershell"># 创建VTEP设备，对端指向k8s-slave1节点，指定VNI及underlay网络使用的网卡
+$ ip link add vxlan20 type vxlan id 20 remote 172.21.51.55 dstport 4789 dev eth0
+
+# 启动设备
+$ ip link set vxlan20 up 
+
+# 设置ip地址
+$ ip addr add 10.0.52.84/24 dev vxlan20
+
+</code></pre>
+<p>在<code>172.21.51.55</code>节点：</p>
+<pre><code class="language-powershell">$ ping 10.0.52.84
+
+# 走vtep封包解包
+
+$ ip route add 10.0.52.0/24 dev vxlan20
+
+# 在172.21.52.84机器
+$ ip route add 10.0.51.0/24 dev vxlan20
+
+# 再次ping
+$ ping 10.0.52.84
+
+# 
+$ tcpdump -i vxlan20 icmp
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154656854.jpg" alt="" loading="lazy"></figure>
+<p>隧道是一个逻辑上的概念，在 vxlan 模型中并没有具体的物理实体想对应。隧道可以看做是一种虚拟通道，vxlan 通信双方（图中的虚拟机）认为自己是在直接通信，并不知道底层网络的存在。从整体来说，每个 vxlan 网络像是为通信的虚拟机搭建了一个单独的通信通道，也就是隧道。</p>
+<p>实现的过程：</p>
+<p>虚拟机的报文通过 vtep 添加上 vxlan 以及外部的报文层，然后发送出去，对方 vtep 收到之后拆除 vxlan 头部然后根据 VNI 把原始报文发送到目的虚拟机。</p>
+<pre><code class="language-powershell"># 查看172.21.51.55主机路由
+$ route -n
+10.0.51.0       0.0.0.0         255.255.255.0   U     0      0        0 vxlan20
+10.0.52.0       0.0.0.0         255.255.255.0   U     0      0        0 vxlan20
+
+# 到了vxlan的设备后，
+$ ip -d link show vxlan20
+    vxlan id 20 remote 172.21.51.55 dev eth0 srcport 0 0 dstport 4789 ...
+
+# 查看fdb地址表，主要由MAC地址、VLAN号、端口号和一些标志域等信息组成,vtep 对端地址为 172.21.51.55，换句话说，如果接收到的报文添加上 vxlan 头部之后都会发到 172.21.51.55
+$ bridge fdb show dev vxlan20
+00:00:00:00:00:00 dst 172.21.52.84 via eth0 self permanent
+a6:61:05:84:20:c6 dst 172.21.52.84 self
+
+
+</code></pre>
+<p>在<code>172.21.52.84</code>机器抓包，查看vxlan封装后的包:</p>
+<pre><code class="language-powershell"># 在172.21.52.84机器执行
+$ tcpdump -i eth0 host 172.21.51.55 -w vxlan.cap
+
+# 在172.21.51.55机器执行
+$ ping 10.0.52.84
+
+</code></pre>
+<p>使用wireshark分析ICMP类型的数据包</p>
+<p>清理：</p>
+<pre><code class="language-powershell">$ ip link del vxlan20
+</code></pre>
+<h2 id="跨主机容器网络的通信">跨主机容器网络的通信</h2>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154679358.jpg" alt="" loading="lazy"></figure>
+<p>思考：容器网络模式下，vxlan设备该接在哪里？</p>
+<p>基本的保证：目的容器的流量要通过vtep设备进行转发！</p>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154706323.jpg" alt="" loading="lazy"></figure>
+<p>演示：利用vxlan实现跨主机容器网络通信</p>
+<p>为了不影响已有的网络，因此创建一个新的网桥，创建容器接入到新的网桥来演示效果</p>
+<p>在<code>172.21.51.55</code>节点：</p>
+<pre><code class="language-powershell"># 创建新网桥，指定cidr段
+$ docker network create --subnet 172.18.1.0/24  network-luffy
+
+# 查看网桥
+$ brctl show
+# 新建容器，接入到新网桥
+$ docker run -d --name vxlan-test --net network-luffy --ip 172.18.1.2 nginx:alpine
+
+$ docker exec vxlan-test ifconfig
+</code></pre>
+<p>在<code>172.21.52.84</code>节点：</p>
+<pre><code class="language-powershell"># 创建新网桥，指定cidr段
+$ docker network create --subnet 172.18.2.0/24  network-luffy
+
+# 新建容器，接入到新网桥
+$ docker run -d --name vxlan-test --net network-luffy --ip 172.18.2.2 nginx:alpine
+</code></pre>
+<p>此时执行ping测试：</p>
+<pre><code class="language-powershell">$ docker exec vxlan-test ping 172.18.2.2
+</code></pre>
+<p>分析：数据到了网桥后，出不去。结合前面的示例，因此应该将流量由vtep设备转发，联想到网桥的特性，接入到桥中的端口，会由网桥负责转发数据，因此，相当于所有容器发出的数据都会经过到vxlan的端口，vxlan将流量转到对端的vtep端点，再次由网桥负责转到容器中。</p>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154725434.jpg" alt="" loading="lazy"></figure>
+<p><code>172.21.51.55</code>节点：</p>
+<pre><code class="language-powershell"># 删除旧的vtep
+$ ip link del vxlan20
+
+# 新建vtep
+$ ip link add vxlan_docker type vxlan id 100 remote 172.21.52.84 dstport 4789 dev eth0
+$ ip link set vxlan_docker up
+# 不用设置ip，因为目标是可以转发容器的数据即可
+
+$ brctl show
+br-0fdb78d3b486         8000.02421452871b       no              vethfffdd2f
+# 接入到网桥中
+$ brctl addif br-0fdb78d3b486 vxlan_docker
+
+</code></pre>
+<p><code>172.21.52.84</code>节点：</p>
+<pre><code class="language-powershell"># 删除旧的vtep
+$ ip link del vxlan20
+
+# 新建vtep
+$ ip link add vxlan_docker type vxlan id 100 remote 172.21.51.55 dstport 4789 dev eth0
+$ ip link set vxlan_docker up
+# 不用设置ip，因为目标是可以转发容器的数据即可
+
+# 接入到网桥中
+$ brctl show
+$ brctl addif br-c6660fe2dc53 vxlan_docker
+
+</code></pre>
+<p>再次执行ping测试：</p>
+<pre><code class="language-powershell">$ docker exec vxlan-test ping 172.18.2.2
+</code></pre>
+<h2 id="flannel的vxlan实现精讲">Flannel的vxlan实现精讲</h2>
+<p>思考：k8s集群的网络环境和手动实现的跨主机的容器通信有哪些差别？</p>
+<ol>
+<li>
+<p>CNI要求，集群中的每个Pod都必须分配唯一的Pod IP</p>
+</li>
+<li>
+<p>k8s集群内的通信不是vxlan点对点通信，因为集群内的所有节点之间都需要互联</p>
+<ul>
+<li>没法创建点对点的vxlan模型</li>
+</ul>
+</li>
+<li>
+<p>集群节点动态添加</p>
+</li>
+</ol>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645154762535.png" alt="" loading="lazy"><img src="images/flannel.png" alt="" loading="lazy"></p>
+<p>flannel如何为每个节点分配Pod地址段：</p>
+<pre><code class="language-powershell">$ kubectl -n kube-system exec kube-flannel-ds-amd64-cb7hs cat /etc/kube-flannel/net-conf.json
+{
+  &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
+  &quot;Backend&quot;: {
+    &quot;Type&quot;: &quot;vxlan&quot;
+  }
+}
+
+#查看节点的pod ip
+[root@k8s-master bin]# kd get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP            NODE        
+myblog-5d9ff54d4b-4rftt   1/1     Running   1          33h     10.244.2.19   k8s-slave2  
+myblog-5d9ff54d4b-n447p   1/1     Running   1          33h     10.244.1.32   k8s-slave1
+
+#查看k8s-slave1主机分配的地址段
+$ cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.244.0.0/16
+FLANNEL_SUBNET=10.244.1.1/24
+FLANNEL_MTU=1450
+FLANNEL_IPMASQ=true
+
+# kubelet启动容器的时候就可以按照本机的网段配置来为pod设置IP地址
+
+</code></pre>
+<p>vtep的设备在哪：</p>
+<pre><code class="language-powershell">$ ip -d link show flannel.1
+# 没有remote ip，非点对点
+
+</code></pre>
+<p>Pod的流量如何转到vtep设备中</p>
+<pre><code class="language-powershell">$ brctl show cni0
+
+# 每个Pod都会使用Veth pair来实现流量转到cni0网桥
+
+$ route -n
+10.244.0.0      10.244.0.0      255.255.255.0   UG    0      0        0 flannel.1
+10.244.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+10.244.2.0      10.244.2.0      255.255.255.0   UG    0      0        0 flannel.1
+
+</code></pre>
+<p>vtep封包的时候，如何拿到目的vetp端的IP及MAC信息</p>
+<pre><code class="language-powershell">--kube-subnet-mgr, 所有节点的flanneld都可以感知到节点的添加和删除操作，就可以动态的更新本机的转发配置,
+同时通过ARP的方式可以获取fdb表的mac地址
+</code></pre>
+<p>演示跨主机Pod通信的流量详细过程：</p>
+<pre><code class="language-powershell">$ kubectl -n luffy get po -o wide
+myblog-5d9ff54d4b-4rftt   1/1     Running   1          25h    10.244.2.19   k8s-slave2
+myblog-5d9ff54d4b-n447p   1/1     Running   1          25h    10.244.1.32   k8s-slave1
+
+$ kubectl -n luffy exec myblog-5d9ff54d4b-n447p -- ping 10.244.2.19 -c 2
+PING 10.244.2.19 (10.244.2.19) 56(84) bytes of data.
+64 bytes from 10.244.2.19: icmp_seq=1 ttl=62 time=0.480 ms
+64 bytes from 10.244.2.19: icmp_seq=2 ttl=62 time=1.44 ms
+
+--- 10.244.2.19 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 0.480/0.961/1.443/0.482 ms
+
+# 查看路由
+$ kubectl -n luffy exec myblog-5d9ff54d4b-n447p -- route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.244.1.1      0.0.0.0         UG    0      0        0 eth0
+10.244.0.0      10.244.1.1      255.255.0.0     UG    0      0        0 eth0
+10.244.1.0      0.0.0.0         255.255.255.0   U     0      0        0 eth0
+
+# 查看k8s-slave1 的veth pair 和网桥
+$ brctl show
+bridge name     bridge id               STP enabled     interfaces
+cni0            8000.6a9a0b341d88       no              veth048cc253
+                                                        veth76f8e4ce
+                                                        vetha4c972e1
+# 流量到了cni0后，查看slave1节点的route
+$ route -n
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.136.2   0.0.0.0         UG    100    0        0 eth0
+10.0.136.0      0.0.0.0         255.255.255.0   U     0      0        0 vxlan20
+10.244.0.0      10.244.0.0      255.255.255.0   UG    0      0        0 flannel.1
+10.244.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+10.244.2.0      10.244.2.0      255.255.255.0   UG    0      0        0 flannel.1
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.136.0   0.0.0.0         255.255.255.0   U     100    0        0 eth0
+
+# 流量转发到了flannel.1网卡，查看该网卡，其实是vtep设备
+$ ip -d link show flannel.1
+4: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN mode DEFAULT group default
+    link/ether 8a:2a:89:4d:b0:31 brd ff:ff:ff:ff:ff:ff promiscuity 0
+    vxlan id 1 local 172.21.51.68 dev eth0 srcport 0 0 dstport 8472 nolearning ageing 300 noudpcsum noudp6zerocsumtx noudp6zerocsumrx addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+
+# 该转发到哪里，通过etcd查询数据，然后本地缓存，流量不用走多播发送
+$ bridge fdb show dev flannel.1
+4a:4d:9d:3a:c5:f0 dst 172.21.51.68 self permanent
+76:e7:98:9f:5b:e9 dst 172.21.51.67 self permanent
+
+# 对端的vtep设备接收到请求后做解包，取出源payload内容，查看k8s-slave2的路由
+$ route -n
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.21.50.140   0.0.0.0         UG    0      0        0 eth0
+10.244.0.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+10.244.1.0      10.244.1.0      255.255.255.0   UG    0      0        0 flannel.1
+10.244.2.0      10.244.2.0      255.255.255.0   UG    0      0        0 flannel.1
+169.254.0.0     0.0.0.0         255.255.0.0     U     1002   0        0 eth0
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+172.21.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eth0
+
+#根据路由规则转发到cni0网桥,然后由网桥转到具体的Pod中
+
+
+</code></pre>
+<p>实际的请求图：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154784880.png" alt="" loading="lazy"></p>
+<ul>
+<li>k8s-slave1 节点中的 pod-a（10.244.2.19）当中的 IP 包通过 pod-a 内的路由表被发送到eth0，进一步通过veth pair转到宿主机中的网桥 <code>cni0</code></li>
+<li>到达 <code>cni0</code> 当中的 IP 包通过匹配节点 k8s-slave1 的路由表发现通往 10.244.2.19 的 IP 包应该交给 <code>flannel.1</code> 接口</li>
+<li><code>flannel.1</code> 作为一个 VTEP 设备，收到报文后将按照 <code>VTEP</code> 的配置进行封包，第一次会发送ARP请求，知道10.244.2.19的vtep设备是k8s-slave2机器，IP地址是172.21.51.67，拿到MAC 地址进行 VXLAN 封包。</li>
+<li>通过节点 k8s-slave2 跟 k8s-slave1之间的网络连接，VXLAN 包到达 k8s-slave2 的 eth0 接口</li>
+<li>通过端口 8472，VXLAN 包被转发给 VTEP 设备 <code>flannel.1</code> 进行解包</li>
+<li>解封装后的 IP 包匹配节点 k8s-slave2 当中的路由表（10.244.2.0），内核将 IP 包转发给<code>cni0</code></li>
+<li><code>cni0</code>将 IP 包转发给连接在 <code>cni0</code> 上的 pod-b</li>
+</ul>
+<h2 id="利用host-gw模式提升集群网络性能">利用host-gw模式提升集群网络性能</h2>
+<p>vxlan模式适用于三层可达的网络环境，对集群的网络要求很宽松，但是同时由于会通过VTEP设备进行额外封包和解包，因此给性能带来了额外的开销。</p>
+<p>网络插件的目的其实就是将本机的cni0网桥的流量送到目的主机的cni0网桥。实际上有很多集群是部署在同一二层网络环境下的，可以直接利用二层的主机当作流量转发的网关。这样的话，可以不用进行封包解包，直接通过路由表去转发流量。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154802448.png" alt="" loading="lazy"></p>
+<p>为什么三层可达的网络不直接利用网关转发流量？</p>
+<pre><code class="language-powershell">内核当中的路由规则，网关必须在跟主机当中至少一个 IP 处于同一网段。
+由于k8s集群内部各节点均需要实现Pod互通，因此，也就意味着host-gw模式需要整个集群节点都在同一二层网络内。
+
+</code></pre>
+<p>修改flannel的网络后端：</p>
+<pre><code class="language-powershell">$ kubectl edit cm kube-flannel-cfg -n kube-system
+...
+net-conf.json: |
+    {
+      &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
+      &quot;Backend&quot;: {
+        &quot;Type&quot;: &quot;host-gw&quot;
+      }
+    }
+kind: ConfigMap
+...
+
+</code></pre>
+<p>重建Flannel的Pod</p>
+<pre><code class="language-powershell">$ kubectl -n kube-system get po |grep flannel
+kube-flannel-ds-amd64-5dgb8          1/1     Running   0          15m
+kube-flannel-ds-amd64-c2gdc          1/1     Running   0          14m
+kube-flannel-ds-amd64-t2jdd          1/1     Running   0          15m
+
+$ kubectl -n kube-system delete po kube-flannel-ds-amd64-5dgb8 kube-flannel-ds-amd64-c2gdc kube-flannel-ds-amd64-t2jdd
+
+# 等待Pod新启动后，查看日志，出现Backend type: host-gw字样
+$  kubectl -n kube-system logs -f kube-flannel-ds-amd64-4hjdw
+I0704 01:18:11.916374       1 kube.go:126] Waiting 10m0s for node controller to sync
+I0704 01:18:11.916579       1 kube.go:309] Starting kube subnet manager
+I0704 01:18:12.917339       1 kube.go:133] Node controller sync successful
+I0704 01:18:12.917848       1 main.go:247] Installing signal handlers
+I0704 01:18:12.918569       1 main.go:386] Found network config - Backend type: host-gw
+I0704 01:18:13.017841       1 main.go:317] Wrote subnet file to /run/flannel/subnet.env
+
+</code></pre>
+<p>查看节点路由表：</p>
+<pre><code class="language-powershell">$ route -n 
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.136.2   0.0.0.0         UG    100    0        0 eth0
+10.244.0.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+10.244.1.0      172.21.51.68  255.255.255.0   UG    0      0        0 eth0
+10.244.2.0      172.21.51.55  255.255.255.0   UG    0      0        0 eth0
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.136.0   0.0.0.0         255.255.255.0   U     100    0        0 eth0
+
+</code></pre>
+<ul>
+<li>k8s-slave1 节点中的 pod-a（10.244.2.19）当中的 IP 包通过 pod-a 内的路由表被发送到eth0，进一步通过veth pair转到宿主机中的网桥 <code>cni0</code></li>
+<li>到达 <code>cni0</code> 当中的 IP 包通过匹配节点 k8s-slave1 的路由表发现通往 10.244.2.19 的 IP 包应该使用172.21.51.55这个网关进行转发</li>
+<li>包到达k8s-slave2节点（172.21.51.55）节点的eth0网卡，根据该节点的路由规则，转发给cni0网卡</li>
+<li><code>cni0</code>将 IP 包转发给连接在 <code>cni0</code> 上的 pod-b</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[kubernetes对接分部式存储]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/qJwfGvnw1/</id>
@@ -3209,786 +4148,6 @@ $ http://bookstore.luffy.com/details/0
 <li>考虑真实的场景，对Ingress的使用做了拓展，介绍多path转发及nginx URL重写的实现</li>
 </ol>
 <figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1644931750740.jpg" alt="" loading="lazy"></figure>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Kubernetes服务访问之Service]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/ddMKrICbP/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/">
-        </link>
-        <updated>2022-02-10T09:23:17.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="33-kubernetes服务访问之service">3.3 Kubernetes服务访问之Service</h2>
-<p>通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：</p>
-<ul>
-<li>Pod IP 仅仅是集群内可见的虚拟IP，外部无法访问。</li>
-<li>Pod IP会随着Pod的销毁而消失，当ReplicaSet对Pod进行动态伸缩时，Pod IP可能随时随地都会变化，这样对于我们访问这个服务带来了难度。</li>
-</ul>
-<h3 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h3>
-<p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。service会为这个LB提供一个IP，一般称为cluster IP 。使用Service对象，通过selector进行标签选择，找到对应的Pod:</p>
-<p><code>myblog/deployment/svc-myblog.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Service
-metadata:
-  name: myblog
-  namespace: luffy
-spec:
-  ports:
-  - port: 80  #映射到ClusterIP上的端口
-    protocol: TCP
-    targetPort: 8002   #对应Pod内的端口
-  selector:
-    app: myblog   #选择标签
-  type: ClusterIP  #集群内的虚拟IP
-</code></pre>
-<p>操作演示：</p>
-<pre><code class="language-powershell">## 别名
-$ alias kd='kubectl -n luffy'
-
-## 创建服务
-$ kd create -f svc-myblog.yaml
-$ kd get po --show-labels
-NAME                      READY   STATUS    RESTARTS   AGE    LABELS
-myblog-5c97d79cdb-jn7km   1/1     Running   0          6m5s   app=myblog
-mysql-85f4f65f99-w6jkj    1/1     Running   0          176m   app=mysql
-
-$ kd get svc
-NAME     TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-myblog   ClusterIP   10.99.174.93   &lt;none&gt;        80/TCP    7m50s
-
-$ kd describe svc myblog
-Name:              myblog
-Namespace:         demo
-Labels:            &lt;none&gt;
-Annotations:       &lt;none&gt;
-Selector:          app=myblog
-Type:              ClusterIP
-IP:                10.99.174.93
-Port:              &lt;unset&gt;  80/TCP
-TargetPort:        8002/TCP
-Endpoints:         10.244.0.68:8002
-Session Affinity:  None
-Events:            &lt;none&gt;
-
-## 扩容myblog服务
-$ kd scale deploy myblog --replicas=2
-deployment.extensions/myblog scaled
-
-## 再次查看
-$ kd describe svc myblog
-Name:              myblog
-Namespace:         demo
-Labels:            &lt;none&gt;
-Annotations:       &lt;none&gt;
-Selector:          app=myblog
-Type:              ClusterIP
-IP:                10.99.174.93
-Port:              &lt;unset&gt;  80/TCP
-TargetPort:        8002/TCP
-Endpoints:         10.244.0.68:8002,10.244.1.158:8002
-Session Affinity:  None
-Events:            &lt;none&gt;
-
-# ClusterIP(10.99.174.93)的80端口转到了Endpoints中podIP的TargetPort(8002)端口上。
-</code></pre>
-<p>Service与Pod如何关联:</p>
-<p>service对象创建的同时，会通过选择器(app=myblog)创建同名的endpoints(端点)对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中。</p>
-<p>选择器(Selector)选择出来的pod,是为了放在Endpoints里面</p>
-<pre><code class="language-powershell"># Endpoints也是一种资源类型，默认会与service绑定起来
-#如果readinessporbe(可用性检测)没过，则会将pod的IP地址从Endpoints列表种剔除，不在接收流量
-$ kd get endpoints myblog
-NAME     ENDPOINTS                            AGE
-myblog   10.244.0.68:8002,10.244.1.158:8002   7m
-</code></pre>
-<p>Service Cluster-IP如何访问:</p>
-<pre><code class="language-powershell">$ kd get svc myblog
-NAME   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-myblog   ClusterIP   10.99.174.93   &lt;none&gt;        80/TCP    13m
-
-$ curl 10.99.174.93/blog/index/
-</code></pre>
-<p>为mysql服务创建service：</p>
-<pre><code class="language-yaml">$ vim svc-mysql.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql
-  namespace: luffy
-spec:
-  ports:
-  - port: 3306
-    protocol: TCP
-    targetPort: 3306
-  selector:
-    app: mysql
-  type: ClusterIP
-  
-#创建myql service
-$ kubectl -n luffy create -f svc-mysql.yaml
-</code></pre>
-<p>访问mysql：</p>
-<pre><code class="language-powershell">$ kd get svc mysql
-mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   3s
-
-$ curl 10.108.214.84:3306
-</code></pre>
-<p>目前使用hostNetwork部署，通过宿主机ip+port访问，弊端：</p>
-<ul>
-<li>服务使用hostNetwork，使得宿主机的端口大量暴漏，存在安全隐患</li>
-<li>容易引发端口冲突</li>
-</ul>
-<p>服务均属于k8s集群，尽可能使用k8s的网络访问，因此可以对目前myblog访问mysql的方式做改造：</p>
-<ul>
-<li>为mysql创建一个固定clusterIp的Service，把clusterIp配置在myblog的环境变量中</li>
-<li>利用集群服务发现的能力，组件之间通过service name来访问</li>
-</ul>
-<h3 id="332-服务发现">3.3.2 服务发现</h3>
-<p>在k8s集群中，Pod之间可以通过定义的Service名称实现通信。<br>
-原理：</p>
-<blockquote>
-<p>各个pod之间，通过<code>/etc/resolv.conf</code>文件进行域名解析。</p>
-</blockquote>
-<pre><code>$ kubectl -n luffy exec -it myblog-55d66f7b89-2h4kc  bash
-
-$ cat /etc/resolv.conf
-nameserver 10.96.0.10   # 域名解析服务器
-search luffy.svc.linux.local svc.linux.local linux.local  # search用来搜索路径
-options ndots:5
-
-curl mysql.luffy.svc.linux.local:3306
-挨个拼接配置域名，然后通过nameserver解析
-</code></pre>
-<p>在mysql或者myblog容器内部通过<code>/etc/resolv.conf</code>配置文件，找到一个域名解析服务器nameserver 10.96.0.10</p>
-<p>在宿主机中，通过命令<code>kubectl get svc -A|grep 10.96.0.10</code>查找发现，10.96.0.10是kube-system命令空间下，一个叫做<code>kube-dns</code>的service产生的Cluster IP。</p>
-<p>通过命令<code>kubectl -n kube-system describe svc kube-dns</code>发现这个service关联了带有<code>k8s-app=kube-dns</code>标签的Pod。</p>
-<p>通过标签过滤<code>kubectl -n kube-system get po -owide -l k8s-app=kube-dns</code>发现,使用的是coredns。</p>
-<p>演示服务发现：</p>
-<pre><code class="language-powershell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
-
-# 先查看服务
-$ kd get svc
-NAME     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-myblog   ClusterIP   10.99.174.93    &lt;none&gt;        80/TCP     59m
-mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   35m
-
-# 进入myblog容器
-$ kd exec -ti myblog-5c97d79cdb-j485f bash
-[root@myblog-5c97d79cdb-j485f myblog]# curl mysql:3306   
-5.7.29 )→  (mysql_native_password ot packets out of order
-[root@myblog-5c97d79cdb-j485f myblog]# curl myblog/blog/index/
-我的博客列表
-
-###curl mysql:3306可以通是因为将mysql当成了域名
-##在容器内查看域名解析文件配置
-cat /etc/resolv.conf
-nameserver 10.0.0.2   #自定义的域名服务器,用来解析
-search luffy.svc.cluster.local svc.cluster.loacl cluster.local  #search用于做匹配
-options ndots:5
-
-curl mysql:3306 相当于和search后面的域名挨个做匹配
-curl mysql.luffy.svc.cluster.local
-curl mysql.svc.cluster.loacl
-curl mysql.cluster.local
-
-mysql其实就是service的名称
-同样，可以直接curl myblog:80/blog/index/
-</code></pre>
-<p>虽然Pod ip和Cluster ip都不固定，但是service name是固定的，而且具有完全的跨集群可移植性，因此组件之间调用的同时，完全可以通过service name去通信，这样避免了大量的ip维护成本，使得服务的yaml模板更加简单。因此可以对mysql和myblog的部署进行优化改造：</p>
-<ol>
-<li>mysql可以去掉hostNetwork部署，使得服务只暴漏在k8s集群内部网络</li>
-<li>configMap中数据库地址可以换成Service名称，这样跨环境的时候，配置内容基本上可以保持不用变化</li>
-</ol>
-<p>修改deploy-mysql.yaml</p>
-<pre><code class="language-yaml">    spec:
-      hostNetwork: true	# 去掉此行
-      volumes: 
-      - name: mysql-data
-        hostPath: 
-          path: /opt/mysql/data
-
-
-        ports:
-        - containerPort: 3306
-          hostPort: 3306 	# 去掉此行
-          protocol: TCP
-</code></pre>
-<p>修改configmap.yaml</p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: myblog
-  namespace: luffy
-data:
-  MYSQL_HOST: &quot;mysql&quot;	# 此处替换为mysql
-  MYSQL_PORT: &quot;3306&quot;
-
-
-</code></pre>
-<p>应用修改：</p>
-<pre><code class="language-powershell">$ kubectl delete -f deployment-mysql.yaml
-
-## myblog不用动，会自动因健康检测不过而重启
-</code></pre>
-<p>服务发现实现：</p>
-<p><code>CoreDNS</code>是一个<code>Go</code>语言实现的链式插件<code>DNS服务端</code>，是CNCF成员，是一个高性能、易扩展的<code>DNS服务端</code>。</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system get po -o wide|grep dns
-coredns-d4475785-2w4hk             1/1     Running   0          4d22h   10.244.0.64       
-coredns-d4475785-s49hq             1/1     Running   0          4d22h   10.244.0.65
-
-# 查看myblog的pod解析配置
-$ kubectl -n luffy exec -ti myblog-5c97d79cdb-j485f bash
-[root@myblog-5c97d79cdb-j485f myblog]# cat /etc/resolv.conf
-nameserver 10.96.0.10
-search luffy.svc.cluster.local svc.cluster.local cluster.local
-options ndots:5
-
-## 10.96.0.10 从哪来
-$ kubectl -n kube-system get svc
-NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)         AGE
-kube-dns   ClusterIP   10.96.0.10   &lt;none&gt;        53/UDP,53/TCP   51d
-
-## 启动pod的时候，会把kube-dns服务的cluster-ip地址注入到pod的resolve解析配置中，同时添加对应的namespace的search域。 
-##因此跨namespace通过service name访问的话，需要添加对应的namespace名称，service_name.namespace
-
-$ kubectl get svc
-NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   26h
-</code></pre>
-<h3 id="endpoints-资源类型">endpoints 资源类型</h3>
-<pre><code>$ kubectl -n luffy get endpoints
-
-每次创建service的时候，实际上会创建一个对应的endpoints.
-endpoint controller负责把endpoints下要关联的Pod IP 添加到list中。
-</code></pre>
-<h3 id="333-service负载均衡之nodeport">3.3.3 Service负载均衡之NodePort</h3>
-<p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。<br>
-NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
-<p><code>myblog/deployment/svc-myblog-nodeport.yaml</code></p>
-<pre><code class="language-powershell">apiVersion: v1
-kind: Service
-metadata:
-  name: myblog-np
-  namespace: luffy
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 8002
-  selector:
-    app: myblog
-  type: NodePort
-</code></pre>
-<p>查看并访问服务：</p>
-<pre><code class="language-powershell">$ kd create -f svc-myblog-nodeport.yaml
-service/myblog-np created
-$ kd get svc
-NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-myblog      ClusterIP   10.99.174.93     &lt;none&gt;        80/TCP         102m
-myblog-np   NodePort    10.105.228.101   &lt;none&gt;        80:30647/TCP   4s
-mysql       ClusterIP   10.108.214.84    &lt;none&gt;        3306/TCP       77m
-
-#集群内每个节点的NodePort端口都会进行监听
-$ curl 172.21.51.143:30647/blog/index/
-我的博客列表
-
-$ curl 172.21.51.143:30647/blog/index/
-我的博客列表
-
-## 浏览器访问
-nodePort 包含   cluster ip:port + nodeip+nodeport。
-所以在宿主机访问cluster ip:port也可以访问成功
-</code></pre>
-<p>思考：</p>
-<ol>
-<li>
-<p>NodePort的端口监听如何转发到对应的Pod服务？</p>
-</li>
-<li>
-<p>CLUSTER-IP为虚拟IP，集群内如何通过虚拟IP访问到具体的Pod服务？</p>
-</li>
-</ol>
-<h3 id="334-kube-proxy">3.3.4 kube-proxy</h3>
-<p>kube-proxy 运行在每个节点上，监听 API Server 中服务对象(service)的变化，再通过创建流量路由规则来实现网络的转发。<a href="https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies">参照</a></p>
-<p>有三种模式：</p>
-<ul>
-<li>
-<p>User space, 让 Kube-Proxy 在用户空间监听一个端口，所有的 Service 都转发到这个端口，然后 Kube-Proxy 在内部应用层对其进行转发 ， 所有报文都走一遍用户态，性能不高，<strong>k8s v1.2版本后废弃</strong>。</p>
-</li>
-<li>
-<p>Iptables， 当前默认模式，完全由 IPtables 来实现， 通过各个node节点上的iptables规则来实现service的负载均衡，但是随着service数量的增大，iptables模式由于线性查找匹配、全量更新等特点，其性能会显著下降。</p>
-</li>
-<li>
-<p>IPVS， 与iptables同样基于Netfilter，但是采用的hash表，因此当service数量达到一定规模时，hash查表的速度优势就会显现出来，从而提高service的服务性能。 k8s 1.8版本开始引入，1.11版本开始稳定，需要开启宿主机的ipvs模块。</p>
-</li>
-</ul>
-<p>IPtables模式示意图：</p>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1639840732148.svg" alt="" loading="lazy"><br>
-图中kube-proxy指向clusterIP意思是：kube-proxy会去拿到clusterIP的地址，然后创建iptables规则，来让clusterIP能够通过iptables的转发，转到具体的pod上去。</p>
-<pre><code class="language-powershell">$ iptables-save |grep -v myblog-np|grep  &quot;luffy/myblog&quot;
--A KUBE-SERVICES ! -s 10.244.0.0/16 -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-MARK-MASQ
-## -j KUBE-MARK-MASQ  指定自定义链，为了做内容记录的一个链，并不产生实际作用
-
--A KUBE-SERVICES -d 10.99.174.93/32 -p tcp -m comment --comment &quot;demo/myblog: cluster IP&quot; -m tcp --dport 80 -j KUBE-SVC-WQNGJ7YFZKCTKPZK
-## 真正产生实际作用的规则
-
-##k8s会为每一个service指定一个&quot;KUBE-SVC-WQNGJ7YFZKCTKPZK&quot;这样的自定义链
-
-## 查询&quot;KUBE-SVC-WQNGJ7YFZKCTKPZK&quot;链的内容
-$ iptables-save |grep KUBE-SVC-WQNGJ7YFZKCTKPZK
--A KUBE-SVC-WQNGJ7YFZKCTKPZK -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-GB5GNOM5CZH7ICXZ
--A KUBE-SVC-WQNGJ7YFZKCTKPZK -j KUBE-SEP-7GWC3FN2JI5KLE47
-
-## --mode random  ##模式：随机
-## --probability 0.50000000000  ##可能性的概率是50%
-#这条规则的意思是：访问10.99.174.93clusterIP80端口的流量有50%的概率会转向&quot;KUBE-SEP-7GWC3FN2JI5KLE47&quot;链
-
-## 查询&quot;KUBE-SEP-7GWC3FN2JI5KLE47&quot;链
-$  iptables-save |grep KUBE-SEP-GB5GNOM5CZH7ICXZ
--A KUBE-SEP-GB5GNOM5CZH7ICXZ -p tcp -m tcp -j DNAT --to-destination 10.244.1.158:8002
-
-$ iptables-save |grep KUBE-SEP-7GWC3FN2JI5KLE47
--A KUBE-SEP-7GWC3FN2JI5KLE47 -p tcp -m tcp -j DNAT --to-destination 10.244.1.159:8002
-
-发现直接到pod的IP地址
-</code></pre>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900545943.png" alt="" loading="lazy"><br>
-curl myblog:80 先将域名解析成IP地址，等同于 curl 10.109.82.176:80(clusterIP)。<br>
-由于宿主机上有kube-proxy存在，kube-proxy(iptables模式)将clusterIP生成了几条iptables规则：</p>
-<ul>
-<li>50%流量转发到10.244.1.158:8002</li>
-<li>另50%流量转发到10.244.1.159:8002</li>
-</ul>
-<p>kube-proxy才是让业务pod的请求能够实现的核心。</p>
-<h3 id="335-面试题-k8s的service-cluster-ip为什么不能ping通">3.3.5 面试题： k8s的Service Cluster-IP为什么不能ping通</h3>
-<p>可以ping通的前提是：要绑定到具体的网卡上，通过要有流量能够访问到网卡上去</p>
-<p>先看下service IP是怎么来的？</p>
-<pre><code>service IP是serviceController生成的，参数--service-cluster-ip-range string会配置在controller-manager上，serviceController会在这个参数指定的cidr范围内取一个IP
-</code></pre>
-<p>为什么不能ping?</p>
-<pre><code>serviceIP是虚拟的地址，没有分配给任何网络接口，当数据包传输时不会把这个IP作为数据包的源IP或目的IP。
-kube-proxy在iptables模式下，这个IP没有被设置在任何的网络设备上，ping这个IP的时候，没有任何的网络协议栈会回应这个ping请求。
-
-在iptables模式时，clusterIp会在iptables的PREROUTING链里面用于nat转换规则中，而在ipvs模式下，会使用在ipvs模块的ipvs规则转换中
-
-在ipvs模式下，所有的clusterIp会被设置在node上的kube-ipvs0的虚拟网卡上，这个时候去ping是可以通的。
-</code></pre>
-<h3 id="336-iptables转换ipvs模式">3.3.6 iptables转换ipvs模式</h3>
-<pre><code class="language-powershell"># 内核开启ipvs模块，集群各节点都执行
-cat &gt; /etc/sysconfig/modules/ipvs.modules &lt;&lt;EOF
-#!/bin/bash
-ipvs_modules=&quot;ip_vs ip_vs_lc ip_vs_wlc ip_vs_rr ip_vs_wrr ip_vs_lblc ip_vs_lblcr ip_vs_dh ip_vs_sh ip_vs_nq ip_vs_sed ip_vs_ftp nf_conntrack_ipv4&quot;
-for kernel_module in \${ipvs_modules}; do
-    /sbin/modinfo -F filename \${kernel_module} &gt; /dev/null 2&gt;&amp;1
-    if [ $? -eq 0 ]; then
-        /sbin/modprobe \${kernel_module}
-    fi
-done
-EOF
-chmod 755 /etc/sysconfig/modules/ipvs.modules &amp;&amp; bash /etc/sysconfig/modules/ipvs.modules &amp;&amp; lsmod | grep ip_vs
-
-# 安装ipvsadm工具
-$ yum install ipset ipvsadm -y
-
-# 修改kube-proxy 模式
-$ kubectl -n kube-system edit cm kube-proxy
-...
-    kind: KubeProxyConfiguration
-    metricsBindAddress: &quot;&quot;
-    mode: &quot;ipvs&quot;   #更改为ipvs
-    nodePortAddresses: null
-    oomScoreAdj: null
-...
-
-# 重建kube-proxy
-$ kubectl -n kube-system get po |grep kube-proxy|awk '{print $1}'|xargs kubectl -n kube-system delete po
-
-# 查看日志，确认使用了ipvs模式
-$ kubectl -n kube-system logs -f 
-I0605 08:47:52.334298       1 node.go:136] Successfully retrieved node IP: 172.21.51.143
-I0605 08:47:52.334430       1 server_others.go:142] kube-proxy node IP is an IPv4 address (172.21.51.143), assume IPv4 operation
-I0605 08:47:52.766314       1 server_others.go:258] Using ipvs Proxier.
-...
-
-# 清理iptables规则
-$ iptables -F -t nat
-$ iptables -F
-
-# 查看规则生效
-$ ipvsadm -ln
-</code></pre>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644900655682.png" alt="" loading="lazy"><br>
-如果k8s集群规模很大几百台，服务很多(超过500个)，则使用ipvs；<br>
-如果k8s集群规模不是很大，则使用iptables，iptables的性能会比ipvs好一些；<br>
-ipvs的查找模式为hash模式，量越大，ipvs的优势越明显。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[K8s管理业务应用--Pod控制器]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/">
-        </link>
-        <updated>2022-02-10T09:20:46.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="32-pod控制器">3.2 Pod控制器</h2>
-<h3 id="321-workload-工作负载">3.2.1 Workload (工作负载)</h3>
-<p>控制器又称工作负载。是用于实现管理pod的中间层，确保pod资源符合预期的状态，pod的资源出现故障时，会尝试进行重启，当根据重启策略无效，则会重新新建pod的资源。</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840632889.png" alt="" loading="lazy"></figure>
-<ul>
-<li>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态，并且支持滚动式自动扩容和缩容功能</li>
-<li>Deployment：工作在ReplicaSet之上，用于管理无状态应用，目前来说最好的控制器。支持滚动更新和回滚功能，提供声明式配置</li>
-<li>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务</li>
-<li>Job：只要完成就立即退出，不需要重启或重建 （一次性任务）</li>
-<li>Cronjob：周期性任务控制，不需要持续后台运行 （定时任务）</li>
-<li>StatefulSet：管理有状态应用</li>
-</ul>
-<h3 id="322-deployment">3.2.2 Deployment</h3>
-<p><code>myblog/deployment/deploy-mysql.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: Deployment  #资源类型
-metadata:
-  name: mysql
-  namespace: luffy
-spec:
-  replicas: 1	#指定Pod副本数
-  selector:		#指定Pod的选择器
-    matchLabels:
-      app: mysql
-  template:
-    metadata:
-      labels:	#给Pod打label
-        app: mysql
-    spec:
-      hostNetwork: true
-      volumes:  #定义数据卷
-      - name: mysql-data
-        hostPath: 
-          path: /opt/mysql/data
-      nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
-        component: mysql
-      containers:
-      - name: mysql
-        image: mysql:5.7
-        args:
-        - --character-set-server=utf8mb4
-        - --collation-server=utf8mb4_unicode_ci
-        ports:
-        - containerPort: 3306
-        env:
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: myblog
-              key: MYSQL_USER
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: myblog
-              key: MYSQL_PASSWD
-        - name: MYSQL_DATABASE
-          value: &quot;myblog&quot;
-        resources:
-          requests:
-            memory: 100Mi
-            cpu: 50m
-          limits:
-            memory: 500Mi
-            cpu: 100m
-        readinessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        volumeMounts:
-        - name: mysql-data
-          mountPath: /var/lib/mysql
-</code></pre>
-<p>deploy-myblog.yaml:</p>
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myblog
-  namespace: luffy
-spec:
-  replicas: 1	#指定Pod副本数
-  selector:		#指定Pod的选择器
-    matchLabels:
-      app: myblog
-  template:
-    metadata:
-      labels:	#给Pod打label
-        app: myblog
-    spec:
-      containers:
-      - name: myblog
-        image: 172.21.51.143:5000/myblog:v1
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: MYSQL_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: myblog
-              key: MYSQL_HOST
-        - name: MYSQL_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: myblog
-              key: MYSQL_PORT
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: myblog
-              key: MYSQL_USER
-        - name: MYSQL_PASSWD
-          valueFrom:
-            secretKeyRef:
-              name: myblog
-              key: MYSQL_PASSWD
-        ports:
-        - containerPort: 8002
-        resources:
-          requests:
-            memory: 100Mi
-            cpu: 50m
-          limits:
-            memory: 500Mi
-            cpu: 100m
-        livenessProbe:
-          httpGet:
-            path: /blog/index/
-            port: 8002
-            scheme: HTTP
-          initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-          periodSeconds: 15 	# 执行探测的频率
-          timeoutSeconds: 2		# 探测超时时间
-        readinessProbe: 
-          httpGet: 
-            path: /blog/index/
-            port: 8002
-            scheme: HTTP
-          initialDelaySeconds: 10 
-          timeoutSeconds: 2
-          periodSeconds: 15
-</code></pre>
-<h3 id="323-创建deployment">3.2.3 创建Deployment</h3>
-<pre><code class="language-powershell">$ kubectl create -f deploy.yaml
-</code></pre>
-<h3 id="324-查看deployment">3.2.4 查看Deployment</h3>
-<pre><code class="language-powershell"># kubectl api-resources
-$ kubectl -n luffy get deploy
-NAME     READY   UP-TO-DATE   AVAILABLE   AGE
-myblog   1/1     1            1           2m22s
-mysql    1/1     1            1           2d11h
-
-  * `NAME` 列出了集群中 Deployments 的名称。
-  * `READY`显示当前正在运行的副本数/期望的副本数。
-  * `UP-TO-DATE`显示已更新以实现期望状态的副本数。
-  * `AVAILABLE`显示应用程序可供用户使用的副本数。
-  * `AGE` 显示应用程序运行的时间量。
-
-# 查看pod
-$ kubectl -n luffy get po
-NAME                      READY   STATUS    RESTARTS   AGE
-myblog-7c96c9f76b-qbbg7   1/1     Running   0          109s
-mysql-85f4f65f99-w6jkj    1/1     Running   0          2m28s
-
-# 查看replicaSet
-$ kubectl -n luffy get rs
-</code></pre>
-<h3 id="325-副本保障机制">3.2.5 副本保障机制</h3>
-<p>controller实时检测pod状态，并保障副本数一直处于期望的值。</p>
-<pre><code class="language-powershell">## 删除pod，观察pod状态变化
-$ kubectl -n luffy delete pod myblog-7c96c9f76b-qbbg7
-
-# 观察pod
-$ kubectl get pods -o wide
-
-## 设置两个副本, 或者通过kubectl -n luffy edit deploy myblog的方式，
-## 最好通过修改文件，然后apply的方式，这样yaml文件可以保持同步
-$ kubectl -n luffy scale deploy myblog --replicas=2
-deployment.extensions/myblog scaled
-
-# 观察pod
-$ kubectl get pods -o wide
-NAME                      READY   STATUS    RESTARTS   AGE
-myblog-7c96c9f76b-qbbg7   1/1     Running   0          11m
-myblog-7c96c9f76b-s6brm   1/1     Running   0          55s
-mysql-85f4f65f99-w6jkj    1/1     Running   0          11m
-</code></pre>
-<h3 id="326-pod驱逐策略">3.2.6 Pod驱逐策略</h3>
-<p>K8S 有个特色功能叫 pod eviction，它在某些场景下，如节点NotReady，或者资源不足时，把 pod 驱逐至其它节点，这也是出于业务保护的角度去考虑的。</p>
-<ol>
-<li>
-<p>Kube-controller-manager: 周期性检查所有节点状态，当节点处于 NotReady 状态超过一段时间后，驱逐该节点上所有 pod。</p>
-<ul>
-<li>
-<p><code>pod-eviction-timeout</code>：Pod驱逐时间，NotReady 状态节点超过该时间后，执行驱逐，默认 5 min，适用于k8s 1.13版本之前</p>
-</li>
-<li>
-<p>1.13版本后，集群开启<code>TaintBasedEvictions与TaintNodesByCondition</code> 功能，即<a href="https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/">taint-based-evictions</a>，即节点若失联或者出现各种异常情况，k8s会自动为node打上污点，同时为pod默认添加如下容忍设置：</p>
-<pre><code class="language-yaml">  tolerations:
-  - effect: NoExecute
-    key: node.kubernetes.io/not-ready
-    operator: Exists
-    tolerationSeconds: 300
-  - effect: NoExecute
-    key: node.kubernetes.io/unreachable
-    operator: Exists
-    tolerationSeconds: 300
-</code></pre>
-<p>即  <strong>各pod可以独立设置驱逐容忍时间策略</strong>。</p>
-</li>
-</ul>
-</li>
-<li>
-<p>Kubelet: 周期性检查本节点资源，当资源不足时，按照优先级驱逐部分 pod</p>
-<ul>
-<li><code>memory.available</code>：节点可用内存</li>
-<li><code>nodefs.available</code>：节点根盘可用存储空间</li>
-<li><code>nodefs.inodesFree</code>：节点inodes可用数量</li>
-<li><code>imagefs.available</code>：镜像存储盘的可用空间</li>
-<li><code>imagefs.inodesFree</code>：镜像存储盘的inodes可用数量</li>
-</ul>
-</li>
-</ol>
-<h3 id="327-服务更新">3.2.7 服务更新</h3>
-<p>问题：K8s是如何实现滚动更新的？</p>
-<p>修改服务，重新打tag,模拟服务更新。</p>
-<pre><code>更新方式：
-
-1. 修改yaml文件，使用`kubectl -n luffy apply -f deploy-myblog.yaml` 来应用更新
-2. `kubectl -n luffy edit deploy myblog` 在线更新  
-3. `kubectl -n luffy set image deploy myblog myblog=172.21.51.143:5000/myblog:v2 --record` 
-# 设置镜像版本为172.21.51.143:5000/myblog:v2  
-# --record：记录本次设置
-</code></pre>
-<p>修改文件测试：</p>
-<pre><code class="language-powershell">#修改配置文件
-$ vi /opt/myblog/python-demo/blog/templates/index.html
-我的博客列表：V2
-
-#重新构建Dockerfile
-cd /opt/myblog/python-demo
-$ docker build . -t 172.21.51.143:5000/myblog:v2 -f Dockerfile
-$ docker push 172.21.51.143:5000/myblog:v2
-</code></pre>
-<p>滚动更新过程详解：</p>
-<pre><code class="language-shell">$ kubectl -n luffy edit deploy myblog   #将V1版本升级到V2版本
-
-#可以通过get观察	pod副本状态
-$ kubectl -n luffy get pod -owide  #当前set副本数为2
-
-先启动一个新的，当新启动的pod状态为running，但是健康检查没有过为0/1时，旧的pod状态为running，并未删除
-当新启动的pod REDAY变为1/1时，旧的pod才开始删除.
-</code></pre>
-<h3 id="328-更新策略">3.2.8 更新策略</h3>
-<pre><code class="language-yaml">...
-spec:
-  replicas: 2	#指定Pod副本数
-  selector:		#指定Pod的选择器
-    matchLabels:
-      app: myblog
-  strategy:   # 默认更新策略
-    rollingUpdate:   # 指定滚动更新策略，控制影响升级行为
-      maxSurge: 25%   # 更新过程中，最多允许3个Pod出现
-      maxUnavailable: 25%  # 最少保证2-0=2个Pod为可用状态
-    type: RollingUpdate		#指定更新方式为滚动更新，默认策略，通过get deploy yaml查看。
-   ...
-
-# 策略是控制Pod的，所以更新策略说明应该在deployment.yaml配置中
-</code></pre>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840679905.png" alt="" loading="lazy"></figure>
-<p>策略控制：</p>
-<ul>
-<li>
-<p>maxSurge：最大激增数, 指pod更新过程中, 最多可以比replicas(期望副本数)预先设定值多出的pod数量, 可以为固定值或百分比。默认为desired Pods(副本)数的25%。计算时向上取整(比如3.4，取4)，更新过程中最多会有replicas(期望副本数) + maxSurge(最大激增数)个pod。</p>
-</li>
-<li>
-<p>maxUnavailable： 指更新过程中, 最多有几个pod处于无法服务状态 , 可以为固定值或百分比，默认为desired Pods(副本)数的25%。计算时向下取整(比如3.6，取3)</p>
-</li>
-</ul>
-<blockquote>
-<p>在Deployment rollout(滚动更新)时，需要保证Available(Ready) (可用)Pods数不低于 desired pods number(副本数) - maxUnavailable; 保证所有的非异常状态Pods数不多于 desired pods number + maxSurge。 2&lt;= pod number&lt;=3</p>
-</blockquote>
-<p>以myblog为例，使用默认的策略，更新过程:</p>
-<ol>
-<li>
-<p>maxSurge 25%，2个实例，向上取整(2*25%)，则maxSurge为1，意味着最多可以有2+1=3个Pod，那么此时会新创建1个ReplicaSet，RS-new，把副本数置为1，此时呢，副本控制器就去创建这个新的Pod。</p>
-</li>
-<li>
-<p>同时，maxUnavailable是25%，副本数2*25%，向下取整，则为0，意味着，滚动更新的过程中，不能有少于2个可用的Pod，因此，旧的Replica（RS-old）会先保持不动，等RS-new管理的Pod状态Ready后，此时已经有3个Ready状态的Pod了，那么由于只要保证有2个可用的Pod即可，因此，RS-old的副本数会有2个变成1个，此时，会删掉一个旧的Pod。</p>
-</li>
-<li>
-<p>删掉旧的Pod的时候，由于总的Pod数量又变成2个了，因此，距离最大的3个还有1个Pod可以创建，所以，RS-new把管理的副本数由1改成2，此时又会创建1个新的Pod，等RS-new管理了2个Pod都ready后，那么就可以把RS-old的副本数由1置为0了，这样就完成了滚动更新。</p>
-</li>
-</ol>
-<pre><code class="language-powershell">#查看滚动更新事件
-$ kubectl -n luffy describe deploy myblog
-...
-Events:
-  Type    Reason             Age   From                   Message
-  ----    ------             ----  ----                   -------
-  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled up replica set myblog-6cf56fc848 to 1
-  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled down replica set myblog-6fdcf98f9 to 1
-  Normal  ScalingReplicaSet  11s   deployment-controller  Scaled up replica set myblog-6cf56fc848 to 2
-  Normal  ScalingReplicaSet  6s    deployment-controller  Scaled down replica set myblog-6fdcf98f9 to 0
-  
-$ kubectl get rs
-NAME                     DESIRED   CURRENT   READY   AGE
-myblog-6cf56fc848   2         2         2       16h
-myblog-6fdcf98f9    0         0         0       16h
-</code></pre>
-<p>除了滚动更新以外，还有一种策略是Recreate，直接在当前的pod基础上先删后建：</p>
-<pre><code class="language-powershell">...
-  strategy:
-    type: Recreate
-...
-</code></pre>
-<p>mysql服务应该使用<code>Recreate</code>来管理：</p>
-<pre><code class="language-powershell">$ kubectl -n luffy edit deploy mysql
-...
-  selector:
-    matchLabels:
-      app: mysql
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        app: mysql
-...
-
-如果mysql也做滚动更新的话，它数据不支持多个副本同时访问
-</code></pre>
-<h3 id="329-服务回滚">3.2.9 服务回滚</h3>
-<p>通过滚动升级的策略可以平滑的升级Deployment，若升级出现问题，需要最快且最好的方式回退到上一次能够提供正常工作的版本。为此K8S提供了回滚机制。</p>
-<p><strong>revision</strong>：更新应用时，K8S都会记录当前的版本号，即为revision，当升级出现问题时，可通过回滚到某个特定的revision，默认配置下，K8S只会保留最近的几个revision，可以通过Deployment配置文件中的spec.revisionHistoryLimit属性增加revision数量，默认是10。</p>
-<p>查看当前：</p>
-<pre><code class="language-powershell">$ kubectl -n luffy rollout history deploy myblog ##CHANGE-CAUSE为空
-$ kubectl delete -f deploy-myblog.yaml    ## 方便演示到具体效果，删掉已有deployment
-</code></pre>
-<p>记录回滚：</p>
-<pre><code class="language-powershell">$ kubectl apply -f deploy-myblog.yaml --record
-
-$ kubectl -n luffy set image deploy myblog myblog=10.1.13.97/library/myblog:v2 --record=true
-</code></pre>
-<p>查看deployment更新历史：</p>
-<pre><code class="language-powershell">$ kubectl -n luffy rollout history deploy myblog
-deployment.extensions/myblog
-REVISION  CHANGE-CAUSE
-1         kubectl create --filename=deploy-myblog.yaml --record=true
-2         kubectl set image deploy myblog myblog=172.21.51.143:5000/demo/myblog:v1 --record=true
-</code></pre>
-<p>回滚到具体的REVISION:</p>
-<pre><code class="language-powershell">$ kubectl -n luffy rollout undo deploy myblog --to-revision=1
-
-deployment.extensions/myblog rolled back
-
-# 访问应用测试
-</code></pre>
 ]]></content>
     </entry>
 </feed>
