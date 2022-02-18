@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645112461463">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645153403854">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645112461463" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645153403854" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -343,8 +343,8 @@ PolicyRule:
   *.*        []                 []              [*]
              [*]                []              [*]
 </code></pre>
-<p>非资源类，如查看集群健康状态。</p>
-<figure data-type="image" tabindex="2"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
+<p>非资源类，如查看集群健康状态。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645153314816.png" alt="" loading="lazy"></p>
 <h1 id="rbac">RBAC</h1>
 <p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
 <p>查看开启：</p>
@@ -457,7 +457,7 @@ roleRef:
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="3"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubelet的认证授权">kubelet的认证授权</h1>
 <p>查看kubelet进程</p>
 <pre><code class="language-powershell">$ systemctl status kubelet
@@ -628,7 +628,7 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2V
 
 
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
 <p>只允许访问luffy命名空间的pod资源：</p>
 <pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
 apiVersion: v1

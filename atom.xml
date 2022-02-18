@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-17T15:41:06.045Z</updated>
+    <updated>2022-02-18T03:03:29.177Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -247,8 +247,8 @@ PolicyRule:
   *.*        []                 []              [*]
              [*]                []              [*]
 </code></pre>
-<p>非资源类，如查看集群健康状态。</p>
-<figure data-type="image" tabindex="2"><img src="images/how-kubectl-be-authorized.png" alt="" loading="lazy"></figure>
+<p>非资源类，如查看集群健康状态。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645153314816.png" alt="" loading="lazy"></p>
 <h1 id="rbac">RBAC</h1>
 <p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
 <p>查看开启：</p>
@@ -361,7 +361,7 @@ roleRef:
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="3"><img src="images/rbac-2.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubelet的认证授权">kubelet的认证授权</h1>
 <p>查看kubelet进程</p>
 <pre><code class="language-powershell">$ systemctl status kubelet
@@ -532,7 +532,7 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2V
 
 
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="images%5Crbac.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
 <p>只允许访问luffy命名空间的pod资源：</p>
 <pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
 apiVersion: v1
