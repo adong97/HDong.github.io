@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-18T03:36:30.632Z</updated>
+    <updated>2022-02-18T03:48:58.842Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -1852,7 +1852,7 @@ The value for this option is a duration that specifies how long the autoscaler h
 <p><code>basic auth</code> (基础认证，已经废弃)</p>
 </li>
 <li>
-<p>client证书验证（https双向验证）(常用)</p>
+<p><code>client证书验证</code>（https双向验证）(常用)</p>
 </li>
 <li>
 <p><code>jwt token</code>(用于serviceaccount) (常用)</p>
@@ -2041,7 +2041,7 @@ Certificate:
 </code></pre>
 <p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
 <p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
-<figure data-type="image" tabindex="1"><img src="images/kubeadm-default-clusterrole-list.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645156072690.png" alt="" loading="lazy"></figure>
 <p>其中第一个cluster-admin这个cluster role binding绑定了system:masters group，这和authentication环节传递过来的身份信息不谋而合。 沿着system:masters group对应的cluster-admin clusterrolebinding“追查”下去，真相就会浮出水面。</p>
 <p>我们查看一下这一binding：</p>
 <pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
