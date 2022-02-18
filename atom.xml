@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-18T03:03:29.177Z</updated>
+    <updated>2022-02-18T03:19:43.060Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,888 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[kubernetes对接分部式存储]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/qJwfGvnw1/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/qJwfGvnw1/">
+        </link>
+        <updated>2022-02-18T03:12:01.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="pv与pvc快速入门">PV与PVC快速入门</h1>
+<p>k8s存储的目的就是保证Pod重建后，数据不丢失。简单的数据持久化的下述方式：</p>
+<ul>
+<li>
+<p>emptyDir</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: webserver
+    volumeMounts:
+    - mountPath: /cache
+      name: cache-volume
+  - image: k8s.gcr.io/test-redis
+    name: redis
+    volumeMounts:
+    - mountPath: /data
+      name: cache-volume
+volumes:
+  - name: cache-volume
+    emptyDir: {}
+</code></pre>
+<ul>
+<li>Pod内的容器共享卷的数据</li>
+<li>存在于Pod的生命周期，Pod销毁，数据丢失</li>
+<li>Pod内的容器自动重建后，数据不会丢失</li>
+</ul>
+</li>
+<li>
+<p>hostPath</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - image: k8s.gcr.io/test-webserver
+    name: test-container
+    volumeMounts:
+    - mountPath: /test-pod
+      name: test-volume
+  volumes:
+  - name: test-volume
+    hostPath:
+      # directory location on host
+      path: /data
+      # this field is optional
+      type: Directory
+</code></pre>
+<p>通常配合nodeSelector使用</p>
+</li>
+<li>
+<p>nfs存储</p>
+<pre><code class="language-yaml">...
+  volumes:
+  - name: redisdata             #卷名称
+    nfs:                        #使用NFS网络存储卷
+      server: 192.168.31.241    #NFS服务器地址
+      path: /data/redis         #NFS服务器共享的目录
+      readOnly: false           #是否为只读
+...
+</code></pre>
+</li>
+</ul>
+<p>volume支持的种类众多（参考 https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes ），每种对应不同的存储后端实现，因此为了屏蔽后端存储的细节，同时使得Pod在使用存储的时候更加简洁和规范，k8s引入了两个新的资源类型，PV和PVC。</p>
+<p>PersistentVolume（持久化卷），是对底层的存储的一种抽象，它和具体的底层的共享存储技术的实现方式有关，比如 Ceph、GlusterFS、NFS 等，都是通过插件机制完成与共享存储的对接。如使用PV对接NFS存储：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity: 
+    storage: 1Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /data/k8s
+    server: 172.21.51.55
+</code></pre>
+<ul>
+<li>capacity，存储能力， 目前只支持存储空间的设置， 就是我们这里的 storage=1Gi，不过未来可能会加入 IOPS、吞吐量等指标的配置。</li>
+<li>accessModes，访问模式， 是用来对 PV 进行访问模式的设置，用于描述用户应用对存储资源的访问权限，访问权限包括下面几种方式：
+<ul>
+<li>ReadWriteOnce（RWO）：读写权限，但是只能被单个节点挂载</li>
+<li>ReadOnlyMany（ROX）：只读权限，可以被多个节点挂载</li>
+<li>ReadWriteMany（RWX）：读写权限，可以被多个节点挂载</li>
+</ul>
+</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154071426.webp" alt="" loading="lazy"></figure>
+<ul>
+<li>persistentVolumeReclaimPolicy，pv的回收策略, 目前只有 NFS 和 HostPath 两种类型支持回收策略
+<ul>
+<li>Retain（保留）- 保留数据，需要管理员手工清理数据</li>
+<li>Recycle（回收）- 清除 PV 中的数据，效果相当于执行 rm -rf /thevolume/*</li>
+<li>Delete（删除）- 与 PV 相连的后端存储完成 volume 的删除操作，当然这常见于云服务商的存储服务，比如 ASW EBS。</li>
+</ul>
+</li>
+</ul>
+<p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。</p>
+<p>PVC全写是PersistentVolumeClaim（持久化卷声明），PVC 是用户存储的一种声明，创建完成后，可以和PV实现一对一绑定。对于真正使用存储的用户不需要关心底层的存储实现细节，只需要直接使用 PVC 即可。</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+</code></pre>
+<p>然后Pod中通过如下方式去使用：</p>
+<pre><code class="language-yaml">...
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:                        #挂载容器中的目录到pvc nfs中的目录
+        - name: www
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: www
+        persistentVolumeClaim:              #指定pvc
+          claimName: pvc-nfs
+...
+</code></pre>
+<h1 id="pv与pvc管理nfs存储卷实践">PV与PVC管理NFS存储卷实践</h1>
+<h2 id="环境准备">环境准备</h2>
+<p>服务端：172.21.51.55</p>
+<pre><code class="language-powershell">$ yum -y install nfs-utils rpcbind
+
+# 共享目录
+$ mkdir -p /data/k8s &amp;&amp; chmod 755 /data/k8s
+
+$ echo '/data/k8s  *(insecure,rw,sync,no_root_squash)'&gt;&gt;/etc/exports
+
+$ systemctl enable rpcbind &amp;&amp; systemctl start rpcbind
+$ systemctl enable nfs &amp;&amp; systemctl start nfs
+</code></pre>
+<p>客户端：k8s集群slave节点</p>
+<pre><code class="language-powershell">$ yum -y install nfs-utils rpcbind
+$ mkdir /nfsdata
+$ mount -t nfs 172.21.51.55:/data/k8s /nfsdata
+</code></pre>
+<h2 id="pv与pvc演示">PV与PVC演示</h2>
+<pre><code class="language-powershell">$ cat pv-nfs.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity: 
+    storage: 1Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /data/k8s/nginx
+    server: 172.21.51.55
+
+$ kubectl create -f pv-nfs.yaml
+
+$ kubectl get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS  
+nfs-pv   1Gi        RWO            Retain           Available
+
+</code></pre>
+<p>一个 PV 的生命周期中，可能会处于4中不同的阶段：</p>
+<ul>
+<li>Available（可用）：表示可用状态，还未被任何 PVC 绑定</li>
+<li>Bound（已绑定）：表示 PV 已经被 PVC 绑定</li>
+<li>Released（已释放）：PVC 被删除，但是资源还未被集群重新声明</li>
+<li>Failed（失败）： 表示该 PV 的自动回收失败</li>
+</ul>
+<pre><code class="language-powershell">$ cat pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+$ kubectl create -f pvc.yaml
+$ kubectl get pvc
+NAME      STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+pvc-nfs   Bound    nfs-pv   1Gi        RWO                           3s
+$ kubectl get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM             
+nfs-pv   1Gi        RWO            Retain           Bound    default/pvc-nfs             
+
+#访问模式，storage大小（pvc大小需要小于pv大小），以及 PV 和 PVC 的 storageClassName 字段必须一样，这样才能够进行绑定。
+
+#PersistentVolumeController会不断地循环去查看每一个 PVC，是不是已经处于 Bound（已绑定）状态。如果不是，那它就会遍历所有的、可用的 PV，并尝试将其与未绑定的 PVC 进行绑定，这样，Kubernetes 就可以保证用户提交的每一个 PVC，只要有合适的 PV 出现，它就能够很快进入绑定状态。而所谓将一个 PV 与 PVC 进行“绑定”，其实就是将这个 PV 对象的名字，填在了 PVC 对象的 spec.volumeName 字段上。
+
+# 查看nfs数据目录
+$ ls /nfsdata
+</code></pre>
+<p>创建Pod挂载pvc</p>
+<pre><code class="language-powershell">$ cat deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-pvc
+spec:
+  replicas: 1
+  selector:		#指定Pod的选择器
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:                        #挂载容器中的目录到pvc nfs中的目录
+        - name: www
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: www
+        persistentVolumeClaim:              #指定pvc
+          claimName: pvc-nfs
+          
+          
+$ kubectl create -f deployment.yaml
+
+# 查看容器/usr/share/nginx/html目录
+
+# 删除pvc
+</code></pre>
+<h2 id="storageclass实现动态挂载">storageClass实现动态挂载</h2>
+<p>创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass  +  provisioner的方式来实现通过PVC自动创建并绑定PV。</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154117942.png" alt="" loading="lazy"></figure>
+<p>部署： https://github.com/kubernetes-retired/external-storage</p>
+<p><code>provisioner.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: nfs-provisioner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: luffy.com/nfs
+            - name: NFS_SERVER
+              value: 172.21.51.55
+            - name: NFS_PATH  
+              value: /data/k8s
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 172.21.51.55
+            path: /data/k8s
+</code></pre>
+<p><code>rbac.yaml</code></p>
+<pre><code class="language-yaml">kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: nfs-client-provisioner
+  namespace: nfs-provisioner
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfs-client-provisioner-runner
+  namespace: nfs-provisioner
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumes&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;delete&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumeclaims&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+  - apiGroups: [&quot;storage.k8s.io&quot;]
+    resources: [&quot;storageclasses&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;events&quot;]
+    verbs: [&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: run-nfs-client-provisioner
+  namespace: nfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: nfs-provisioner
+roleRef:
+  kind: ClusterRole
+  name: nfs-client-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: nfs-provisioner
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;endpoints&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: nfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    # replace with namespace where provisioner is deployed
+    namespace: nfs-provisioner
+roleRef:
+  kind: Role
+  name: leader-locking-nfs-client-provisioner
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<p><code>storage-class.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs
+provisioner: luffy.com/nfs
+</code></pre>
+<p><code>pvc.yaml</code></p>
+<pre><code class="language-yaml">kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: nfs
+</code></pre>
+<h1 id="对接ceph存储实践">对接Ceph存储实践</h1>
+<p>ceph的安装及使用参考 http://docs.ceph.org.cn/start/intro/</p>
+<p>单点快速安装：  https://blog.csdn.net/h106140873/article/details/90201379</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154148566.png" alt="" loading="lazy"></figure>
+<pre><code class="language-powershell"># CephFS需要使用两个Pool来分别存储数据和元数据
+ceph osd pool create cephfs_data 128
+ceph osd pool create cephfs_meta 128
+ceph osd lspools
+
+# 创建一个CephFS
+ceph fs new cephfs cephfs_meta cephfs_data
+
+# 查看
+ceph fs ls
+
+# ceph auth get-key client.admin
+client.admin
+        key: AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
+# 挂载
+$ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
+</code></pre>
+<h2 id="storageclass实现动态挂载-2">storageClass实现动态挂载</h2>
+<p>创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass  +  provisioner的方式来实现通过PVC自动创建并绑定PV。</p>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154168771.png" alt="" loading="lazy"></figure>
+<p>比如，针对cephfs，可以创建如下类型的storageclass：</p>
+<pre><code class="language-yaml">kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: dynamic-cephfs
+provisioner: ceph.com/cephfs
+parameters:
+    monitors: 172.21.51.55:6789
+    adminId: admin
+    adminSecretName: ceph-admin-secret
+    adminSecretNamespace: &quot;kube-system&quot;
+    claimRoot: /volumes/kubernetes
+</code></pre>
+<p>NFS，ceph-rbd，cephfs均提供了对应的provisioner</p>
+<p>部署cephfs-provisioner</p>
+<pre><code class="language-powershell">$ cat external-storage-cephfs-provisioner.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-provisioner
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumes&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;delete&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;persistentvolumeclaims&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
+  - apiGroups: [&quot;storage.k8s.io&quot;]
+    resources: [&quot;storageclasses&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;events&quot;]
+    verbs: [&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;endpoints&quot;]
+    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;secrets&quot;]
+    verbs: [&quot;create&quot;, &quot;get&quot;, &quot;delete&quot;]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cephfs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: cephfs-provisioner
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cephfs-provisioner
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+rules:
+  - apiGroups: [&quot;&quot;]
+    resources: [&quot;secrets&quot;]
+    verbs: [&quot;create&quot;, &quot;get&quot;, &quot;delete&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cephfs-provisioner
+subjects:
+- kind: ServiceAccount
+  name: cephfs-provisioner
+  namespace: kube-system
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-provisioner
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cephfs-provisioner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-provisioner
+    spec:
+      containers:
+      - name: cephfs-provisioner
+        image: &quot;quay.io/external_storage/cephfs-provisioner:latest&quot;
+        env:
+        - name: PROVISIONER_NAME
+          value: ceph.com/cephfs
+        imagePullPolicy: IfNotPresent
+        command:
+        - &quot;/usr/local/bin/cephfs-provisioner&quot;
+        args:
+        - &quot;-id=cephfs-provisioner-1&quot;
+        - &quot;-disable-ceph-namespace-isolation=true&quot;
+      serviceAccount: cephfs-provisioner
+</code></pre>
+<p>在ceph monitor机器中查看admin账户的key</p>
+<pre><code class="language-powershell">$ ceph auth list
+$ ceph auth get-key client.admin
+AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
+</code></pre>
+<p>创建secret</p>
+<pre><code class="language-powershell">$ echo -n AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==|base64
+QVFCUFRzdGdjMDc4TkJBQTc4RDEvS0FCZ2xJWkhLaDcrRzJYOHc9PQ==
+$ cat ceph-admin-secret.yaml
+apiVersion: v1
+data:
+  key: QVFCUFRzdGdjMDc4TkJBQTc4RDEvS0FCZ2xJWkhLaDcrRzJYOHc9PQ==
+kind: Secret
+metadata:
+  name: ceph-admin-secret
+  namespace: kube-system
+type: Opaque
+</code></pre>
+<p>创建storageclass</p>
+<pre><code class="language-powershell">$ cat cephfs-storage-class.yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: dynamic-cephfs
+provisioner: ceph.com/cephfs
+parameters:
+    monitors: 172.21.51.55:6789
+    adminId: admin
+    adminSecretName: ceph-admin-secret
+    adminSecretNamespace: &quot;kube-system&quot;
+    claimRoot: /volumes/kubernetes
+</code></pre>
+<h2 id="动态pvc验证及实现分析">动态pvc验证及实现分析</h2>
+<p>使用流程： 创建pvc，指定storageclass和存储大小，即可实现动态存储。</p>
+<p>创建pvc测试自动生成pv</p>
+<pre><code class="language-powershell">$ cat cephfs-pvc-test.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cephfs-claim
+spec:
+  accessModes:     
+    - ReadWriteOnce
+  storageClassName: dynamic-cephfs
+  resources:
+    requests:
+      storage: 2Gi
+
+$ kubectl create -f cephfs-pvc-test.yaml
+
+$ kubectl get pv
+pvc-2abe427e-7568-442d-939f-2c273695c3db   2Gi        RWO            Delete           Bound      default/cephfs-claim   dynamic-cephfs            1s
+
+</code></pre>
+<p>创建Pod使用pvc挂载cephfs数据盘</p>
+<pre><code class="language-powershell">$ cat test-pvc-cephfs.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    name: nginx-pod
+spec:
+  containers:
+  - name: nginx-pod
+    image: nginx:alpine
+    ports:
+    - name: web
+      containerPort: 80
+    volumeMounts:
+    - name: cephfs
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: cephfs
+    persistentVolumeClaim:
+      claimName: cephfs-claim
+      
+$ kubectl create -f test-pvc-cephfs.yaml
+
+</code></pre>
+<p>我们所说的容器的持久化，实际上应该理解为宿主机中volume的持久化，因为Pod是支持销毁重建的，所以只能通过宿主机volume持久化，然后挂载到Pod内部来实现Pod的数据持久化。</p>
+<p>宿主机上的volume持久化，因为要支持数据漂移，所以通常是数据存储在分布式存储中，宿主机本地挂载远程存储（NFS，Ceph，OSS），这样即使Pod漂移也不影响数据。</p>
+<p>k8s的pod的挂载盘通常的格式为：</p>
+<pre><code class="language-powershell">/var/lib/kubelet/pods/&lt;Pod的ID&gt;/volumes/kubernetes.io~&lt;Volume类型&gt;/&lt;Volume名字&gt;
+</code></pre>
+<p>查看nginx-pod的挂载盘，</p>
+<pre><code class="language-powershell">$ df -TH
+/var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kubernetes.io~cephfs/pvc-2abe427e-7568-442d-939f-2c273695c3db/
+
+$ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kubernetes.io~cephfs/pvc-2abe427e-7568-442d-939f-2c273695c3db/
+
+172.21.51.55:6789:/volumes/kubernetes/kubernetes/kubernetes-dynamic-pvc-ffe3d84d-c433-11ea-b347-6acc3cf3c15f
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[通过HPA实现业务应用的动态扩缩容]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/">
+        </link>
+        <updated>2022-02-18T03:04:12.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="hpa控制器介绍">HPA控制器介绍</h1>
+<p>当系统资源过高的时候，我们可以使用如下命令来实现 Pod 的扩缩容功能</p>
+<pre><code class="language-powershell">$ kubectl -n luffy scale deployment myblog --replicas=2
+</code></pre>
+<p>但是这个过程是手动操作的。在实际项目中，我们需要做到是的是一个自动化感知并自动扩容的操作。Kubernetes 也为提供了这样的一个资源对象：Horizontal Pod Autoscaling（Pod 水平自动伸缩），简称<a href="https://v1-14.docs.kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">HPA</a></p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153673923.png" alt="" loading="lazy"></figure>
+<p>基本原理：HPA 通过监控分析控制器控制的所有 Pod 的负载变化情况来确定是否需要调整 Pod 的副本数量</p>
+<p>HPA的实现有两个版本：</p>
+<ul>
+<li>autoscaling/v1，只包含了根据CPU指标的检测，稳定版本</li>
+<li>autoscaling/v2beta1，支持根据memory或者用户自定义指标进行伸缩</li>
+</ul>
+<p>如何获取Pod的监控数据？</p>
+<ul>
+<li>k8s 1.8以下：使用heapster，1.11版本完全废弃</li>
+<li>k8s 1.8以上：使用metric-server</li>
+</ul>
+<p>思考：为什么之前用 heapster ，现在废弃了项目，改用 metric-server ？</p>
+<p>heapster时代，apiserver 会直接将metric请求通过apiserver proxy 的方式转发给集群内的 hepaster 服务，采用这种 proxy 方式是有问题的：</p>
+<ul>
+<li>
+<pre><code class="language-powershell">http://kubernetes_master_address/api/v1/namespaces/namespace_name/services/service_name[:port_name]/proxy
+</code></pre>
+</li>
+<li>
+<p>proxy只是代理请求，一般用于问题排查，不够稳定，且版本不可控</p>
+</li>
+<li>
+<p>heapster的接口不能像apiserver一样有完整的鉴权以及client集成</p>
+</li>
+<li>
+<p>pod 的监控数据是核心指标（HPA调度），应该和 pod 本身拥有同等地位，即 metric应该作为一种资源存在，如metrics.k8s.io 的形式，称之为 Metric Api</p>
+</li>
+</ul>
+<p>于是官方从 1.8 版本开始逐步废弃 heapster，并提出了上边 Metric api 的概念，而 metrics-server 就是这种概念下官方的一种实现，用于从 kubelet获取指标，替换掉之前的 heapster。</p>
+<p><code>Metrics Server</code> 可以通过标准的 Kubernetes API 把监控数据暴露出来，比如获取某一Pod的监控数据：</p>
+<pre><code class="language-powershell">https://172.21.51.143:6443/apis/metrics.k8s.io/v1beta1/namespaces/&lt;namespace-name&gt;/pods/&lt;pod-name&gt;
+
+# https://172.21.51.143:6443/api/v1/namespaces/luffy/pods?limit=500
+</code></pre>
+<p>目前的采集流程：</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153727835.png" alt="" loading="lazy"></figure>
+<h1 id="metric-server">Metric Server</h1>
+<p><a href="https://v1-14.docs.kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server">官方介绍</a></p>
+<pre><code>...
+Metric server collects metrics from the Summary API, exposed by Kubelet on each node.
+
+Metrics Server registered in the main API server through Kubernetes aggregator, which was introduced in Kubernetes 1.7
+...
+</code></pre>
+<h2 id="安装">安装</h2>
+<p>官方代码仓库地址：https://github.com/kubernetes-sigs/metrics-server</p>
+<p>Depending on your cluster setup, you may also need to change flags passed to the Metrics Server container. Most useful flags:</p>
+<ul>
+<li><code>--kubelet-preferred-address-types</code> - The priority of node address types used when determining an address for connecting to a particular node (default [Hostname,InternalDNS,InternalIP,ExternalDNS,ExternalIP])</li>
+<li><code>--kubelet-insecure-tls</code> - Do not verify the CA of serving certificates presented by Kubelets. For testing purposes only.</li>
+<li><code>--requestheader-client-ca-file</code> - Specify a root certificate bundle for verifying client certificates on incoming requests.</li>
+</ul>
+<pre><code class="language-powershell">$ wget https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.4/components.yaml
+</code></pre>
+<p>修改args参数：</p>
+<pre><code class="language-powershell">...
+130       containers:
+131       - args:
+132         - --cert-dir=/tmp
+133         - --secure-port=4443
+134         - --kubelet-insecure-tls
+135         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+136         - --kubelet-use-node-status-port
+137         image: willdockerhub/metrics-server:v0.4.4
+138         imagePullPolicy: IfNotPresent
+...
+</code></pre>
+<p>执行安装：</p>
+<pre><code class="language-powershell">$ kubectl apply -f components.yaml
+
+$ kubectl -n kube-system get pods
+
+$ kubectl top nodes
+</code></pre>
+<h2 id="kubelet的指标采集">kubelet的指标采集</h2>
+<p>无论是 heapster还是 metric-server，都只是数据的中转和聚合，两者都是调用的 kubelet 的 api 接口获取的数据，而 kubelet 代码中实际采集指标的是 cadvisor 模块，你可以在 node 节点访问 10250 端口获取监控数据：</p>
+<ul>
+<li>Kubelet Summary metrics:  https://127.0.0.1:10250/metrics，暴露 node、pod 汇总数据</li>
+<li>Cadvisor metrics: https://127.0.0.1:10250/metrics/cadvisor，暴露 container 维度数据</li>
+</ul>
+<p>调用示例：</p>
+<pre><code class="language-powershell">$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InhXcmtaSG5ZODF1TVJ6dUcycnRLT2c4U3ZncVdoVjlLaVRxNG1wZ0pqVmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi10b2tlbi1xNXBueiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJhZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImViZDg2ODZjLWZkYzAtNDRlZC04NmZlLTY5ZmE0ZTE1YjBmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbiJ9.iEIVMWg2mHPD88GQ2i4uc_60K4o17e39tN0VI_Q_s3TrRS8hmpi0pkEaN88igEKZm95Qf1qcN9J5W5eqOmcK2SN83Dd9dyGAGxuNAdEwi0i73weFHHsjDqokl9_4RGbHT5lRY46BbIGADIphcTeVbCggI6T_V9zBbtl8dcmsd-lD_6c6uC2INtPyIfz1FplynkjEVLapp_45aXZ9IMy76ljNSA8Uc061Uys6PD3IXsUD5JJfdm7lAt0F7rn9SdX1q10F2lIHYCMcCcfEpLr4Vkymxb4IU4RCR8BsMOPIO_yfRVeYZkG4gU2C47KwxpLsJRrTUcUXJktSEPdeYYXf9w&quot; https://localhost:10250/metrics
+</code></pre>
+<p>kubelet虽然提供了 metric 接口，但实际监控逻辑由内置的cAdvisor模块负责，早期的时候，cadvisor是单独的组件，从k8s 1.12开始，cadvisor 监听的端口在k8s中被删除，所有监控数据统一由Kubelet的API提供。</p>
+<p>cadvisor获取指标时实际调用的是 runc/libcontainer库，而libcontainer是对 cgroup文件 的封装，即 cadvsior也只是个转发者，它的数据来自于cgroup文件。</p>
+<p>cgroup文件中的值是监控数据的最终来源，如</p>
+<ul>
+<li>
+<p>mem usage的值，</p>
+<ul>
+<li>
+<p>对于docker容器来讲，来源于<code>/sys/fs/cgroup/memory/docker/[containerId]/memory.usage_in_bytes</code></p>
+</li>
+<li>
+<p>对于pod来讲，<code>/sys/fs/cgroup/memory/kubepods/besteffort/pod[podId]/memory.usage_in_bytes</code>或者</p>
+<p><code>/sys/fs/cgroup/memory/kubepods/burstable/pod[podId]/memory.usage_in_bytes</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p>如果没限制内存，Limit = machine_mem，否则来自于<br>
+<code>/sys/fs/cgroup/memory/docker/[id]/memory.limit_in_bytes</code></p>
+</li>
+<li>
+<p>内存使用率 = memory.usage_in_bytes/memory.limit_in_bytes</p>
+</li>
+</ul>
+<p>Metrics数据流：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645153791494.webp" alt="" loading="lazy"></p>
+<p>思考：</p>
+<p>Metrics Server是独立的一个服务，只能服务内部实现自己的api，是如何做到通过标准的kubernetes 的API格式暴露出去的？</p>
+<p><a href="https://github.com/kubernetes/kube-aggregator">kube-aggregator</a></p>
+<h2 id="kube-aggregator聚合器及metric-server的实现">kube-aggregator聚合器及Metric-Server的实现</h2>
+<p>kube-aggregator是对 apiserver 的api的一种拓展机制，它允许开发人员编写一个自己的服务，并把这个服务注册到k8s的api里面，即扩展 API 。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645153809568.webp" alt="" loading="lazy"></p>
+<p>定义一个APIService对象：</p>
+<pre><code class="language-yaml">apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.luffy.k8s.io
+spec:
+  group: luffy.k8s.io
+  groupPriorityMinimum: 100
+  insecureSkipTLSVerify: true
+  service:
+    name: service-A       # 必须https访问
+    namespace: luffy
+    port: 443   
+  version: v1beta1
+  versionPriority: 100
+</code></pre>
+<p>k8s会自动帮我们代理如下url的请求：</p>
+<pre><code class="language-powershell">proxyPath := &quot;/apis/&quot; + apiService.Spec.Group + &quot;/&quot; + apiService.Spec.Version
+</code></pre>
+<p>即：https://172.21.51.143:6443/apis/luffy.k8s.io/v1beta1/xxxx转到我们的service-A服务中，service-A中只需要实现 <code>https://service-A/apis/luffy.k8s.io/v1beta1/xxxx</code> 即可。</p>
+<p>看下metric-server的实现：</p>
+<pre><code class="language-powershell">$ kubectl get apiservice 
+NAME                       SERVICE                      AVAILABLE                      
+v1beta1.metrics.k8s.io   kube-system/metrics-server		True
+
+$ kubectl get apiservice v1beta1.metrics.k8s.io -oyaml
+...
+spec:
+  group: metrics.k8s.io
+  groupPriorityMinimum: 100
+  insecureSkipTLSVerify: true
+  service:
+    name: metrics-server
+    namespace: kube-system
+    port: 443
+  version: v1beta1
+  versionPriority: 100
+...
+
+$ kubectl -n kube-system get svc metrics-server
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+metrics-server   ClusterIP   10.110.111.146   &lt;none&gt;        443/TCP   11h
+
+$ curl -k  -H &quot;Authorization: Bearer xxxx&quot; https://10.110.111.146
+{
+  &quot;paths&quot;: [
+    &quot;/apis&quot;,
+    &quot;/apis/metrics.k8s.io&quot;,
+    &quot;/apis/metrics.k8s.io/v1beta1&quot;,
+    &quot;/healthz&quot;,
+    &quot;/healthz/healthz&quot;,
+    &quot;/healthz/log&quot;,
+    &quot;/healthz/ping&quot;,
+    &quot;/healthz/poststarthook/generic-apiserver-start-informers&quot;,
+    &quot;/metrics&quot;,
+    &quot;/openapi/v2&quot;,
+    &quot;/version&quot;
+  ]
+
+# https://172.21.51.143:6443/apis/metrics.k8s.io/v1beta1/namespaces/&lt;namespace-name&gt;/pods/&lt;pod-name&gt;
+# 
+$ curl -k  -H &quot;Authorization: Bearer xxxx&quot; https://10.110.111.146/apis/metrics.k8s.io/v1beta1/namespaces/luffy/pods/myblog-5d9ff54d4b-4rftt
+
+$ curl -k  -H &quot;Authorization: Bearer xxxx&quot; https://172.21.51.143:6443/apis/metrics.k8s.io/v1beta1/namespaces/luffy/pods/myblog-5d9ff54d4b-4rftt
+</code></pre>
+<h1 id="hpa实践">HPA实践</h1>
+<h2 id="基于cpu和内存的动态伸缩">基于CPU和内存的动态伸缩</h2>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153832880.png" alt="" loading="lazy"></figure>
+<p>创建hpa对象：</p>
+<pre><code class="language-powershell"># 方式一
+$ cat hpa-myblog.yaml
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-myblog
+  namespace: luffy
+spec:
+  maxReplicas: 3
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myblog
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 20
+
+# 方式二
+$ kubectl -n luffy autoscale deployment myblog --cpu-percent=10 --min=1 --max=3
+</code></pre>
+<blockquote>
+<p>Deployment对象必须配置requests的参数，不然无法获取监控数据，也无法通过HPA进行动态伸缩</p>
+</blockquote>
+<p>验证：</p>
+<pre><code class="language-powershell">$ yum -y install httpd-tools
+$ kubectl -n luffy get svc myblog
+myblog   ClusterIP   10.104.245.225   &lt;none&gt;        80/TCP    6d18h
+
+# 为了更快看到效果，先调整副本数为1
+$ kubectl -n luffy scale deploy myblog --replicas=1
+
+# 模拟1000个用户并发访问页面10万次
+$ ab -n 100000 -c 1000 http://10.104.245.225/blog/index/
+
+$ kubectl get hpa
+$ kubectl -n luffy get pods
+
+</code></pre>
+<p>压力降下来后，会有默认5分钟的scaledown的时间，可以通过controller-manager的如下参数设置：</p>
+<pre><code>--horizontal-pod-autoscaler-downscale-stabilization
+
+The value for this option is a duration that specifies how long the autoscaler has to wait before another downscale operation can be performed after the current one has completed. The default value is 5 minutes (5m0s).
+</code></pre>
+<p>是一个逐步的过程，当前的缩放完成后，下次缩放的时间间隔，比如从3个副本降低到1个副本，中间大概会等待2*5min = 10分钟</p>
+<h2 id="基于自定义指标的动态伸缩">基于自定义指标的动态伸缩</h2>
+<p>除了基于 CPU 和内存来进行自动扩缩容之外，我们还可以根据自定义的监控指标来进行。这个我们就需要使用 <code>Prometheus Adapter</code>，Prometheus 用于监控应用的负载和集群本身的各种指标，<code>Prometheus Adapter</code> 可以帮我们使用 Prometheus 收集的指标并使用它们来制定扩展策略，这些指标都是通过 APIServer 暴露的，而且 HPA 资源对象也可以很轻易的直接使用。</p>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153865309.webp" alt="" loading="lazy"></figure>
+<p>架构图：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645153879688.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Kubernetes认证与授权 ]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/</id>
@@ -3107,2134 +3989,6 @@ deployment.extensions/myblog rolled back
 
 # 访问应用测试
 </code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[k8s管理业务应用 --Pod常用设置]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/">
-        </link>
-        <updated>2022-02-10T09:15:32.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="三-实践-使用k8s管理业务应用">三、实践--使用k8s管理业务应用</h1>
-<h2 id="31-最小调度单元-pod">3.1 最小调度单元 Pod</h2>
-<p>docker调度的是容器，在k8s集群中，最小的调度单元是Pod（豆荚）</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840469887.png" alt="" loading="lazy"></figure>
-<h3 id="311-为什么引入pod">3.1.1 为什么引入Pod</h3>
-<ul>
-<li>
-<p>与容器引擎解耦</p>
-<p>Docker、Rkt等容器 平台设计与引擎的具体的实现解耦</p>
-</li>
-<li>
-<p>多容器共享网络|存储|进程 空间, 支持的业务场景更加灵活</p>
-</li>
-</ul>
-<h3 id="312-使用yaml格式定义pod">3.1.2 使用yaml格式定义Pod</h3>
-<p><em>myblog/one-pod/pod.yaml</em></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:   #元数据属性
-  name: myblog   #Pod名称
-  namespace: luffy  #指定命名空间	
-  labels:   #标签
-    component: myblog
-spec:
-  containers:  #定义容器属性
-  - name: myblog  #容器名称  一个&quot;-&quot;表示一个数组
-    image: 172.21.51.143:5000/myblog:v1
-    env: #变量
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;127.0.0.1&quot;
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-  - name: mysql  #第二个容器名称
-    image: mysql:5.7
-    args:  #传递参数
-    - --character-set-server=utf8mb4
-    - --collation-server=utf8mb4_unicode_ci
-    ports:
-    - containerPort: 3306
-    env:   #环境变量
-    - name: MYSQL_ROOT_PASSWORD
-      value: &quot;123456&quot;
-    - name: MYSQL_DATABASE
-      value: &quot;myblog&quot;
-
-</code></pre>
-<p>json格式定义pod</p>
-<pre><code class="language-json">{
-    &quot;apiVersion&quot;: &quot;v1&quot;,
-    &quot;kind&quot;: &quot;Pod&quot;,
-    &quot;metadata&quot;: {
-        &quot;name&quot;: &quot;myblog&quot;,
-        &quot;namespace&quot;: &quot;luffy&quot;,
-        &quot;labels&quot;: {
-            &quot;component&quot;: &quot;myblog&quot;
-        }
-    },
-    &quot;spec&quot;: {
-        &quot;containers&quot;: [
-            {
-                &quot;name&quot;: &quot;myblog&quot;,
-                &quot;image&quot;: &quot;172.21.51.143:5000/myblog:v1&quot;,
-                &quot;env&quot;: [
-                    {
-                        &quot;name&quot;: &quot;MYSQL_HOST&quot;,
-                        &quot;value&quot;: &quot;127.0.0.1&quot;
-                    }
-                ]
-            },
-            {
-                ...
-            }
-        ]
-    }
-}
-</code></pre>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">apiVersion</th>
-<th style="text-align:left">含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">alpha</td>
-<td style="text-align:left">进入K8s功能的早期候选版本，可能包含Bug，最终不一定进入K8s</td>
-</tr>
-<tr>
-<td style="text-align:left">beta</td>
-<td style="text-align:left">已经过测试的版本，最终会进入K8s，但功能、对象定义可能会发生变更。</td>
-</tr>
-<tr>
-<td style="text-align:left">stable</td>
-<td style="text-align:left">可安全使用的稳定版本</td>
-</tr>
-<tr>
-<td style="text-align:left">v1</td>
-<td style="text-align:left">stable 版本之后的首个版本，包含了更多的核心对象</td>
-</tr>
-<tr>
-<td style="text-align:left">apps/v1</td>
-<td style="text-align:left">使用最广泛的版本，像Deployment、ReplicaSets都已进入该版本</td>
-</tr>
-</tbody>
-</table>
-<p><strong>资源类型与apiVersion对照表</strong></p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Kind</th>
-<th style="text-align:left">apiVersion</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">ClusterRoleBinding</td>
-<td style="text-align:left">rbac.authorization.k8s.io/v1</td>
-</tr>
-<tr>
-<td style="text-align:left">ClusterRole</td>
-<td style="text-align:left">rbac.authorization.k8s.io/v1</td>
-</tr>
-<tr>
-<td style="text-align:left">ConfigMap</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">CronJob</td>
-<td style="text-align:left">batch/v1beta1</td>
-</tr>
-<tr>
-<td style="text-align:left">DaemonSet</td>
-<td style="text-align:left">extensions/v1beta1</td>
-</tr>
-<tr>
-<td style="text-align:left">Node</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">Namespace</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">Secret</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">PersistentVolume</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">PersistentVolumeClaim</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">Pod</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">Deployment</td>
-<td style="text-align:left">v1、apps/v1、apps/v1beta1、apps/v1beta2</td>
-</tr>
-<tr>
-<td style="text-align:left">Service</td>
-<td style="text-align:left">v1</td>
-</tr>
-<tr>
-<td style="text-align:left">Ingress</td>
-<td style="text-align:left">extensions/v1beta1</td>
-</tr>
-<tr>
-<td style="text-align:left">ReplicaSet</td>
-<td style="text-align:left">apps/v1、apps/v1beta2</td>
-</tr>
-<tr>
-<td style="text-align:left">Job</td>
-<td style="text-align:left">batch/v1</td>
-</tr>
-<tr>
-<td style="text-align:left">StatefulSet</td>
-<td style="text-align:left">apps/v1、apps/v1beta1、apps/v1beta2</td>
-</tr>
-</tbody>
-</table>
-<p>快速获得资源和版本</p>
-<pre><code class="language-powershell">$ kubectl explain pod
-$ kubectl explain Pod.apiVersion
-</code></pre>
-<h3 id="313-创建和访问pod">3.1.3 创建和访问Pod</h3>
-<pre><code class="language-powershell">## 创建namespace, namespace是逻辑上的资源池
-$ kubectl create namespace luffy
-
-## 使用指定文件创建Pod
-$ kubectl create -f pod.yaml
-
-## 查看pod，可以简写po
-## 所有的操作都需要指定namespace，如果是在default命名空间下，则可以省略
-$ kubectl -n luffy get pods -o wide
-NAME     READY   STATUS    RESTARTS   AGE    IP             NODE
-myblog   2/2     Running   0          3m     10.244.1.146   k8s-slave1
-
-## 回顾流程
-
-## 使用Pod Ip访问服务,3306和8002
-$ curl 10.244.1.146:8002/blog/index/
-
-## 进入容器,执行初始化, 不必到对应的主机执行docker exec
-### -c 指定进入哪一个容器里
-
-$ kubectl -n luffy exec -ti myblog -c myblog bash
-/ # env
-/ # python3 manage.py migrate
-$ kubectl -n luffy exec -ti myblog -c mysql bash
-/ # mysql -p123456
-
-## 再次访问服务,3306和8002
-$ curl 10.244.1.146:8002/blog/index/
-</code></pre>
-<h3 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h3>
-<p>登录<code>k8s-slave1</code>节点</p>
-<pre><code class="language-powershell">$ docker ps -a |grep myblog  ## 发现有三个容器
-## 其中包含mysql和myblog程序以及Infra容器
-## 为了实现Pod内部的容器可以通过localhost通信，每个Pod都会启动Infra容器，然后Pod内部的其他容器的网络空间会共享该Infra容器的网络空间(Docker网络的container模式)，Infra容器只需要hang住网络空间，不需要额外的功能，因此资源消耗极低。
-
-## 登录master节点，查看pod内部的容器ip均相同，为pod ip
-$ kubectl -n luffy exec -ti myblog -c myblog bash
-/ # ifconfig
-
-$ kubectl -n luffy exec -ti myblog -c mysql bash
-/ # ifconfig
-</code></pre>
-<p>pod容器命名: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
-<h3 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h3>
-<pre><code class="language-powershell">## 查看pod调度节点及pod_ip
-$ kubectl -n luffy get pods -o wide
-
-## 查看完整的yaml
-$ kubectl -n luffy get po myblog -o yaml
-
-## 查看pod的明细信息及事件
-$ kubectl -n luffy describe pod myblog
-
-## 查看pod的labels标签
-$ kubectl -n luffy get pod --show-lables
-</code></pre>
-<h3 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h3>
-<pre><code class="language-powershell">#进入Pod内的容器
-$ kubectl -n &lt;namespace&gt; exec &lt;pod_name&gt; -c &lt;container_name&gt; -ti /bin/sh
-
-#查看Pod内容器日志,显示标准或者错误输出日志
-$ kubectl -n &lt;namespace&gt; logs -f --tail=100 &lt;pod_name&gt; -c &lt;container_name&gt;
-</code></pre>
-<h3 id="317-更新服务版本">3.1.7 更新服务版本</h3>
-<pre><code class="language-powershell">$ kubectl apply -f demo-pod.yaml
-</code></pre>
-<h3 id="318-删除pod服务">3.1.8 删除Pod服务</h3>
-<pre><code class="language-powershell">#根据文件删除
-$ kubectl delete -f demo-pod.yaml
-
-#根据pod_name删除
-$ kubectl -n &lt;namespace&gt; delete pod &lt;pod_name&gt;
-</code></pre>
-<h3 id="319-pod数据持久化">3.1.9 Pod数据持久化</h3>
-<p>若删除了Pod，由于mysql的数据都在容器内部，会造成数据丢失，因此需要数据进行持久化。</p>
-<ul>
-<li>
-<p>定点使用hostpath挂载，nodeSelector定点(node选择器通过标签选择挂载到哪个机器上)</p>
-<p><code>myblog/one-pod/pod-with-volume.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: myblog
-  namespace: luffy
-  labels:
-    component: myblog
-spec:
-  volumes:  #定义一个卷
-  - name: mysql-data #名称
-    hostPath:  #定义类型，hostPath:映射到宿主机上
-      path: /opt/mysql/data
-  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点，标签可以打在任何资源上
-    component: mysql #把Pod调度到带有component=mysql标签的节点上去
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    env:
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;127.0.0.1&quot;
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-  - name: mysql
-    image: mysql:5.7
-    args:
-    - --character-set-server=utf8mb4
-    - --collation-server=utf8mb4_unicode_ci
-    ports:
-    - containerPort: 3306
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      value: &quot;123456&quot;
-    - name: MYSQL_DATABASE
-      value: &quot;myblog&quot;
-    volumeMounts:  #挂载数据卷
-    - name: mysql-data  #与定义的数据卷名称必须保持一致
-      mountPath: /var/lib/mysql  #容器内部路径
-</code></pre>
-<p>保存文件为<code>pod-with-volume.yaml</code>，执行创建</p>
-<pre><code class="language-powershell">## 若存在旧的同名服务，先删除掉，后创建
-$ kubectl -n luffy delete pod myblog
-
-## 创建
-$ kubectl create -f pod-with-volume.yaml
-
-## 此时pod状态Pending
-$ kubectl -n luffy get po
-NAME     READY   STATUS    RESTARTS   AGE
-myblog   0/2     Pending   0          32s
-
-## 查看原因，提示调度失败，因为节点不满足node selector
-$ kubectl -n luffy describe po myblog
-Events:
-  Type     Reason            Age                From               Message
-  ----     ------            ----               ----               -------
-  Warning  FailedScheduling  12s (x2 over 12s)  default-scheduler  0/3 nodes are available: 3 node(s) didn't match node selector.
-  
-## 为节点打标签
-$ kubectl label node k8s-slave1 component=mysql
-
-## 再次查看，已经运行成功
-$ kubectl -n luffy get po
-NAME     READY   STATUS    RESTARTS   AGE     IP             NODE
-myblog   2/2     Running   0          3m54s   10.244.1.150   k8s-slave1
-
-## 到k8s-slave1节点，查看/opt/mysql/data
-$ ll /opt/mysql/data/
-total 188484
--rw-r----- 1 polkitd input       56 Mar 29 09:20 auto.cnf
--rw------- 1 polkitd input     1676 Mar 29 09:20 ca-key.pem
--rw-r--r-- 1 polkitd input     1112 Mar 29 09:20 ca.pem
-drwxr-x--- 2 polkitd input     8192 Mar 29 09:20 sys
-...
-
-## 执行migrate，创建数据库表，然后删掉pod，再次创建后验证数据是否存在
-$ kubectl -n luffy exec -ti myblog bash
-python3 manage.py migrate
-
-## 访问服务，正常
-$ curl 10.244.1.150:8002/blog/index/ 
-
-## 删除pod
-$ kubectl delete -f pod-with-volume.yaml
-
-## 再次创建Pod
-$ kubectl create -f pod-with-volume.yaml
-
-## 查看pod ip并访问服务
-$ kubectl -n luffy get po -o wide
-NAME     READY   STATUS    RESTARTS   AGE   IP             NODE  
-myblog   2/2     Running   0          7s    10.244.1.151   k8s-slave1
-
-## 未重新做migrate，服务正常
-$ curl 10.244.1.151:8002/blog/index/
-</code></pre>
-</li>
-<li>
-<p>使用PV+PVC连接分布式存储解决方案</p>
-<ul>
-<li>ceph</li>
-<li>glusterfs</li>
-<li>nfs</li>
-</ul>
-</li>
-</ul>
-<h3 id="3110-服务健康检查">3.1.10 服务健康检查</h3>
-<p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
-<p>两种机制：</p>
-<ul>
-<li>
-<p>LivenessProbe探针<br>
-存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包含LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。</p>
-<pre><code class="language-yaml">...
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    livenessProbe:
-      httpGet:
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 10 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-...
-</code></pre>
-</li>
-</ul>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840513305.webp" alt="" loading="lazy"></figure>
-<ul>
-<li>
-<p>ReadinessProbe探针<br>
-可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。</p>
-<pre><code class="language-yaml">...
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    readinessProbe: 
-      httpGet: 
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10 
-      timeoutSeconds: 2
-      periodSeconds: 10
-...
-</code></pre>
-</li>
-</ul>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840524981.webp" alt="" loading="lazy"></figure>
-<p>三种探测类型：</p>
-<ul>
-<li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康</li>
-<li>httpGet方式：通过发送http请求检查服务是否正常，返回200-399状态码则表明容器健康</li>
-<li>tcpSocket：通过容器的IP和Port执行TCP检查，如果能够建立TCP连接，则表明容器健康</li>
-</ul>
-<p>示例：</p>
-<p>完整文件路径 <code>myblog/one-pod/pod-with-healthcheck.yaml</code></p>
-<pre><code class="language-yaml">  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    env:
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;127.0.0.1&quot;
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-    livenessProbe:   # 存活性探测
-      httpGet:   # 探测类型
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 10 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-    readinessProbe:   #可用性探测
-      httpGet:  # 探测类型
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10 
-      timeoutSeconds: 2
-      periodSeconds: 10
-</code></pre>
-<ul>
-<li>initialDelaySeconds：容器启动后第一次执行探测是需要等待多少秒。</li>
-<li>periodSeconds：执行探测的频率。默认是10秒，最小1秒。</li>
-<li>timeoutSeconds：探测超时时间。默认1秒，最小1秒。</li>
-<li>successThreshold：探测失败后，最少连续探测成功多少次才被认定为成功。默认是1。</li>
-<li>failureThreshold：探测成功后，最少连续探测失败多少次才被认定为失败。默认是3，最小值是1。</li>
-</ul>
-<p>K8S将在Pod开始<strong>启动10s(initialDelaySeconds)后</strong>利用HTTP访问8002端口的/blog/index/，如果<strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
-<h3 id="3111-重启策略">3.1.11 重启策略</h3>
-<p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。<br>
-Pod的重启策略包括Always、OnFailure和Never，默认值为Always。</p>
-<ul>
-<li>Always：当容器进程退出后，由kubelet自动重启该容器；</li>
-<li>OnFailure：当容器终止运行且退出码不为0时，由kubelet自动重启该容器；</li>
-<li>Never：不论容器运行状态如何，kubelet都不会重启该容器。</li>
-</ul>
-<p>演示重启策略：</p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: test-restart-policy  
-spec:
-  restartPolicy: Always   #定义重启策略
-  containers:
-  - name: busybox
-    image: busybox
-    args:
-    - /bin/sh
-    - -c
-    - sleep 10
-</code></pre>
-<ol>
-<li>使用默认的重启策略，即 restartPolicy: Always ，无论容器是否是正常退出，都会自动重启容器</li>
-<li>使用OnFailure的策略时
-<ul>
-<li>如果把exit 1，去掉，即让容器的进程正常退出的话，则不会重启</li>
-<li>只有非正常退出状态才会重启</li>
-</ul>
-</li>
-<li>使用Never时，退出了就不再重启</li>
-</ol>
-<p>可以看出，若容器正常退出，Pod的状态会是Completed，非正常退出，状态为CrashLoopBackOff</p>
-<h3 id="3112-镜像拉取策略">3.1.12 镜像拉取策略</h3>
-<pre><code class="language-yaml">spec:
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    imagePullPolicy: IfNotPresent  #镜像拉取策略
-</code></pre>
-<p>设置镜像的拉取策略，默认为IfNotPresent</p>
-<ul>
-<li>Always，总是拉取镜像，即使本地有镜像也从仓库拉取</li>
-<li>IfNotPresent ，本地有则使用本地镜像，本地没有则去仓库拉取</li>
-<li>Never，只使用本地镜像，本地没有则报错</li>
-</ul>
-<h3 id="3113-pod资源限制">3.1.13 Pod资源限制</h3>
-<p>为了保证充分利用集群资源，且确保重要容器在运行周期内能够分配到足够的资源稳定运行，因此平台需要具备</p>
-<p>Pod的资源限制的能力。 对于一个pod来说，资源最基础的2个的指标就是：CPU和内存。</p>
-<p>Kubernetes提供了个采用requests和limits 两种类型参数对资源进行预分配和使用限制。</p>
-<p>完整文件路径：<code>myblog/one-pod/pod-with-resourcelimits.yaml</code></p>
-<pre><code class="language-yaml">...
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1    #注意更改镜像地址
-    env:
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;127.0.0.1&quot;
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-    resources:  #Pod资源限制
-      requests:  #schedule调度的时候，寻找最少有这些资源的Node(作为调度依据)（下限）
-        memory: 100Mi
-        cpu: 50m
-      limits:  #资源限制，最大可以使用多少资源（上限）
-        memory: 500Mi
-        cpu: 100m
-...
-</code></pre>
-<p><strong>requests：</strong></p>
-<ul>
-<li>容器使用的最小资源需求,作用于schedule调度阶段，作为容器调度时资源分配的判断依据</li>
-<li>只有当前节点上可分配的资源量 &gt;= request 时才允许将容器调度到该节点</li>
-<li>request参数不限制容器的最大可使用资源</li>
-<li>requests.cpu被转成docker的--cpu-shares参数，与cgroup cpu.shares功能相同 (无论宿主机有多少个cpu或者内核，--cpu-shares选项都会按照比例分配cpu资源）</li>
-<li>requests.memory没有对应的docker参数，仅作为k8s调度依据</li>
-</ul>
-<p><strong>limits：</strong></p>
-<ul>
-<li>容器能使用资源的最大值</li>
-<li>设置为0表示对使用的资源不做限制, 可无限的使用</li>
-<li>当pod 内存超过limit时，会被oom</li>
-<li>当cpu超过limit时，不会被kill，但是会限制不超过limit值</li>
-<li>limits.cpu会被转换成docker的–cpu-quota参数。与cgroup cpu.cfs_quota_us功能相同</li>
-<li>limits.memory会被转换成docker的–memory参数。用来限制容器使用的最大内存</li>
-</ul>
-<p>对于 CPU，我们知道计算机里 CPU 的资源是按<code>“时间片”</code>的方式来进行分配的，系统里的每一个操作都需要 CPU 的处理，所以，哪个任务要是申请的 CPU 时间片越多，那么它得到的 CPU 资源就越多。</p>
-<p>然后还需要了解下 CGroup 里面对于 CPU 资源的单位换算：</p>
-<pre><code class="language-shell">1 CPU =  1000 millicpu（1 Core = 1000m）
-</code></pre>
-<p>这里的 <code>m</code> 就是毫、毫核的意思，Kubernetes 集群中的每一个节点可以通过操作系统的命令来确认本节点的 CPU 内核数量，然后将这个数量乘以1000，得到的就是节点总 CPU 总毫数。比如一个节点有四核，那么该节点的 CPU 总毫量为 4000m。</p>
-<p><code>docker run</code>命令和 CPU 限制相关的所有选项如下：</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--cpuset-cpus=&quot;&quot;</code></td>
-<td>允许使用的 CPU 集，值可以为 0-3,0,1</td>
-</tr>
-<tr>
-<td><code>-c</code>,<code>--cpu-shares=0</code></td>
-<td>CPU 共享权值（相对权重）</td>
-</tr>
-<tr>
-<td><code>cpu-period=0</code></td>
-<td>限制 CPU CFS 的周期，范围从 100ms~1s，即[1000, 1000000]</td>
-</tr>
-<tr>
-<td><code>--cpu-quota=0</code></td>
-<td>限制 CPU CFS 配额，必须不小于1ms，即 &gt;= 1000，绝对限制</td>
-</tr>
-</tbody>
-</table>
-<pre><code class="language-shell">docker run -it --cpu-period=50000 --cpu-quota=25000 ubuntu:16.04 /bin/bash
-</code></pre>
-<p>将 CFS 调度的周期设为 50000，将容器在每个周期内的 CPU 配额设置为 25000，表示该容器每 50ms 可以得到 50% 的 CPU 运行时间。</p>
-<blockquote>
-<p>注意：若内存使用超出限制，会引发系统的OOM机制，因CPU是可压缩资源，不会引发Pod退出或重建</p>
-</blockquote>
-<h3 id="3114-yaml优化">3.1.14 yaml优化</h3>
-<p>目前完善后的yaml，<code>myblog/one-pod/pod-completed.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: myblog
-  namespace: luffy
-  labels:
-    component: myblog
-spec:
-  volumes: 
-  - name: mysql-data
-    hostPath: 
-      path: /opt/mysql/data
-  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点(前提是，Node有这个标签)
-    component: mysql
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1    # 注意更改镜像地址
-    env:
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;127.0.0.1&quot;
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 50m
-      limits:
-        memory: 500Mi
-        cpu: 100m
-    livenessProbe:
-      httpGet:
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 15 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-    readinessProbe: 
-      httpGet: 
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10 
-      timeoutSeconds: 2
-      periodSeconds: 15
-  - name: mysql
-    image: mysql:5.7
-    args:
-    - --character-set-server=utf8mb4
-    - --collation-server=utf8mb4_unicode_ci
-    ports:
-    - containerPort: 3306
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      value: &quot;123456&quot;
-    - name: MYSQL_DATABASE
-      value: &quot;myblog&quot;
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 50m
-      limits:
-        memory: 500Mi
-        cpu: 100m
-    readinessProbe:
-      tcpSocket:
-        port: 3306
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    livenessProbe:
-      tcpSocket:
-        port: 3306
-      initialDelaySeconds: 15
-      periodSeconds: 20
-    volumeMounts:
-    - name: mysql-data
-      mountPath: /var/lib/mysql
-</code></pre>
-<p>为什么要优化</p>
-<ul>
-<li>考虑真实的使用场景，像数据库这类中间件，是作为公共资源，为多个项目提供服务，不适合和业务容器绑定在同一个Pod中，因为业务容器是经常变更的，而数据库不需要频繁迭代</li>
-<li>yaml的环境变量中存在敏感信息（账号、密码），存在安全隐患</li>
-</ul>
-<p><strong>解决问题一，需要拆分yaml</strong></p>
-<p><code>myblog/two-pod/mysql.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: mysql
-  namespace: luffy
-  labels:
-    component: mysql
-spec:
-  hostNetwork: true	# 声明pod的网络模式为host模式，效果同docker run --net=host
-  volumes: 
-  - name: mysql-data
-    hostPath: 
-      path: /opt/mysql/data
-  nodeSelector:   # 使用节点选择器将Pod调度到指定label的节点
-    component: mysql
-  containers:
-  - name: mysql
-    image: mysql:5.7
-    args:
-    - --character-set-server=utf8mb4
-    - --collation-server=utf8mb4_unicode_ci
-    ports:
-    - containerPort: 3306
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      value: &quot;123456&quot;
-    - name: MYSQL_DATABASE
-      value: &quot;myblog&quot;
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 50m
-      limits:
-        memory: 500Mi
-        cpu: 100m
-    readinessProbe:
-      tcpSocket:
-        port: 3306
-      initialDelaySeconds: 5
-      periodSeconds: 10
-    livenessProbe:
-      tcpSocket:
-        port: 3306
-      initialDelaySeconds: 15
-      periodSeconds: 20
-    volumeMounts:
-    - name: mysql-data
-      mountPath: /var/lib/mysql
-</code></pre>
-<p>myblog.yaml</p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: myblog
-  namespace: luffy
-  labels:
-    component: myblog
-spec:
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1  # 注意更改镜像地址
-    imagePullPolicy: IfNotPresent
-    env:
-    - name: MYSQL_HOST   #  指定root用户的用户名
-      value: &quot;172.21.51.67&quot;   # 更改为lable选定的地址
-    - name: MYSQL_PASSWD
-      value: &quot;123456&quot;
-    ports:
-    - containerPort: 8002
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 50m
-      limits:
-        memory: 500Mi
-        cpu: 100m
-    livenessProbe:
-      httpGet:
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 15 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-    readinessProbe: 
-      httpGet: 
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10 
-      timeoutSeconds: 2
-      periodSeconds: 15
-</code></pre>
-<p>创建测试</p>
-<pre><code class="language-powershell">## 先删除旧pod
-$ kubectl -n luffy delete po myblog
-
-## 分别创建mysql和myblog
-$ kubectl create -f mysql.yaml
-$ kubectl create -f myblog.yaml
-
-## 查看pod，注意mysqlIP为宿主机IP，因为网络模式为host
-$ kubectl -n luffy get po -o wide 
-NAME     READY   STATUS    RESTARTS   AGE   IP                NODE
-myblog   1/1     Running   0          41s   10.244.1.152      k8s-slave1
-mysql    1/1     Running   0          52s   172.21.51.67      k8s-slave1
-
-## 访问myblog服务正常
-$ curl 10.244.1.152:8002/blog/index/
-</code></pre>
-<h3 id="3115-configmap和secret">3.1.15 Configmap和Secret</h3>
-<p><strong>解决问题二，环境变量中敏感信息带来的安全隐患</strong></p>
-<p>为什么要统一管理环境变量</p>
-<ul>
-<li>环境变量中有很多敏感的信息，比如账号密码，直接暴漏在yaml文件中存在安全性问题</li>
-<li>团队内部一般存在多个项目，这些项目直接存在配置相同环境变量的情况，因此可以统一维护管理</li>
-<li>对于开发、测试、生产环境，由于配置均不同，每套环境部署的时候都要修改yaml，带来额外的开销</li>
-</ul>
-<p>k8s提供两类资源，configMap和Secret，可以用来实现业务配置的统一管理， 允许将配置文件与镜像文件分离，以使容器化的应用程序具有可移植性 。</p>
-<p><strong>configMap和Secret的区别：</strong></p>
-<pre><code>Secret通常用来存储一些比较敏感的信息，例如账号密码、证书私钥、Token等信息。
-
-configMap通常用来存储配置文件或环境变量信息
-</code></pre>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840559140.png" alt="" loading="lazy"></figure>
-<ul>
-<li>
-<p>configMap，通常用来管理应用的配置文件或者环境变量，<code>myblog/two-pod/configmap.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: myblog
-  namespace: luffy
-data:
-  MYSQL_HOST: &quot;172.21.51.67&quot;
-  MYSQL_PORT: &quot;3306&quot;
-</code></pre>
-<p>创建并查看configMap：</p>
-<pre><code class="language-powershell">$ kubectl create -f configmap.yaml
-$ kubectl -n luffy get cm myblog -oyaml
-</code></pre>
-<p>或者可以使用命令的方式，从文件中创建，比如：</p>
-<p>configmap.txt  <strong>(推荐使用)</strong></p>
-<pre><code class="language-powershell">$ cat configmap.txt
-MYSQL_HOST=172.21.51.67
-MYSQL_PORT=3306
-
-$ kubectl create configmap myblog --from-env-file=configmap.txt
-
-## --from-env-file 通常创建环境变量类型的配置文件使用，环境变量形式的配置
-## --from-file 通常用来创建配置文件,非环境变量形式的配置
-示例：
-vim config.ini
-[mysqld]
-aaa=bbb
-ccc=ddd
-
-#创建配置文件
-kubectl create configmap demo --form-file=config.ini
-
-#查看文件区别
-kubectl get configmap myblog -o yaml
-kubectl get configmap demp -o yaml
-</code></pre>
-</li>
-<li>
-<p>Secret，管理敏感类的信息，默认会base64编码存储，有三种类型</p>
-<ul>
-<li>Service Account ：用来访问Kubernetes API，由Kubernetes自动创建，并且会自动挂载到Pod的/run/secrets/kubernetes.io/serviceaccount目录中；创建ServiceAccount后，Pod中指定serviceAccount后，自动创建该ServiceAccount对应的secret；</li>
-<li>Opaque ： base64编码格式的Secret，用来存储密码、密钥等；</li>
-<li>kubernetes.io/dockerconfigjson ：用来存储私有docker registry的认证信息。</li>
-</ul>
-<p><code>myblog/two-pod/secret.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Secret
-metadata:
-  name: myblog
-  namespace: luffy
-type: Opaque  #指定存储类型
-data:
-  MYSQL_USER: cm9vdA==		#注意加-n参数， echo -n root|base64
-  MYSQL_PASSWD: MTIzNDU2
-</code></pre>
-<p>创建并查看：</p>
-<pre><code class="language-powershell">$ kubectl create -f secret.yaml
-$ kubectl -n luffy get secret
-</code></pre>
-<p>如果不习惯这种方式，可以通过如下方式：<strong>（推荐使用）</strong></p>
-<pre><code class="language-powershell">$ cat secret.txt
-MYSQL_USER=root
-MYSQL_PASSWD=123456
-
-$ kubectl -n luffy create secret generic myblog --from-env-file=secret.txt 
-</code></pre>
-</li>
-</ul>
-<p>修改后的mysql的yaml，资源路径：<code>myblog/two-pod/mysql-with-config.yaml</code></p>
-<pre><code class="language-yaml">...
-spec:
-  containers:
-  - name: mysql
-    args:
-    - --character-set-server=utf8mb4
-    - --collation-server=utf8mb4_unicode_ci
-    env:
-    - name: MYSQL_USER  #获取&quot;MYSQL_USER参数&quot;
-      valueFrom:
-        secretKeyRef:  #从secret中引用
-          name: myblog
-          key: MYSQL_USER
-    - name: MYSQL_ROOT_PASSWORD  #获取&quot;MYSQL_ROOT_PASSWORD参数&quot;
-      valueFrom:  
-        secretKeyRef: #从secret中引用
-          name: myblog
-          key: MYSQL_PASSWD
-    - name: MYSQL_DATABASE
-      value: &quot;myblog&quot;
-...
-</code></pre>
-<p>整体修改后的myblog的yaml，资源路径：<code>myblog/two-pod/myblog-with-config.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: myblog
-  namespace: luffy
-  labels:
-    component: myblog
-spec:
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    imagePullPolicy: IfNotPresent
-    env:
-    - name: MYSQL_HOST
-      valueFrom:
-        configMapKeyRef:
-          name: myblog
-          key: MYSQL_HOST
-    - name: MYSQL_PORT
-      valueFrom:
-        configMapKeyRef:
-          name: myblog
-          key: MYSQL_PORT
-    - name: MYSQL_USER
-      valueFrom:
-        secretKeyRef:
-          name: myblog
-          key: MYSQL_USER
-    - name: MYSQL_PASSWD
-      valueFrom:
-        secretKeyRef:
-          name: myblog
-          key: MYSQL_PASSWD
-    ports:
-    - containerPort: 8002
-    resources:
-      requests:
-        memory: 100Mi
-        cpu: 50m
-      limits:
-        memory: 500Mi
-        cpu: 100m
-    livenessProbe:
-      httpGet:
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 15 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-    readinessProbe: 
-      httpGet: 
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10 
-      timeoutSeconds: 2
-      periodSeconds: 15
-</code></pre>
-<p>在部署不同的环境时，pod的yaml无须再变化，只需要在每套环境中维护一套ConfigMap和Secret即可。但是注意configmap和secret不能跨namespace使用，且更新后，pod内的env不会自动更新，重建后方可更新。</p>
-<h3 id="3116-如何编写资源yaml">3.1.16 如何编写资源yaml</h3>
-<ol>
-<li>
-<p>拿来主义，从机器中已有的资源中拿</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system get po,deployment,ds
-</code></pre>
-</li>
-<li>
-<p>学会在官网查找， https://kubernetes.io/docs/home/</p>
-</li>
-<li>
-<p>从kubernetes-api文档中查找， https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#pod-v1-core</p>
-</li>
-<li>
-<p>kubectl explain 查看具体字段含义</p>
-</li>
-</ol>
-<h3 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h3>
-<p>Pod的状态如下表所示：</p>
-<table>
-<thead>
-<tr>
-<th>状态值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pending</td>
-<td>API Server已经创建该Pod，等待调度器调度</td>
-</tr>
-<tr>
-<td>ContainerCreating</td>
-<td>拉取镜像启动容器中</td>
-</tr>
-<tr>
-<td>Running</td>
-<td>Pod内容器均已创建，且至少有一个容器处于运行状态、正在启动状态或正在重启状态</td>
-</tr>
-<tr>
-<td>Succeeded|Completed</td>
-<td>Pod内所有容器均已成功执行退出，且不再重启</td>
-</tr>
-<tr>
-<td>Failed|Error</td>
-<td>Pod内所有容器均已退出，但至少有一个容器退出为失败状态</td>
-</tr>
-<tr>
-<td>CrashLoopBackOff</td>
-<td>Pod内有容器启动失败，比如配置文件丢失导致主进程启动失败</td>
-</tr>
-<tr>
-<td>Unknown</td>
-<td>由于某种原因无法获取该Pod的状态，可能由于网络通信不畅导致</td>
-</tr>
-</tbody>
-</table>
-<p>生命周期示意图：</p>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840588832.jpg" alt="" loading="lazy"></figure>
-<p>启动和关闭示意：</p>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840601236.jpg" alt="" loading="lazy"></figure>
-<pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
-Pod从开始启动得时候，先执行得就是init container里面得内容。
-initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
-init container启动完就退出了，不会持久的存在
-</code></pre>
-<p>通常用init container来做什么事情 ？</p>
-<p>初始化容器(init container)：</p>
-<ul>
-<li>验证业务应用依赖的组件是否均已启动</li>
-<li>修改目录的权限</li>
-<li>调整系统参数</li>
-<li>istio -&gt; iptables规则的设置</li>
-</ul>
-<pre><code class="language-yaml">示例：
-...
-      initContainers:
-      - command:
-        - /sbin/sysctl
-        - -w
-        - vm.max_map_count=262144
-        image: alpine:3.6
-        imagePullPolicy: IfNotPresent
-        name: elasticsearch-logging-init
-        resources: {}
-        securityContext:
-          privileged: true
-      - name: fix-permissions
-        image: alpine:3.6
-        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: elasticsearch-logging
-          mountPath: /usr/share/elasticsearch/data
-...
-</code></pre>
-<p>验证Pod生命周期：</p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: pod-lifecycle
-  namespace: luffy
-  labels:
-    component: pod-lifecycless
-spec:
-  initContainers:
-  - name: init
-    image: busybox
-    command: ['sh', '-c', 'echo $(date +%s): INIT &gt;&gt; /loap/timing']
-    volumeMounts:
-    - mountPath: /loap
-      name: timing
-  containers:
-  - name: main
-    image: busybox
-    command: ['sh', '-c', 'echo $(date +%s): START &gt;&gt; /loap/timing;
-sleep 10; echo $(date +%s): END &gt;&gt; /loap/timing;']
-    volumeMounts:
-    - mountPath: /loap 
-      name: timing
-    livenessProbe:
-      exec:
-        command: ['sh', '-c', 'echo $(date +%s): LIVENESS &gt;&gt; /loap/timing']
-    readinessProbe:
-      exec:
-        command: ['sh', '-c', 'echo $(date +%s): READINESS &gt;&gt; /loap/timing']
-    lifecycle:
-      postStart:
-        exec:
-          command: ['sh', '-c', 'echo $(date +%s): POST-START &gt;&gt; /loap/timing']
-      preStop:
-        exec:
-          command: ['sh', '-c', 'echo $(date +%s): PRE-STOP &gt;&gt; /loap/timing']
-  volumes:
-  - name: timing
-    hostPath:
-      path: /tmp/loap
-</code></pre>
-<p>创建pod测试：</p>
-<pre><code class="language-powershell">$ kubectl create -f pod-lifecycle.yaml
-
-## 查看demo状态
-$ kubectl -n luffy get po -o wide -w
-
-## 查看调度节点的/tmp/loap/timing
-$ cat /tmp/loap/timing
-1585424708: INIT
-1585424746: START
-1585424746: POST-START
-1585424754: READINESS
-1585424756: LIVENESS
-1585424756: END
-</code></pre>
-<blockquote>
-<p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
-</blockquote>
-<h3 id="3118-小结">3.1.18 小结</h3>
-<ol>
-<li>实现k8s平台与特定的容器运行时解耦，提供更加灵活的业务部署方式，引入了Pod概念</li>
-<li>k8s使用yaml格式定义资源文件，yaml中Map与List的语法，与json做类比</li>
-<li>通过kubectl apply| get | exec | logs | delete 等操作k8s资源，必须指定namespace</li>
-<li>每启动一个Pod，为了实现网络空间共享，会先创建Infra(基础设施)容器，并把其他容器网络加入该容器</li>
-<li>通过livenessProbe(存活性探测)和readinessProbe(可用性探测)实现Pod的存活性和就绪健康检查</li>
-<li>通过requests和limit分别限定容器初始资源申请与最高上限资源申请（资源限制）</li>
-<li>Pod通过initContainer和lifecycle分别来执行初始化、pod启动和删除时候的操作，使得功能更加全面和灵活</li>
-<li>编写yaml讲究方法，学习k8s，养成从官方网站查询知识的习惯</li>
-</ol>
-<p>做了哪些工作：</p>
-<ol>
-<li>定义Pod.yaml，将myblog和mysql打包在同一个Pod中，使用myblog使用localhost访问mysql</li>
-<li>mysql数据持久化，为myblog业务应用添加了健康检查和资源限制</li>
-<li>将myblog与mysql拆分，使用独立的Pod管理</li>
-<li>yaml文件中的环境变量存在账号密码明文等敏感信息，使用configMap和Secret来统一配置，优化部署</li>
-</ol>
-<p>只使用Pod, 面临的问题:</p>
-<ol>
-<li>业务应用启动多个副本</li>
-<li>Pod重建后IP会变化，外部如何访问Pod服务</li>
-<li>运行业务Pod的某个节点挂了，可以自动帮我把Pod转移到集群中的可用节点启动起来</li>
-<li>我的业务应用功能是收集节点监控数据,需要把Pod运行在k8集群的各个节点上</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Prometheus+Grafana+Consul+alertmanager 生产环境监控告警]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/LwmnRALvn/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/">
-        </link>
-        <updated>2022-02-08T07:17:33.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="为什么做生产环境监控部署包">为什么做生产环境监控部署包</h1>
-<p>目前我们很多部署在客户环境中的云管其实都没有配置监控，导致很多时候出现问题后，客户找到我们比较被动，还会出现磁盘满导致服务不可用。同时对于规模比较大的客户，资源数量增长比较快，也不清楚整体系统资源随资源数量增长的变化性能情况。为了能够及时了解云管的运行情况、及时发现故障并解决，制作了云管生产环境监控部署包。</p>
-<h1 id="使用场景">使用场景</h1>
-<p>在云管生产实施后，导入部署包，把Prometheus监控部署包部署到一台监控主机，把Node Exporter部署包部署到需要监控的虚拟机，把mysql exporter部署包部署到MySQL组主机，把Cadvisor部署包部署到需要监控的docker服务虚拟机，打开监控主机登录Grafana，即可看到生产云管系统的监控情况，并能在部署时指定的告警通知邮箱中收到告警。</p>
-<h1 id="一-环境准备">一 、环境准备：</h1>
-<p>1.1 监控主机硬件环境：</p>
-<table>
-<thead>
-<tr>
-<th>部署包</th>
-<th>操作系统</th>
-<th>CPU	内存</th>
-<th>磁盘</th>
-<th>主机</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>prometheus监控</td>
-<td>CentOS7以上版本</td>
-<td>2C</td>
-<td>4G</td>
-<td>50G	一台</td>
-</tr>
-</tbody>
-</table>
-<h2 id="12-被监控服务环境">1.2  被监控服务环境：</h2>
-<table>
-<thead>
-<tr>
-<th>部署包</th>
-<th>操作系统</th>
-<th>监控的服务版本</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>node_exporter</td>
-<td>CentOS7</td>
-<td>虚拟机</td>
-</tr>
-<tr>
-<td>mysql_exporter</td>
-<td>CentOS7</td>
-<td>mysql/mariaDB &gt; 5.6</td>
-</tr>
-<tr>
-<td>Cadvisor</td>
-<td>CentOS7</td>
-<td>Docker 不限制</td>
-</tr>
-</tbody>
-</table>
-<h2 id="13-部署包下载链接">1.3 部署包下载链接：</h2>
-<p>1. prometheus监控工具：https://f2c-north-rel-1251506367.cos.ap-beijing.myqcloud.com/deployment-packages/CentOS/%E9%83%A8%E7%BD%B2%E5%8C%85-prometheus%2Bgrafana%2Bconsul%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6-CentOS7-2021-10-30.zip</p>
-<p>2.exporter被监控节点数据收集工具: https://f2c-north-rel-1251506367.cos.ap-beijing.myqcloud.com/deployment-packages/CentOS/%E9%83%A8%E7%BD%B2%E5%8C%85-%E5%AE%89%E8%A3%85exporter%E5%B9%B6%E6%B3%A8%E5%86%8C%E5%88%B0consu-CentOS7-2021-10-30.zip</p>
-<h1 id="二-prometheus部署包使用说明">二、prometheus部署包使用说明：</h1>
-<p>由于proemtheus使用专为监控指标数据设计的高性能时序数据库TSDB，为保证服务器时间准确一致，部署包中安装了ntpd时间同步服务。</p>
-<p>因此如果是内网环境，请最好配置本地yum源和时间同步服务来保证时间准确一致。</p>
-<h2 id="21-工具功能说明">2.1 工具功能说明</h2>
-<p>用于监控云管环境中的机器状态和服务状态，确保出现异常及时告警维护。<br>
-已支持监控node节点的CPU、内存、磁盘、网络等，MySQL服务、docker容器，后续根据需求更新监控服务和监控指标。</p>
-<h2 id="22-工具组成介绍">2.2 工具组成介绍</h2>
-<table>
-<thead>
-<tr>
-<th>服务</th>
-<th>用途</th>
-<th>版本</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>prometheus</td>
-<td>主要负责数据采集和存储</td>
-<td>2.30.3</td>
-</tr>
-<tr>
-<td>alertmanager</td>
-<td>进行报警发送邮件</td>
-<td>0.23.0</td>
-</tr>
-<tr>
-<td>consul</td>
-<td>用于服务发现，自注册</td>
-<td>1.10.3</td>
-</tr>
-<tr>
-<td>grafana</td>
-<td>数据可视化展示</td>
-<td>8.2.1</td>
-</tr>
-</tbody>
-</table>
-<h2 id="23-prometheus部署包参数">2.3 prometheus部署包参数：</h2>
-<h3 id="231-prometheus监控部署包邮箱配置参数">2.3.1 prometheus监控部署包邮箱配置参数：</h3>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Smtp_Mail</td>
-<td>smtp邮箱+端口号</td>
-<td>smtp.exmail.qq.com:25</td>
-</tr>
-<tr>
-<td>Smtp_Username</td>
-<td>接收告警通知人的邮箱地址</td>
-<td>xiaodong.wei@fit2cloud.com</td>
-</tr>
-<tr>
-<td>Stmp_Password</td>
-<td>邮箱授权码</td>
-<td>nHdhrBDBhEqPERAP</td>
-</tr>
-</tbody>
-</table>
-<p>smtp参数用来配置Alertmanager告警通知，部署包中以邮件告警作为告警方式，支持使用QQ邮箱、企业微信邮箱、网易163邮箱等。</p>
-<h3 id="232-整理常用邮箱服务器地址和端口方便大家使用">2.3.2  整理常用邮箱服务器地址和端口，方便大家使用：</h3>
-<table>
-<thead>
-<tr>
-<th>常用邮箱</th>
-<th>邮箱服务器地址</th>
-<th>端口号</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>QQ邮箱</td>
-<td>smtp.qq.com</td>
-<td>25/456(加密)</td>
-</tr>
-<tr>
-<td>企业微信邮箱</td>
-<td>smtp.exmail.qq.com</td>
-<td>25/456(加密)</td>
-</tr>
-<tr>
-<td>网易163邮箱</td>
-<td>smtp.163.com</td>
-<td>25</td>
-</tr>
-</tbody>
-</table>
-<h3 id="233-邮箱授权码获取方式">2.3.3  邮箱授权码获取方式：</h3>
-<p>1.以企业微信邮箱为例：登陆企业微信邮箱 https://exmail.qq.com 进入设置页面。</p>
-<p>2.选择”微信绑定“ → &quot;开启安全登录&quot; → &quot;生成密码&quot;，复制密码即可。</p>
-<p></p>
-<h2 id="24-测试部署机器">2.4 测试部署机器：</h2>
-<p>prometheus主机IP地址： 10.1.13.172</p>
-<h2 id="25-部署完成后在机器上通过systemctl命令查看各个服务状态">2.5 部署完成后，在机器上通过systemctl命令查看各个服务状态：</h2>
-<p>systemctl status prometheus alertmanager consul grafana</p>
-<p>服务名称	默认端口号<br>
-prometheus 	9090<br>
-alertmanager 	9093(访问端口)/9094<br>
-consul 	8300/8500(访问端口)<br>
-grafana	3000</p>
-<h2 id="26-使用-ss-ntlp检查端口是否存在">2.6  使用 ss -ntlp检查端口是否存在</h2>
-<h2 id="27-查看安装日志">2.7 查看安装日志</h2>
-<p>如果部署过程中出现错误或异常，可在${install_dir}/install-tool.log（默认/opt/install-tool.log）中查看哪一步出现的错误，进行排错。</p>
-<h2 id="28-访问界面测试">2.8  访问界面测试：</h2>
-<p>prometheus: http://10.1.13.172:9090</p>
-<p>consul: http://10.1.13.172:8500</p>
-<p>grafana:http://10.1.13.172:3000<br>
-默认登陆用户名/密码：admin/admin</p>
-<p>然后更改密码，即可进入</p>
-<p>grafana已经配置好prometheus数据源和node dashboard、mysql dashboard、docker dashboard，只需使用expoter部署包部署到需要监控的机器上即可。</p>
-<p>在这里查找需要关注的dashboard</p>
-<p>到这里prometheus监控工具部署验证就结束了。</p>
-<p>如果没有问题，那就没有问题✌</p>
-<h1 id="三-部署exporter部署包">三、部署exporter部署包</h1>
-<h2 id="31-工具功能">3.1 工具功能</h2>
-<p>用于收集被监控主机上的数据，向Prometheus提供监控样本数据。<br>
-目前部署包中包含Node Exporter、Mysql Exporter、Cadvosor三种，可以任意选择。<br>
-将安装完成的服务，注册到consul中。</p>
-<h2 id="32-工具组成介绍">3.2 工具组成介绍</h2>
-<p>服务	用途	版本<br>
-Node Exporter	用于采集服务器层面的运行指标	1.2.2<br>
-Mysql Exporter	采集 MySQL/MariaDB 数据库监控指标	0.13.0<br>
-Cadvisor	采集和容器运行相关的所有指标	docker镜像</p>
-<h2 id="33-exporter部署包参数说明">3.3 exporter部署包参数说明：</h2>
-<p>参数	含义	示例<br>
-Mysqlrootpwd	mysql root用户登录密码	Test123!<br>
-Install_exportername	需要安装的exporter名称: node/mysql/cadvisor	node<br>
-Consul_IP	prometheus机器IP地址	10.1.10.127<br>
-Mysqlrootpwd：安装mysql_exporter收集mysql数据时，需要创建一个mysql普通用户用于连接。因此，需要你填写mysql root用户的密码。<br>
-tips: 这个普通用户用户名密码为exporter/Fit2cloud!,请放心，它没有登陆权限，最大连接数是5个，不会造成很大的负载。</p>
-<p>Install_exportername： 填写你需要监控的服务，<br>
-                     node为本机的cpu、内存、磁盘、网络的监控，</p>
-<p>mysql为本机mysql服务的监控，但是目前不支持docker容器启动的mysql监控，后续有需要再更新，</p>
-<p>cadvisor为本机docker容器的监控。请保证mysql和docker为running状态。</p>
-<p>tips：你可以选择部署一个或多个服务，例如：只部署node、mysql、cadvisor或者部署多个，node/mysql，mysql/cadvisor，node/cadvisor，node/mysql/cadvisor都可以。<br>
-         多个服务请使用”/“划分，和我写的保持一致，或者直接复制即可。</p>
-<p>Consul_IP：填写上面部署好的prometheus监控的IP地址，它会自动将服务注册到consul中。</p>
-<h2 id="34-测试部署exporter">3.4  测试部署exporter：</h2>
-<p>exporter部署机器IP：10.1.13.172、10.1.13.173、10.1.13.175</p>
-<p>tips：10.1.13.172机器部署了prometheus监控工具，但是想要监控自己的机器状态或服务，需要再次部署exporter部署包。</p>
-<p></p>
-<p></p>
-<h2 id="35-部署完成以后通过systemctl命令查看各个服务的状态">3.5  部署完成以后，通过systemctl命令查看各个服务的状态：</h2>
-<p>systemctl   status  node_exporter mysql_exporter</p>
-<p>cadvisor是用docker启动的，所以需要使用docker命令查看</p>
-<p>docker ps |grep cadvisor</p>
-<p>服务	默认端口号<br>
-node_exporter	9100<br>
-mysql_exporter	9104<br>
-cadvisor	8090</p>
-<h2 id="36-使用-ss-ntlp检查端口是否存在">3.6  使用 ss -ntlp检查端口是否存在</h2>
-<h2 id="37-验证服务是否注册到consul中">3.7 验证服务是否注册到consul中</h2>
-<p>再次访问consul地址：http://10.1.10.172:8500</p>
-<p>刷新界面，发现服务已经注册进来✌</p>
-<h2 id="38-访问grafana查看node-mysql-docker-dashboard是否有数据">3.8  访问Grafana，查看node、mysql、docker dashboard，是否有数据。</h2>
-<p>Grafana： http://10.1.10.172:3000</p>
-<p>node dashboard</p>
-<p>mysql dashboard</p>
-<p>docker dashboard</p>
-<h1 id="四-测试alertmanager告警">四、测试alertmanager告警</h1>
-<p>停掉10.1.13.173、10.1.13175的mysql_exporter，这样prometheus就无法收集mysql数据，然后报警发邮件。</p>
-<h2 id="41-关闭mysql_exporter服务">4.1  关闭mysql_exporter服务</h2>
-<p>systemctl stop mysql_exporter</p>
-<h2 id="42-promrtheus-alerts界面出现告警">4.2  promrtheus alerts界面出现告警</h2>
-<h2 id="43-收到告警邮件">4.3  收到告警邮件</h2>
-<h2 id="44-重新启动mysql_exporter">4.4  重新启动mysql_exporter</h2>
-<h2 id="45-告警消失">4.5  告警消失</h2>
-<h1 id="五-一键部署脚本">五 一键部署脚本</h1>
-<h2 id="51-监控告警一键部署脚本">5.1 监控告警一键部署脚本</h2>
-<pre><code>#!/bin/bash
-
-#设置环境信息
-[ `whoami` != &quot;root&quot; ] &amp;&amp; echo &quot;######## Please Use root Install......&quot; &amp;&amp; exit 71
-IP=`ip addr |awk '/inet /' |sed -n '2p' |awk -F' ' '{print $2}' |awk -F'/' '{print $1}'`
-install_dir=${{Install_Dir}}      #安装目录  /opt
-tool_dir=${install_dir}/software  #部署包目录 /opt/software
-data_dir=${{Data_Dir}}            #prometheus数据目录  /opt
-LogFile=${{logfile}}              #日志文件  /opt/install-tool.log
-file_dir=${{file_Dir}}            #解压文件目录  /usr/local
-
-#配置告警邮箱
-Smtp_Mail=${{Smtp_Mail}}  #smtp邮箱+端口号，例:smtp.qq.com:465
-Stmp_Username=${{Smtp_Username}}  #接收告警通知人的邮箱地址，例：xxxxxxxx@qq.com
-Stmp_Password=${{Stmp_Password}}  #邮箱授权码
-
-yum install zip expect -y
-
-#检查文件目录是否存在
-if [ ! -f ${LogFile} ];then
-    touch ${LogFile}
-fi
-
-if [ ! -d ${install_dir}/Consul_Host ];then
-    mkdir -p ${install_dir}/Consul_Host
-else
-    echo &quot;目录已存在&quot; &gt;&gt; ${LogFile}
-fi
-
-#安装前初始化，检查防火墙、selinux
-function InitInstall()
-{
-echo &quot;===================开始安装前初始化，检查防火墙、selinux===================&quot; &gt;&gt; ${LogFile} 
-#Disable SeLinux
-if [ -s /etc/selinux/config ]; then
-    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-fi
-setenforce 0
-
-echo &quot;Selinux已关闭&quot; &gt;&gt;  ${LogFile}
-
-#关闭防火墙
-systemctl status firewalld &gt; /dev/null
-if [ $? -eq 0 ];then
-    systemctl stop firewalld &gt; /dev/null 2&gt;&amp;1
-    echo -e &quot;firewalld关闭成功！&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;未开启防火墙无需添加规则！&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-#安装ntpd
-function Install_Ntpd()
-{
-if [ -f /usr/sbin/ntpdate ];then
-    echo &quot;the ntp-service is installed&quot; &gt;&gt; ${LogFile}
-else
-    yum install -y ntp  &amp;&amp; mv /etc/ntp.conf /etc/ntp.conf.bak
-    cat &gt; /etc/ntp.conf &lt;&lt;EOF
-driftfile /var/lib/ntp/drift
-restrict default kod nomodify notrap nopeer noquery
-restrict -6 default kod nomodify notrap nopeer noquery
-restrict 127.0.0.1
-restrict -6 ::1
-#server 0.centos.pool.ntp.org iburst
-#server 1.centos.pool.ntp.org iburst
-#server 2.centos.pool.ntp.org iburst
-#server 3.centos.pool.ntp.org iburst
-#定义使用的上游 ntp服务器，将原来的注释
-server ntp1.aliyun.com
-server time1.aliyun.com
-#允许上层时间服务器主动修改本机时间
-restrict time1.aliyun.com nomodify notrap noquery
-restrict ntp1.aliyun.com nomodify notrap noquery
-
-includefile /etc/ntp/crypto/pw
-keys /etc/ntp/keys
-EOF
-    
-	#启动ntpd服务
-    systemctl start ntpd
-    if [ $? -eq 0 ];then
-        echo &quot;ntpd启动成功&quot; &gt;&gt; ${LogFile}
-    else
-        echo &quot;ntpd启动失败&quot; &gt;&gt; ${LogFile}
-    fi
-fi
-}
-
-#下载工具安装包
-function Download()
-{
-echo &quot;======================开始下载工具安装包=========================&quot; &gt;&gt;  ${LogFile} 
-cd ${install_dir}
-if [ ! -f ${{software}} ];then
-    wget ${{software}}
-	if [ $? -eq 0 ];then
-        echo -e &quot;工具包下载成功&quot; &gt;&gt; ${LogFile}
-    else
-        echo &quot;工具包下载失败&quot; &gt;&gt; ${LogFile}
-	    exit 2
-    fi
-    unzip ${{software__filename}}
-else
-    echo &quot;software文件已存在，无需下载&quot; &gt;&gt; ${LogFile}
-fi
-
-cd ${tool_dir}
-unzip rules.zip
-unzip grafana_file.zip
-}
-
-#解压并启动prometheus
-function Install_Prometheus()
-{
-echo &quot;========================开始解压并启动prometheus...===================&quot; &gt;&gt; ${LogFile}
-cd ${tool_dir}
-tar -zxvf prometheus-2.30.3.linux-amd64.tar.gz -C ${file_dir}
-ln -sv ${file_dir}/prometheus-2.30.3.linux-amd64 ${file_dir}/prometheus
-cat &gt; /etc/systemd/system/prometheus.service &lt;&lt;EOF
-[Unit]
-Description=Prometheus
-Documentation=https://prometheus.io/docs/introduction/overview/
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=root
-Group=root
-Type=simple
-# 启动脚本
-ExecStart=${file_dir}/prometheus/prometheus \
-    --config.file ${file_dir}/prometheus/prometheus.yml \
-    --storage.tsdb.path ${data_dir}/prometheus/ \
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-chmod a+x /etc/systemd/system/prometheus.service
-systemctl daemon-reload &amp;&amp; systemctl start prometheus.service &amp;&amp; systemctl enable prometheus.service
-if [ $? -eq 0 ];then
-    echo -e &quot;prometheus启动成功...&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;prometheus启动失败&quot; &gt;&gt; ${LogFile}
-	exit
-fi
-}
-
-
-#安装consul
-function Install_Consul()
-{
-echo &quot;======================开始安装consul=====================&quot; &gt;&gt; ${LogFile}
-if [ ! -d ${data_dir}/consul ];then
-    mkdir -pv /etc/consul.d  &amp;&amp; mkdir -pv ${data_dir}/consul/shell
-else
-    echo &quot;consul目录已存在&quot; &gt;&gt; ${Logfile}
-fi
-
-cd ${tool_dir}
-unzip consul_1.10.3_linux_amd64.zip &amp;&amp; mv consul /usr/bin/
-
-
-#配置启动脚本
-cat &gt; /etc/consul.d/service.json &lt;&lt;EOF
-{
-&quot;server&quot;: true,
-&quot;ui&quot;:true,
-&quot;datacenter&quot;: &quot;consul&quot;,
-&quot;data_dir&quot;: &quot;${data_dir}/consul&quot;,
-&quot;node_name&quot;: &quot;consul-node&quot;,
-&quot;bootstrap_expect&quot;:1,
-&quot;client_addr&quot;: &quot;0.0.0.0&quot;,
-&quot;bind_addr&quot;: &quot;${IP}&quot;
-}
-EOF
-
-cat &gt; /etc/systemd/system/consul.service&lt;&lt;EOF
-[Unit]
-Description=consul-service
-After=network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/bin/consul agent -config-dir /etc/consul.d
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-#启动consul服务
-systemctl daemon-reload  &amp;&amp; systemctl enable consul  &amp;&amp; systemctl start consul
-sleep 10
-netstat -anp | grep consul
-if [ $? -eq 0 ];then
-    echo &quot;consul已启动&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;consul未启动&quot; &gt;&gt; ${LogFile}
-fi
-
-#将consul添加到prometheus.yml
-cat &gt;&gt; ${file_dir}/prometheus/prometheus.yml &lt;&lt;EOF
-  # consul
-  - job_name: &quot;consul-prometheus&quot;
-    consul_sd_configs:
-      - server: ${IP}:8500
-    relabel_configs:
-    - source_labels: [__meta_consul_service]
-      action: drop
-      regex: consul
-EOF
-
-#重启prometheus
-systemctl restart prometheus
-sleep 10
-}
-
-
-function Install_Alter()
-{
-echo &quot;============================开始安装Alertmanager=====================&quot; &gt;&gt; ${LogFile}
-#解压文件
-tar -zxvf ${tool_dir}/alertmanager-0.23.0.linux-amd64.tar.gz -C ${file_dir}/
-ln -sv  ${file_dir}/alertmanager-0.23.0.linux-amd64  ${file_dir}/alertmanager
-
-#修改alertmanager配置文件
-cd ${file_dir}/alertmanager
-mv alertmanager.yml alertmanager.yml.bak
-cat &gt; alertmanager-email.yml &lt;&lt;EOF
-global:
-  resolve_timeout: 10s
-  smtp_smarthost: &quot;${Smtp_Mail}&quot;
-  smtp_from: &quot;${Stmp_Username}&quot;
-  smtp_auth_username: &quot;${Stmp_Username}&quot;
-  smtp_auth_password: &quot;${Stmp_Password}&quot;
-  smtp_require_tls: false
-
-route:
-  group_by: ['altername']
-  group_wait: 10s
-  group_interval: 20m
-  repeat_interval: 1h
-  receiver: 'email'
-
-receivers:
-- name: 'email'
-  email_configs:
-    - to: &quot;${Stmp_Username}&quot;
-
-templates:
-  - &quot;/usr/local/alertmanager/template/email.tmpl&quot;
-
-inhibit_rules:
-  - source_match:
-      severity: 'critical'
-    target_match:
-      severity: 'warning'
-    equal: ['alertname', 'dev', 'instance']
-EOF
-
-
-#检查alertmanager配置文件
-cd ${file_dir}/alertmanager
-./amtool check-config alertmanager-email.yml  &gt;&gt; ${LogFile}
-if [ $? -eq 0 ];then
-    echo &quot;Checking 'alertmanager-email.yml'  SUCCESS&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;Checking 'alertmanager-email.yml'  FAILED&quot; &gt;&gt; ${LogFile}
-fi
-
-#添加告警模板
-mkdir -p ${file_dir}/alertmanager/template
-cp ${tool_dir}/rules/email.tmpl  ${file_dir}/alertmanager/template/
-
-# 加入开机启动
-cat &gt; /etc/systemd/system/alertmanager.service &lt;&lt;EOF
-[Unit]
-Description=alertmanager
-After=local-fs.target network-online.target network.target
-Wants=local-fs.target network-online.target network.target
- 
-[Service]
-ExecStart=${file_dir}/alertmanager/alertmanager --config.file=${file_dir}/alertmanager/alertmanager-email.yml
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-#启动服务
-systemctl daemon-reload  &amp;&amp; systemctl enable alertmanager  &amp;&amp; systemctl start alertmanager
-netstat -nap|grep alertmanager
-if [ $? -eq 0 ];then
-    echo &quot;alertmanager服务已启动&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;alertmanager服务启动失败&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-function Config_Alert()
-{
-#Prometheus配置
-#进入prometheus安装目录，编辑prometheus.yml,开启alertmanager监控
-sed -i &quot;s/# - alertmanager:9093/  - ${IP}:9093/g&quot;  ${file_dir}/prometheus/prometheus.yml 
-
-#开启告警配置
-sed -i '15a\    - &quot;rules/*.yml&quot;' ${file_dir}/prometheus/prometheus.yml
-
-#监控Alertmanager
-cat &gt;&gt; ${file_dir}/prometheus/prometheus.yml &lt;&lt; EOF
-
-  # alertmanager
-  - job_name: 'alertmanager'
-    static_configs:
-      - targets: [&quot;localhost:9093&quot;]
-EOF
-
-#检查并重新加载配置文件
-cd ${file_dir}/prometheus
-./promtool check config prometheus.yml  &gt;&gt; ${LogFile}
-if [ $? -eq 0 ];then
-    echo &quot;Checking prometheus.yml  SUCCESS&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;Checking prometheus.yml FAILED&quot; &gt;&gt; ${LogFile}
-fi
-
-#创建告警目录&amp;添加报警规则
-#在prometheus.yml的同级目录下，创建rules目录，在该rules目录下创建node_alerts.yml文件，内容如下：
-mkdir -p  ${file_dir}/prometheus/rules
-cp ${tool_dir}/rules/*.yml ${file_dir}/prometheus/rules/
-
-#重启Prometheus
-systemctl restart prometheus
-systemctl restart alertmanager
-
-netstat -nap|grep alertmanager
-if [ $? -eq 0 ];then
-    echo &quot;alertmanager服务已重启完成&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;alertmanager服务重启失败&quot; &gt;&gt; ${LogFile}
-fi
-
-netstat -nap|grep prometheus
-if [ $? -eq 0 ];then
-    echo &quot;prometheus服务重启完成&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;prometheus服务重启失败&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-
-#安装grafana
-function Install_Grafana()
-{
-echo &quot;============================开始安装Grafana====================&quot; &gt;&gt; ${LogFile}
-cd ${tool_dir}
-tar -zxvf grafana-enterprise-8.2.1.linux-amd64.tar.gz -C ${file_dir}
-ln -sv ${file_dir}/grafana-8.2.1 ${file_dir}/grafana
-
-#启动grafana
-cat &gt; /etc/systemd/system/grafana.service &lt;&lt;EOF
-[Unit]
-Description=Grafana Server
-After=network.target
- 
-[Service]
-Type=simple
-User=root
-WorkingDirectory=${file_dir}/grafana
-ExecStart=${file_dir}/grafana/bin/grafana-server
- 
-Restart=on-failure
-LimitNOFILE=65536
- 
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload &amp;&amp; systemctl start grafana.service &amp;&amp; systemctl enable grafana.service
-sleep 10
-netstat -anp | grep grafana
-if [ $? -eq 0 ];then
-    echo &quot;Grafana已启动&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;Grafana未启动&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-function Config_Grafana()
-{
-echo &quot;=========================开始配置Grafana数据源和dashboard=================&quot; &gt;&gt; ${LogFile}
-#grafana添加数据源
-cat &gt; ${file_dir}/grafana/conf/provisioning/datasources/prometheus.yaml &lt;&lt;EOF
-# config file version
-apiVersion: 1
-
-datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    orgId: 1
-    url: http://localhost:9090
-    editable: true
-EOF
-
-#grafana添加仪表盘
-cd ${file_dir}/grafana/conf/provisioning/dashboards
-cat &gt; prometheus.yaml &lt;&lt;EOF
-apiVersion: 1
-providers:
- - name: 'default'
-   orgId: 1
-   folder: ''
-   type: file
-   updateIntervalSeconds: 10
-   options:
-     path: ${file_dir}/grafana/conf/provisioning/exporter_dashboard
-EOF
-
-#导入dashboard
-mkdir -p ${file_dir}/grafana/conf/provisioning/exporter_dashboard
-cp ${tool_dir}/grafana_file/*.json ${file_dir}/grafana/conf/provisioning/exporter_dashboard/
-
-#重启grafana
-systemctl restart grafana
-if [ $? -eq 0 ];then
-    echo &quot;grafana重启成功&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;grafana重启失败&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-
-InitInstall
-Install_Ntpd
-Download
-Install_Prometheus
-Install_Consul
-Install_Alter
-Config_Alert
-Install_Grafana
-Config_Grafana
-</code></pre>
-<h2 id="52-exporter-一键部署脚本">5.2 Exporter 一键部署脚本</h2>
-<pre><code>#!/bin/bash
-install_dir=${{Install_Dir}}      #安装包下载目录  /opt
-tool_dir=${install_dir}/exporter      #exporter工具目录 /opt/exporter
-file_dir=${{File_Dir}}            #解压文件目录  /usr/local
-LogFile=${{logfile}}              #日志文件  /opt/install-tool.log
-Install_exportername=${{Install_exportername}}  #需要安装的exporter,包括node\Mysql\Cadvisor
-mysqlrootpwd=${{Mysqlrootpwd}}    #mysql root用户登录密码
-
-
-host=`hostname`
-Consul_IP=${{Consul_IP}}
-Local_IP=`ip addr |awk '/inet /' |sed -n '2p' |awk -F' ' '{print $2}' |awk -F'/' '{print $1}'`
-yum update &amp;&amp; yum zip -y 
-
-cd ${install_dir}
-if [ ! -f ${{exporter}} ];then
-    wget ${{exporter}}
-    unzip ${{exporter__filename}}
-else
-    echo &quot;${{exporter}}已存在，无需下载&quot; &gt;&gt; ${LogFile}
-fi
-
-#安装前初始化，检查防火墙、selinux
-function InitInstall()
-{
-echo &quot;===================开始安装前初始化，检查防火墙、selinux===================&quot; &gt;&gt; ${LogFile}
-#Disable SeLinux
-if [ -s /etc/selinux/config ]; then
-    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-fi
-setenforce 0
-
-echo &quot;Selinux已关闭&quot; &gt;&gt;  ${LogFile}
-
-#关闭防火墙
-systemctl status firewalld &gt; /dev/null
-if [ $? -eq 0 ];then
-    systemctl stop firewalld &gt; /dev/null 2&gt;&amp;1
-    echo -e &quot;firewalld关闭成功！&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;未开启防火墙无需添加规则！&quot; &gt;&gt; ${LogFile}
-fi
-}
-
-
-#安装ntpd
-function Install_Ntpd()
-{
-if [ -f /usr/sbin/ntpdate ];then
-    echo &quot;the ntp-service is installed&quot; &gt;&gt; ${LogFile}
-else
-    yum install -y ntp  &amp;&amp; mv /etc/ntp.conf /etc/ntp.conf.bak
-    cat &gt; /etc/ntp.conf &lt;&lt;EOF
-driftfile /var/lib/ntp/drift
-restrict default kod nomodify notrap nopeer noquery
-restrict -6 default kod nomodify notrap nopeer noquery
-restrict 127.0.0.1
-restrict -6 ::1
-#server 0.centos.pool.ntp.org iburst
-#server 1.centos.pool.ntp.org iburst
-#server 2.centos.pool.ntp.org iburst
-#server 3.centos.pool.ntp.org iburst
-#定义使用的上游 ntp服务器，将原来的注释
-server ntp1.aliyun.com
-server time1.aliyun.com
-#允许上层时间服务器主动修改本机时间
-restrict time1.aliyun.com nomodify notrap noquery
-restrict ntp1.aliyun.com nomodify notrap noquery
-
-includefile /etc/ntp/crypto/pw
-keys /etc/ntp/keys
-EOF
-    
-	#启动ntpd服务
-    systemctl start ntpd
-    if [ $? -eq 0 ];then
-        echo &quot;ntpd启动成功&quot; &gt;&gt; ${LogFile}
-    else
-        echo &quot;ntpd启动失败&quot; &gt;&gt; ${LogFile}
-    fi
-fi
-}
-
-
-
-function Node_exporter()
-{
-echo &quot;============================开始部署Node_exporter======================&quot; &gt;&gt; ${LogFile}
-tar -zxvf  ${tool_dir}/node_exporter-1.2.2.linux-amd64.tar.gz -C ${file_dir}
-ln -sv ${file_dir}/node_exporter-1.2.2.linux-amd64 ${file_dir}/node_exporter
-
-cat &gt; /etc/systemd/system/node_exporter.service &lt;&lt;EOF
-[Unit]
-Description=Node Exporter
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=root
-Group=root
-Type=simple
-ExecStart=${file_dir}/node_exporter/node_exporter
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-chmod a+x /etc/systemd/system/node_exporter.service
-systemctl daemon-reload &amp;&amp; systemctl start node_exporter &amp;&amp; systemctl enable node_exporter
-if [ $? -eq 0 ];then
-    echo -e &quot;node_exporter启动成功...&quot;  &gt;&gt; ${LogFile}
-else
-    echo &quot;node_exporter启动失败&quot;  &gt;&gt; ${LogFile}
-	exit
-fi
-
-#注册node_exporter到consul
-
-curl -X PUT -d '{&quot;id&quot;: &quot;'node_exporter-${host}'&quot;,&quot;name&quot;: &quot;'node-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:9100,&quot;tags&quot;: [&quot;node-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':9100/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
-}
-
-function Mysql_exporter()
-{
-echo &quot;============================开始部署Mysql_exporter=====================&quot; &gt;&gt; ${LogFile}
-#下载安装MySQL Exporter(监控机器下载)
-tar xvf ${tool_dir}/mysqld_exporter-0.13.0.linux-amd64.tar.gz -C ${file_dir}
-ln -sv ${file_dir}/mysqld_exporter-0.13.0.linux-amd64 ${file_dir}/mysqld_exporter
-
-
-#创建Prometheus exporter数据库用户
-#创建用户并分配权限
-cat &gt; /tmp/mysql_sec_script &lt;&lt; EOF
-use mysql;
-CREATE USER 'exporter'@'localhost' IDENTIFIED BY 'Fit2cloud!';
-UPDATE mysql.user SET max_user_connections = 5 WHERE user='exporter' AND host='localhost';
-GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
-FLUSH PRIVILEGES;
-exit
-EOF
-
-#创建连接mysql_exporter用户
-mysql -u root -p${mysqlrootpwd}  &lt; /tmp/mysql_sec_script 
-if [ $? -eq 0 ];then
-    echo &quot;创建exporter用户成功&quot; &gt;&gt; ${LogFile}
-else
-    echo &quot;创建exporter用户失败&quot; &gt;&gt; ${LogFile}
-fi
-
-#配置.my.cnf
-cat &gt; ${file_dir}/mysqld_exporter/.mysqld_exporter.cnf &lt;&lt;EOF
-[client]
-user=exporter
-password=Fit2cloud!
-EOF
-
-
-#创建systemd单元文件
-cat &gt; /etc/systemd/system/mysql_exporter.service &lt;&lt;EOF
-[Unit]
-Description=Prometheus MySQL Exporter
-After=network.target
-User=root
-Group=root
-
-[Service]
-Type=simple
-Restart=always
-ExecStart=${file_dir}/mysqld_exporter/mysqld_exporter \
---config.my-cnf ${file_dir}/mysqld_exporter/.mysqld_exporter.cnf \
---collect.global_status \
---collect.info_schema.innodb_metrics \
---collect.auto_increment.columns \
---collect.info_schema.processlist \
---collect.binlog_size \
---collect.info_schema.tablestats \
---collect.global_variables \
---collect.info_schema.query_response_time \
---collect.info_schema.userstats \
---collect.info_schema.tables \
---collect.perf_schema.tablelocks \
---collect.perf_schema.file_events \
---collect.perf_schema.eventswaits \
---collect.perf_schema.indexiowaits \
---collect.perf_schema.tableiowaits \
---collect.slave_status \
---web.listen-address=0.0.0.0:9104
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-#启动mysql_exporter
-systemctl daemon-reload  &amp;&amp; systemctl enable mysql_exporter  &amp;&amp; systemctl start mysql_exporter
-sleep 10
-
-ss -ntlp |grep 9104
-if [ $? -eq 0 ];then
-    echo &quot;mysql_exporter已成功启动&quot; &gt;&gt; ${Log_File}
-else
-    echo &quot;mysql_exporter未启动成功&quot; &gt;&gt; ${Log_File}
-fi
-
-#注册mysqld_exporter到consul
-curl -X PUT -d '{&quot;id&quot;: &quot;'mysql-exporter-${host}'&quot;,&quot;name&quot;: &quot;'mysql-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:9104,&quot;tags&quot;: [&quot;mysql-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':9104/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
-}
-
-function Cadvisor_exporter()
-{
-echo &quot;==============================开始部署Cadvisor_exporter=====================&quot; &gt;&gt; ${LogFile}
-#监控docker容器
-docker images |grep cadvisors
-if [ ! $? -eq 0];then
-    docker load &lt; ${tool_dir}/cadvisor.tar
-	if [ $? -eq 0 ];then
-        echo &quot;Cadvisor镜像已导入&quot; &gt;&gt; ${LogFile}
-    else
-        echo &quot;Cadvisor镜像导入失败&quot; &gt;&gt; ${LogFile}
-    fi
-else
-    echo &quot;cadvisor镜像已存在&quot; &gt;&gt; ${LogFile}
-fi
-
-#启动Cadviso服务
-docker run \
-  --volume=/:/rootfs:ro \
-  --volume=/var/run:/var/run:ro \
-  --volume=/sys:/sys:ro \
-  --volume=/var/lib/docker/:/var/lib/docker:ro \
-  --volume=/dev/disk/:/dev/disk:ro \
-  --publish=8090:8080 \
-  --detach=true \
-  --name=cadvisor \
-  google/cadvisor:latest
-  
-docker ps |grep cadvisor
-if [ $? -eq 0 ];then
-    echo &quot;cadvisor_exporter已成功启动&quot; &gt;&gt; ${Log_File}
-else
-    echo &quot;cadvisor_exporter未启动成功&quot; &gt;&gt; ${Log_File}
-	exit
-fi
-
-#注册cadvisor_exporter到consul
-curl -X PUT -d '{&quot;id&quot;: &quot;'docker-exporter-${host}'&quot;,&quot;name&quot;: &quot;'docker-exporter-${host}'&quot;,&quot;address&quot;: &quot;'${Local_IP}'&quot;,&quot;port&quot;:8090,&quot;tags&quot;: [&quot;docker-exporter&quot;],&quot;checks&quot;: [{&quot;http&quot;: &quot;http://'${Local_IP}':8090/&quot;,&quot;interval&quot;: &quot;5s&quot;}]}' http://${Consul_IP}:8500/v1/agent/service/register
-}
-
-
-InitInstall
-Install_Ntpd
-Install_name=${Install_exportername}
-case ${Install_name} in
-	Node | node)
-	    Node_exporter
-		echo &quot;已部署Node_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-	Mysql | mysql)
-	    Mysql_exporter
-		echo &quot;已部署Mysql_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-	Cadvisor | cadvisor)
-		Cadvisor_exporter
-		echo &quot;已部署Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-    node/mysql | mysql/node)
-	    Node_exporter
-		Mysql_exporter
-		echo &quot;已部署Node_exporter、Mysql_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-	node/cadvisor | cadvisor/node)
-	    Node_exporter
-		Cadvisor_exporter
-		echo &quot;已部署Node_exporter、Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-	mysql/cadvisor | cadvisor/mysql)
-	    Mysql_exporter
-		Cadvisor_exporter
-	    echo &quot;已部署Mysql_exporter、Cadvisor_exporter&quot; &gt;&gt; ${LogFile}
-		;;
-	node/mysql/cadvisor)
-	    Node_exporter
-		Mysql_exporter
-		Cadvisor_exporter
-		echo &quot;已部署安装Node_exporter、Mysql_exporter、Cadvisor_exporter到本机&quot; &gt;&gt; ${LogFile}
-		;;
-	*)
-		echo &quot;无效的指令&quot; &gt;&gt;  ${LogFile}
-esac
-</code></pre>
-<p>以上。</p>
 ]]></content>
     </entry>
 </feed>
