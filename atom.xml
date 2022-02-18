@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-18T03:33:51.121Z</updated>
+    <updated>2022-02-18T03:35:52.224Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -87,7 +87,7 @@
 <li>在kubernetes集群中安装、卸载 release</li>
 <li>更新、回滚、测试 release</li>
 </ul>
-<h5 id="安装与快速入门实践">安装与快速入门实践</h5>
+<h1 id="安装与快速入门实践">安装与快速入门实践</h1>
 <p>下载最新的稳定版本：https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz</p>
 <p>更多版本可以参考： https://github.com/helm/helm/releases</p>
 <pre><code class="language-powershell"># k8s-master节点
@@ -137,8 +137,8 @@ $ helm -n luffy ls
 #
 $ kubectl -n luffy get all
 </code></pre>
-<h5 id="chart的模板语法及开发">Chart的模板语法及开发</h5>
-<h6 id="nginx的chart实现分析">nginx的chart实现分析</h6>
+<h1 id="chart的模板语法及开发">Chart的模板语法及开发</h1>
+<h2 id="nginx的chart实现分析">nginx的chart实现分析</h2>
 <p>格式：</p>
 <pre><code class="language-powershell">$ tree nginx/
 nginx/
@@ -323,7 +323,7 @@ spec:
   {{- end }}
 {{- end }}
 </code></pre>
-<h6 id="创建应用的时候赋值">创建应用的时候赋值</h6>
+<h2 id="创建应用的时候赋值">创建应用的时候赋值</h2>
 <ul>
 <li>set的方式</li>
 </ul>
@@ -360,8 +360,8 @@ $ helm install -f nginx-values.yaml nginx-3 ./nginx
 </ul>
 <p>更多语法参考：</p>
 <p>https://helm.sh/docs/topics/charts/</p>
-<h5 id="实战使用helm部署harbor镜像及chart仓库">实战：使用Helm部署Harbor镜像及chart仓库</h5>
-<h6 id="harbor部署">harbor部署</h6>
+<h1 id="实战使用helm部署harbor镜像及chart仓库">实战：使用Helm部署Harbor镜像及chart仓库</h1>
+<h2 id="harbor部署">harbor部署</h2>
 <p>架构 https://github.com/goharbor/harbor/wiki/Architecture-Overview-of-Harbor</p>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154979580.png" alt="" loading="lazy"></figure>
 <ul>
@@ -464,7 +464,7 @@ $ chown -R 999:999 redis
 $ chown -R 10000:10000 chartmuseum
 $ chown -R 10000:10000 registry
 </code></pre>
-<h6 id="推送镜像到harbor仓库">推送镜像到Harbor仓库</h6>
+<h2 id="推送镜像到harbor仓库">推送镜像到Harbor仓库</h2>
 <p>配置hosts及docker非安全仓库：</p>
 <pre><code class="language-powershell">$ cat /etc/hosts
 ...
@@ -491,7 +491,7 @@ $ docker login harbor.luffy.com
 $ docker tag nginx:alpine harbor.luffy.com/library/nginx:alpine
 $ docker push harbor.luffy.com/library/nginx:alpine
 </code></pre>
-<h6 id="推送chart到harbor仓库">推送chart到Harbor仓库</h6>
+<h2 id="推送chart到harbor仓库">推送chart到Harbor仓库</h2>
 <p>helm3默认没有安装helm push插件，需要手动安装。插件地址 https://github.com/chartmuseum/helm-push</p>
 <p>安装插件：</p>
 <pre><code class="language-powershell">$ helm plugin install https://github.com/chartmuseum/helm-push
@@ -521,7 +521,7 @@ $ helm repo ls
 <p>推送chart到仓库：</p>
 <pre><code class="language-powershell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
 </code></pre>
-<h4 id="课程小结">课程小结</h4>
+<h1 id="课程小结">课程小结</h1>
 <p>使用k8s的进阶内容。</p>
 <ol>
 <li>
