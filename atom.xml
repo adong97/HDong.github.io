@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-18T05:29:34.060Z</updated>
+    <updated>2022-02-18T09:59:13.216Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -2468,7 +2468,7 @@ roleRef:
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Kubernetes调度]]></title>
+        <title type="html"><![CDATA[Kubernetes调度系统]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/sn0OllrL_/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
         </link>
@@ -2480,19 +2480,53 @@ roleRef:
 <li>......</li>
 </ul>
 <p>Kubernetes Scheduler 的作用是将待调度的 Pod 按照一定的调度算法和策略绑定到集群中一个合适的 Worker Node 上，并将绑定信息写入到 etcd 中，之后目标 Node 中 kubelet 服务通过 API Server 监听到 Scheduler 产生的 Pod 绑定事件获取 Pod 信息，然后下载镜像启动容器。</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918439871.jpg" alt="" loading="lazy"></figure>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1644918439871.jpg" alt="" loading="lazy"><br>
+kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，其监听kube-apiserver，查询未分配 Node的Pod（未分配、分配失败及尝试多次无法分配），根据配置的调度策略，将Pod调度到最优的工作节点上，从而高效、合理的利用集群的资源，该特性是用户选择K8S系统的关键因素之一，帮助用户提升效率、降低能耗。</p>
+<p>在上述过程中，需要考虑以下问题：</p>
+<ul>
+<li>如何确保节点分配的公平性</li>
+<li>如何确保节点资源分配的高效性</li>
+<li>如何确保Pod调度的公平性</li>
+<li>如何确保Pod调度的高效性</li>
+<li>如何扩展Pod调度策略</li>
+</ul>
+<p>为解决上述的问题，kube-scheduler通过汇集节点资源、节点地域、节点镜像、Pod调度等信息综合决策，确保Pod分配到最佳节点，以下为kube-scheduler的主要目标：</p>
+<ul>
+<li>公平性：在调度Pod时需要公平的决策，每个节点都有被分配的机会，调度器需要针对不同节点作出平衡决策。</li>
+<li>资源高效：最大化提升所有可调度资源的利用率，使有限的CPU、内存等资源服务尽可能更多的Pod。</li>
+<li>性能：能快速的完成对大规模Pod的调度工作，在集群规模扩增的情况下，依然能确保调度的性能。</li>
+<li>灵活性：在实际生产中，用户希望Pod的调度策略是可扩展的，从而可以定制化调度算法以处理复杂的实际问题。因此平台要允许多种调度器并行工作，并支持自定义调度器。</li>
+</ul>
 <h1 id="调度的过程">调度的过程</h1>
+<p>首先我们通过下面的整体的交互图，来构建Pod调度的直观感受。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645177672161.png" alt="" loading="lazy"><br>
+上述以创建一个Pod为例，简要介绍调度流程：</p>
+<ol>
+<li>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略 kube-controller-manager)</li>
+<li>kube-apiserver经过对象校验、admission、quota等准入操作，写入etcd</li>
+<li>kube-apiserver将结果返回给用户</li>
+<li>同时kube-scheduler一直监听节点、Pod事件等（流程1）</li>
+<li>kube-scheduler将spec.nodeName的pod加入到调度队列中，进行调度周期（该周期即位后续介绍内容）（流程2-3）</li>
+<li>kube-scheduler将pod与得分最高的节点进行binding操作（流程4）</li>
+<li>kube-apiserver将binding信息写入etcd</li>
+<li>kubelet监听分配给自己的Pod，调用CRI接口进行Pod创建（该部分内容后续出系列，进行介绍）</li>
+<li>kubelet创建Pod后，更新Pod状态等信息，并向kube-apiserver上报</li>
+<li>kube-apiserver写入数据</li>
+</ol>
+<h1 id="调度算法">调度算法</h1>
 <p>Scheduler 提供的调度流程分为预选 (Predicates) 和优选 (Priorities) 两个步骤：</p>
 <ul>
 <li>预选，K8S会遍历当前集群中的所有 Node，筛选出其中符合要求的 Node 作为候选 （不满足就踢掉）</li>
 <li>优选，K8S将对候选的 Node 进行打分 （都满足，选一个最优得）</li>
 </ul>
-<p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。<br>
+<p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。</p>
+<p>如果在过滤阶段没有节点满足条件，Pod会一直处在Pending状态直到出现满足的节点，在此期间调度器会不断的进行重试。如果有多个节点评分一致，那么kube-scheduler任意选择其一。</p>
+<p>​ 注：Pod首先进入调度队列，失败后进入backoff，多次失败后进入unschedule，该部分内容后续介绍。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1644918490773.png" alt="" loading="lazy"></p>
 <h2 id="预选">预选：</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
 <h2 id="优选">优选：</h2>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
 <h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
 <p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，Pod 的调度可以根据节点的 label 进行特定的部署。</p>
 <p>查看节点的label：</p>
