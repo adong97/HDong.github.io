@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-19T01:36:25.272Z</updated>
+    <updated>2022-02-19T03:02:47.986Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -1888,9 +1888,11 @@ The value for this option is a duration that specifies how long the autoscaler h
 <p><strong>Admission Control：准入控制</strong>，一个控制链(层层关卡)，用于拦截请求的一种方式。偏集群安全控制、管理方面。</p>
 <ul>
 <li>
-<p>为什么需要？<br>
-认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。<br>
-Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</p>
+<p>为什么需要？</p>
+<ul>
+<li>认证与授权获取 http 请求 header 以及证书，无法通过body内容做校验。</li>
+<li>Admission 运行在 API Server 的增删改查 handler 中，可以自然地操作 API resource</li>
+</ul>
 </li>
 <li>
 <p>举个栗子</p>
@@ -1947,6 +1949,7 @@ spec:
 </li>
 </ul>
 <h1 id="kubectl的认证授权">kubectl的认证授权</h1>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645238694988.jpg" alt="" loading="lazy"></figure>
 <p>kubectl的日志调试级别：</p>
 <table>
 <thead>
@@ -1995,18 +1998,18 @@ spec:
 </tbody>
 </table>
 <pre><code class="language-powershell">$ kubectl get nodes -v=7
-I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config   ##配置文件从哪里加载
+I0329 20:20:08.633065    3979 loader.go:359] Config loaded from file /root/.kube/config   ##配置文件从哪里加载  
 I0329 20:20:08.633797    3979 round_trippers.go:416] GET https://172.21.51.143:6443/api/v1/nodes?limit=500
 </code></pre>
 <p><code>kubeadm init</code>启动完master节点后，会默认输出类似下面的提示内容：</p>
-<pre><code class="language-bash">... ...
+<pre><code class="language-bash">...
 Your Kubernetes master has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
-... ...
+...
 </code></pre>
 <p>这些信息是在告知我们如何配置<code>kubeconfig</code>文件。按照上述命令配置后，master节点上的<code>kubectl</code>就可以直接使用<code>$HOME/.kube/config</code>的信息访问<code>k8s cluster</code>了。 并且，通过这种配置方式，<code>kubectl</code>也拥有了整个集群的管理员(root)权限。</p>
 <p>很多K8s初学者在这里都会有疑问：</p>
@@ -2017,32 +2020,38 @@ To start using your cluster, you need to run the following as a regular user:
 <p>查看<code>/root/.kube/config</code>文件：</p>
 <p>前面提到过apiserver的authentication支持通过<code>tls client certificate、basic auth、token</code>等方式对客户端发起的请求进行身份校验， 从kubeconfig信息来看，kubectl显然在请求中使用了<code>tls client certificate</code>的方式，即客户端的证书。</p>
 <p>证书base64解码：</p>
-<pre><code class="language-powershell">$ echo xxxxxxxxxxxxxx |base64 -d &gt; kubectl.crt
+<pre><code class="language-shell">$ cat /root/.kube/config
 
+# 复制client-certificate-data段
+$ echo xxxxxxxxxxxxxx |base64 -d &gt; kubectl.crt
 </code></pre>
-<p>说明在认证阶段，<code>apiserver</code>会首先使用<code>--client-ca-file</code>配置的CA证书去验证kubectl提供的证书的有效性,基本的方式 ：</p>
-<pre><code class="language-powershell">$  openssl verify -CAfile /etc/kubernetes/pki/ca.crt kubectl.crt
-kubectl.crt: OK
-
+<p>说明在认证阶段，<code>apiserver</code>会首先使用<code>--client-ca-file</code>配置的CA证书。</p>
+<p>验证kubectl提供的证书的有效性,基本的方式 ：</p>
+<pre><code class="language-shell">##通过openssl校验kubectl.crt是否是ca签发的
+$  openssl verify -CAfile /etc/kubernetes/pki/ca.crt  kubectl.crt
+kubectl.crt: OK  #OK 表示kubectl.crt是CA根证书签发的
 </code></pre>
-<p>除了认证身份，还会取出必要的信息供授权阶段使用，文本形式查看证书内容：</p>
-<pre><code class="language-powershell">$ openssl x509 -in kubectl.crt -text
+<p>除了认证身份，还会取出必要的信息，供授权阶段使用。<br>
+文本形式查看证书内容：</p>
+<pre><code class="language-shell">##对证书做一次解析
+$ openssl x509 -in kubectl.crt -text
+...
 Certificate:
     Data:
         Version: 3 (0x2)
-        Serial Number: 4736260165981664452 (0x41ba9386f52b74c4)
-    Signature Algorithm: sha256WithRSAEncryption
-        Issuer: CN=kubernetes
+        Serial Number: 1859634861847566607 (0x19cec00dd85b590f)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN = kubernetes
         Validity
-            Not Before: Feb 10 07:33:39 2020 GMT
-            Not After : Feb  9 07:33:40 2021 GMT
-        Subject: O=system:masters, CN=kubernetes-admin
-        ...
+            Not Before: Jan 23 13:35:51 2022 GMT  
+            Not After : Jan 23 13:35:54 2023 GMT  #十年有效期
+        Subject: O = system:masters, CN = kubernetes-admin
+...
 </code></pre>
 <p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
 <p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645156072690.png" alt="" loading="lazy"></figure>
-<p>其中第一个cluster-admin这个cluster role binding绑定了system:masters group，这和authentication环节传递过来的身份信息不谋而合。 沿着system:masters group对应的cluster-admin clusterrolebinding“追查”下去，真相就会浮出水面。</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645156072690.png" alt="" loading="lazy"></figure>
+<p>其中第一个<code>cluster-admin</code>这个<code>cluster role binding</code>绑定了<code>system:masters group</code>，这和<code>authentication</code>环节传递过来的身份信息不谋而合。 沿着<code>system:masters group</code>对应的<code>cluster-admin clusterrolebinding</code>“追查”下去，真相就会浮出水面。</p>
 <p>我们查看一下这一binding：</p>
 <pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
 Name:         cluster-admin
@@ -2056,7 +2065,7 @@ Subjects:
   ----   ----            ---------
   Group  system:masters
 </code></pre>
-<p>我们看到在kube-system名字空间中，一个名为cluster-admin的clusterrolebinding将cluster-admin cluster role与system:masters Group绑定到了一起， 赋予了所有归属于system:masters Group中用户cluster-admin角色所拥有的权限。</p>
+<p>我们看到在<code>kube-system</code>名字空间中，一个名为<code>cluster-admin</code>的<code>clusterrolebinding</code>将<code>cluster-admin cluster role</code>与<code>system:masters Group</code>绑定到了一起， 赋予了所有归属于<code>system:masters Group</code>中用户<code>cluster-admin</code>角色所拥有的权限。</p>
 <p>我们再来查看一下cluster-admin这个role的具体权限信息：</p>
 <pre><code class="language-powershell">$ kubectl describe clusterrole cluster-admin
 Name:         cluster-admin
@@ -2071,9 +2080,11 @@ PolicyRule:
 <p>非资源类，如查看集群健康状态。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645153314816.png" alt="" loading="lazy"></p>
 <h1 id="rbac">RBAC</h1>
-<p>Role-Based Access Control，基于角色的访问控制， apiserver启动参数添加--authorization-mode=RBAC 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
+<p><code>Role-Based Access Control</code>，基于角色的访问控制。 apiserver启动参数添加<code>--authorization-mode=RBAC</code> 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<br>
+<a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
+<p>把权限定义在Role(角色)里面，把权限赋予给用户，这样用户就有Role里面定义的所有权限了。</p>
 <p>查看开启：</p>
-<pre><code class="language-powershell"># master节点查看apiserver进程
+<pre><code class="language-shell"># master节点查看apiserver进程
 $ ps aux |grep apiserver
 </code></pre>
 <p>RBAC模式引入了4个资源类型：</p>
@@ -2182,10 +2193,10 @@ roleRef:
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubelet的认证授权">kubelet的认证授权</h1>
 <p>查看kubelet进程</p>
-<pre><code class="language-powershell">$ systemctl status kubelet
+<pre><code class="language-shell">$ systemctl status kubelet
 ● kubelet.service - kubelet: The Kubernetes Node Agent
    Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
   Drop-In: /usr/lib/systemd/system/kubelet.service.d
@@ -2288,7 +2299,7 @@ PolicyRule:
 </table>
 <p>大致意思是说：之前会定义system:node这个角色，目的是为了kubelet可以访问到必要的资源，包括所有secret的读权限及更新pod状态的写权限。如果1.8版本后，是建议使用 <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Node authorizer</a> and <a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#noderestriction">NodeRestriction admission plugin</a> 来代替这个角色的。</p>
 <p>我们目前使用1.19，查看一下授权策略：</p>
-<pre><code class="language-powershell">$ ps axu|grep apiserver
+<pre><code class="language-shell">$ ps axu|grep apiserver
 kube-apiserver --authorization-mode=Node,RBAC  --enable-admission-plugins=NodeRestriction
 </code></pre>
 <p>查看一下官网对Node authorizer的介绍：</p>
@@ -2337,7 +2348,7 @@ secrets:
 
 </code></pre>
 <p>注意到serviceaccount上默认绑定了一个名为admin-token-lfsrf的secret，我们查看一下secret</p>
-<pre><code class="language-powershell">$ kubectl -n kubernetes-dashboard describe secret admin-token-lfsrf
+<pre><code class="language-shell">$ kubectl -n kubernetes-dashboard describe secret admin-token-lfsrf
 Name:         admin-token-lfsrf
 Namespace:    kubernetes-dashboard
 Labels:       &lt;none&gt;
@@ -2353,9 +2364,9 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2V
 
 
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
 <p>只允许访问luffy命名空间的pod资源：</p>
-<pre><code class="language-powershell">$ cat luffy-admin-rbac.yaml
+<pre><code class="language-shell">$ cat luffy-admin-rbac.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -2396,10 +2407,10 @@ $ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl
 
 # https://172.21.51.143:6443/api/v1/nodes
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645158926236.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645158926236.jpg" alt="" loading="lazy"></figure>
 <h1 id="创建用户认证授权的kubeconfig文件">创建用户认证授权的kubeconfig文件</h1>
 <p>签发证书对：</p>
-<pre><code class="language-powershell"># 生成私钥
+<pre><code class="language-shell"># 生成私钥
 $ openssl genrsa -out luffy.key 2048
 
 # 生成证书请求文件
@@ -2415,7 +2426,7 @@ extendedKeyUsage = clientAuth
 $ openssl x509 -req -in luffy.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -sha256 -out luffy.crt -extensions v3_ca -extfile extfile.conf -days 3650
 </code></pre>
 <p>配置kubeconfig文件：</p>
-<pre><code class="language-powershell"># 创建kubeconfig文件，指定集群名称和地址
+<pre><code class="language-shell"># 创建kubeconfig文件，指定集群名称和地址
 $ kubectl config set-cluster luffy-cluster --certificate-authority=/etc/kubernetes/pki/ca.crt --embed-certs=true --server=https://172.21.51.143:6443 --kubeconfig=luffy.kubeconfig
 
 # 为kubeconfig文件添加认证信息
@@ -2428,7 +2439,7 @@ $ kubectl config set-context luffy-context --cluster=luffy-cluster --user=luffy-
 $ kubectl config use-context luffy-context --kubeconfig=luffy.kubeconfig
 </code></pre>
 <p>验证：</p>
-<pre><code class="language-powershell"># 设置当前kubectl使用的config文件
+<pre><code class="language-shell"># 设置当前kubectl使用的config文件
 $ export KUBECONFIG=luffy.kubeconfig
 
 # 当前不具有任何权限，因为没有为用户或者组设置RBAC规则
@@ -2437,7 +2448,7 @@ Error from server (Forbidden): pods is forbidden: User &quot;luffy-admin&quot; c
 
 </code></pre>
 <p>为luffy用户添加luffy命名空间访问权限：</p>
-<pre><code class="language-powershell"># 定义role，具有luffy命名空间的所有权限
+<pre><code class="language-shell"># 定义role，具有luffy命名空间的所有权限
 $ cat luffy-admin-role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
