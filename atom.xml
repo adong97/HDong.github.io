@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-19T03:02:47.986Z</updated>
+    <updated>2022-02-19T06:27:20.880Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -2079,6 +2079,7 @@ PolicyRule:
 </code></pre>
 <p>非资源类，如查看集群健康状态。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645153314816.png" alt="" loading="lazy"></p>
+<p>我们在通过<code>kubectl</code>操作资源的时候，其实是通过读取<code>config文件</code>在<code>Authentication</code>环节，使用client证书这种方式，做的身份认证。完成身份认证以后，同时读出来证书的<code>Group</code>用的<code>system-master</code>。<code>system-master</code>这个<code>Group</code>刚好通过<code>RBAC</code>绑定了一个名为<code>cluster-admin</code>的<code>ClusterRole</code>。</p>
 <h1 id="rbac">RBAC</h1>
 <p><code>Role-Based Access Control</code>，基于角色的访问控制。 apiserver启动参数添加<code>--authorization-mode=RBAC</code> 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<br>
 <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">官方介绍</a></p>
@@ -2096,12 +2097,12 @@ $ ps aux |grep apiserver
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: demo
-  name: pod-reader
-rules:
+  namespace: demo   #命名空间
+  name: pod-reader   #角色名称
+rules:  #权限
 - apiGroups: [&quot;&quot;] # &quot;&quot; indicates the core API group
-  resources: [&quot;pods&quot;]
-  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+  resources: [&quot;pods&quot;]  #访问pod
+  verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]  #只读
   
 ## apiGroups: &quot;&quot;,&quot;apps&quot;, &quot;autoscaling&quot;, &quot;batch&quot;, kubectl api-versions
 ## resources: &quot;services&quot;, &quot;pods&quot;,&quot;deployments&quot;... kubectl api-resources
@@ -2112,7 +2113,7 @@ rules:
 </code></pre>
 </li>
 <li>
-<p>ClusterRole</p>
+<p>ClusterRole，跨命名空间的</p>
 <p>一个ClusterRole能够授予和Role一样的权限，但是它是集群范围内的。</p>
 <pre><code class="language-yaml">## 定义一个集群角色，名为secret-reader，该角色可以读取所有的namespace中的secret资源
 kind: ClusterRole
@@ -2210,7 +2211,7 @@ roleRef:
            └─851 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf
 </code></pre>
 <p>查看<code>/etc/kubernetes/kubelet.conf</code>，解析证书：</p>
-<pre><code class="language-powershell">$ echo xxxxx |base64 -d &gt;kubelet.crt
+<pre><code class="language-shell">$ echo xxxxx |base64 -d &gt;kubelet.crt
 $ openssl x509 -in kubelet.crt -text
 Certificate:
     Data:
@@ -2227,7 +2228,7 @@ Certificate:
 <pre><code class="language-bash">Subject: O=system:nodes, CN=system:node:k8s-master
 </code></pre>
 <p>我们知道，k8s会把O作为Group来进行请求，因此如果有权限绑定给这个组，肯定在clusterrolebinding的定义中可以找得到。因此尝试去找一下绑定了system:nodes组的clusterrolebinding</p>
-<pre><code class="language-powershell">$ kubectl get clusterrolebinding -oyaml|grep -n10 system:nodes
+<pre><code class="language-shell">$ kubectl get clusterrolebinding -oyaml|grep -n10 system:nodes
 178-    resourceVersion: &quot;225&quot;
 179-    selfLink: /apis/rbac.authorization.k8s.io/v1/clusterrolebindings/kubeadm%3Anode-autoapprove-certificate-rotation
 180-    uid: b4303542-d383-4b62-a1e9-02f2cefa2c20
@@ -2307,7 +2308,9 @@ kube-apiserver --authorization-mode=Node,RBAC  --enable-admission-plugins=NodeRe
 <p><em>In future releases, the node authorizer may add or remove permissions to ensure kubelets have the minimal set of permissions required to operate correctly.</em></p>
 <p><em>In order to be authorized by the Node authorizer, kubelets must use a credential that identifies them as being in the <code>system:nodes</code> group, with a username of <code>system:node:&lt;nodeName&gt;</code></em></p>
 <h1 id="service-account及k8s-api调用">Service Account及K8S Api调用</h1>
-<p>前面说，认证可以通过证书，也可以通过使用ServiceAccount（服务账户）的方式来做认证。大多数时候，我们在基于k8s做二次开发时都是选择通过ServiceAccount + RBAC 的方式。我们之前访问dashboard的时候，是如何做的？</p>
+<p>前面说，认证可以通过证书，也可以通过使用ServiceAccount（服务账户）的方式来做认证。大多数时候，我们在基于k8s做二次开发时都是选择通过ServiceAccount + RBAC 的方式。我们之前访问dashboard的时候，是如何做的？<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645251847337.jpg" alt="" loading="lazy"><br>
+一个deployment写的时候，定义了一个ServiceAcconut name,这个ServiceAcconut可以绑定Role或ClusterRole,然后ServiceAcconut会生成一个名为A-Token-xxx的Secret,这个Secret里面会有一个Token。Token的权限来自于绑定给SA的ClusterRole或Role，将token写到pod中。</p>
 <pre><code class="language-yaml">## 新建一个名为admin的serviceaccount，并且把名为cluster-admin的这个集群角色的权限授予新建的
 #serviceaccount
 apiVersion: v1
