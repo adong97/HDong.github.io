@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-19T11:30:48.779Z</updated>
+    <updated>2022-02-19T16:09:28.712Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -562,13 +562,24 @@ $ helm repo ls
         <link href="https://adong97.github.io/HDong.github.io/post/5VA_pluXP/">
         </link>
         <updated>2022-02-18T03:20:35.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="cni介绍及集群网络选型">CNI介绍及集群网络选型</h1>
+        <content type="html"><![CDATA[<p>官方文档：https://kubernetes.io/zh/docs/concepts/cluster-administration/networking/</p>
+<h1 id="容器网络的目的">容器网络的目的</h1>
+<p>1.实现同一个 pod 中的不同容器通信(LNMP)，一个 pod 中的容器共用底层的网络组件<br>
+2.实现 pod 与 pod 同主机与跨主机的容器通信(微服务)<br>
+3.pod 和服务之间的通信( nginx 通过调用 tomcat )<br>
+4.pod 与 k8s 之外的网络通信<br>
+外部到 pod (客户端的请求)，用户的请求先到负载均衡器，负载均衡器在转发至 node 节点，node 节点在转发至 svc ， svc 再转发至 pod ，中间经过多层转发，最主要的就是在 node 节点这块如何将请求转发至 svc，这是通过 K8S 环境以外进来的 pod 到外部(响应报文)</p>
+<h1 id="cni介绍及集群网络选型">CNI介绍及集群网络选型</h1>
 <p>容器网络接口（Container Network Interface），实现kubernetes集群的Pod网络通信及管理。包括：</p>
 <ul>
-<li>CNI Plugin负责给容器配置网络，它包括两个基本的接口：<br>
+<li>
+<p>CNI Plugin负责给容器配置网络，它包括两个基本的接口：<br>
 配置网络: AddNetwork(net NetworkConfig, rt RuntimeConf) (types.Result, error)<br>
-清理网络: DelNetwork(net NetworkConfig, rt RuntimeConf) error</li>
-<li>IPAM Plugin负责给容器分配IP地址，主要实现包括host-local和dhcp。</li>
+清理网络: DelNetwork(net NetworkConfig, rt RuntimeConf) error</p>
+</li>
+<li>
+<p>IPAM Plugin负责给容器分配IP地址，主要实现包括host-local和dhcp。</p>
+</li>
 </ul>
 <p>以上两种插件的支持，使得k8s的网络可以支持各式各样的管理模式，当前在业界也出现了大量的支持方案，其中比较流行的比如flannel、calico等。</p>
 <p><strong>网络创建流程</strong></p>
@@ -615,12 +626,19 @@ $ cat /etc/kube-flannel/net-conf.json
 <li>VTEP（VXLAN Tunnel Endpoints,VXLAN隧道的端点）：vxlan 网络的边缘设备，用来进行 vxlan 报文的处理（封包和解包）。vtep 可以是网络设备（比如交换机），也可以是一台机器（比如虚拟化集群中的宿主机）</li>
 <li>VNI（VXLAN Network Identifier）：VNI 是每个 vxlan 的标识，一共有 2^24 = 16,777,216，一般每个 VNI 对应一个租户，也就是说使用 vxlan 搭建的公有云可以理论上可以支撑千万级别的租户</li>
 </ul>
+<p>VXLAN实现的三个条件：</p>
+<ol>
+<li>要有VTEP设备</li>
+<li>确保VTEP设备的VNI编号一致</li>
+<li>确保pod的流量最终都会通过VTEP设备做转发</li>
+</ol>
 <p>演示：在k8s-slave1和k8s-slave2两台机器间，利用vxlan的点对点能力，实现虚拟二层网络的通信</p>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154641023.jpg" alt="" loading="lazy"></figure>
 <p><code>172.21.51.55</code>节点：</p>
 <pre><code class="language-powershell"># 创建vTEP设备，对端指向172.21.52.84节点，指定VNI及underlay网络使用的网卡
 $ ip link add vxlan20 type vxlan id 20 remote 172.21.52.84 dstport 4789 dev eth0
 
+#查看创建的vxlan20
 $ ip -d link show vxlan20
 
 # 启动设备
@@ -631,7 +649,7 @@ $ ip addr add 10.0.51.55/24 dev vxlan20
 
 </code></pre>
 <p><code>172.21.52.84</code>节点：</p>
-<pre><code class="language-powershell"># 创建VTEP设备，对端指向k8s-slave1节点，指定VNI及underlay网络使用的网卡
+<pre><code class="language-shell"># 创建VTEP设备，对端指向k8s-slave1节点，指定VNI及underlay网络使用的网卡
 $ ip link add vxlan20 type vxlan id 20 remote 172.21.51.55 dstport 4789 dev eth0
 
 # 启动设备
@@ -641,26 +659,29 @@ $ ip link set vxlan20 up
 $ ip addr add 10.0.52.84/24 dev vxlan20
 
 </code></pre>
+<p>此时在<code>172.21.51.55</code>节点上ping<code>172.21.52.84</code>节点的<code>10.0.52.84</code>IP地址，是ping不通的。想要使用vxlan技术，最核心的一点就是一定要确保流量走vtep设备来转发。</p>
+<p>因此需要手动添加路由表：</p>
 <p>在<code>172.21.51.55</code>节点：</p>
-<pre><code class="language-powershell">$ ping 10.0.52.84
+<pre><code class="language-shell">$ ping 10.0.52.84
 
 # 走vtep封包解包
 
+#添加路由表，将10.0.52.0段的流量通过vxlan20设备转发
 $ ip route add 10.0.52.0/24 dev vxlan20
+</code></pre>
+<p>在<code>172.21.52.84</code>机器</p>
+<pre><code class="language-shell">$ ip route add 10.0.51.0/24 dev vxlan20
 
-# 在172.21.52.84机器
-$ ip route add 10.0.51.0/24 dev vxlan20
-
-# 再次ping
+# 在`172.21.51.55`节点再次ping
 $ ping 10.0.52.84
 
 # 
 $ tcpdump -i vxlan20 icmp
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154656854.jpg" alt="" loading="lazy"></figure>
-<p>隧道是一个逻辑上的概念，在 vxlan 模型中并没有具体的物理实体想对应。隧道可以看做是一种虚拟通道，vxlan 通信双方（图中的虚拟机）认为自己是在直接通信，并不知道底层网络的存在。从整体来说，每个 vxlan 网络像是为通信的虚拟机搭建了一个单独的通信通道，也就是隧道。</p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645154656854.jpg" alt="" loading="lazy"><br>
+隧道是一个逻辑上的概念，在 vxlan 模型中并没有具体的物理实体想对应。隧道可以看做是一种虚拟通道，vxlan 通信双方（图中的虚拟机）认为自己是在直接通信，并不知道底层网络的存在。从整体来说，每个 vxlan 网络像是为通信的虚拟机搭建了一个单独的通信通道，也就是隧道。</p>
 <p>实现的过程：</p>
-<p>虚拟机的报文通过 vtep 添加上 vxlan 以及外部的报文层，然后发送出去，对方 vtep 收到之后拆除 vxlan 头部然后根据 VNI 把原始报文发送到目的虚拟机。</p>
+<p>虚拟机的报文通过 vtep 添加上 vxlan 以及外部的报文层，然后发送出去，对方 vtep 收到之后拆除 vxlan 头部然后根据 VNI 把原始报文发送到目的虚拟机。 (封包和解包的过程)</p>
 <pre><code class="language-powershell"># 查看172.21.51.55主机路由
 $ route -n
 10.0.51.0       0.0.0.0         255.255.255.0   U     0      0        0 vxlan20
@@ -674,8 +695,6 @@ $ ip -d link show vxlan20
 $ bridge fdb show dev vxlan20
 00:00:00:00:00:00 dst 172.21.52.84 via eth0 self permanent
 a6:61:05:84:20:c6 dst 172.21.52.84 self
-
-
 </code></pre>
 <p>在<code>172.21.52.84</code>机器抓包，查看vxlan封装后的包:</p>
 <pre><code class="language-powershell"># 在172.21.52.84机器执行
@@ -687,55 +706,58 @@ $ ping 10.0.52.84
 </code></pre>
 <p>使用wireshark分析ICMP类型的数据包</p>
 <p>清理：</p>
-<pre><code class="language-powershell">$ ip link del vxlan20
+<pre><code class="language-shell">$ ip link del vxlan20
 </code></pre>
 <h2 id="跨主机容器网络的通信">跨主机容器网络的通信</h2>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154679358.jpg" alt="" loading="lazy"></figure>
-<p>思考：容器网络模式下，vxlan设备该接在哪里？</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154679358.jpg" alt="" loading="lazy"></figure>
+<p>思考：容器网络模式下，vxlan设备该接在哪里？<br>
+网桥上</p>
 <p>基本的保证：目的容器的流量要通过vtep设备进行转发！</p>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154706323.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154706323.jpg" alt="" loading="lazy"></figure>
 <p>演示：利用vxlan实现跨主机容器网络通信</p>
 <p>为了不影响已有的网络，因此创建一个新的网桥，创建容器接入到新的网桥来演示效果</p>
 <p>在<code>172.21.51.55</code>节点：</p>
-<pre><code class="language-powershell"># 创建新网桥，指定cidr段
+<pre><code class="language-shell"># 创建新网桥，指定cidr段
 $ docker network create --subnet 172.18.1.0/24  network-luffy
 
 # 查看网桥
 $ brctl show
+
 # 新建容器，接入到新网桥
 $ docker run -d --name vxlan-test --net network-luffy --ip 172.18.1.2 nginx:alpine
 
 $ docker exec vxlan-test ifconfig
 </code></pre>
 <p>在<code>172.21.52.84</code>节点：</p>
-<pre><code class="language-powershell"># 创建新网桥，指定cidr段
+<pre><code class="language-shell"># 创建新网桥，指定cidr段
 $ docker network create --subnet 172.18.2.0/24  network-luffy
 
 # 新建容器，接入到新网桥
 $ docker run -d --name vxlan-test --net network-luffy --ip 172.18.2.2 nginx:alpine
 </code></pre>
 <p>此时执行ping测试：</p>
-<pre><code class="language-powershell">$ docker exec vxlan-test ping 172.18.2.2
+<pre><code class="language-rshell">$ docker exec vxlan-test ping 172.18.2.2
 </code></pre>
 <p>分析：数据到了网桥后，出不去。结合前面的示例，因此应该将流量由vtep设备转发，联想到网桥的特性，接入到桥中的端口，会由网桥负责转发数据，因此，相当于所有容器发出的数据都会经过到vxlan的端口，vxlan将流量转到对端的vtep端点，再次由网桥负责转到容器中。</p>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154725434.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154725434.jpg" alt="" loading="lazy"></figure>
 <p><code>172.21.51.55</code>节点：</p>
-<pre><code class="language-powershell"># 删除旧的vtep
+<pre><code class="language-shell"># 删除旧的vtep
 $ ip link del vxlan20
 
 # 新建vtep
 $ ip link add vxlan_docker type vxlan id 100 remote 172.21.52.84 dstport 4789 dev eth0
+#启动vtep
 $ ip link set vxlan_docker up
 # 不用设置ip，因为目标是可以转发容器的数据即可
 
 $ brctl show
 br-0fdb78d3b486         8000.02421452871b       no              vethfffdd2f
+
 # 接入到网桥中
 $ brctl addif br-0fdb78d3b486 vxlan_docker
-
 </code></pre>
 <p><code>172.21.52.84</code>节点：</p>
-<pre><code class="language-powershell"># 删除旧的vtep
+<pre><code class="language-shell"># 删除旧的vtep
 $ ip link del vxlan20
 
 # 新建vtep
@@ -746,10 +768,9 @@ $ ip link set vxlan_docker up
 # 接入到网桥中
 $ brctl show
 $ brctl addif br-c6660fe2dc53 vxlan_docker
-
 </code></pre>
 <p>再次执行ping测试：</p>
-<pre><code class="language-powershell">$ docker exec vxlan-test ping 172.18.2.2
+<pre><code class="language-shell">$ docker exec vxlan-test ping 172.18.2.2
 </code></pre>
 <h2 id="flannel的vxlan实现精讲">Flannel的vxlan实现精讲</h2>
 <p>思考：k8s集群的网络环境和手动实现的跨主机的容器通信有哪些差别？</p>
@@ -764,12 +785,12 @@ $ brctl addif br-c6660fe2dc53 vxlan_docker
 </ul>
 </li>
 <li>
-<p>集群节点动态添加</p>
+<p>集群节点动态添加<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154762535.png" alt="" loading="lazy"></p>
 </li>
 </ol>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645154762535.png" alt="" loading="lazy"><img src="images/flannel.png" alt="" loading="lazy"></p>
 <p>flannel如何为每个节点分配Pod地址段：</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system exec kube-flannel-ds-amd64-cb7hs cat /etc/kube-flannel/net-conf.json
+<pre><code class="language-shell">$ kubectl -n kube-system exec kube-flannel-ds-amd64-cb7hs cat /etc/kube-flannel/net-conf.json
 {
   &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
   &quot;Backend&quot;: {
@@ -791,30 +812,26 @@ FLANNEL_MTU=1450
 FLANNEL_IPMASQ=true
 
 # kubelet启动容器的时候就可以按照本机的网段配置来为pod设置IP地址
-
 </code></pre>
-<p>vtep的设备在哪：</p>
-<pre><code class="language-powershell">$ ip -d link show flannel.1
+<p>vtep的设备在哪?</p>
+<pre><code class="language-shell">$ ip -d link show flannel.1
 # 没有remote ip，非点对点
-
 </code></pre>
-<p>Pod的流量如何转到vtep设备中</p>
-<pre><code class="language-powershell">$ brctl show cni0
-
+<p>Pod的流量如何转到vtep设备中?</p>
+<pre><code class="language-shell">$ brctl show cni0
 # 每个Pod都会使用Veth pair来实现流量转到cni0网桥
 
 $ route -n
 10.244.0.0      10.244.0.0      255.255.255.0   UG    0      0        0 flannel.1
 10.244.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
 10.244.2.0      10.244.2.0      255.255.255.0   UG    0      0        0 flannel.1
-
 </code></pre>
-<p>vtep封包的时候，如何拿到目的vetp端的IP及MAC信息</p>
-<pre><code class="language-powershell">--kube-subnet-mgr, 所有节点的flanneld都可以感知到节点的添加和删除操作，就可以动态的更新本机的转发配置,
+<p>vtep封包的时候，如何拿到目的vetp端的IP及MAC信息?</p>
+<pre><code class="language-shell">--kube-subnet-mgr, 所有节点的flanneld都可以感知到节点的添加和删除操作，就可以动态的更新本机的转发配置,
 同时通过ARP的方式可以获取fdb表的mac地址
 </code></pre>
 <p>演示跨主机Pod通信的流量详细过程：</p>
-<pre><code class="language-powershell">$ kubectl -n luffy get po -o wide
+<pre><code class="language-shell">$ kubectl -n luffy get po -o wide
 myblog-5d9ff54d4b-4rftt   1/1     Running   1          25h    10.244.2.19   k8s-slave2
 myblog-5d9ff54d4b-n447p   1/1     Running   1          25h    10.244.1.32   k8s-slave1
 
@@ -875,11 +892,11 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 172.21.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eth0
 
 #根据路由规则转发到cni0网桥,然后由网桥转到具体的Pod中
-
-
 </code></pre>
+<p>cni0是k8s集群中的网桥，和docker0的功能作用完全相同。不会影响pod之间的通信，因为pod之间的通信都不会来到宿主机上，都在网桥内部。</p>
 <p>实际的请求图：<br>
-<img src="https://adong97.github.io/HDong.github.io//post-images/1645154784880.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154784880.png" alt="" loading="lazy"><br>
+k8s-node节点上Pod容器中的Container通过Pause共享网络命令空间。veth-pair(网卡对)为了能够实现跨网络命名空间的通信，对端接到了Bridge(网桥 cni0)上。pod如果是跨宿主机之间的通信，接到cni0上之后，Routing到flannle.1上。flannle.1其实就是VTEP设备，和另一台Node建立隧道。</p>
 <ul>
 <li>k8s-slave1 节点中的 pod-a（10.244.2.19）当中的 IP 包通过 pod-a 内的路由表被发送到eth0，进一步通过veth pair转到宿主机中的网桥 <code>cni0</code></li>
 <li>到达 <code>cni0</code> 当中的 IP 包通过匹配节点 k8s-slave1 的路由表发现通往 10.244.2.19 的 IP 包应该交给 <code>flannel.1</code> 接口</li>
@@ -894,18 +911,17 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <p>网络插件的目的其实就是将本机的cni0网桥的流量送到目的主机的cni0网桥。实际上有很多集群是部署在同一二层网络环境下的，可以直接利用二层的主机当作流量转发的网关。这样的话，可以不用进行封包解包，直接通过路由表去转发流量。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645154802448.png" alt="" loading="lazy"></p>
 <p>为什么三层可达的网络不直接利用网关转发流量？</p>
-<pre><code class="language-powershell">内核当中的路由规则，网关必须在跟主机当中至少一个 IP 处于同一网段。
+<pre><code class="language-shell">内核当中的路由规则，网关必须在跟主机当中至少一个 IP 处于同一网段。
 由于k8s集群内部各节点均需要实现Pod互通，因此，也就意味着host-gw模式需要整个集群节点都在同一二层网络内。
-
 </code></pre>
 <p>修改flannel的网络后端：</p>
-<pre><code class="language-powershell">$ kubectl edit cm kube-flannel-cfg -n kube-system
+<pre><code class="language-shell">$ kubectl edit cm kube-flannel-cfg -n kube-system
 ...
 net-conf.json: |
     {
       &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
       &quot;Backend&quot;: {
-        &quot;Type&quot;: &quot;host-gw&quot;
+        &quot;Type&quot;: &quot;host-gw&quot;  #更改
       }
     }
 kind: ConfigMap
@@ -913,7 +929,7 @@ kind: ConfigMap
 
 </code></pre>
 <p>重建Flannel的Pod</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system get po |grep flannel
+<pre><code class="language-shell">$ kubectl -n kube-system get po |grep flannel
 kube-flannel-ds-amd64-5dgb8          1/1     Running   0          15m
 kube-flannel-ds-amd64-c2gdc          1/1     Running   0          14m
 kube-flannel-ds-amd64-t2jdd          1/1     Running   0          15m
@@ -928,10 +944,9 @@ I0704 01:18:12.917339       1 kube.go:133] Node controller sync successful
 I0704 01:18:12.917848       1 main.go:247] Installing signal handlers
 I0704 01:18:12.918569       1 main.go:386] Found network config - Backend type: host-gw
 I0704 01:18:13.017841       1 main.go:317] Wrote subnet file to /run/flannel/subnet.env
-
 </code></pre>
 <p>查看节点路由表：</p>
-<pre><code class="language-powershell">$ route -n 
+<pre><code class="language-shell">$ route -n 
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         192.168.136.2   0.0.0.0         UG    100    0        0 eth0
 10.244.0.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
