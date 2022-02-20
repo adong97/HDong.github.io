@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645320102481">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645350485335">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645320102481" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645350485335" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -109,14 +109,14 @@
         <div class="post-content yue">
           <h1 id="etcd常用操作">ETCD常用操作</h1>
 <p>拷贝etcdctl命令行工具：</p>
-<pre><code class="language-powershell">#将Etcd容器中的etcdctl命令拷贝到本机/usr/bin/etcdctl
+<pre><code class="language-shell">#将Etcd容器中的etcdctl命令拷贝到本机/usr/bin/etcdctl
 $ docker cp etcd_container:/usr/local/bin/etcdctl /usr/bin/etcdctl
 
 #如果etcd没有使用Docker容器，则将Etcd安装目录下的etcdctl拷贝到/usr/bin/etcdctl目录下
 $ cp /opt/etcd/bin/etcdctl /usr/bin/etcdctl
 </code></pre>
 <p>查看etcd集群的成员节点：</p>
-<pre><code class="language-powershell">#声明通过ETCDCTL_API=3这个版本拿取数据
+<pre><code class="language-shell">#声明通过ETCDCTL_API=3这个版本拿取数据
 $ export ETCDCTL_API=3
 
 $ etcdctl --endpoints=https://[127.0.0.1]:2379 \
@@ -137,12 +137,12 @@ $ alias etcdctl='etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubern
 $ etcdctl member list -w table
 </code></pre>
 <p>查看etcd集群节点状态：</p>
-<pre><code class="language-powershell">$ etcdctl endpoint status -w table
+<pre><code class="language-shell">$ etcdctl endpoint status -w table
 
 $ etcdctl endpoint health -w table
 </code></pre>
 <p>设置key值:</p>
-<pre><code class="language-powershell">#设置值
+<pre><code class="language-shell">#设置值
 $ etcdctl put luffy 1
 
 #查询值
@@ -152,7 +152,7 @@ $ etcdctl get luffy
 $ etcdctl put /luffy/key1 val1
 </code></pre>
 <p>查看所有key值：</p>
-<pre><code class="language-powershell">$  etcdctl get / --prefix --keys-only
+<pre><code class="language-shell">$  etcdctl get / --prefix --keys-only
 ## --prefix 前缀，把所有使用/前缀的key读出来
 ## --keys-only 只取key值
 
@@ -163,14 +163,14 @@ $ etcdctl put /luffy/key1 val1
 &gt; /services 第二层，资源类型
 </code></pre>
 <p>查看具体的key对应的数据：</p>
-<pre><code class="language-powershell">$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
+<pre><code class="language-shell">$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
 </code></pre>
 <p>list-watch:</p>
-<pre><code class="language-powershell">$ etcdctl watch /luffy/ --prefix
+<pre><code class="language-shell">$ etcdctl watch /luffy/ --prefix
 $ etcdctl put /luffy/key1 val1
 </code></pre>
 <p>添加定时任务做数据快照（重要！）</p>
-<pre><code class="language-powershell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
+<pre><code class="language-shell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
 </code></pre>
 <p>恢复快照：</p>
 <ol>
@@ -184,7 +184,7 @@ $ etcdctl put /luffy/key1 val1
 </li>
 <li>
 <p>恢复快照</p>
-<pre><code class="language-powershell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
+<pre><code class="language-shell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
 </code></pre>
 </li>
 <li>
