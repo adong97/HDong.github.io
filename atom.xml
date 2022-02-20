@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-20T09:48:17.041Z</updated>
+    <updated>2022-02-20T14:37:37.769Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -90,7 +90,7 @@
 <h1 id="安装与快速入门实践">安装与快速入门实践</h1>
 <p>下载最新的稳定版本：https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz</p>
 <p>更多版本可以参考： https://github.com/helm/helm/releases</p>
-<pre><code class="language-powershell"># k8s-master节点
+<pre><code class="language-shell"># k8s-master节点
 $ wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
 $ tar -zxf helm-v3.2.4-linux-amd64.tar.gz
 
@@ -101,20 +101,24 @@ $ helm version
 version.BuildInfo{Version:&quot;v3.2.4&quot;, GitCommit:&quot;0ad800ef43d3b826f31a5ad8dfbb4fe05d143688&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.12&quot;}
 $ helm env
 
-# 添加仓库
+# 添加仓库到本地
 $ helm repo add stable http://mirror.azure.cn/kubernetes/charts/
 # 同步最新charts信息到本地
 $ helm repo update
 </code></pre>
-<p>快速入门实践：</p>
+<h1 id="快速入门实践">快速入门实践：</h1>
 <p>示例一：使用helm安装mysql应用</p>
-<pre><code class="language-powershell"># helm 搜索chart包
+<pre><code class="language-shell"># helm 搜索chart包
 $ helm search repo mysql
 
 # 从仓库安装
 $ helm install  mysql --set mysqlRootPassword=root,mysqlUser=luffy,mysqlPassword=luffy,mysqlDatabase=my-database --set persistence.storageClass=dynamic-cephfs  stable/mysql
 
-$ helm ls
+$ helm -n wordpress ls
+NAME     	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART            	APP VERSION
+wordpress	wordpress	1       	2022-02-20 18:15:56.240564179 +0800 CST	deployed	wordpress-13.0.11	5.9.0
+# 一条数据就是一个release,一个release就是chart（k8s资源模板）的一次部署
+
 $ kubectl get all 
 
 # 从chart仓库中把chart包下载到本地
@@ -140,7 +144,7 @@ $ kubectl -n luffy get all
 <h1 id="chart的模板语法及开发">Chart的模板语法及开发</h1>
 <h2 id="nginx的chart实现分析">nginx的chart实现分析</h2>
 <p>格式：</p>
-<pre><code class="language-powershell">$ tree nginx/
+<pre><code class="language-shell">$ tree nginx/
 nginx/
 ├── charts						# 存放子chart
 ├── Chart.yaml					# 该chart的全局定义信息
@@ -157,7 +161,7 @@ nginx/
 └── values.yaml					# 模板使用的默认值信息
 </code></pre>
 <p>很明显，资源清单都在templates中，数据来源于values.yaml，安装的过程就是将模板与数据融合成k8s可识别的资源清单，然后部署到k8s环境中。</p>
-<pre><code class="language-powershell">$ helm install debug-nginx ./ --dry-run --set replicaCount=2 --debug
+<pre><code class="language-shell">$ helm install debug-nginx ./ --dry-run --set replicaCount=2 --debug
 </code></pre>
 <p>分析模板文件的实现：</p>
 <ul>
@@ -327,14 +331,13 @@ spec:
 <ul>
 <li>set的方式</li>
 </ul>
-<pre><code class="language-powershell"># 改变副本数和resource值
+<pre><code class="language-shell"># 改变副本数和resource值
 $ helm install nginx-2 ./nginx --set replicaCount=2 --set resources.limits.cpu=200m --set resources.limits.memory=256Mi
-
 </code></pre>
 <ul>
 <li>
 <p>value文件的方式</p>
-<pre><code class="language-powershell">$ cat nginx-values.yaml
+<pre><code class="language-shell">$ cat nginx-values.yaml
 resources:
   limits:
     cpu: 100m
@@ -391,7 +394,7 @@ $ helm install -f nginx-values.yaml nginx-3 ./nginx
 </ul>
 <p>通常用作企业级镜像仓库服务，实际功能强大很多。</p>
 <p>组件众多，因此使用helm部署</p>
-<pre><code class="language-powershell"># 添加harbor chart仓库
+<pre><code class="language-shell"># 添加harbor chart仓库
 $ helm repo add harbor https://helm.goharbor.io
 
 # 搜索harbor的chart
@@ -401,7 +404,8 @@ $ helm search repo harbor
 $ helm pull harbor/harbor
 </code></pre>
 <p>创建pvc</p>
-<pre><code class="language-powershell">$ kubectl create namespace harbor
+<pre><code class="language-shell">$ kubectl create namespace harbor
+
 $ cat harbor-pv.yaml
 apiVersion: v1
 kind: PersistentVolume
@@ -446,7 +450,7 @@ spec:
 <li>clair和trivy漏洞扫描组件，暂不启用</li>
 </ul>
 <p>helm创建：</p>
-<pre><code class="language-powershell"># 使用本地chart安装
+<pre><code class="language-shell"># 使用本地chart安装
 $ helm install harbor ./harbor -n harbor
 </code></pre>
 <p>数据权限问题：</p>
@@ -457,7 +461,7 @@ $ helm install harbor ./harbor -n harbor
 <li>chartmuseum存储目录权限，导致chart推送失败</li>
 </ul>
 <p>解决：</p>
-<pre><code class="language-powershell">$ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
+<pre><code class="language-shell">$ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
 
 $ chown -R 999:999 database
 $ chown -R 999:999 redis
@@ -466,7 +470,7 @@ $ chown -R 10000:10000 registry
 </code></pre>
 <h2 id="推送镜像到harbor仓库">推送镜像到Harbor仓库</h2>
 <p>配置hosts及docker非安全仓库：</p>
-<pre><code class="language-powershell">$ cat /etc/hosts
+<pre><code class="language-shell">$ cat /etc/hosts
 ...
 172.21.51.143 k8s-master harbor.luffy.com
 ...
@@ -494,16 +498,16 @@ $ docker push harbor.luffy.com/library/nginx:alpine
 <h2 id="推送chart到harbor仓库">推送chart到Harbor仓库</h2>
 <p>helm3默认没有安装helm push插件，需要手动安装。插件地址 https://github.com/chartmuseum/helm-push</p>
 <p>安装插件：</p>
-<pre><code class="language-powershell">$ helm plugin install https://github.com/chartmuseum/helm-push
+<pre><code class="language-shell">$ helm plugin install https://github.com/chartmuseum/helm-push
 </code></pre>
 <p>离线安装：</p>
-<pre><code class="language-powershell">$ mkdir helm-push
+<pre><code class="language-shell">$ mkdir helm-push
 $ wget https://github.com/chartmuseum/helm-push/releases/download/v0.8.1/helm-push_0.8.1_linux_amd64.tar.gz
 $ tar zxf helm-push_0.8.1_linux_amd64.tar.gz -C helm-push
 $ helm plugin install ./helm-push
 </code></pre>
 <p>添加repo</p>
-<pre><code class="language-powershell">$ helm repo add myharbor https://harbor.luffy.com/chartrepo/luffy
+<pre><code class="language-shell">$ helm repo add myharbor https://harbor.luffy.com/chartrepo/luffy
 # x509错误
 
 # 添加证书信任，根证书为配置给ingress使用的证书
@@ -519,7 +523,7 @@ $ helm repo ls
 
 </code></pre>
 <p>推送chart到仓库：</p>
-<pre><code class="language-powershell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
+<pre><code class="language-shell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
 </code></pre>
 <h1 id="课程小结">课程小结</h1>
 <p>使用k8s的进阶内容。</p>
