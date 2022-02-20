@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-19T16:09:28.712Z</updated>
+    <updated>2022-02-20T01:07:39.539Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -569,6 +569,30 @@ $ helm repo ls
 3.pod 和服务之间的通信( nginx 通过调用 tomcat )<br>
 4.pod 与 k8s 之外的网络通信<br>
 外部到 pod (客户端的请求)，用户的请求先到负载均衡器，负载均衡器在转发至 node 节点，node 节点在转发至 svc ， svc 再转发至 pod ，中间经过多层转发，最主要的就是在 node 节点这块如何将请求转发至 svc，这是通过 K8S 环境以外进来的 pod 到外部(响应报文)</p>
+<h1 id="kubernetes-网络模型">Kubernetes 网络模型</h1>
+<p>每一个 Pod 都有它自己的IP地址，这就意味着你不需要显式地在每个 Pod 之间创建链接， 你几乎不需要处理容器端口到主机端口之间的映射。 这将创建一个干净的、向后兼容的模型，在这个模型里，从端口分配、命名、服务发现、 负载均衡、应用配置和迁移的角度来看，Pod 可以被视作虚拟机或者物理主机。</p>
+<p>Kubernetes 对所有网络设施的实施，都需要满足以下的基本要求（除非有设置一些特定的网络分段策略）：</p>
+<ul>
+<li>节点上的 Pod 可以不通过 NAT 和其他任何节点上的 Pod 通信</li>
+<li>节点上的代理（比如：系统守护进程、kubelet）可以和节点上的所有Pod通信<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645317655041.png" alt="" loading="lazy"></li>
+</ul>
+<h2 id="overlay">overlay：</h2>
+<p>​ 不同主机的容器间通信，容器需要在本地创建一个二层的虚拟网桥，让后网桥将请求报文进行封装，最后将封装好后发送至 vtype ，然后 vtype 本身是一个网络设备用于创建隧道，并且在每个主机上都有这么一个虚拟网卡，每个主机的报文都会进入到这个隧道上，在这个隧道上进行封装和解封装，隧道封装一次将报文发送至物理机，然后物理机在封装一次。</p>
+<p>​ 在隧道中封装的是容器的源 mac 和源 ip 封装好了之后将报文交给了物理网卡，物理网卡在原有的基础上在封装一次，这次封装的就是物理机的源 mac 和 IP ，这个时候在发送至交换机，而对于交换机来说能够看到的只是物理层面的 ip 和 mac 地址，然后通过拆分最后找到了目的 mac 和 ip 地址，然后将报文发送至目的物理机。</p>
+<p>​ 这时候目的物理机在进行报文的拆分，就会获取到目的容器地址和 ip</p>
+<p>​ 这样的好处就是可以实现跨网段，这个报文可以在不同的网段进行转发，他的通信是靠三层路由来打通的，不会受 mac 地址限制，但是可能会有损耗因为需要给他进行封装多层</p>
+<h2 id="路由">路由：</h2>
+<p>​ 将封装设备去点，在宿主机上直接通过路由选址，就是直接创建容器，这个容器直接调用物理网卡，并不需要在宿主机上进行封装了，到了物理网卡然后发现这是要去那个网段就直接丢到网桥，网桥再将报文直接转给容器，这样的好处就是不需要虚拟设备的封装。</p>
+<p>​ 虽然少了一层封装性能有所提升，但是问题在于不能实现跨网段，因为这个地方是通过二层设备来转发并没有直连设备。交换机只能够识别到 mac 地址</p>
+<p>​ 解决方法就是在交换机上添加对应的容器网段，从而实现直连</p>
+<h2 id="underlay">Underlay：</h2>
+<p>​ 直接通过底层网络打通，强力依赖于底层网络，容器的网段直接和宿主机在同一网段，不在由 K8S 给容器分配地址，我们可以理解为直接将地址桥接至宿主机上，然后在由宿主机直接将报文交给交换机，可以通过 macvlan 来实现</p>
+<p>​ 这样的话一个网口有多个子接口，每个子接口有多个地址和 mac 地址，对交换机来讲他就是一个独立的地址，类似于虚拟化的桥接</p>
+<p>​ 这样的好处在于通信模式比较简单，不用再多次封装，而实直接将报文通过宿主机转发给交换机，性能很强但是管理起来相对麻烦。因为每个容器都需要一个独立的 ip 地址，所有对应的地址池都非常多，而且会有大量的广播报文。</p>
+<p>总结：<br>
+从性能角度来看：underlay 是最强、接着是路由、overlay 最次</p>
+<p>兼容性角度来看：overlay 是最强、路由第二、underlay 最次</p>
 <h1 id="cni介绍及集群网络选型">CNI介绍及集群网络选型</h1>
 <p>容器网络接口（Container Network Interface），实现kubernetes集群的Pod网络通信及管理。包括：</p>
 <ul>
@@ -703,10 +727,13 @@ $ tcpdump -i eth0 host 172.21.51.55 -w vxlan.cap
 # 在172.21.51.55机器执行
 $ ping 10.0.52.84
 
-</code></pre>
-<p>使用wireshark分析ICMP类型的数据包</p>
-<p>清理：</p>
-<pre><code class="language-shell">$ ip link del vxlan20
+``
+使用wireshark分析ICMP类型的数据包
+
+
+清理：
+```shell
+$ ip link del vxlan20
 </code></pre>
 <h2 id="跨主机容器网络的通信">跨主机容器网络的通信</h2>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154679358.jpg" alt="" loading="lazy"></figure>
@@ -962,6 +989,141 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <li>包到达k8s-slave2节点（172.21.51.55）节点的eth0网卡，根据该节点的路由规则，转发给cni0网卡</li>
 <li><code>cni0</code>将 IP 包转发给连接在 <code>cni0</code> 上的 pod-b</li>
 </ul>
+<h1 id="calico网络">calico网络</h1>
+<p>calico官网： https://www.tigera.io/project-calico/</p>
+<p>Calico 是一个纯三层的网络解决方案，为容器提供多 node 间的访问通信, calico 将每个 node 节点都当做为一个路由器(router)来使用通过宿主机来做一些目的地址得匹配，各节点通过 BGP(Border Gateway Protocol) 边界网关协议学习并在 node 节点生成路由规则，从而将不同 node 节点上的pod连接起来进行通信。</p>
+<p>calico 简介：<br>
+网络通过第 3 层路由技术(如静态路由或 BGP 路由分配)或第 2 层地址学习来感知工作负载 IP 地址。因此，它们可以将未封装的流量路由到作为最终目的地的端点的正确主机。但是，并非所有网络都能够路由工作负载IP地址。例如公共云环境、跨VPC子网边界的 ANS,以及无法通过 BGP、Calico 对应到 underlay 网络或无法轻松配置静态路由的其他场最，这就是为什么 Calico 支持封装，因此您可以在工作负载之间发送流量，而无需底层网络知道工作负载IP 地址。</p>
+<p>calico 封装类型:<br>
+Calico 支持两种类型的封装: VXLAN 和 IP-in-IP， VXLAN 在 IP 中没有 IP 的某些环境中受支持(例如Azure) ，VXLAN 的每数据包开销稍高，因为报头较大。但除非您运行的是网络密集型工作负载，否则您通常不会注意到这种差异，这两种封装之间的另一个小差异是 Calico 的 VXLAN 实现不使用BGP，Calico的IP-In-IP是在Calico节点之间使用BGP协议实现跨子网。</p>
+<p>BGP 是一个去中心化的协议，它通过自动学习和维护路由表实现网络的可用性,但是并不是所有的网络都支持BGP，另外为了跨网络实现更大规模的网络管理，calico 还支持 IP-in-IP 的叠加模型，简称 IPIP， IPIP 可以实现跨不同网段建立路由通信，但是会存在安全性问题，其在内核内置，可以通过 Calico 的配置文件设置是否启用IPIP ,在公司内部如果 k8s 的 node 节点没有跨越网段建议关闭 IPIP。</p>
+<p>BGP 和 IPIP 的区别：</p>
+<ul>
+<li>IPIP 是一种将各 Node 的路由之间做一个 tunnel, 再把两个网络连接起来的模式。启用 IPIP 模式时，Calico 将在各 Node 上创建一个名为&quot;tunl0&quot;的虚拟网络接口。</li>
+<li>BGP 模式则直接使用物理机作为虚拟路由路(vRouter) ， 不再创建额外的tunnel。</li>
+</ul>
+<h2 id="calico-核心组件">calico 核心组件：</h2>
+<p>Felix:<br>
+calico 的 agent, 运行在每一台 node 节点上，其主要是维护路由规则、汇报当前节点状态以确保 pod 的夸主机通信。</p>
+<p>BGP Client:<br>
+每台 node 都运行，其主要负责监听 node 节点上由 felix 生成的路由信息，然后通过 BGP 协议广播至其他剩余的 node 节点，从而相互学习路由实现 pod 通信。</p>
+<p>Route Reflector:<br>
+集中式的路由反射器，calico v3.3 开始支持，当 Calico BGP 客户端将路由从其 FIB(Forward InformationdataBase,转发信息库)通告到 Route Reflector时， Route Reflector 会将这些路由通告给部署集群中的其他节点，Route Reflector 专门用于管理 BGP 网络路由规则，不会产生 pod 数据通信。</p>
+<p>注: calico 默认工作模式是 BGP 的 node-to-node mesh,如果要使用 Route Reflector 需要进行相关配置。<br>
+https://docs . projectcalico. org/v3. 4/usage/ routereflector<br>
+https://docs. projectcalico.org/v3.2/usage/ routereflector/calico-routereflector</p>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1645318328496.png" alt="" loading="lazy"></figure>
+<h2 id="查看-pod-路由走向">查看 pod 路由走向</h2>
+<p>验证开启 ipip 和 关闭 ipip 的 K8S 集群验证</p>
+<p>calico ipip 模式工作原理：<br>
+所谓ipip，也就是IP in IP，即在IP报文的基础上，又封装了一个IP头，和overlay网络相似。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645318410964.png" alt="" loading="lazy"><br>
+如下图：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645318801006.png" alt="" loading="lazy"><br>
+如果说 node1 上的 pod 想要访问 node2 上的 pod，那么在 node1 的路由中肯定有去往 node2 的路由表才行，也就是说 node1 会将请求报文发送至 node2 ，当目的主机 node2 拿到报文之后就进行拆封装，拆封发现这个是去往 pod2 的请求报文，最后就会将该报文发送至 pod2 ，并且这里通过 tunl0 的网络模式(ipip)能够实现跨主机访问。</p>
+<h2 id="开启或关闭-ipip">开启或关闭 ipip</h2>
+<p>默认情况下 calico 会开启 ipip 隧道模式，开启 ipip 之后会看到在宿主机上面就有对应的 tunl0 网卡，这个就是所谓的隧道负责容器间的通信、会在宿主机上进行报文封装从而实现能够跨网段通信</p>
+<p>在创建 calico 的 pod 的时候如需关闭 ipip 模式只需将 always 改为 off。</p>
+<pre><code class="language-shell">$ vim calico-etcd.yaml 
+            # Enable IPIP
+            - name: CALICO_IPV4POOL_IPIP
+              value: &quot;Always&quot;       # 将 always 改为 off ,就关闭了 ipip 模式
+
+# 如果关闭了 ipip 模式，我们的 pod 就不能实现跨网段通信，关闭之后就会在宿主机上生成对应的 tunl0 网卡。
+</code></pre>
+<p>关闭 ipip 之后就会使用 bgp 网络模式，也就是不能跨子网的网络模式。</p>
+<h2 id="验证-ipip-隧道封装">验证 ipip 隧道封装</h2>
+<ol>
+<li>查看路由<br>
+calico 在 node 上也会维护大量路由规则如下命令</li>
+</ol>
+<pre><code class="language-shell">$ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.0.2        0.0.0.0         UG    0      0        0 eth0
+10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 eth0
+10.10.113.128   10.0.0.130      255.255.255.192 UG    0      0        0 tunl0
+10.10.169.128   0.0.0.0         255.255.255.192 U     0      0        0 *
+10.10.169.182   0.0.0.0         255.255.255.255 UH    0      0        0 cali6382e723d9e
+10.10.169.187   0.0.0.0         255.255.255.255 UH    0      0        0 calic5cef89a6b9
+10.10.169.190   0.0.0.0         255.255.255.255 UH    0      0        0 calicfccad17a33
+10.10.235.192   10.0.0.131      255.255.255.192 UG    0      0        0 tunl0
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+
+# tunl0 的网卡就是跨主机通讯的路由规则
+# 对应的 gateway 就是 node ip ，也就是对应的路由下一跳，host上也多了两条通往node的路由记录
+# 但是在上面 255.255.255.192 这个子网就是给对应的 pod 进行使用，如果说后期子网不够 ETCD 就会重新分配
+</code></pre>
+<ol start="2">
+<li>查看网卡信息<br>
+而且 calico 会在对应 pod 的 node 上生成大量网卡</li>
+</ol>
+<pre><code class="language-shell">$ ip a | grep cali
+5: calic5cef89a6b9@if3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1480 qdisc noqueue state UP group default 
+6: cali6382e723d9e@if3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1480 qdisc noqueue state UP group default 
+7: calicfccad17a33@if3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1480 qdisc noqueue state UP group default 
+</code></pre>
+<ol start="3">
+<li>创建pod</li>
+</ol>
+<pre><code class="language-shell"># 创建 busybox pod
+$  cat&lt;&lt;EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: default
+spec:
+  containers:
+  - name: busybox
+    image: busybox:1.34
+    command:
+      - sleep
+      - &quot;3600&quot;
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+EOF
+</code></pre>
+<ol start="4">
+<li>查看该 pod 详情</li>
+</ol>
+<pre><code># 可以看到当前 pod 分配到了 node 节点上，并且 pod 地址为 10.10.113.175 
+$ kubectl  get pod -o wide
+NAME      READY   STATUS    RESTARTS   AGE   IP              NODE       NOMINATED NODE   READINESS GATES
+busybox   1/1     Running   0          56s   10.10.113.175   k8s-node   &lt;none&gt;           &lt;none&gt;
+</code></pre>
+<ol start="5">
+<li>查看对应的 node 路由</li>
+</ol>
+<pre><code class="language-shell"># 到 K8S-node 节点上查看路由信息，就会找到一条对应的 路由
+[10:52:44 root@k8s-node ~]#route -n | grep 10.10.113.175 
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+10.10.113.175   0.0.0.0         255.255.255.255 UH    0      0        0 cali12d4a061371
+</code></pre>
+<ol start="6">
+<li>查看不同网段的 pod 信息</li>
+</ol>
+<pre><code class="language-shell"># 可以看到 busybox 网段为 10.10.113 而 kube-scheduler-k8s-master 网段为 10.0.0.131   
+$ kubectl get pod -A -o wide
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE     IP              NODE         
+default       busybox                                    1/1     Running   0          7m50s   10.10.113.175   k8s-node     
+kube-system   kube-scheduler-k8s-master                  1/1     Running   34         7d      10.0.0.131      k8s-master   
+</code></pre>
+<ol start="7">
+<li>进入到 busybox pod 中通过 tarceroute 命令解析 kube-scheduler-k8s-master 的 ip</li>
+</ol>
+<pre><code class="language-shell"># 通过 tarceroute 命令解析到 不同网段的 pod 
+/# traceroute to 10.10.169.182 (10.10.169.182), 30 hops max, 46 byte packets
+ 1  10.0.0.130 (10.0.0.130)  0.014 ms  0.008 ms  0.005 ms
+ 2  10.10.169.128 (10.10.169.128)  0.463 ms  0.517 ms  0.645 ms # 通过在路由表中的 10.10.169.128 tunl0 隧道封装
+ 3  10-10-169-182.metrics-server.kube-system.svc.linux.local (10.10.169.182)  0.563 ms  0.841 ms  1.605 ms # 再到对应的 pod 中
+</code></pre>
+<h2 id="ipip-和-bgp-的区别">ipip 和 BGP 的区别</h2>
+<p>ipip 由于需要跨子网所以会被封装一层网络隧道，而 BGP 只能够在同一网段下进行通信。</p>
+<p>ipip 优点：能够跨越子网，使用场景不受限制<br>
+ipip缺点：性能不如 BGP</p>
+<p>BGP优点：性能比 IPIP 模式强劲<br>
+BGP缺点：由于不能够跨子网所有使用场景受限制</p>
 ]]></content>
     </entry>
     <entry>
