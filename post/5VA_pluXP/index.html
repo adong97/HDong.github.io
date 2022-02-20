@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645319250388">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645319657776">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645319250388" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645319657776" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -134,7 +134,7 @@
         <div class="post-content yue">
           <p>官方文档：https://kubernetes.io/zh/docs/concepts/cluster-administration/networking/</p>
 <h1 id="容器网络的目的">容器网络的目的</h1>
-<p>1.实现同一个 pod 中的不同容器通信(LNMP)，一个 pod 中的容器共用底层的网络组件<br>
+<p>1.实现同一个 pod 中的不同容器通信，一个 pod 中的容器共用底层的网络组件<br>
 2.实现 pod 与 pod 同主机与跨主机的容器通信(微服务)<br>
 3.pod 和服务之间的通信( nginx 通过调用 tomcat )<br>
 4.pod 与 k8s 之外的网络通信<br>
@@ -148,7 +148,7 @@
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645317655041.png" alt="" loading="lazy"></li>
 </ul>
 <h2 id="overlay">overlay：</h2>
-<p>​ 不同主机的容器间通信，容器需要在本地创建一个二层的虚拟网桥，让后网桥将请求报文进行封装，最后将封装好后发送至 vtype ，然后 vtype 本身是一个网络设备用于创建隧道，并且在每个主机上都有这么一个虚拟网卡，每个主机的报文都会进入到这个隧道上，在这个隧道上进行封装和解封装，隧道封装一次将报文发送至物理机，然后物理机在封装一次。</p>
+<p>​ 不同主机的容器间通信，容器需要在本地创建一个二层的虚拟网桥，让后网桥将请求报文进行封装，最后将封装好后发送至 VTEP ，VTEP 本身是一个网络设备用于创建隧道，并且在每个主机上都有这么一个虚拟网卡，每个主机的报文都会进入到这个隧道上，在这个隧道上进行封装和解封装，隧道封装一次将报文发送至物理机，然后物理机在封装一次。</p>
 <p>​ 在隧道中封装的是容器的源 mac 和源 ip 封装好了之后将报文交给了物理网卡，物理网卡在原有的基础上在封装一次，这次封装的就是物理机的源 mac 和 IP ，这个时候在发送至交换机，而对于交换机来说能够看到的只是物理层面的 ip 和 mac 地址，然后通过拆分最后找到了目的 mac 和 ip 地址，然后将报文发送至目的物理机。</p>
 <p>​ 这时候目的物理机在进行报文的拆分，就会获取到目的容器地址和 ip</p>
 <p>​ 这样的好处就是可以实现跨网段，这个报文可以在不同的网段进行转发，他的通信是靠三层路由来打通的，不会受 mac 地址限制，但是可能会有损耗因为需要给他进行封装多层</p>
@@ -562,12 +562,12 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 <h1 id="calico网络">calico网络</h1>
 <p>calico官网： https://www.tigera.io/project-calico/</p>
 <p>Calico 是一个纯三层的网络解决方案，为容器提供多 node 间的访问通信, calico 将每个 node 节点都当做为一个路由器(router)来使用通过宿主机来做一些目的地址得匹配，各节点通过 BGP(Border Gateway Protocol) 边界网关协议学习并在 node 节点生成路由规则，从而将不同 node 节点上的pod连接起来进行通信。</p>
-<p>calico 简介：<br>
+<p><strong>calico 简介：</strong><br>
 网络通过第 3 层路由技术(如静态路由或 BGP 路由分配)或第 2 层地址学习来感知工作负载 IP 地址。因此，它们可以将未封装的流量路由到作为最终目的地的端点的正确主机。但是，并非所有网络都能够路由工作负载IP地址。例如公共云环境、跨VPC子网边界的 ANS,以及无法通过 BGP、Calico 对应到 underlay 网络或无法轻松配置静态路由的其他场最，这就是为什么 Calico 支持封装，因此您可以在工作负载之间发送流量，而无需底层网络知道工作负载IP 地址。</p>
-<p>calico 封装类型:<br>
+<p><strong>calico 封装类型:</strong><br>
 Calico 支持两种类型的封装: VXLAN 和 IP-in-IP， VXLAN 在 IP 中没有 IP 的某些环境中受支持(例如Azure) ，VXLAN 的每数据包开销稍高，因为报头较大。但除非您运行的是网络密集型工作负载，否则您通常不会注意到这种差异，这两种封装之间的另一个小差异是 Calico 的 VXLAN 实现不使用BGP，Calico的IP-In-IP是在Calico节点之间使用BGP协议实现跨子网。</p>
 <p>BGP 是一个去中心化的协议，它通过自动学习和维护路由表实现网络的可用性,但是并不是所有的网络都支持BGP，另外为了跨网络实现更大规模的网络管理，calico 还支持 IP-in-IP 的叠加模型，简称 IPIP， IPIP 可以实现跨不同网段建立路由通信，但是会存在安全性问题，其在内核内置，可以通过 Calico 的配置文件设置是否启用IPIP ,在公司内部如果 k8s 的 node 节点没有跨越网段建议关闭 IPIP。</p>
-<p>BGP 和 IPIP 的区别：</p>
+<p><strong>BGP 和 IPIP 的区别：</strong></p>
 <ul>
 <li>IPIP 是一种将各 Node 的路由之间做一个 tunnel, 再把两个网络连接起来的模式。启用 IPIP 模式时，Calico 将在各 Node 上创建一个名为&quot;tunl0&quot;的虚拟网络接口。</li>
 <li>BGP 模式则直接使用物理机作为虚拟路由路(vRouter) ， 不再创建额外的tunnel。</li>
