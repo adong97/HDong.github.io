@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-21T15:32:19.344Z</updated>
+    <updated>2022-02-21T15:34:09.177Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -1957,7 +1957,7 @@ $ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kub
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[通过HPA实现业务应用的动态扩缩容]]></title>
+        <title type="html"><![CDATA[ kubernetes通过HPA实现业务应用的动态扩缩容]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/">
         </link>
