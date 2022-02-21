@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645367854667">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645413623033">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645367854667" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645413623033" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,9 +34,20 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E8%AE%A4%E8%AF%86helm">认识Helm</a></li>
-<li><a href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">安装与快速入门实践</a></li>
+<li><a href="#%E8%AE%A4%E8%AF%86helm">认识Helm</a>
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89helm">为什么有helm？</a></li>
+<li><a href="#helm%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D">Helm基础介绍</a></li>
+<li><a href="#helm%E7%9A%84%E7%89%88%E6%9C%AC">Helm的版本</a></li>
+<li><a href="#helm-v2v3-%E7%9A%84%E5%AF%B9%E6%AF%94">Helm V2/V3 的对比</a></li>
+<li><a href="#helm%E7%9A%84%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5">Helm的重要概念</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">安装与快速入门实践</a>
+<ul>
 <li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5">快速入门实践：</a></li>
+</ul>
+</li>
 <li><a href="#chart%E7%9A%84%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95%E5%8F%8A%E5%BC%80%E5%8F%91">Chart的模板语法及开发</a>
 <ul>
 <li><a href="#nginx%E7%9A%84chart%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90">nginx的chart实现分析</a></li>
@@ -50,7 +61,6 @@
 <li><a href="#%E6%8E%A8%E9%80%81chart%E5%88%B0harbor%E4%BB%93%E5%BA%93">推送chart到Harbor仓库</a></li>
 </ul>
 </li>
-<li><a href="#%E8%AF%BE%E7%A8%8B%E5%B0%8F%E7%BB%93">课程小结</a></li>
 </ul>
 
           </div>
@@ -117,41 +127,33 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">使用Helm3管理复杂应用的部署</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-18 / 13 min read
+          2022-02-18 / 14 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/7We4vZ_36.png" alt="">
         
         <div class="post-content yue">
           <h1 id="认识helm">认识Helm</h1>
-<ol>
-<li>
-<p>为什么有helm？</p>
-</li>
-<li>
-<p>Helm是什么？</p>
+<h2 id="为什么有helm">为什么有helm？</h2>
+<p>在我们学习 kubernetes 的过程中，用的最多的是 kubectl 命令行工具，使用 kubectl 工具需要我们编写好各种部署文件，这在生产中是非常不方便的，因此 Helm 这个 kubernetes 包管理工具就应运而生了。</p>
+<p>Helm 包管理工具不仅可以为我们安装网上已经成熟的部署库文件，而且可以生产本地部署模板，我们只需要简单改一改，就可以完成一个应用的部署，不需要我们记住那么多的命令和配置。</p>
+<h2 id="helm基础介绍">Helm基础介绍</h2>
 <p>kubernetes的包管理器，“可以将Helm看作Linux系统下的apt-get/yum”。</p>
 <ul>
-<li>
-<p>对于应用发布者而言，可以通过Helm打包应用，管理应用依赖关系，管理应用版本并发布应用到软件仓库。</p>
-</li>
-<li>
-<p>对于使用者而言，使用Helm后不用需要了解Kubernetes的Yaml语法并编写应用部署文件，可以通过Helm下载并在kubernetes上安装需要的应用。</p>
-</li>
+<li>对于应用发布者而言，可以通过Helm打包应用，管理应用依赖关系，管理应用版本并发布应用到软件仓库。</li>
+<li>对于使用者而言，使用Helm后不用需要了解Kubernetes的Yaml语法并编写应用部署文件，可以通过Helm下载并在kubernetes上安装需要的应用。</li>
 </ul>
 <p>除此以外，Helm还提供了kubernetes上的软件部署，删除，升级，回滚应用的强大功能。</p>
-</li>
-<li>
-<p>Helm的版本</p>
+<h2 id="helm的版本">Helm的版本</h2>
 <ul>
 <li>
 <p>helm2</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154935395.jpg" alt="" loading="lazy"></figure>
-<p>C/S架构，helm通过Tiller与k8s交互</p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645154935395.jpg" alt="" loading="lazy"><br>
+C/S架构，helm通过Tiller与k8s交互</p>
 </li>
 <li>
-<p>helm3</p>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154947798.jpg" alt="" loading="lazy"></figure>
+<p>helm3<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154947798.jpg" alt="" loading="lazy"></p>
 <ul>
 <li>
 <p>从安全性和易用性方面考虑，移除了Tiller服务端，helm3直接使用kubeconfig文件鉴权访问APIServer服务器</p>
@@ -177,17 +179,34 @@
 </ul>
 </li>
 </ul>
+<h2 id="helm-v2v3-的对比">Helm V2/V3 的对比</h2>
+<p><strong>组件架构对比：</strong></p>
+<ol>
+<li>
+<p>Helm2：由2个二进制组成：helm（客户端cli）、tiller（服务端）</p>
 </li>
 <li>
-<p>Helm的重要概念</p>
+<p>Helm3：只有1个二进制组成：helm、移除了tiller</p>
+</li>
+</ol>
+<p><strong>工作原理对比：</strong></p>
+<ol>
+<li>
+<p>Helm2：helm-&gt;tiller-&gt;k8s。首先由helm和tiller交互，然后由tiller负责和k8s交互来完成操作。</p>
+</li>
+<li>
+<p>Helm3：helm-&gt;k8s。由helm命令去调用/root/.kube/config获取k8s权限，然后直接与apiserver交互操作。</p>
+</li>
+</ol>
+<p>Helm 安装的 Chart 的元信息记录到k8s的secret里面，secret名字叫sh.helm.release.v1.NAME.v1，另外还有一个serviceaccount，名字叫 {NAME}-</p>
+<h2 id="helm的重要概念">Helm的重要概念</h2>
 <ul>
 <li>chart，应用的信息集合，包括各种对象的配置模板、参数定义、依赖关系、文档说明等</li>
 <li>Repoistory，chart仓库，存储chart的地方，并且提供了一个该 Repository 的 Chart 包的清单文件以供查询。Helm 可以同时管理多个不同的 Repository。</li>
 <li>release， 当 chart 被安装到 kubernetes 集群，就生成了一个 release ， 是 chart 的运行实例，代表了一个正在运行的应用</li>
 </ul>
-</li>
-</ol>
-<p>helm 是包管理工具，包就是指 chart，helm 能够：</p>
+<p>helm 是包管理工具，包就是指 chart<br>
+helm 能够：</p>
 <ul>
 <li>从零创建chart</li>
 <li>与仓库交互，拉取、保存、更新 chart</li>
@@ -199,21 +218,40 @@
 <p>更多版本可以参考： https://github.com/helm/helm/releases</p>
 <pre><code class="language-shell"># k8s-master节点
 $ wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+
 $ tar -zxf helm-v3.2.4-linux-amd64.tar.gz
 
 $ cp linux-amd64/helm /usr/local/bin/
 
-# 验证安装
+# 命令自动补全，在 /etc/profile 里增加如下内容：
+$ vim /etc/profile
+##添加
+...
+source &lt;(helm completion bash)
+...
+## 生效环境变量
+$ source /etc/profile
+</code></pre>
+<p>常用命令：</p>
+<pre><code># 验证安装
 $ helm version
 version.BuildInfo{Version:&quot;v3.2.4&quot;, GitCommit:&quot;0ad800ef43d3b826f31a5ad8dfbb4fe05d143688&quot;, GitTreeState:&quot;clean&quot;, GoVersion:&quot;go1.13.12&quot;}
+
 $ helm env
 
 # 添加仓库到本地
 $ helm repo add stable http://mirror.azure.cn/kubernetes/charts/
+
+# 查看添加了哪些仓库
+$ helm repo list
+
 # 同步最新charts信息到本地
 $ helm repo update
+
+# 移除仓库
+$ helm repo remove $仓库名
 </code></pre>
-<h1 id="快速入门实践">快速入门实践：</h1>
+<h2 id="快速入门实践">快速入门实践：</h2>
 <p>示例一：使用helm安装mysql应用</p>
 <pre><code class="language-shell"># helm 搜索chart包
 $ helm search repo mysql
@@ -230,10 +268,11 @@ $ kubectl get all
 
 # 从chart仓库中把chart包下载到本地
 $ helm pull stable/mysql
+
 $ tree mysql
 </code></pre>
 <p>示例二：新建nginx的chart并安装</p>
-<pre><code class="language-powershell">$ helm create nginx
+<pre><code class="language-shell">$ helm create nginx
 
 # 从本地安装
 $ helm install nginx ./nginx
@@ -245,7 +284,6 @@ $ helm -n luffy install nginx ./nginx --set replicaCount=2 --set image.tag=alpin
 $ helm ls
 $ helm -n luffy ls
 
-#
 $ kubectl -n luffy get all
 </code></pre>
 <h1 id="chart的模板语法及开发">Chart的模板语法及开发</h1>
@@ -473,7 +511,7 @@ $ helm install -f nginx-values.yaml nginx-3 ./nginx
 <h1 id="实战使用helm部署harbor镜像及chart仓库">实战：使用Helm部署Harbor镜像及chart仓库</h1>
 <h2 id="harbor部署">harbor部署</h2>
 <p>架构 https://github.com/goharbor/harbor/wiki/Architecture-Overview-of-Harbor</p>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154979580.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154979580.png" alt="" loading="lazy"></figure>
 <ul>
 <li>Core，核心组件
 <ul>
@@ -632,39 +670,6 @@ $ helm repo ls
 <p>推送chart到仓库：</p>
 <pre><code class="language-shell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
 </code></pre>
-<h1 id="课程小结">课程小结</h1>
-<p>使用k8s的进阶内容。</p>
-<ol>
-<li>
-<p>学习k8s在etcd中数据的存储，掌握etcd的基本操作命令</p>
-</li>
-<li>
-<p>理解k8s调度的过程，预选及优先。影响调度策略的设置</p>
-</li>
-</ol>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155005132.png" alt="" loading="lazy"></figure>
-<ol start="3">
-<li>
-<p>Flannel网络的原理学习，了解网络的流向，帮助定位问题</p>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155022677.png" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>认证与授权，掌握kubectl、kubelet、rbac及二次开发如何调度API</p>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155037341.jpg" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>利用HPA进行业务动态扩缩容，通过metrics-server了解整个k8s的监控体系</p>
-<figure data-type="image" tabindex="7"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155053288.png" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>PV + PVC</p>
-<figure data-type="image" tabindex="8"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155069117.png" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>Helm</p>
-</li>
-</ol>
-<figure data-type="image" tabindex="9"><img src="https://adong97.github.io/HDong.github.io//post-images/1645155081947.jpg" alt="" loading="lazy"></figure>
 
         </div>
 
