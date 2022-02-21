@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645434265944">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645457536338">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645434265944" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645457536338" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -127,7 +127,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">使用Helm3管理复杂应用的部署</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-18 / 14 min read
+          2022-02-18 / 17 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/7We4vZ_36.png" alt="">
@@ -535,9 +535,9 @@ $ helm install -f nginx-values.yaml nginx-3 ./nginx
 <li>Docker Registry，镜像仓库服务</li>
 <li>kv-storage，redis缓存服务，job service使用，存储job metadata</li>
 <li>local/remote storage，存储服务，比较镜像存储</li>
-<li>SQL Database，postgresl，存储用户、项目等元数据</li>
+<li>SQL Database，postgresl，存储用户、项目等元数据<br>
+通常用作企业级镜像仓库服务，实际功能强大很多。</li>
 </ul>
-<p>通常用作企业级镜像仓库服务，实际功能强大很多。</p>
 <p>组件众多，因此使用helm部署</p>
 <pre><code class="language-shell"># 添加harbor chart仓库
 $ helm repo add harbor https://helm.goharbor.io
@@ -547,34 +547,20 @@ $ helm search repo harbor
 
 # 不知道如何部署，因此拉到本地
 $ helm pull harbor/harbor
+
+#解压harbor安装包
+$ tar -zxcf harbor-1.8.1.tgz
+
+#方法nfs目录权限
+chmod -R 777 /data/k8s/
 </code></pre>
 <p>创建pvc</p>
-<pre><code class="language-shell">$ kubectl create namespace harbor
+<pre><code class="language-shell"># 创建harbor命名空间
+$ kubectl create namespace harbor
 
-$ cat harbor-pv.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: cephfs-pv
-  labels:
-    pv: cephfs-pv
-spec:
-  capacity:
-    storage: 20Gi
-  accessModes:
-    - ReadWriteMany
-  cephfs:
-    monitors:
-      - 172.21.51.55:6789
-    user: admin
-    secretRef:
-      name: ceph-admin-secret
-	  namespace: kube-system
-    readOnly: false
-  persistentVolumeReclaimPolicy: Retain
-
-  
+创建harbor  pvc
 $ cat harbor-pvc.yaml
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -586,6 +572,7 @@ spec:
   resources:
     requests:
       storage: 20Gi
+  storageClassName: nfs-storage   #直接使用动态挂载磁盘
 </code></pre>
 <p>修改harbor配置：</p>
 <ul>
@@ -596,81 +583,191 @@ spec:
 <li>开启chartmuseum</li>
 <li>clair和trivy漏洞扫描组件，暂不启用</li>
 </ul>
+<pre><code class="language-shell">vim harbor/values.yaml
+
+...
+expose:  #暴露svc
+  type: ingress  #默认使用ingress资源类型
+...
+...
+  ingress:
+    hosts:
+      core: harbor.luffy.com   #ingress访问域名
+      notary: notary.luffy.com  #内部签名使用的服务
+...
+...
+externalURL: https://harbor.luffy.com  #对外暴露的URL
+...
+...
+persistence:  #持久化
+  enabled: true
+  resourcePolicy: &quot;keep&quot;
+  persistentVolumeClaim:  #配置PVC
+    registry:
+      existingClaim: &quot;harbor-data-pvc&quot;   #配置已存在的PVC名称
+      storageClass: &quot;&quot;
+      subPath: &quot;registry&quot;  #配置子路径
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    chartmuseum:
+      existingClaim: &quot;harbor-data-pvc&quot;  #配置已存在的PVC名称
+      storageClass: &quot;&quot;
+      subPath: &quot;chartmuseum&quot; #配置子路径
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    jobservice:
+      existingClaim: &quot;harbor-data-pvc&quot;
+      storageClass: &quot;&quot;
+      subPath: &quot;jobservice&quot;
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    database:
+      existingClaim: &quot;harbor-data-pvc&quot;
+      storageClass: &quot;&quot;
+      subPath: &quot;database&quot;
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    redis:
+      existingClaim: &quot;harbor-data-pvc&quot;
+      storageClass: &quot;&quot;
+      subPath: &quot;redis&quot;
+      accessMode: ReadWriteOnce
+      size: 1Gi
+    trivy:
+      existingClaim: &quot;harbor-data-pvc&quot;
+      storageClass: &quot;&quot;
+      subPath: &quot;trivy&quot;
+      accessMode: ReadWriteOnce
+      size: 5Gi
+...
+
+</code></pre>
 <p>helm创建：</p>
 <pre><code class="language-shell"># 使用本地chart安装
 $ helm install harbor ./harbor -n harbor
-</code></pre>
-<p>数据权限问题：</p>
-<ul>
-<li>数据库目录初始化无权限</li>
-<li>redis持久化数据目录权限导致无法登录</li>
-<li>registry组件的镜像存储目录权限导致镜像推送失败</li>
-<li>chartmuseum存储目录权限，导致chart推送失败</li>
-</ul>
-<p>解决：</p>
-<pre><code class="language-shell">$ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
 
-$ chown -R 999:999 database
-$ chown -R 999:999 redis
-$ chown -R 10000:10000 chartmuseum
-$ chown -R 10000:10000 registry
+# 指定chart名称 harbor
+# chart目录  ./harbor
+
+NAME: harbor
+LAST DEPLOYED: Mon Feb 21 21:53:59 2022
+NAMESPACE: harbor
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Please wait for several minutes for Harbor deployment to complete.
+Then you should be able to visit the Harbor portal at https://harbor.luffy.com
+For more details, please visit https://github.com/goharbor/harbor
+
+
+#查看nfs挂载目录
+ll /data/k8s/harbor-harbor-data-pvc-pvc-23e5e9b4-ffa8-4db1-bdaf-f2c27bdaf0fb/
+total 32
+drwxrwxrwx 8 root root 4096 Feb 21 21:58 ./
+drwxrwxrwx 7 root root 4096 Feb 21 17:21 ../
+drwxrwxrwx 2 root root 4096 Feb 21 21:56 chartmuseum/
+drwxrwxrwx 3 root root 4096 Feb 21 21:55 database/
+drwxrwxrwx 2 root root 4096 Feb 21 21:54 jobservice/
+drwxrwxrwx 2 root root 4096 Feb 21 22:01 redis/
+drwxrwxrwx 2 root root 4096 Feb 21 21:57 registry/
+drwxrwxrwx 4 root root 4096 Feb 21 21:58 trivy/
 </code></pre>
+<p>在本机<code>hosts</code>配置文件中添加域名解析</p>
+<pre><code>C:\Windows\System32\drivers\etc\hosts
+10.1.13.156  harbor.luffy.com
+</code></pre>
+<p>浏览器访问: https://harbor.luffy.com<br>
+登录用户密码：admin/Harbor12345</p>
 <h2 id="推送镜像到harbor仓库">推送镜像到Harbor仓库</h2>
 <p>配置hosts及docker非安全仓库：</p>
-<pre><code class="language-shell">$ cat /etc/hosts
+<pre><code class="language-shell">
+#解析host
+$ cat /etc/hosts
 ...
 172.21.51.143 k8s-master harbor.luffy.com
 ...
 
+#添加docker非安全仓库
 $ cat /etc/docker/daemon.json
-{                                            
-  &quot;insecure-registries&quot;: [                   
-    &quot;172.21.51.143:5000&quot;,                   
-    &quot;harbor.luffy.com&quot;                     
-  ],                                         
-  &quot;registry-mirrors&quot; : [                     
-    &quot;https://8xpk5wnt.mirror.aliyuncs.com&quot;   
-  ]                                          
-}                           
+{
+  &quot;registry-mirrors&quot;:[&quot;https://b9pmyelo.mirror.aliyuncs.com&quot;],
+  &quot;exec-opts&quot;:[&quot;native.cgroupdriver=systemd&quot;],
+  &quot;insecure-registries&quot;:[&quot;harbor.luffy.com&quot;],   #添加仓库
+  &quot;debug&quot;: true,
+  &quot;experimental&quot;: false
+}                          
 
-#
-$ systemctl restart docker
+#重新加载docker
+$ systemctl daemon-reload &amp;&amp; systemctl reload docker
 
 # 使用账户密码登录admin/Harbor12345
 $ docker login harbor.luffy.com
 
+#上传镜像到harbor仓库测试
 $ docker tag nginx:alpine harbor.luffy.com/library/nginx:alpine
 $ docker push harbor.luffy.com/library/nginx:alpine
 </code></pre>
 <h2 id="推送chart到harbor仓库">推送chart到Harbor仓库</h2>
-<p>helm3默认没有安装helm push插件，需要手动安装。插件地址 https://github.com/chartmuseum/helm-push</p>
+<p>helm3默认没有安装helm push插件，需要手动安装。<br>
+插件地址:  https://github.com/chartmuseum/helm-push</p>
 <p>安装插件：</p>
-<pre><code class="language-shell">$ helm plugin install https://github.com/chartmuseum/helm-push
+<pre><code class="language-shell">#查看插件列表
+$ helm plugin ls
+
+$ helm plugin install https://github.com/chartmuseum/helm-push
 </code></pre>
 <p>离线安装：</p>
 <pre><code class="language-shell">$ mkdir helm-push
+
 $ wget https://github.com/chartmuseum/helm-push/releases/download/v0.8.1/helm-push_0.8.1_linux_amd64.tar.gz
+
 $ tar zxf helm-push_0.8.1_linux_amd64.tar.gz -C helm-push
+
 $ helm plugin install ./helm-push
+
+$ helm plugin ls
+NAME	VERSION	DESCRIPTION
+push	0.8.1  	Push chart package to ChartMuseum
+安装完成
 </code></pre>
 <p>添加repo</p>
 <pre><code class="language-shell">$ helm repo add myharbor https://harbor.luffy.com/chartrepo/luffy
 # x509错误
 
 # 添加证书信任，根证书为配置给ingress使用的证书
-$ kubectl get secret harbor-harbor-ingress -n harbor -o jsonpath=&quot;{.data.ca\.crt}&quot; | base64 -d &gt;harbor.ca.crt
+$ kubectl get secret harbor-ingress -n harbor -o jsonpath=&quot;{.data.ca\.crt}&quot; | base64 -d &gt;harbor.ca.crt
 
+#哪台机器想上传chart，就把证书放到这个目录下（Centos）
 $ cp harbor.ca.crt /etc/pki/ca-trust/source/anchors
+
+#更新
 $ update-ca-trust enable; update-ca-trust extract
 
 # 再次添加
 $ helm repo add luffy https://harbor.luffy.com/chartrepo/luffy --ca-file=harbor.ca.crt  --username admin --password Harbor12345
 
 $ helm repo ls
+</code></pre>
+<p>ubuntu系统添加新的根证书</p>
+<pre><code class="language-shell">添加证书：
+首先，复制pem格式的根证书，重命名为 .crt格式
+然后，执行下边的命令
+$sudo cp 证书路径.crt /usr/local/share/ca-certificates
+$sudo update-ca-certificates
 
+update-ca-certificates命令将PEM格式的根证书内容附加到/etc/ssl/certs/ca-certificates.crt ，
+而/etc/ssl/certs/ca-certificates.crt 包含了系统自带的各种可信根证书.
+
+删除证书：
+$sudo rm -f /usr/local/share/ca-certificates/证书名称.crt
+$sudo update-ca-certificates
 </code></pre>
 <p>推送chart到仓库：</p>
 <pre><code class="language-shell">$ helm push harbor luffy --ca-file=harbor.ca.crt -u admin -p Harbor12345
+
+# harbor 就是当前路径
+# luffy 就是repo名称
 </code></pre>
 
         </div>
