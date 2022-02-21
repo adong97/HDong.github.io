@@ -1,431 +1,345 @@
-<html>
-  <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Adong&#39;s blog</title>
-<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645458544987">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//media/css/tailwind.css">
 <link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Adong&#39;s blog - Atom Feed" href="https://adong97.github.io/HDong.github.io//atom.xml">
 
+    
 
+  <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+</head>
+<body>
+  <div class="antialiased flex flex-col min-h-screen" id="app">
 
-  </head>
-  <body>
-    <div class="main px-4 flex flex-col lg:flex-row">
-      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
-  <div class="lg:sticky top-0">
-    <div class="sidebar-content">
-      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
-        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645458544987" alt="">
-        </a>
-        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
-      </div>
-      
-        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
-          <p class="my-4 text-gray-600 font-light hidden lg:block">
-            人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。
-          </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-          </div>
-        </div>
-      
+    <div class="nav py-3 md:py-8 fixed w-full z-10 bg-gray-50 dark:bg-gray-700 transition-all duration-300" :class="{ 'scroll': scrolled }">
+  <div class="flex justify-end px-4">
+    <div class="w-8 h-8 flex justify-center items-center rounded-full md:hidden" @click="showMenu = !showMenu">
+      <i class="ri-close-line" v-show="showMenu"></i>
+      <i class="ri-menu-3-line" v-show="!showMenu"></i>
     </div>
   </div>
+  <nav class="max-w-4xl w-full mx-auto text-center flex flex-col md:flex-row justify-center md:block" :class="`${ showMenu ? 'block' : 'hidden' }`">
+    
+      <a href="https://adong97.github.io/HDong.github.io/" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        首页
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        Docker
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        Kubernetes
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        Kubernetes日志采集
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        推荐书籍
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/archives" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        归档
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/tags" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        标签
+      </a>
+    
+      <a href="https://adong97.github.io/HDong.github.io/post/about" target="" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+        关于
+      </a>
+    
+    <a href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank" class="py-2 md:py-1 px-4 mx-4 inline-flex transition font-semibold rounded dark:hover:bg-gray-600 hover:bg-gray-200">
+      RSS
+    </a>
+  </nav>
 </div>
 
-<div class="menu-container">
-  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
+    <div class="max-w-4xl w-full mx-auto pt-32">
+      
+
+      <div class="shadow-box bg-white dark:bg-gray-600 border-gray-300 rounded-none md:rounded-lg -mx-1 md:mx-0 md:px-0">
+        
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      
-        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
-          首页
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Kubernetes服务访问之Service
         </a>
-      
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-02-10</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        3.3 Kubernetes服务访问之Service
+通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：
+
+Pod IP 仅仅...
+      </div>
+      <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/" class="btn">
+        Read more
+      </a>
+    </div>
     
-      
-        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
-          Docker
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
-          Kubernetes
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
-          Kubernetes日志采集
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
-          推荐书籍
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
-          关于
-        </a>
-      
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/ddMKrICbP.png" alt="Kubernetes服务访问之Service">
     
   </div>
-  <div class="site-footer">
-    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          K8s管理业务应用--Pod控制器
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-02-10</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        3.2 Pod控制器
+3.2.1 Workload (工作负载)
+控制器又称工作负载。是用于实现管理pod的中间层，确保pod资源符合预期的状态，pod的资源出现故障时，会尝试进行重启，当根据重启策略无效，则会重新新建pod的资源。
+
+
+R...
+      </div>
+      <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/ms6GWrvV3.png" alt="K8s管理业务应用--Pod控制器">
+    
   </div>
-</div>
-<div class="mask" onclick="closeMenu()">
-</div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="latest-article text-lg text-gray-700 mb-8">
-          <i class="ri-article-line"></i>
-          最新文章
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/ddMKrICbP.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/ddMKrICbP/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Kubernetes服务访问之Service</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2022-02-10 / 16 min read</div>
-    </div>
-  </section>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/ms6GWrvV3.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/ms6GWrvV3/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">K8s管理业务应用--Pod控制器</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2022-02-10 / 12 min read</div>
-    </div>
-  </section>
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          k8s管理业务应用 --Pod常用设置
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-02-10</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        三、实践--使用k8s管理业务应用
+3.1 最小调度单元 Pod
+docker调度的是容器，在k8s集群中，最小的调度单元是Pod（豆荚）
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${2 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/tEQZvcXTx.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">k8s管理业务应用 --Pod常用设置</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2022-02-10 / 30 min read</div>
-    </div>
-  </section>
+3.1.1 为什么引入Pod
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${3 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/LwmnRALvn.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Prometheus+Grafana+Consul+alertmanager 生产环境监控告警</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2022-02-08 / 27 min read</div>
-    </div>
-  </section>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${4 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/VvdojeJqQ.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+与容器引擎解耦
+Docker、Rkt等容器 平台设计与引擎的具体...
       </div>
-      <div class="text-gray-400 text-sm font-light">2022-01-23 / 21 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/tEQZvcXTx/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/tEQZvcXTx.png" alt="k8s管理业务应用 --Pod常用设置">
+    
+  </div>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${5 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/ZDr4Wj9Ip.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">经济机器是如何运行的</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Prometheus+Grafana+Consul+alertmanager 生产环境监控告警
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-02-08</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        为什么做生产环境监控部署包
+目前我们很多部署在客户环境中的云管其实都没有配置监控，导致很多时候出现问题后，客户找到我们比较被动，还会出现磁盘满导致服务不可用。同时对于规模比较大的客户，资源数量增长比较快，也不清楚整体系统资源随资源数量增长的...
       </div>
-      <div class="text-gray-400 text-sm font-light">2022-01-03 / 17 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/LwmnRALvn/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/LwmnRALvn.png" alt="Prometheus+Grafana+Consul+alertmanager 生产环境监控告警">
+    
+  </div>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${6 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/h18GD0Tkp.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Kubernetes架构及核心组件</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-01-23</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        一 基础环境
+部署k8s集群的节点按照用途可以划分为如下2类角色：
+
+master：集群的master节点，集群的初始化节点，基础配置不低于2C4G
+node：集群的node节点，可以多台，基础配置不低于2C4G
+
+本次部署使用Ubuntu...
       </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-18 / 19 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/VvdojeJqQ/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/VvdojeJqQ.png" alt="Ubuntu18.04 Kubeadmin部署高可用K8s 1.22.5">
+    
+  </div>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${7 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/M8qJE5Aoj/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/M8qJE5Aoj.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/M8qJE5Aoj/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">kubectl 使用基础与示例</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          经济机器是如何运行的
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2022-01-03</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        概述
+经济就像一部简单的机器那样运行，本课分享简单、适用的经济分析模式，虽然不符合常规传统经济学，但帮作者预测和躲避全球金融危机，30年来一直受益。
+经济由几个简单的零部件和无数次重复的简单交易组成，这些交易首先由人的天性所驱动，因而形成三...
       </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-13 / 9 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/ZDr4Wj9Ip.png" alt="经济机器是如何运行的">
+    
+  </div>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${8 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/renzhijuexing.jpg'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">《认知觉醒：开启自我改变的原动力》</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          Kubernetes架构及核心组件
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2021-12-18</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        一、 Kubernetes概述
+1.1 纯容器模式的问题
+
+业务容器数量庞大，哪些容器部署在哪些节点，使用了哪些端口，如何记录、管理，需要登录到每台机器去管理？
+跨主机通信，多个机器中的容器之间相互调用如何做，iptables规则手动维护？...
       </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-11 / 133 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/h18GD0Tkp/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/h18GD0Tkp.png" alt="Kubernetes架构及核心组件">
+    
+  </div>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${9 * 0.2}s` }">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
     
-      <a href="https://adong97.github.io/HDong.github.io/post/bq2VWq1rc/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io//post-images/bq2VWq1rc.png'">
-        </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/bq2VWq1rc/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">安装krew插件</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/M8qJE5Aoj/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          kubectl 使用基础与示例
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2021-12-13</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        Kubernetes API 是管理其各种资源对象的唯一人口，它提供了一个RESTful 风格的
+CRUD (Create、Read、Update 和Delete) 接口用于查询和修改集群状态，并将结 果存储于集群状态存储系统 etcd 中...
       </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-11 / 3 min read</div>
+      <a href="https://adong97.github.io/HDong.github.io/post/M8qJE5Aoj/" class="btn">
+        Read more
+      </a>
     </div>
-  </section>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/M8qJE5Aoj.png" alt="kubectl 使用基础与示例">
+    
+  </div>
 
-        <div class="read-more">
-          
-            <a href="https://adong97.github.io/HDong.github.io/page/3/" class="animated fadeIn font-extrabold text-gray-700 hover:text-gray-900 more-btn">
-              阅读更多
-              <i class="ri-arrow-right-line"></i>
-            </a>
-          
-        </div>
-        <div class="index-page">
-          <div class="pagination-container animated fadeIn">
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          《认知觉醒：开启自我改变的原动力》
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2021-12-11</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        ​                                                     自序  开启自我改变的原动力
+所谓心智，通俗地说，就是我们看待人和事的态度，以及由此做出的判断与选择。每一个人来到这个世界时，其人生...
+      </div>
+      <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/renzhijuexing.jpg" alt="《认知觉醒：开启自我改变的原动力》">
+    
+  </div>
+
+  <div class="p-8 border-b border-gray-200 dark:border-gray-700 flex relative overflow-hidden flex-col md:flex-row animated fadeIn">
+    
+    <div class="flex-1 order-2 md:order-1">
+      <h2 class="text-2xl font-semibold mb-4">
+        <a href="https://adong97.github.io/HDong.github.io/post/bq2VWq1rc/" class="text-gray-700 dark:text-gray-200 border-b-2 border-dotted border-gray-200 dark:border-gray-400 dark:hover:border-gray-200 hover:border-gray-600 transition-all duration-100">
+          安装krew插件
+        </a>
+      </h2>
+      <div class="mb-4 text-xs text-gray-500">2021-12-11</div>
+      <div class="mb-4 text-gray-500 dark:text-gray-300">
+        概念
+Krew是kubectl插件的包管理工具。借助Krew，可以轻松地使用kubectl plugin：发现插件、安装和管理插件。使用类似apt、dnf或者brew。
+
+对于kubectl用户：krew能帮助用户搜索、安装和管理kubec...
+      </div>
+      <a href="https://adong97.github.io/HDong.github.io/post/bq2VWq1rc/" class="btn">
+        Read more
+      </a>
+    </div>
+    
+      <img class="flex-shrink-0 self-start md:ml-4 mb-4 md:mb-0 rounded-sm object-cover featured-img order-1 md:order-2 w-full h-40 md:w-56 md:h-32" loading="lazy" src="https://adong97.github.io/HDong.github.io//post-images/bq2VWq1rc.png" alt="安装krew插件">
+    
+  </div>
   
-    <a href="https://adong97.github.io/HDong.github.io/" class="page-btn"><i class="ri-arrow-left-line"></i> 上一页</a>
-  
-  
-    <a href="https://adong97.github.io/HDong.github.io/page/3/" class="page-btn">下一页 <i class="ri-arrow-right-line"></i></a>
-  
-</div>
-
-        </div>
       </div>
+
+      
+  <div class="my-4 flex justify-between px-4 md:px-0">
+    
+      <a href="https://adong97.github.io/HDong.github.io/" class="btn btn-white">
+        <i class="ri-arrow-left-line mr-4"></i>
+        上一页
+      </a>
+    
+    
+      <a href="https://adong97.github.io/HDong.github.io/page/3/" class="btn btn-white">
+        下一页
+        <i class="ri-arrow-right-line ml-4"></i>
+      </a>
+    
+  </div>
+
+      <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a>
+</footer>
+
     </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://adong97.github.io/HDong.github.io//media/scripts/main.js"></script>
+</body>
 
-    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
-<script>
-
-Prism.highlightAll()
-let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-// This should probably be throttled.
-// Especially because it triggers during smooth scrolling.
-// https://lodash.com/docs/4.17.10#throttle
-// You could do like...
-// window.addEventListener("scroll", () => {
-//    _.throttle(doThatStuff, 100);
-// });
-// Only not doing it here to keep this Pen dependency-free.
-
-window.addEventListener("scroll", event => {
-  let fromTop = window.scrollY;
-
-  mainNavLinks.forEach((link, index) => {
-    let section = document.getElementById(decodeURI(link.hash).substring(1));
-    let nextSection = null
-    if (mainNavLinks[index + 1]) {
-      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-    }
-    if (section.offsetTop <= fromTop) {
-      if (nextSection) {
-        if (nextSection.offsetTop > fromTop) {
-          link.classList.add("current");
-        } else {
-          link.classList.remove("current");    
-        }
-      } else {
-        link.classList.add("current");
-      }
-    } else {
-      link.classList.remove("current");
-    }
-  });
-});
-
-
-document.addEventListener("DOMContentLoaded", function() {
-  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
-
-  if ("IntersectionObserver" in window) {
-    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          let lazyImage = entry.target
-          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
-          lazyImage.classList.remove("lazy")
-          lazyImageObserver.unobserve(lazyImage)
-        }
-      });
-    });
-
-    lazyImages.forEach(function(lazyImage) {
-      lazyImageObserver.observe(lazyImage)
-    })
-  } else {
-    // Possibly fall back to a more compatible method here
-  }
-});
-
-const menuContainer = document.querySelector('.menu-container')
-const menus = document.querySelectorAll('.menu-container .menu')
-const mask = document.querySelector('.mask')
-const contentWrapper = document.querySelector('.content-wrapper')
-const latestArticle = document.querySelector('.latest-article')
-const readMore = document.querySelector('.read-more')
-const indexPage = document.querySelector('.index-page')
-
-const isHome = location.pathname === '/'
-if (latestArticle) {
-  latestArticle.style.display = isHome ? 'block' : 'none'
-  readMore.style.display = isHome ? 'block' : 'none'
-  indexPage.style.display = isHome ? 'none' : 'block'
-}
-
-const openMenu = () => {
-  menuContainer.classList.add('open')
-  menus.forEach(menu => {
-    menu.classList.add('animated', 'fadeInLeft')
-  })
-  mask.classList.add('open')
-  contentWrapper.classList.add('is-second')
-}
-
-const closeMenu = () => {
-  menuContainer.classList.remove('open')
-  menus.forEach(menu => {
-    menu.classList.remove('animated', 'fadeInLeft')
-  })
-  mask.classList.remove('open')
-  contentWrapper.classList.remove('is-second')
-}
-</script>
-  
-  </body>
 </html>
