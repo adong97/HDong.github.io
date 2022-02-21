@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645432950121">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645434265944">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645432950121" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645434265944" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -122,7 +122,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Ingress</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 29 min read
+          2022-02-10 / 31 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/xSXZzI9mV.png" alt="">
@@ -861,7 +861,7 @@ spec:
         runAsUser: 2000
 </code></pre>
 <p>创建ingress</p>
-<pre><code class="language-powershell"># 为k8s-master节点添加label
+<pre><code class="language-shell"># 为k8s-master节点添加label
 $ kubectl label node k8s-master ingress=true
 
 $ kubectl apply -f mandatory.yaml
@@ -918,6 +918,51 @@ Annotations:        &lt;none&gt;
 Events:             &lt;none&gt;
 
 ## 访问myblog.luffy.com域名的&quot;/&quot;路径（curl http://myblog.luffy.com/）会转换到 myblog:80端口上去。
+</code></pre>
+<p><strong>ingress.yaml文件参数解析</strong></p>
+<pre><code>$ vim ingress1.yaml 
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-web
+  namespace: luffy
+  annotations:
+
+    # 指定Ingress Controller的类型
+    kubernetes.io/ingress.class: &quot;nginx&quot;
+
+    # 指定后面rules定义的path可以使用正则表达式
+    nginx.ingress.kubernetes.io/use-regex: &quot;true&quot;
+
+    # 连接超时时间,默认为5s
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: &quot;600&quot;
+
+    # 后端服务器回转数据超时时间,默认为60s
+    nginx.ingress.kubernetes.io/proxy-send-timeout: &quot;600&quot;
+
+    # 后端服务器响应超时时间,默认为60s
+    nginx.ingress.kubernetes.io/proxy-read-timeout: &quot;600&quot;
+
+     # 客户端上传文件，最大大小，默认为20m
+    nginx.ingress.kubernetes.io/proxy-body-size: &quot;50m&quot;
+
+    #nginx.ingress.kubernetes.io/rewrite-target: / ##URL重写
+
+    # 当用户访问的 rul 不存在就自定跳转至 /index.html
+    nginx.ingress.kubernetes.io/app-root: /index.html
+spec:                                   
+  rules:                                # 规则
+    - host: myblog.luffy.com           # 使用的规则是 host，也就是主机域名是什么
+      http:                             # 使用 http 的详细信息
+        paths:                          # 访问的路径
+        - path: /                       # 访问 / URL ，就会调用下面的 nginx-svc
+          pathType: Exact               # 精确匹配 URL 路径，且区分大小写。
+          backend:                      # 后端 svc 匹配
+              service:
+              name: svc-ingress         # service name = nginx-svc 匹配 SVC
+              port:
+                number: 80              # 暴露的端口是 80 
 </code></pre>
 <p>ingress-nginx动态生成upstream配置：</p>
 <pre><code class="language-yaml">$ kubectl -n ingress-nginx exec -ti nginx-ingress-xxxxxxx bash
@@ -1040,7 +1085,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: &quot;false&quot;  #是否默认跳转https
     nginx.ingress.kubernetes.io/proxy-body-size: 1000m  #上传文件大小
-    nginx.ingress.kubernetes.io/ssl-redirect: &quot;false&quot;   #
+    nginx.ingress.kubernetes.io/ssl-redirect: &quot;false&quot;   #指示位置部分是否仅可访问 SSL （当 ingress 包含证书时默认为 true）
     nginx.org/client-max-body-size: 1000m   #
 spec:
   rules:
