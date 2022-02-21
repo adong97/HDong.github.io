@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-21T05:38:42.801Z</updated>
+    <updated>2022-02-21T08:42:43.776Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -3409,6 +3409,12 @@ spec:
 配置文件中的spce.rules 最终是由nginx实现反向代理转发功能，但是由于nginx无法识别Ingress配置文件，所以需要nginx-ingress-controller对资源中的配置片段进行转换，放到nginx.conf中，解析成为nginx可以理解的配置。</p>
 <p>3.解析完之后，nginx再进行一次reload，即可解析生效。<br>
 (同下方&quot;实现逻辑&quot;)</p>
+<h3 id="340-ingress-的访问方案">3.4.0 ingress 的访问方案</h3>
+<p><strong>ingress原理</strong><br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645432805700.png" alt="" loading="lazy"><br>
+首先我们的客户端先访问至我们的域名，也就是对于 ingress 来说需要绑定一个域名毕竟是一个 7 层代理（访问多个域名都可以）。那不同的域名都可以访问至我们 ingress-nginx ，ingress-nginx 会反向代理或叫做负载均衡选择到后端的一些 service ，那这些 service 会有对应的一些容器的出现。这样的话我们就实现了从访问域名接入进 kubernetes 集群内部，然后再由 ingress-nginx 接入至不同的一些容器。</p>
+<p>这里有以下问题我们需要注意一下：<br>
+ingress-nginx 到底是以何种的方法去进行所谓的跟后端的 svc 进行链接，其实对于 ingress-nginx 的暴露方案来说它依然是一个 nodeport ，也就是 ingress-nginx 最常见的部署方案依然是以 nodeport 的部署方案。那这样的话 ingress-nginx 就会以内部的服务暴露给外部用户，暴露给外部用户以后我们访问到 ingress-nginx 以后， ingress-nginx 再去链接至不同的 SVC 。也就意味着我们在 SVC 中进行容器部署的话需要先创建一个 SVC 与 ingress-nginx 关联，然后这个 SVC 在被我们的 ingress-nginx 所链接进去。在进行如上图的这么一个步骤之后呢，我们会看见 ingress-nginx 里面有 server 这么一个代理配置文件的生成，是一个反向代理的区域。所以可以理解为 ingress 就是帮我们去部署了一个 nginx ，只不过进行这种访问的时候我们不需要进入到 nginx 内部去写文件了，这个反向代理的配置文件会自动的添加。</p>
 <h3 id="341-示意图">3.4.1 示意图：</h3>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639840756401.webp" alt="" loading="lazy"></figure>
 <p>Ingress的作用：</p>
