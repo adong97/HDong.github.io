@@ -1,125 +1,251 @@
-<html lang="en">
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645462186678">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>二进制部署kubernets 1.20 - Adong&#39;s blog</title>
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css">
-<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//media/css/tailwind.css">
 <link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="二进制部署kubernets 1.20 - Adong&#39;s blog - Atom Feed" href="https://adong97.github.io/HDong.github.io//atom.xml">
-
-    
-
-  <meta name="description" content="一、环境准备
-1.1 服务器硬件要求
 
 
 
-主机
-IP地址
-磁盘/内存
-系统版本
-容器引擎
-k8s 版本
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645462186678" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">一、环境准备</a>
+<ul>
+<li><a href="#11-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82">1.1 服务器硬件要求</a></li>
+<li><a href="#12-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%B4%E4%BD%93%E8%A7%84%E5%88%92">1.2 服务器整体规划</a></li>
+<li><a href="#13-%E5%8D%95master%E6%9E%B6%E6%9E%84%E5%9B%BE">1.3 单Master架构图</a></li>
+<li><a href="#14-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE">1.4 操作系统初始化配置</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E9%83%A8%E7%BD%B2etcd%E9%9B%86%E7%BE%A4">二、部署ETCD集群</a>
+<ul>
+<li><a href="#21-%E5%87%86%E5%A4%87cfssl-%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7">2.1 准备cfssl 证书生成工具</a></li>
+<li><a href="#22-%E7%94%9F%E6%88%90etcd%E8%AF%81%E4%B9%A6">2.2  生成Etcd证书</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E7%AD%BE%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84ca">1. 自签证书颁发机构（CA）</a></li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%87%AA%E7%AD%BEca%E7%AD%BE%E5%8F%91etcd-https%E8%AF%81%E4%B9%A6">2. 使用自签CA签发Etcd HTTPS证书</a></li>
+</ul>
+</li>
+<li><a href="#23-%E4%BB%8Egithub%E4%B8%8B%E8%BD%BDetcd%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">2.3 从Github下载Etcd二进制文件</a></li>
+<li><a href="#24-%E9%83%A8%E7%BD%B2etcd%E9%9B%86%E7%BE%A4">2.4 部署Etcd集群</a>
+<ul>
+<li><a href="#1-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E5%B9%B6%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">1. 创建工作目录并解压二进制包</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BAetcd%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">2. 创建Etcd配置文件</a></li>
+<li><a href="#3-systemd-%E7%AE%A1%E7%90%86etcd">3. systemd 管理etcd</a></li>
+<li><a href="#4-%E6%8B%B7%E8%B4%9D%E5%88%9A%E6%89%8D%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6">4. 拷贝刚才生成的证书</a></li>
+<li><a href="#5-%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">5. 启动并设置开机启动</a></li>
+<li><a href="#6-%E5%B0%86%E4%B8%8A%E9%9D%A2%E8%8A%82%E7%82%B91%E6%89%80%E6%9C%89%E7%94%9F%E6%88%90%E7%9A%84%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D%E5%88%B0%E8%8A%82%E7%82%B92%E5%92%8C%E8%8A%82%E7%82%B93">6. 将上面节点1所有生成的文件拷贝到节点2和节点3</a></li>
+<li><a href="#7-%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">7. 查看集群状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E5%AE%89%E8%A3%85docker">三、 安装Docker</a>
+<ul>
+<li><a href="#31-%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">3.1 解压二进制包</a></li>
+<li><a href="#32-systemd%E7%AE%A1%E7%90%86docker">3.2 systemd管理docker</a></li>
+<li><a href="#33-%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">3.3 创建配置文件</a></li>
+<li><a href="#34-%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%90%AF%E5%90%AF%E5%8A%A8">3.4 启动并设置开启启动</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-%E9%83%A8%E7%BD%B2master-node">四、部署Master Node</a>
+<ul>
+<li><a href="#41-%E7%94%9F%E6%88%90kube-apiserver%E8%AF%81%E4%B9%A6">4.1 生成kube-apiserver证书</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E7%AD%BE%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84ca-2">1. 自签证书颁发机构（CA）</a></li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%87%AA%E7%AD%BEca%E7%AD%BE%E5%8F%91kube-apiserver-https%E8%AF%81%E4%B9%A6">2. 使用自签CA签发kube-apiserver HTTPS证书</a></li>
+</ul>
+</li>
+<li><a href="#42-%E4%BB%8Egithub%E4%B8%8B%E8%BD%BDk8s%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">4.2 从Github下载k8s二进制文件</a></li>
+<li><a href="#43-%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">4.3 解压二进制包</a></li>
+<li><a href="#44-%E9%83%A8%E7%BD%B2kube-apiserver">4.4 部署kube-apiserver</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">1.创建配置文件</a></li>
+<li><a href="#2%E6%8B%B7%E8%B4%9D%E5%88%9A%E6%89%8D%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6">2.拷贝刚才生成的证书</a></li>
+<li><a href="#3%E5%90%AF%E7%94%A8tls-bootstrapping-%E6%9C%BA%E5%88%B6">3.启用TLS Bootstrapping 机制</a></li>
+<li><a href="#4systemd%E7%AE%A1%E7%90%86apiserver">4.systemd管理apiserver</a></li>
+<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">5.启动并设置开机启动</a></li>
+</ul>
+</li>
+<li><a href="#45%E9%83%A8%E7%BD%B2kube-controller-manager">4.5部署kube-controller-manager</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-2">1.创建配置文件</a></li>
+<li><a href="#2%E7%94%9F%E6%88%90kubeconfig%E6%96%87%E4%BB%B6">2.生成kubeconfig文件</a></li>
+<li><a href="#3systemd%E7%AE%A1%E7%90%86controller-manager">3.systemd管理controller-manager</a></li>
+<li><a href="#4%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4.启动并设置开机启动</a></li>
+</ul>
+</li>
+<li><a href="#46%E9%83%A8%E7%BD%B2kube-scheduler">4.6部署kube-scheduler</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-3">1.创建配置文件</a></li>
+<li><a href="#2%E7%94%9F%E6%88%90kubeconfig%E6%96%87%E4%BB%B6-2">2.生成kubeconfig文件</a></li>
+<li><a href="#3systemd%E7%AE%A1%E7%90%86scheduler">3.systemd管理scheduler</a></li>
+<li><a href="#4%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-2">4.启动并设置开机启动</a></li>
+<li><a href="#5%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">5.查看集群状态</a></li>
+<li><a href="#6%E6%8E%88%E6%9D%83kubelet-bootstrap%E7%94%A8%E6%88%B7%E5%85%81%E8%AE%B8%E8%AF%B7%E6%B1%82%E8%AF%81%E4%B9%A6">6.授权kubelet-bootstrap用户允许请求证书</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E9%83%A8%E7%BD%B2worker-node">五、部署Worker Node</a>
+<ul>
+<li><a href="#51-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E5%B9%B6%E6%8B%B7%E8%B4%9D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">5.1 创建工作目录并拷贝二进制文件</a></li>
+<li><a href="#52%E9%83%A8%E7%BD%B2kubelet">5.2部署kubelet</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-4">1.创建配置文件</a></li>
+<li><a href="#2%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6">2.配置参数文件</a></li>
+<li><a href="#3%E7%94%9F%E6%88%90kubectl%E5%88%9D%E6%AC%A1%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4%E5%BC%95%E5%AF%BCkubeconfig%E6%96%87%E4%BB%B6">3.生成kubectl初次加入集群引导kubeconfig文件</a></li>
+<li><a href="#4systemd%E7%AE%A1%E7%90%86kubelet">4.systemd管理kubelet</a></li>
+<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-2">5.启动并设置开机启动</a></li>
+</ul>
+</li>
+<li><a href="#53%E6%89%B9%E5%87%86kubelet%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7%E5%B9%B6%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4">5.3批准kubelet证书申请并加入集群</a></li>
+<li><a href="#54%E9%83%A8%E7%BD%B2kube-proxy">5.4部署kube-proxy</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-5">1.创建配置文件</a></li>
+<li><a href="#2%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6-2">2.配置参数文件</a></li>
+<li><a href="#3%E7%94%9F%E6%88%90kube-proxykubeconfig%E6%96%87%E4%BB%B6">3.生成kube-proxy.kubeconfig文件</a></li>
+<li><a href="#4systemd%E7%AE%A1%E7%90%86kube-proxy">4.systemd管理kube-proxy</a></li>
+<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-3">5.启动并设置开机启动</a></li>
+</ul>
+</li>
+<li><a href="#55%E9%83%A8%E7%BD%B2%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5部署网络组件</a>
+<ul>
+<li><a href="#1%E9%83%A8%E7%BD%B2calico%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">1.部署calico网络组件</a></li>
+<li><a href="#2%E6%88%96%E8%80%85%E9%83%A8%E7%BD%B2flanne%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">2.或者部署Flanne网络组件</a>
+<ul>
+<li><a href="#1%E9%83%A8%E7%BD%B2cni%E7%BD%91%E7%BB%9C">1.部署CNI网络</a></li>
+<li><a href="#2%E8%A7%A3%E5%8E%8B%E5%B9%B6%E5%AE%89%E8%A3%85cni">2.解压并安装CNI</a></li>
+<li><a href="#3%E5%AE%89%E8%A3%85flannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6">3.安装flannel网络插件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#56%E6%8E%88%E6%9D%83apiserver%E8%AE%BF%E9%97%AEkubelet">5.6授权apiserver访问kubelet</a></li>
+<li><a href="#57%E6%96%B0%E5%A2%9E%E5%8A%A0worker-node">5.7新增加Worker Node</a>
+<ul>
+<li><a href="#1%E6%8B%B7%E8%B4%9D%E5%B7%B2%E9%83%A8%E7%BD%B2%E5%A5%BD%E7%9A%84node%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E5%88%B0%E6%96%B0%E8%8A%82%E7%82%B9">1.拷贝已部署好的Node相关文件到新节点</a></li>
+<li><a href="#2%E5%88%A0%E9%99%A4kubelet%E8%AF%81%E4%B9%A6%E5%92%8Ckubeconfig%E6%96%87%E4%BB%B6">2.删除kubelet证书和kubeconfig文件</a></li>
+<li><a href="#3%E7%94%9F%E6%88%90kubectl%E8%BF%9E%E6%8E%A5%E9%9B%86%E7%BE%A4%E7%9A%84%E8%AF%81%E4%B9%A6">3.生成kubectl连接集群的证书</a></li>
+<li><a href="#4%E5%AE%89%E8%A3%85cni%E9%85%8D%E7%BD%AEflannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6">4.安装CNI,配置flannel网络插件</a></li>
+<li><a href="#5%E4%BF%AE%E6%94%B9%E4%B8%BB%E6%9C%BA%E5%90%8D">5.修改主机名</a></li>
+<li><a href="#6%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">6.启动并设置开机启动</a></li>
+<li><a href="#7%E5%9C%A8master%E4%B8%8A%E6%89%B9%E5%87%86%E6%96%B0node-kubelet%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7">7.在Master上批准新Node kubelet证书申请</a></li>
+<li><a href="#8worker%E8%8A%82%E7%82%B9%E6%9F%A5%E7%9C%8Bnode%E7%8A%B6%E6%80%81">8.Worker节点查看Node状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD-%E9%83%A8%E7%BD%B2dashboard%E5%92%8Ccoredns">六、部署Dashboard和CoreDNS</a></li>
+<li><a href="#61%E9%83%A8%E7%BD%B2dashboard">6.1部署Dashboard</a></li>
+<li><a href="#62%E9%83%A8%E7%BD%B2coredns">6.2部署CoreDNS</a></li>
+</ul>
+</li>
+</ul>
 
-
-
-
-k8s-master1
-10.1.13.155
-2c4g/150G
-CentOS 7.6
-Docker CE 19
-V1.20..." />
-  <meta property="og:title" content="二进制部署kubernets 1.20 - Adong&#39;s blog">
-  <meta property="og:description" content="一、环境准备
-1.1 服务器硬件要求
-
-
-
-主机
-IP地址
-磁盘/内存
-系统版本
-容器引擎
-k8s 版本
-
-
-
-
-k8s-master1
-10.1.13.155
-2c4g/150G
-CentOS 7.6
-Docker CE 19
-V1.20..." />
-  <meta property="og:type" content="articles">
-  <meta property="og:url" content="https://adong97.github.io/HDong.github.io/post/erjinzhibushu/" />
-  <meta property="og:image" content="https://adong97.github.io/HDong.github.io//post-images/erjinzhibushu.png">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:width" content="1200">
-  <meta name="twitter:title" content="二进制部署kubernets 1.20 - Adong&#39;s blog">
-  <meta name="twitter:description" content="一、环境准备
-1.1 服务器硬件要求
-
-
-
-主机
-IP地址
-磁盘/内存
-系统版本
-容器引擎
-k8s 版本
-
-
-
-
-k8s-master1
-10.1.13.155
-2c4g/150G
-CentOS 7.6
-Docker CE 19
-V1.20...">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://adong97.github.io/HDong.github.io/post/erjinzhibushu/">
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
- 
-  
-    <link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//media/css/prism-atom-dark.css">
-  
-
-  
-</head>
-
-<body>
-  <div class="antialiased flex flex-col min-h-screen" id="app">
-    <a href="https://adong97.github.io/HDong.github.io/" class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
-      Adong&#39;s blog
-    </a>
-    <div class="max-w-4xl w-full mx-auto">
-      <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
-        <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
-          二进制部署kubernets 1.20
-        </h1>
-        
-          <img src="https://adong97.github.io/HDong.github.io//post-images/erjinzhibushu.png" alt="二进制部署kubernets 1.20" class="block w-full mb-8">
-        
-        <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2021-12-11 · 160 min read</div>
-          
-            <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
-              <i class="ri-hashtag"></i>
-              Kubernetes
-            </a>
-          
+          </div>
         </div>
-        <div class="markdown mb-8" v-pre>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">二进制部署kubernets 1.20</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2021-12-11 / 160 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/erjinzhibushu.png" alt="">
+        
+        <div class="post-content yue">
           <h2 id="一-环境准备">一、环境准备</h2>
 <h3 id="11-服务器硬件要求">1.1 服务器硬件要求</h3>
 <table>
@@ -5743,342 +5869,140 @@ kubectl apply -f coredns.yaml
 <p>至此部署完成。</p>
 
         </div>
-        <!-- Share to Twitter, Weibo, Telegram -->
-        <div class="flex items-center">
-          <div class="mr-4 flex items-center">
-            <i class="ri-share-forward-line text-gray-500"></i>
-          </div>
-          <div class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTwitter">
-            <i class="ri-twitter-line"></i>
-          </div>
-          <div class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex" @click="shareToWeibo">
-            <i class="ri-weibo-line"></i>
-          </div>
-          <div class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex" @click="shareToTelegram">
-            <i class="ri-telegram-line"></i>
-          </div>
-        </div>
-      </div>
 
-      
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
 
-      
 
-      <footer class="py-12 text-center px-4 md:px-0" v-pre>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a>
-</footer>
-    </div>
-
-    <!-- TOC Container -->
-    <div class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight" @click="showToc = true">
-      <i class="ri-file-list-line"></i>
-    </div>
-
-    <div class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast" :class="{ '-mr-64': !showToc }">
-      <div class="flex mb-4 justify-end">
-        <div class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast" @click="showToc = false">
-          <i class="ri-close-line text-lg"></i>
-        </div>
-      </div>
-      <div class="post-toc-container">
-        <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">一、环境准备</a>
-<ul>
-<li><a href="#11-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82">1.1 服务器硬件要求</a></li>
-<li><a href="#12-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%B4%E4%BD%93%E8%A7%84%E5%88%92">1.2 服务器整体规划</a></li>
-<li><a href="#13-%E5%8D%95master%E6%9E%B6%E6%9E%84%E5%9B%BE">1.3 单Master架构图</a></li>
-<li><a href="#14-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE">1.4 操作系统初始化配置</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BA%8C-%E9%83%A8%E7%BD%B2etcd%E9%9B%86%E7%BE%A4">二、部署ETCD集群</a>
-<ul>
-<li><a href="#21-%E5%87%86%E5%A4%87cfssl-%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7">2.1 准备cfssl 证书生成工具</a></li>
-<li><a href="#22-%E7%94%9F%E6%88%90etcd%E8%AF%81%E4%B9%A6">2.2  生成Etcd证书</a>
-<ul>
-<li><a href="#1-%E8%87%AA%E7%AD%BE%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84ca">1. 自签证书颁发机构（CA）</a></li>
-<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%87%AA%E7%AD%BEca%E7%AD%BE%E5%8F%91etcd-https%E8%AF%81%E4%B9%A6">2. 使用自签CA签发Etcd HTTPS证书</a></li>
-</ul>
-</li>
-<li><a href="#23-%E4%BB%8Egithub%E4%B8%8B%E8%BD%BDetcd%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">2.3 从Github下载Etcd二进制文件</a></li>
-<li><a href="#24-%E9%83%A8%E7%BD%B2etcd%E9%9B%86%E7%BE%A4">2.4 部署Etcd集群</a>
-<ul>
-<li><a href="#1-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E5%B9%B6%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">1. 创建工作目录并解压二进制包</a></li>
-<li><a href="#2-%E5%88%9B%E5%BB%BAetcd%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">2. 创建Etcd配置文件</a></li>
-<li><a href="#3-systemd-%E7%AE%A1%E7%90%86etcd">3. systemd 管理etcd</a></li>
-<li><a href="#4-%E6%8B%B7%E8%B4%9D%E5%88%9A%E6%89%8D%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6">4. 拷贝刚才生成的证书</a></li>
-<li><a href="#5-%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">5. 启动并设置开机启动</a></li>
-<li><a href="#6-%E5%B0%86%E4%B8%8A%E9%9D%A2%E8%8A%82%E7%82%B91%E6%89%80%E6%9C%89%E7%94%9F%E6%88%90%E7%9A%84%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D%E5%88%B0%E8%8A%82%E7%82%B92%E5%92%8C%E8%8A%82%E7%82%B93">6. 将上面节点1所有生成的文件拷贝到节点2和节点3</a></li>
-<li><a href="#7-%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">7. 查看集群状态</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E4%B8%89-%E5%AE%89%E8%A3%85docker">三、 安装Docker</a>
-<ul>
-<li><a href="#31-%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">3.1 解压二进制包</a></li>
-<li><a href="#32-systemd%E7%AE%A1%E7%90%86docker">3.2 systemd管理docker</a></li>
-<li><a href="#33-%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">3.3 创建配置文件</a></li>
-<li><a href="#34-%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%90%AF%E5%90%AF%E5%8A%A8">3.4 启动并设置开启启动</a></li>
-</ul>
-</li>
-<li><a href="#%E5%9B%9B-%E9%83%A8%E7%BD%B2master-node">四、部署Master Node</a>
-<ul>
-<li><a href="#41-%E7%94%9F%E6%88%90kube-apiserver%E8%AF%81%E4%B9%A6">4.1 生成kube-apiserver证书</a>
-<ul>
-<li><a href="#1-%E8%87%AA%E7%AD%BE%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E6%9C%BA%E6%9E%84ca-2">1. 自签证书颁发机构（CA）</a></li>
-<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%87%AA%E7%AD%BEca%E7%AD%BE%E5%8F%91kube-apiserver-https%E8%AF%81%E4%B9%A6">2. 使用自签CA签发kube-apiserver HTTPS证书</a></li>
-</ul>
-</li>
-<li><a href="#42-%E4%BB%8Egithub%E4%B8%8B%E8%BD%BDk8s%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">4.2 从Github下载k8s二进制文件</a></li>
-<li><a href="#43-%E8%A7%A3%E5%8E%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85">4.3 解压二进制包</a></li>
-<li><a href="#44-%E9%83%A8%E7%BD%B2kube-apiserver">4.4 部署kube-apiserver</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">1.创建配置文件</a></li>
-<li><a href="#2%E6%8B%B7%E8%B4%9D%E5%88%9A%E6%89%8D%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6">2.拷贝刚才生成的证书</a></li>
-<li><a href="#3%E5%90%AF%E7%94%A8tls-bootstrapping-%E6%9C%BA%E5%88%B6">3.启用TLS Bootstrapping 机制</a></li>
-<li><a href="#4systemd%E7%AE%A1%E7%90%86apiserver">4.systemd管理apiserver</a></li>
-<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">5.启动并设置开机启动</a></li>
-</ul>
-</li>
-<li><a href="#45%E9%83%A8%E7%BD%B2kube-controller-manager">4.5部署kube-controller-manager</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-2">1.创建配置文件</a></li>
-<li><a href="#2%E7%94%9F%E6%88%90kubeconfig%E6%96%87%E4%BB%B6">2.生成kubeconfig文件</a></li>
-<li><a href="#3systemd%E7%AE%A1%E7%90%86controller-manager">3.systemd管理controller-manager</a></li>
-<li><a href="#4%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">4.启动并设置开机启动</a></li>
-</ul>
-</li>
-<li><a href="#46%E9%83%A8%E7%BD%B2kube-scheduler">4.6部署kube-scheduler</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-3">1.创建配置文件</a></li>
-<li><a href="#2%E7%94%9F%E6%88%90kubeconfig%E6%96%87%E4%BB%B6-2">2.生成kubeconfig文件</a></li>
-<li><a href="#3systemd%E7%AE%A1%E7%90%86scheduler">3.systemd管理scheduler</a></li>
-<li><a href="#4%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-2">4.启动并设置开机启动</a></li>
-<li><a href="#5%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">5.查看集群状态</a></li>
-<li><a href="#6%E6%8E%88%E6%9D%83kubelet-bootstrap%E7%94%A8%E6%88%B7%E5%85%81%E8%AE%B8%E8%AF%B7%E6%B1%82%E8%AF%81%E4%B9%A6">6.授权kubelet-bootstrap用户允许请求证书</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E4%BA%94-%E9%83%A8%E7%BD%B2worker-node">五、部署Worker Node</a>
-<ul>
-<li><a href="#51-%E5%88%9B%E5%BB%BA%E5%B7%A5%E4%BD%9C%E7%9B%AE%E5%BD%95%E5%B9%B6%E6%8B%B7%E8%B4%9D%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6">5.1 创建工作目录并拷贝二进制文件</a></li>
-<li><a href="#52%E9%83%A8%E7%BD%B2kubelet">5.2部署kubelet</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-4">1.创建配置文件</a></li>
-<li><a href="#2%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6">2.配置参数文件</a></li>
-<li><a href="#3%E7%94%9F%E6%88%90kubectl%E5%88%9D%E6%AC%A1%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4%E5%BC%95%E5%AF%BCkubeconfig%E6%96%87%E4%BB%B6">3.生成kubectl初次加入集群引导kubeconfig文件</a></li>
-<li><a href="#4systemd%E7%AE%A1%E7%90%86kubelet">4.systemd管理kubelet</a></li>
-<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-2">5.启动并设置开机启动</a></li>
-</ul>
-</li>
-<li><a href="#53%E6%89%B9%E5%87%86kubelet%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7%E5%B9%B6%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4">5.3批准kubelet证书申请并加入集群</a></li>
-<li><a href="#54%E9%83%A8%E7%BD%B2kube-proxy">5.4部署kube-proxy</a>
-<ul>
-<li><a href="#1%E5%88%9B%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-5">1.创建配置文件</a></li>
-<li><a href="#2%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E6%96%87%E4%BB%B6-2">2.配置参数文件</a></li>
-<li><a href="#3%E7%94%9F%E6%88%90kube-proxykubeconfig%E6%96%87%E4%BB%B6">3.生成kube-proxy.kubeconfig文件</a></li>
-<li><a href="#4systemd%E7%AE%A1%E7%90%86kube-proxy">4.systemd管理kube-proxy</a></li>
-<li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-3">5.启动并设置开机启动</a></li>
-</ul>
-</li>
-<li><a href="#55%E9%83%A8%E7%BD%B2%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5部署网络组件</a>
-<ul>
-<li><a href="#1%E9%83%A8%E7%BD%B2calico%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">1.部署calico网络组件</a></li>
-<li><a href="#2%E6%88%96%E8%80%85%E9%83%A8%E7%BD%B2flanne%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">2.或者部署Flanne网络组件</a>
-<ul>
-<li><a href="#1%E9%83%A8%E7%BD%B2cni%E7%BD%91%E7%BB%9C">1.部署CNI网络</a></li>
-<li><a href="#2%E8%A7%A3%E5%8E%8B%E5%B9%B6%E5%AE%89%E8%A3%85cni">2.解压并安装CNI</a></li>
-<li><a href="#3%E5%AE%89%E8%A3%85flannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6">3.安装flannel网络插件</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#56%E6%8E%88%E6%9D%83apiserver%E8%AE%BF%E9%97%AEkubelet">5.6授权apiserver访问kubelet</a></li>
-<li><a href="#57%E6%96%B0%E5%A2%9E%E5%8A%A0worker-node">5.7新增加Worker Node</a>
-<ul>
-<li><a href="#1%E6%8B%B7%E8%B4%9D%E5%B7%B2%E9%83%A8%E7%BD%B2%E5%A5%BD%E7%9A%84node%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E5%88%B0%E6%96%B0%E8%8A%82%E7%82%B9">1.拷贝已部署好的Node相关文件到新节点</a></li>
-<li><a href="#2%E5%88%A0%E9%99%A4kubelet%E8%AF%81%E4%B9%A6%E5%92%8Ckubeconfig%E6%96%87%E4%BB%B6">2.删除kubelet证书和kubeconfig文件</a></li>
-<li><a href="#3%E7%94%9F%E6%88%90kubectl%E8%BF%9E%E6%8E%A5%E9%9B%86%E7%BE%A4%E7%9A%84%E8%AF%81%E4%B9%A6">3.生成kubectl连接集群的证书</a></li>
-<li><a href="#4%E5%AE%89%E8%A3%85cni%E9%85%8D%E7%BD%AEflannel%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6">4.安装CNI,配置flannel网络插件</a></li>
-<li><a href="#5%E4%BF%AE%E6%94%B9%E4%B8%BB%E6%9C%BA%E5%90%8D">5.修改主机名</a></li>
-<li><a href="#6%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8">6.启动并设置开机启动</a></li>
-<li><a href="#7%E5%9C%A8master%E4%B8%8A%E6%89%B9%E5%87%86%E6%96%B0node-kubelet%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7">7.在Master上批准新Node kubelet证书申请</a></li>
-<li><a href="#8worker%E8%8A%82%E7%82%B9%E6%9F%A5%E7%9C%8Bnode%E7%8A%B6%E6%80%81">8.Worker节点查看Node状态</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%85%AD-%E9%83%A8%E7%BD%B2dashboard%E5%92%8Ccoredns">六、部署Dashboard和CoreDNS</a></li>
-<li><a href="#61%E9%83%A8%E7%BD%B2dashboard">6.1部署Dashboard</a></li>
-<li><a href="#62%E9%83%A8%E7%BD%B2coredns">6.2部署CoreDNS</a></li>
-</ul>
-</li>
-</ul>
-
-      </div>
-    </div>
-
-    <!-- Back to top -->
-    <div class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200" @click="backToUp" v-show="scrolled">
-      <i class="ri-arrow-up-line"></i>
-    </div>
-  </div>
-
-  <!-- Root element of PhotoSwipe. Must have class pswp. -->
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-  <!-- Background of PhotoSwipe. 
-        It's a separate element as animating opacity is faster than rgba(). -->
-  <div class="pswp__bg">
-  </div>
-  <!-- Slides wrapper with overflow:hidden. -->
-  <div class="pswp__scroll-wrap">
-    <!-- Container that holds slides. 
-            PhotoSwipe keeps only 3 of them in the DOM to save memory.
-            Don't modify these 3 pswp__item elements, data is added later on. -->
-    <div class="pswp__container">
-      <div class="pswp__item">
-      </div>
-      <div class="pswp__item">
-      </div>
-      <div class="pswp__item">
-      </div>
-    </div>
-    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
-    <div class="pswp__ui pswp__ui--hidden">
-      <div class="pswp__top-bar">
-        <!--  Controls are self-explanatory. Order can be changed. -->
-        <div class="pswp__counter">
-        </div>
-        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
-        <!-- element will get class pswp__preloader--active when preloader is running -->
-        <div class="pswp__preloader">
-          <div class="pswp__preloader__icn">
-            <div class="pswp__preloader__cut">
-              <div class="pswp__preloader__donut">
-              </div>
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/carenzheng/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  CA认证原理及CFSSL证书生成工具的使用
+                </h3>
+              </a>
             </div>
-          </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/kubernetes-gai-shu/">
+                <h3 class="post-title">
+                  Kubernetes 概述
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
         </div>
-      </div>
-      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-        <div class="pswp__share-tooltip">
-        </div>
-      </div>
-      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-      </button>
-      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-      </button>
-      <div class="pswp__caption">
-        <div class="pswp__caption__center">
-        </div>
+
+        
+
       </div>
     </div>
-  </div>
-</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://adong97.github.io/HDong.github.io//media/scripts/main.js"></script>
-  
-  <!-- Code Highlight -->
-  
-    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>
-    <script>
-      Prism.highlightAll()
-    </script>
-  
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
 
-  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
-  <script>
-    //拿到预览框架，也就是上面的html代码
-    var pswpElement = document.querySelectorAll('.pswp')[0];
-    //定义图片数组变量
-    var imgitems;
-    /**
-    * 用于显示预览界面
-    * @param index 图片数组下标
-    */
-    function viewImg(index) {
-      //其它选项这里不做过多阐述，详情见官网
-      var pswpoptions = {
-        index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
-        bgOpacity: 0.7, // 背景透明度，0-1
-        maxSpreadZoom: 3, // 缩放级别，不要太大
-      };
-      //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
-      var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, imgitems, pswpoptions);
-      gallery.init()
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
     }
-    /**
-    * 用于添加图片点击事件
-    * @param img 图片元素
-    * @param index 所属下标（在imgitems中的位置）
-    */
-    function addImgClick(img, index) {
-      img.onclick = function() {
-        viewImg(index)
-      }
-    }
-    /**
-    * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
-    * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
-    * 异步加载图片可在图片元素创建完成后调用此方法
-    */
-    function initImg() {
-      //重置图片数组
-      imgitems = [];
-      //查找class:markdown 下的所有img元素并遍历
-      var imgs = document.querySelectorAll('.markdown img');
-      for (var i = 0; i < imgs.length; i++) {
-        var img = imgs[i];
-        //本站相册初始为loading图片，真实图片放在data-src
-        var ds = img.getAttribute("data-src");
-        //创建image对象，用于获取图片宽高
-        var imgtemp = new Image();
-        //判断是否存在data-src
-        if (ds != null && ds.length > 0) {
-          imgtemp.src = ds
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
         } else {
-          imgtemp.src = img.src
+          link.classList.remove("current");    
         }
-        //判断是否存在缓存
-        if (imgtemp.complete) {
-          var imgobj = {
-            "src": imgtemp.src,
-            "w": imgtemp.width,
-            "h": imgtemp.height,
-          };
-          imgitems[i] = imgobj;
-          addImgClick(img, i);
-        } else {
-          console.log('进来了2')
-          imgtemp.index = i;
-          imgtemp.img = img;
-          imgtemp.onload = function() {
-            var imgobj = {
-              "src": this.src,
-              "w": this.width,
-              "h": this.height,
-            };
-            //不要使用push，因为onload前后顺序会不同
-            imgitems[this.index] = imgobj
-            //添加点击事件
-            addImgClick(this.img, this.index);
-          }
-        }
+      } else {
+        link.classList.add("current");
       }
+    } else {
+      link.classList.remove("current");
     }
-    //初始化
-    initImg();
-  </script>
-  
-  
-</body>
+  });
+});
 
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
 </html>
