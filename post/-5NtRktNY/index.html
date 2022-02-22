@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645494728278">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645501163448">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645494728278" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645501163448" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -39,7 +39,8 @@
 <ul>
 <li><a href="#fluentd%E6%9E%B6%E6%9E%84">Fluentd架构</a></li>
 <li><a href="#fluentd%E4%BA%8B%E4%BB%B6%E6%B5%81%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%8F%8A%E6%8C%87%E4%BB%A4%E9%85%8D%E7%BD%AE">fluentd事件流的生命周期及指令配置</a></li>
-<li><a href="#fluentd%E7%9A%84buffer%E4%BA%8B%E4%BB%B6%E7%BC%93%E5%86%B2%E6%A8%A1%E5%9E%8B">fluentd的buffer事件缓冲模型</a>
+<li><a href="#fluentd%E7%9A%84buffer%E4%BA%8B%E4%BB%B6%E7%BC%93%E5%86%B2%E6%A8%A1%E5%9E%8B">fluentd的buffer事件缓冲模型</a></li>
+<li><a href="#fluentd%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5">Fluentd配置实践</a>
 <ul>
 <li><a href="#%E5%AE%9E%E8%B7%B5%E4%B8%80%E5%AE%9E%E7%8E%B0%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E6%94%B6%E9%9B%86%E5%8F%8A%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90">实践一：实现业务应用日志的收集及字段解析</a></li>
 <li><a href="#%E5%AE%9E%E8%B7%B5%E4%BA%8C%E4%BD%BF%E7%94%A8ruby%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E5%AD%97%E6%AE%B5%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%8F%8A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A4%84%E7%90%86">实践二：使用ruby实现日志字段的转换及自定义处理</a></li>
@@ -321,6 +322,7 @@ record：真实的日志内容，json对象</p>
 <p>但是实际情况考虑网络等因素，往往缓存块被写入后端存储的时候会出现延迟或者写入失败的情况，当缓存块写入后端失败时，该缓存块还会留在队列中，等retry_wait时间后重试发送，当retry的次数达到retry_limit后，该缓存块被销毁（数据被丢弃）。</p>
 <p>此时缓存队列持续有新的缓存块进来，如果队列中存在很多未及时写入到后端存储的缓存块的话，当队列长度达到buffer_queue_limit大小，则新的事件被拒绝，fluentd报错，error_class=Fluent::Plugin::Buffer::BufferOverflowError error=&quot;buffer space has too many data&quot;。</p>
 <p>还有一种情况是网络传输缓慢的情况，若每3秒钟会产生一个新块，但是写入到后端时间却达到了30s钟，队列长度为100，那么每个块出列的时间内，又有新的10个块进来，那么队列很快就会被占满，导致异常出现。</p>
+<h2 id="fluentd配置实践">Fluentd配置实践</h2>
 <h3 id="实践一实现业务应用日志的收集及字段解析">实践一：实现业务应用日志的收集及字段解析</h3>
 <p>目标：收集容器内的nginx应用的access.log日志，并解析日志字段为JSON格式，原始日志的格式为：</p>
 <pre><code class="language-shell">$ tail -f access.log
@@ -422,6 +424,15 @@ record：真实的日志内容，json对象</p>
 
 
         <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/n_W-IgNKd/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  ConfigMap的配置文件挂载使用场景
+                </h3>
+              </a>
+            </div>
           
 
           

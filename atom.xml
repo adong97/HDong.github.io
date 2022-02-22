@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-22T01:52:12.234Z</updated>
+    <updated>2022-02-22T03:39:30.333Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,27 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[EFK功能验证]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/sYhMekwgE/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/sYhMekwgE/">
+        </link>
+        <updated>2022-02-22T03:36:53.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[EFK基于k8s部署]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/1IA40gbgV/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
+        </link>
+        <updated>2022-02-22T03:28:50.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ConfigMap的配置文件挂载使用场景]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/n_W-IgNKd/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/n_W-IgNKd/">
+        </link>
+        <updated>2022-02-22T02:13:59.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[使用EFK实现业务日志收集]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/-5NtRktNY/</id>
@@ -58,26 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
         </link>
         <updated>2022-02-17T07:37:53.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Kubernetes调度系统]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/sn0OllrL_/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
-        </link>
-        <updated>2022-02-15T09:45:09.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[ETCD数据的访问]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/">
-        </link>
-        <updated>2022-02-15T05:47:17.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Docker images批量导入导出]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/8wMXd7F36/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/8wMXd7F36/">
-        </link>
-        <updated>2022-02-14T15:51:37.000Z</updated>
     </entry>
 </feed>

@@ -34,8 +34,13 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#docker-images%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E8%84%9A%E6%9C%AC">Docker images批量导出脚本</a></li>
-<li><a href="#docker-images%E6%89%B9%E9%87%8F%E5%AF%BC%E5%85%A5">Docker images批量导入</a></li>
+<li>
+<ul>
+<li><a href="#%E9%AA%8C%E8%AF%81%E6%80%9D%E8%B7%AF">验证思路</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E5%AE%B9%E5%99%A8">创建测试容器</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEkibana">配置kibana</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -106,92 +111,62 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">Docker images批量导入导出</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">EFK功能验证</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-14 / 2 min read
+          2022-02-22 / 1 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/8wMXd7F36.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/sYhMekwgE.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="docker-images批量导出脚本">Docker images批量导出脚本</h1>
-<p>vim save-images.sh</p>
-<pre><code>#!/bin/bash
-#Output the information of images to images.txt
-sudo docker image ls &gt;images.txt
-#Get the number of images according to the total of content's rows
-N=$(awk 'END{print NR}' images.txt)
-echo The total of images is $N
-#Get names and tags of images
-for ((i=2; i&lt;=$N; i++))
- do
-   image=$(awk 'NR==&quot;'&quot;$i&quot;'&quot; {print $1}' images.txt)
-   version=$(awk 'NR==&quot;'&quot;$i&quot;'&quot; {print $2}' images.txt)
-#Modify the name of files which will be saved in local , otherwise you will be failed to save images.
-   shortname=`echo $image | sed 's/.*\///g'`
-#filename is name of the file that will be saved
-   filename=&quot;${shortname}-${version}.tar&quot;
-   imagename=&quot;${image}:${version}&quot;
+          <h2 id="验证思路">验证思路</h2>
+<p>在slave节点中启动服务，同时往标准输出中打印测试日志，到kibana中查看是否可以收集</p>
+<h2 id="创建测试容器">创建测试容器</h2>
+<p><code>efk/test-pod.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  nodeSelector:
+    fluentd: &quot;true&quot;
+  containers:
+  - name: count
+    image: alpine:3.6
+    args: [/bin/sh, -c,
+            'i=0; while true; do echo &quot;$i: $(date)&quot;; i=$((i+1)); sleep 1; done']
+</code></pre>
+<pre><code class="language-shell">$ kubectl get po  
+NAME                          READY   STATUS    RESTARTS   AGE  
+counter                       1/1     Running   0          6s
 
-#Output the value of variable
-   echo image=$image
-   echo version=$version
-   echo filename=$filename
-   echo imagename=$imagename
-   echo shortname=$shortname
-
-#Save the image as a local tar file
-   sudo docker save -o $filename $imagename
-#Modify the permission of the file
-   sudo chmod 755 $filename
-#Output the result!
-   echo No.$i $shortname is saved successfully！
- done
-#Delete file
-rm images.txt
-保存退出
 </code></pre>
-<p>执行脚本</p>
-<pre><code>chmod a+x save-images.sh
-bash save-images.sh
-</code></pre>
-<h1 id="docker-images批量导入">Docker images批量导入</h1>
-<pre><code># 使用sed 拼接命令 借助管道符 交给bash（注意修改成你对应的文件后缀）
-ls *.tar|awk '{print $NF}'|sed -r 's#(.*)#sudo docker load -i \1#' |bash
- 
-或者使用脚本
-#!/bin/bash
-for i in *.tar
-  do sudo docker load -i $i
-done
-</code></pre>
+<h2 id="配置kibana">配置kibana</h2>
+<p>登录kibana界面，按照截图的顺序操作：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645501118780.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501129207.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501135593.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501141890.png" alt="" loading="lazy"></figure>
+<p>也可以通过其他元数据来过滤日志数据，比如可以单击任何日志条目以查看其他元数据，如容器名称，Kubernetes 节点，命名空间等，比如kubernetes.pod_name : counter</p>
+<p>到这里，我们就在 Kubernetes 集群上成功部署了 EFK ，要了解如何使用 Kibana 进行日志数据分析，可以参考 Kibana 用户指南文档：https://www.elastic.co/guide/en/kibana/current/index.html</p>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
-            <span class="flex-auto">Docker</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
+            <span class="flex-auto">Kubernetes日志采集</span>
           </a>
         
 
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/TcpMtOSFQ/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  ETCD数据的访问
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/eryZMLlpZ/">
+              <a href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
                 <h3 class="post-title">
-                  清理 Docker 占用的磁盘空间
+                  EFK基于k8s部署
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>

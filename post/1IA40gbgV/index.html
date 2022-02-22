@@ -1,0 +1,839 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645501163448">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645501163448" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E9%83%A8%E7%BD%B2es%E6%9C%8D%E5%8A%A1">部署es服务</a>
+<ul>
+<li><a href="#%E9%83%A8%E7%BD%B2%E5%88%86%E6%9E%90">部署分析</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8statefulset%E7%AE%A1%E7%90%86%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1">使用StatefulSet管理有状态服务</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2%E5%B9%B6%E9%AA%8C%E8%AF%81">部署并验证</a></li>
+</ul>
+</li>
+<li><a href="#%E9%83%A8%E7%BD%B2kibana">部署kibana</a>
+<ul>
+<li><a href="#%E9%83%A8%E7%BD%B2%E5%88%86%E6%9E%90-2">部署分析</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2%E5%B9%B6%E9%AA%8C%E8%AF%81-2">部署并验证</a></li>
+</ul>
+</li>
+<li><a href="#fluentd%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2">Fluentd服务部署</a>
+<ul>
+<li><a href="#%E9%83%A8%E7%BD%B2%E5%88%86%E6%9E%90-3">部署分析</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1">部署服务</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">EFK基于k8s部署</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-22 / 12 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/1IA40gbgV.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="部署es服务">部署es服务</h1>
+<h2 id="部署分析">部署分析</h2>
+<ol>
+<li>es生产环境是部署es集群，通常会使用statefulset进行部署</li>
+<li>es默认使用elasticsearch用户启动进程，es的数据目录是通过宿主机的路径挂载，因此目录权限被主机的目录权限覆盖，因此可以利用initContainer容器在es进程启动之前把目录的权限修改掉，注意init container要用特权模式启动。</li>
+<li>若希望使用helm部署，参考：<br>
+https://github.com/helm/charts/tree/master/stable/elasticsearch<br>
+https://staight.github.io/2019/09/16/%E5%9C%A8k8s%E4%B8%8A%E9%83%A8%E7%BD%B2elasticsearch/</li>
+</ol>
+<h2 id="使用statefulset管理有状态服务">使用StatefulSet管理有状态服务</h2>
+<p>使用Deployment创建多副本的pod的情况：</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: default
+  labels:
+    app: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+</code></pre>
+<p>使用StatefulSet创建多副本pod的情况：</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+  namespace: default
+  labels:
+    app: nginx-sts
+spec:
+  replicas: 3
+  serviceName: &quot;nginx&quot;
+  selector:
+    matchLabels:
+      app: nginx-sts
+  template:
+    metadata:
+      labels:
+        app: nginx-sts
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+</code></pre>
+<p>无头服务Headless Service</p>
+<pre><code class="language-yaml">kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  selector:
+    app: nginx-sts
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  clusterIP: None
+</code></pre>
+<pre><code class="language-shell">$ kubectl -n default exec  -ti nginx-statefulset-0 sh
+/ # curl nginx-statefulset-2.nginx
+</code></pre>
+<h2 id="部署并验证">部署并验证</h2>
+<p><code>es-config.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: es-config
+  namespace: logging
+data:
+  elasticsearch.yml: |
+    cluster.name: &quot;luffy-elasticsearch&quot;
+    node.name: &quot;${POD_NAME}&quot;
+    network.host: 0.0.0.0
+    discovery.seed_hosts: &quot;es-svc-headless&quot;
+    cluster.initial_master_nodes: &quot;elasticsearch-0,elasticsearch-1,elasticsearch-2&quot;
+</code></pre>
+<p><code>es-svc-headless.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: es-svc-headless
+  namespace: logging
+  labels:
+    k8s-app: elasticsearch
+spec:
+  selector:
+    k8s-app: elasticsearch
+  clusterIP: None
+  ports:
+  - name: in
+    port: 9300
+    protocol: TCP
+</code></pre>
+<p><code>es-statefulset.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  namespace: logging
+  labels:
+    k8s-app: elasticsearch
+spec:
+  replicas: 3
+  serviceName: es-svc-headless
+  selector:
+    matchLabels:
+      k8s-app: elasticsearch
+  template:
+    metadata:
+      labels:
+        k8s-app: elasticsearch
+    spec:
+      initContainers:
+      - command:
+        - /sbin/sysctl
+        - -w
+        - vm.max_map_count=262144
+        image: alpine:3.6
+        imagePullPolicy: IfNotPresent
+        name: elasticsearch-logging-init
+        resources: {}
+        securityContext:
+          privileged: true
+      - name: fix-permissions
+        image: alpine:3.6
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: es-data-volume
+          mountPath: /usr/share/elasticsearch/data
+      containers:
+      - name: elasticsearch
+        image: 172.21.51.143:5000/elasticsearch/elasticsearch:7.4.2
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        resources:
+          limits:
+            cpu: '1'
+            memory: 2Gi
+          requests:
+            cpu: '1'
+            memory: 2Gi
+        ports:
+        - containerPort: 9200
+          name: db
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+          - name: es-config-volume
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          - name: es-data-volume
+            mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: es-config-volume
+          configMap:
+            name: es-config
+            items:
+            - key: elasticsearch.yml
+              path: elasticsearch.yml
+  volumeClaimTemplates:
+  - metadata:
+      name: es-data-volume
+    spec:
+      accessModes: [&quot;ReadWriteOnce&quot;]
+      storageClassName: &quot;nfs&quot;
+      resources:
+        requests:
+          storage: 5Gi
+</code></pre>
+<p><code>es-svc.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: es-svc
+  namespace: logging
+  labels:
+    k8s-app: elasticsearch
+spec:
+  selector:
+    k8s-app: elasticsearch
+  ports:
+  - name: out
+    port: 9200
+    protocol: TCP
+</code></pre>
+<pre><code class="language-shell">$ kubectl create namespace logging
+
+## 部署服务
+$ kubectl apply -f es-config.yaml
+$ kubectl apply -f es-svc-headless.yaml
+$ kubectl apply -f es-sts.yaml
+$ kubectl apply -f es-svc.yaml
+
+## 等待片刻，查看一下es的pod部署到了k8s-slave1节点，状态变为running
+$ kubectl -n logging get po -o wide  
+NAME              READY   STATUS    RESTARTS   AGE   IP  
+elasticsearch-0   1/1     Running   0          15m   10.244.0.126 
+elasticsearch-1   1/1     Running   0          15m   10.244.0.127
+elasticsearch-2   1/1     Running   0          15m   10.244.0.128
+# 然后通过curl命令访问一下服务，验证es是否部署成功
+$ kubectl -n logging get svc  
+es-svc            ClusterIP   10.104.226.175   &lt;none&gt;        9200/TCP   2s
+es-svc-headless   ClusterIP   None             &lt;none&gt;        9300/TCP   32m 
+$ curl 10.104.226.175:9200
+{
+  &quot;name&quot; : &quot;elasticsearch-2&quot;,
+  &quot;cluster_name&quot; : &quot;luffy-elasticsearch&quot;,
+  &quot;cluster_uuid&quot; : &quot;7FDIACx9T-2ajYcB5qp4hQ&quot;,
+  &quot;version&quot; : {
+    &quot;number&quot; : &quot;7.4.2&quot;,
+    &quot;build_flavor&quot; : &quot;default&quot;,
+    &quot;build_type&quot; : &quot;docker&quot;,
+    &quot;build_hash&quot; : &quot;2f90bbf7b93631e52bafb59b3b049cb44ec25e96&quot;,
+    &quot;build_date&quot; : &quot;2019-10-28T20:40:44.881551Z&quot;,
+    &quot;build_snapshot&quot; : false,
+    &quot;lucene_version&quot; : &quot;8.2.0&quot;,
+    &quot;minimum_wire_compatibility_version&quot; : &quot;6.8.0&quot;,
+    &quot;minimum_index_compatibility_version&quot; : &quot;6.0.0-beta1&quot;
+  },
+  &quot;tagline&quot; : &quot;You Know, for Search&quot;
+</code></pre>
+<h1 id="部署kibana">部署kibana</h1>
+<h2 id="部署分析-2">部署分析</h2>
+<ol>
+<li>kibana需要暴露web页面给前端使用，因此使用ingress配置域名来实现对kibana的访问</li>
+<li>kibana为无状态应用，直接使用Deployment来启动</li>
+<li>kibana需要访问es，直接利用k8s服务发现访问此地址即可，http://es-svc:9200</li>
+</ol>
+<h2 id="部署并验证-2">部署并验证</h2>
+<p><code>efk/kibana.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: logging
+  labels:
+    app: kibana
+spec:
+  selector:
+    matchLabels:
+      app: &quot;kibana&quot;
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: 172.21.51.143:5000/kibana/kibana:7.4.2
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 100m
+        env:
+          - name: ELASTICSEARCH_HOSTS
+            value: http://es-svc:9200
+          - name: SERVER_NAME
+            value: kibana-logging
+          - name: SERVER_REWRITEBASEPATH
+            value: &quot;false&quot;
+        ports:
+        - containerPort: 5601
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: logging
+  labels:
+    app: kibana
+spec:
+  ports:
+  - port: 5601
+    protocol: TCP
+    targetPort: 5601
+  type: ClusterIP
+  selector:
+    app: kibana
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kibana
+  namespace: logging
+spec:
+  rules:
+  - host: kibana.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: kibana
+            port:
+              number: 5601
+</code></pre>
+<pre><code class="language-shell">$ kubectl apply -f kibana.yaml  
+deployment.apps/kibana created
+service/kibana created  
+ingress/kibana created
+
+## 配置域名解析 kibana.luffy.com，并访问服务进行验证，若可以访问，说明连接es成功
+
+
+# GET /_cat/health?v
+# GET /_cat/indices
+</code></pre>
+<h1 id="fluentd服务部署">Fluentd服务部署</h1>
+<h2 id="部署分析-3">部署分析</h2>
+<ol>
+<li>fluentd为日志采集服务，kubernetes集群的每个业务节点都有日志产生，因此需要使用daemonset的模式进行部署</li>
+<li>为进一步控制资源，会为daemonset指定一个选择标签，fluentd=true来做进一步过滤，只有带有此标签的节点才会部署fluentd</li>
+<li>日志采集，需要采集哪些目录下的日志，采集后发送到es端，因此需要配置的内容比较多，我们选择使用configmap的方式把配置文件整个挂载出来</li>
+</ol>
+<h2 id="部署服务">部署服务</h2>
+<p><code>efk/fluentd-es-config-main.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+data:
+  fluent.conf: |-
+    # This is the root config file, which only includes components of the actual configuration
+    #
+    #  Do not collect fluentd's own logs to avoid infinite loops.
+    &lt;match fluent.**&gt;
+    @type null
+    &lt;/match&gt;
+
+    @include /fluentd/etc/config.d/*.conf
+kind: ConfigMap
+metadata:
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+  name: fluentd-es-config-main
+  namespace: logging
+
+</code></pre>
+<p>配置文件，fluentd-config.yaml，注意点：</p>
+<ol>
+<li>数据源source的配置，k8s会默认把容器的标准和错误输出日志重定向到宿主机中</li>
+<li>默认集成了 <a href="https://github.com/fabric8io/fluent-plugin-kubernetes_metadata_filter">kubernetes_metadata_filter</a> 插件，来解析日志格式，得到k8s相关的元数据，raw.kubernetes</li>
+<li>match输出到es端的flush配置</li>
+</ol>
+<p><code>efk/fluentd-configmap.yaml</code></p>
+<pre><code class="language-yaml">kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: fluentd-config
+  namespace: logging
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+data:
+  containers.input.conf: |-
+    &lt;source&gt;
+      @id fluentd-containers.log
+      @type tail
+      path /var/log/containers/*.log
+      pos_file /var/log/es-containers.log.pos
+      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      localtime
+      tag raw.kubernetes.*
+      format json
+      read_from_head false
+    &lt;/source&gt;
+    # Detect exceptions in the log output and forward them as one log entry.
+    # https://github.com/GoogleCloudPlatform/fluent-plugin-detect-exceptions 
+    &lt;match raw.kubernetes.**&gt;
+      @id raw.kubernetes
+      @type detect_exceptions
+      remove_tag_prefix raw
+      message log
+      stream stream
+      multiline_flush_interval 5
+      max_bytes 500000
+      max_lines 1000
+    &lt;/match&gt;
+        # Concatenate multi-line logs
+    &lt;filter **&gt;
+      @id filter_concat
+      @type concat
+      key message
+      multiline_end_regexp /\n$/
+      separator &quot;&quot;
+    &lt;/filter&gt;
+  output.conf: |-
+    # Enriches records with Kubernetes metadata
+    &lt;filter kubernetes.**&gt;
+      @type kubernetes_metadata
+    &lt;/filter&gt;
+    &lt;match **&gt;
+      @id elasticsearch
+      @type elasticsearch
+      @log_level info
+      include_tag_key true
+      hosts elasticsearch-0.es-svc-headless:9200,elasticsearch-1.es-svc-headless:9200,elasticsearch-2.es-svc-headless:9200
+      #port 9200
+      logstash_format true
+      #index_name kubernetes-%Y.%m.%d
+      request_timeout    30s
+      &lt;buffer&gt;
+        @type file
+        path /var/log/fluentd-buffers/kubernetes.system.buffer
+        flush_mode interval
+        retry_type exponential_backoff
+        flush_thread_count 2
+        flush_interval 5s
+        retry_forever
+        retry_max_interval 30
+        chunk_limit_size 2M
+        queue_limit_length 8
+        overflow_action block
+      &lt;/buffer&gt;
+    &lt;/match&gt;
+</code></pre>
+<p>daemonset定义文件，fluentd.yaml，注意点：</p>
+<ol>
+<li>需要配置rbac规则，因为需要访问k8s api去根据日志查询元数据</li>
+<li>需要将/var/log/containers/目录挂载到容器中</li>
+<li>需要将fluentd的configmap中的配置文件挂载到容器内</li>
+<li>想要部署fluentd的节点，需要添加fluentd=true的标签</li>
+</ol>
+<p><code>efk/fluentd.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd-es
+  namespace: logging
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd-es
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+rules:
+- apiGroups:
+  - &quot;&quot;
+  resources:
+  - &quot;namespaces&quot;
+  - &quot;pods&quot;
+  verbs:
+  - &quot;get&quot;
+  - &quot;watch&quot;
+  - &quot;list&quot;
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd-es
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+subjects:
+- kind: ServiceAccount
+  name: fluentd-es
+  namespace: logging
+  apiGroup: &quot;&quot;
+roleRef:
+  kind: ClusterRole
+  name: fluentd-es
+  apiGroup: &quot;&quot;
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: fluentd-es
+  name: fluentd-es
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      k8s-app: fluentd-es
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-es
+    spec:
+      containers:
+      - image: quay.io/fluentd_elasticsearch/fluentd:v3.1.0
+        imagePullPolicy: IfNotPresent
+        name: fluentd-es
+        resources:
+          limits:
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - mountPath: /var/log
+          name: varlog
+        - mountPath: /var/lib/docker/containers
+          name: varlibdockercontainers
+          readOnly: true
+        - mountPath: /etc/fluent/config.d
+          name: config-volume
+      nodeSelector:
+        fluentd: &quot;true&quot;
+      securityContext: {}
+      serviceAccount: fluentd-es
+      serviceAccountName: fluentd-es
+      volumes:
+      - hostPath:
+          path: /var/log
+        name: varlog
+      - hostPath:
+          path: /var/lib/docker/containers
+        name: varlibdockercontainers
+      - configMap:
+          defaultMode: 420
+          name: fluentd-config
+        name: config-volume
+</code></pre>
+<pre><code class="language-shell">## 给slave1打上标签，进行部署fluentd日志采集服务
+$ kubectl label node k8s-slave1 fluentd=true  
+$ kubectl label node k8s-slave2 fluentd=true
+
+# 创建服务
+$ kubectl apply -f fluentd-es-config-main.yaml  
+configmap/fluentd-es-config-main created  
+$ kubectl apply -f fluentd-configmap.yaml  
+configmap/fluentd-config created  
+$ kubectl apply -f fluentd.yaml  
+serviceaccount/fluentd-es created  
+clusterrole.rbac.authorization.k8s.io/fluentd-es created  
+clusterrolebinding.rbac.authorization.k8s.io/fluentd-es created  
+daemonset.extensions/fluentd-es created 
+
+## 然后查看一下pod是否已经在k8s-slave1
+$ kubectl -n logging get po -o wide
+NAME                      READY   STATUS    RESTARTS   AGE  
+elasticsearch-logging-0   1/1     Running   0          123m  
+fluentd-es-246pl   		  1/1     Running   0          2m2s  
+kibana-944c57766-ftlcw    1/1     Running   0          50m
+</code></pre>
+<p>上述是简化版的k8s日志部署收集的配置，完全版的可以提供 https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch 来查看。</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
+            <span class="flex-auto">Kubernetes日志采集</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/sYhMekwgE/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  EFK功能验证
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/n_W-IgNKd/">
+                <h3 class="post-title">
+                  ConfigMap的配置文件挂载使用场景
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
