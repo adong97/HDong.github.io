@@ -6504,7 +6504,7 @@ body {
   overflow-y: scroll;
 }
 .menu-container .list_overflow {
-  max-height: 500px;
+  max-height: 300px;
   overflow-y: scroll;
 }
 .menu-container .close-menu-btn {
