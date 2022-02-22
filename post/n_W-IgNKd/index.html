@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645540481799">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645542165942">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645540481799" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645542165942" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -112,7 +112,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">ConfigMap的配置文件挂载使用场景</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 5 min read
+          2022-02-22 / 6 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/n_W-IgNKd.png" alt="">
@@ -277,17 +277,19 @@ $ kubectl create cm application-config --from-file=application.yml --from-file=s
 $ kubectl get cm application-config -oyaml
 </code></pre>
 <p>观察Pod已经自动获取到最新的变化</p>
-<pre><code class="language-shell">$ kubectl exec demo-55c649865b-gpkgk ls /etc/application/
+<pre><code class="language-shell">$ kubectl exec demo-55c649865b-gpkgk -- ls /etc/application/
 application.yml
 supervisord.conf
 </code></pre>
 <p>此时，是挂载到pod内的空目录中<code>/etc/application</code>，假如想挂载到pod已存在的目录中，比如：</p>
-<pre><code class="language-shell">$  kubectl exec   demo-55c649865b-gpkgk ls /etc/profile.d
-color_prompt
-locale
+<pre><code class="language-shell">$  kubectl exec   demo-55c649865b-gpkgk -- ls /etc/profile.d
+README
+color_prompt.sh.disabled
+locale.sh
 </code></pre>
-<p>更改deployment的挂载目录：</p>
+<p>更改deployment的挂载目录为<code>/etc/profile.d</code>：</p>
 <pre><code class="language-shell">$ cat demo-deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -311,14 +313,14 @@ spec:
         image: nginx:alpine
         imagePullPolicy: IfNotPresent
         volumeMounts:
-        - mountPath: &quot;/etc/profile.d&quot;
+        - mountPath: &quot;/etc/profile.d&quot;  #更改目录
           name: config
 </code></pre>
 <p>重建pod</p>
 <pre><code class="language-shell">$ kubectl apply -f demo-deployment.yaml
 
 # 查看pod内的/etc/profile.d目录，发现已有文件被覆盖
-$ kubectl exec demo-77d685b9f7-68qz7 ls /etc/profile.d
+$ kubectl exec demo-77d685b9f7-68qz7 --  ls /etc/profile.d
 application.yml
 supervisord.conf
 </code></pre>
@@ -330,6 +332,7 @@ supervisord.conf
 </ul>
 <p>configmap保持不变，修改deployment文件：</p>
 <pre><code class="language-shell">$ cat demo-deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -344,42 +347,43 @@ spec:
       labels:
         app: demo
     spec:
-      volumes:
+      volumes:  #定义configmap
       - name: config
         configMap:
           name: application-config
-          items:
-          - key: application.yml
-            path: application
-          - key: supervisord.conf
-            path: supervisord
+          items:  #添加
+          - key: application.yml  #key值必须和cm中的值保持一致
+            path: application       #自定义
+          - key: supervisord.conf #key值必须和cm中的值保持一致
+            path: supervisord       #自定义
       containers:
       - name: nginx
         image: nginx:alpine
         imagePullPolicy: IfNotPresent
         volumeMounts:
-        - mountPath: &quot;/etc/application/application.yml&quot;
+        - mountPath: &quot;/etc/application/application.yml&quot; #需要写明文件名称
           name: config
-          subPath: application
-        - mountPath: &quot;/etc/profile.d/supervisord.conf&quot;
+          subPath: application  #和上面path内容保持一致
+        - mountPath: &quot;/etc/profile.d/supervisord.conf&quot;  #需要写明文件名称
           name: config
-          subPath: supervisord
+          subPath: supervisord #和上面path内容保持一致
 
 </code></pre>
 <p>测试挂载：</p>
 <pre><code class="language-shell">$ kubectl apply -f demo-deployment.yaml
 
-$ kubectl exec demo-78489c754-shjhz ls /etc/application
+$ kubectl exec demo-78489c754-shjhz -- ls /etc/application
 application.yml
 
-$ kubectl exec demo-78489c754-shjhz ls /etc/profile.d/
+$ kubectl exec demo-78489c754-shjhz -- ls /etc/profile.d/
 supervisord.conf
 color_prompt
 locale
-
 </code></pre>
 <blockquote>
-<p>使用subPath挂载到Pod内部的文件，不会自动感知原有ConfigMap的变更</p>
+<p>使用subPath挂载到Pod内部的文件，不会自动感知原有ConfigMap的变更<br>
+整体挂载写路径，子路径挂载写文件。<br>
+整体文件挂载可以感知到ConfigMap文件的变更，子路径文件挂载不会自动感知原有ConfigMap的变更。</p>
 </blockquote>
 
         </div>
