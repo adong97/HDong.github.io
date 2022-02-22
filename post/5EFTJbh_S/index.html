@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645501163448">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645507729781">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645501163448" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645507729781" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -37,6 +37,9 @@
 <li><a href="#k8s%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E6%9E%B6%E6%9E%84">k8s日志收集架构</a>
 <ul>
 <li><a href="#%E4%BD%BF%E7%94%A8%E8%8A%82%E7%82%B9%E7%BA%A7%E6%97%A5%E5%BF%97%E4%BB%A3%E7%90%86">使用节点级日志代理</a></li>
+<li><a href="#docker%E5%9F%BA%E4%BA%8E%E6%97%A5%E5%BF%97%E9%A9%B1%E5%8A%A8loging-driver%E7%9A%84%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6">Docker基于日志驱动(loging driver)的日志管理机制</a></li>
+<li><a href="#%E4%B8%8B%E9%9D%A2%E4%B8%BA%E5%AE%98%E6%96%B9%E6%94%AF%E6%8C%81%E7%9A%84%E6%97%A5%E5%BF%97%E9%A9%B1%E5%8A%A8%E5%88%97%E8%A1%A8">下面为官方支持的日志驱动列表：</a></li>
+<li><a href="#json-file-%E6%97%A5%E5%BF%97%E9%A9%B1%E5%8A%A8%E6%94%AF%E6%8C%81%E7%9A%84%E9%85%8D%E7%BD%AE%E9%80%89%E9%A1%B9%E5%A6%82%E4%B8%8B">json-file 日志驱动支持的配置选项如下：</a></li>
 </ul>
 </li>
 <li><a href="#%E4%BD%BF%E7%94%A8-sidecar-%E5%AE%B9%E5%99%A8%E5%92%8C%E6%97%A5%E5%BF%97%E4%BB%A3%E7%90%86">使用 sidecar 容器和日志代理</a>
@@ -123,7 +126,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s日志收集架构</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 4 min read
+          2022-02-22 / 10 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/5EFTJbh_S.png" alt="">
@@ -139,7 +142,74 @@
 </ul>
 <h2 id="使用节点级日志代理">使用节点级日志代理</h2>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645493781018.png" alt="" loading="lazy"></figure>
-<p>容器日志驱动：<br>
+<h2 id="docker基于日志驱动loging-driver的日志管理机制">Docker基于日志驱动(loging driver)的日志管理机制</h2>
+<p>Docker 提供了一套通用、灵活的日志管理机制，Docker 将所有容器打到 stdout 和 stderr 的日志都统一通过日志驱动重定向到某个地方。</p>
+<p>Docker 支持的日志驱动有很多，比如 local、json-file、syslog、journald 等等，类似插件一样，不同的日志驱动可以将日志重定向到不同的地方，这体现了 Docker 日志管理的灵活性，以热插拔的方式实现日志不同目的地的输出。</p>
+<p>Dokcer 默认的日志日志驱动是 json-file，该驱动将将来自容器的 stdout 和 stderr 日志都统一以 json 的形式存储到本地磁盘。日志存储路径格式为：<code>/var/lib/docker/containers/&lt;容器 id&gt;/&lt;容器 id&gt;-json.log</code>。所以可以看出在 json-file 日志驱动下，Docker 将所有容器日志都统一重定向到了 <code>/var/lib/docker/containers/</code>目录下，这为日志收集提供了很大的便利。</p>
+<blockquote>
+<p>注意：只有日志驱动为：local、json-file 或者 journald 时，docker logs 命令才能查看到容器打到 stdout/stderr 的日志。</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645506832430.png" alt="" loading="lazy"></figure>
+<h2 id="下面为官方支持的日志驱动列表">下面为官方支持的日志驱动列表：</h2>
+<table>
+<thead>
+<tr>
+<th>驱动</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>none</td>
+<td>运行的容器没有日志，docker logs 也不返回任何输出。</td>
+</tr>
+<tr>
+<td>local</td>
+<td>日志以自定义格式存储，旨在实现最小开销。</td>
+</tr>
+<tr>
+<td>json-file</td>
+<td>日志格式为JSON。Docker的默认日志记录驱动程序。</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>将日志消息写入syslog。该 syslog 守护程序必须在主机上运行。</td>
+</tr>
+<tr>
+<td>journald</td>
+<td>将日志消息写入journald。该journald守护程序必须在主机上运行。</td>
+</tr>
+<tr>
+<td>gelf</td>
+<td>将日志消息写入Graylog扩展日志格式（GELF）端点，例如Graylog或Logstash。</td>
+</tr>
+<tr>
+<td>fluentd</td>
+<td>将日志消息写入fluentd（转发输入）。该fluentd守护程序必须在主机上运行。</td>
+</tr>
+<tr>
+<td>awslogs</td>
+<td>将日志消息写入Amazon CloudWatch Logs。</td>
+</tr>
+<tr>
+<td>splunk</td>
+<td>使用HTTP 事件收集器将日志消息写入 splunk。</td>
+</tr>
+<tr>
+<td>etwlogs</td>
+<td>将日志消息写为 Windows 事件跟踪（ETW）事件。仅适用于Windows平台。</td>
+</tr>
+<tr>
+<td>gcplogs</td>
+<td>将日志消息写入 Google Cloud Platform（GCP）Logging。</td>
+</tr>
+<tr>
+<td>logentries</td>
+<td>将日志消息写入 Rapid7 Logentries。</td>
+</tr>
+</tbody>
+</table>
+<p>Docker 容器日志驱动：<br>
 https://docs.docker.com/config/containers/logging/configure/</p>
 <p>查看当前的docker主机的驱动：</p>
 <pre><code class="language-shell">$ docker info --format '{{.LoggingDriver}}'
@@ -157,6 +227,44 @@ https://docs.docker.com/config/containers/logging/configure/</p>
   }
 }
 </code></pre>
+<p>每种 Docker 日志驱动都有相应的配置项日志轮转，比如根据单个文件大小和日志文件数量配置轮转。</p>
+<h2 id="json-file-日志驱动支持的配置选项如下">json-file 日志驱动支持的配置选项如下：</h2>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+<th>示例值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>max-size</td>
+<td>切割之前日志的最大大小。可取值单位为(k,m,g)， 默认为-1（表示无限制）。</td>
+<td>--log-opt max-size=10m</td>
+</tr>
+<tr>
+<td>max-file</td>
+<td>可以存在的最大日志文件数。如果切割日志会创建超过阈值的文件数，则会删除最旧的文件。仅在max-size设置时有效。正整数。默认为1。</td>
+<td>--log-opt max-file=3</td>
+</tr>
+<tr>
+<td>labels</td>
+<td>适用于启动Docker守护程序时。此守护程序接受的以逗号分隔的与日志记录相关的标签列表。</td>
+<td>--log-opt labels=production_status,geo</td>
+</tr>
+<tr>
+<td>env</td>
+<td>适用于启动Docker守护程序时。此守护程序接受的以逗号分隔的与日志记录相关的环境变量列表。</td>
+<td>--log-opt env=os,customer</td>
+</tr>
+<tr>
+<td>compress</td>
+<td>切割的日志是否进行压缩。默认是disabled。</td>
+<td>--log-opt compress=true</td>
+</tr>
+</tbody>
+</table>
 <p>优势：</p>
 <ul>
 <li>部署方便，使用DaemonSet类型控制器来部署agent即可</li>
@@ -168,8 +276,9 @@ https://docs.docker.com/config/containers/logging/configure/</p>
 </ul>
 <h1 id="使用-sidecar-容器和日志代理">使用 sidecar 容器和日志代理</h1>
 <h2 id="方式一sidecar-容器将应用程序日志传送到自己的标准输出">方式一：sidecar 容器将应用程序日志传送到自己的标准输出。</h2>
-<p>思路：在pod中启动一个sidecar容器，把容器内的日志文件吐到标准输出，由宿主机中的日志收集agent进行采集。<br>
-<img src="https://adong97.github.io/HDong.github.io//post-images/1645493876379.png" alt="" loading="lazy"></p>
+<p>这种方式基于节点级日志代理方案，sidecar 容器和应用容器在同一个 Pod 运行，这个容器的作用就是读取应用容器的日志文件，然后将读取的日志内容重定向到 stdout 和 stderr，然后通过节点级日志代理统一收集。这种方式不推荐使用，缺点就是日志重复存储了，导致磁盘使用会成倍增加。比如应用容器的日志本身打到文件存储了一份，sidecar 容器重定向又存储了一份（存储到了 /var/lib/docker/containers/ 目录下）。这种方式的应用场景是应用本身不支持将日志打到 stdout 和 stderr，所以才需要 sidecar 容器重定向下。</p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645493876379.png" alt="" loading="lazy"><br>
+思路：在pod中启动一个sidecar容器，把容器内的日志文件吐到标准输出，由宿主机中的日志收集agent进行采集。</p>
 <pre><code class="language-shell">$ cat count-pod.yaml
 apiVersion: v1
 kind: Pod
@@ -224,12 +333,15 @@ $ kubectl logs -f counter -c count-log-1
 <li>增加了一次日志的写入，对磁盘使用率有一定影响</li>
 </ul>
 <h2 id="方式二sidecar-容器运行一个日志代理配置该日志代理以便从应用容器收集日志">方式二：sidecar 容器运行一个日志代理，配置该日志代理以便从应用容器收集日志。</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645493942290.png" alt="" loading="lazy"></figure>
+<p>这种方式不需要节点级日志代理，和应用容器在一起的 sidecar 容器直接作为日志代理方式运行在 Pod 中，sidecar 容器读取应用容器的日志，然后直接实时传输到日志存储平台。很显然这种方式也存在一个缺点，就是每个应用 Pod 都需要有个 sidecar 容器作为日志代理，而日志代理对系统 CPU、和内存都有一定的消耗，在节点 Pod 数很多的时候这个资源消耗其实是不小的。另外还有个问题就是在这种方式下由于应用容器日志不直接打到 stdout 和 stderr，所以是无法使用 kubectl logs 命令查看 Pod 中容器日志。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645493942290.png" alt="" loading="lazy"></p>
 <p>思路：直接在业务Pod中使用sidecar的方式启动一个日志收集的组件（比如fluentd），这样日志收集可以将容器内的日志当成本地文件来进行收取。</p>
-<p>优势：不用往宿主机存储日志，本地日志完全可以收集</p>
-<p>劣势：每个业务应用额外启动一个日志agent，带来额外的资源损耗</p>
+<p>优势：不用往宿主机存储日志，本地日志完全可以收集<br>
+劣势：每个业务应用额外启动一个日志agent，带来额外的资源损耗</p>
 <p><strong>从应用中直接暴露日志目录</strong><br>
+这种方式就是应用程序本身直接将日志打到统一的日志收集平台，比如 Java 应用可以配置日志的 appender，打到不同的地方，很显然这种方式对应用程序有一定的侵入性，而且还要保证日志系统的健壮性，从这个角度看应用和日志系统还有一定的耦合性，所以不是很推荐这种方式。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645493984869.png" alt="" loading="lazy"></p>
+<p>**总结：**综合对比上述三种日志收集方案优缺点，更推荐使用节点级日志代理方案，这种方式对应用没有侵入性，而且对系统资源没有额外的消耗，也不影响 kubelet 工具查看 Pod 容器日志。</p>
 <h2 id="企业日志方案选型">企业日志方案选型</h2>
 <p>目前来讲，最建议的是采用节点级的日志代理。</p>
 <h3 id="方案一自研方案实现一个自研的日志收集agent">方案一：自研方案，实现一个自研的日志收集agent</h3>
