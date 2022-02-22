@@ -1,0 +1,543 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645494728278">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645494728278" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#efk%E6%9E%B6%E6%9E%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B">EFK架构工作流程</a></li>
+<li><a href="#fluentd%E7%B2%BE%E8%AE%B2">Fluentd精讲</a>
+<ul>
+<li><a href="#fluentd%E6%9E%B6%E6%9E%84">Fluentd架构</a></li>
+<li><a href="#fluentd%E4%BA%8B%E4%BB%B6%E6%B5%81%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%8F%8A%E6%8C%87%E4%BB%A4%E9%85%8D%E7%BD%AE">fluentd事件流的生命周期及指令配置</a></li>
+<li><a href="#fluentd%E7%9A%84buffer%E4%BA%8B%E4%BB%B6%E7%BC%93%E5%86%B2%E6%A8%A1%E5%9E%8B">fluentd的buffer事件缓冲模型</a>
+<ul>
+<li><a href="#%E5%AE%9E%E8%B7%B5%E4%B8%80%E5%AE%9E%E7%8E%B0%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E6%94%B6%E9%9B%86%E5%8F%8A%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90">实践一：实现业务应用日志的收集及字段解析</a></li>
+<li><a href="#%E5%AE%9E%E8%B7%B5%E4%BA%8C%E4%BD%BF%E7%94%A8ruby%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E5%AD%97%E6%AE%B5%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%8F%8A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A4%84%E7%90%86">实践二：使用ruby实现日志字段的转换及自定义处理</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">使用EFK实现业务日志收集</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-22 / 11 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/-5NtRktNY.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="efk架构工作流程">EFK架构工作流程</h1>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645494221947.png" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>Elasticsearch<br>
+一个开源的分布式、Restful 风格的搜索和数据分析引擎，它的底层是开源库Apache Lucene。它可以被下面这样准确地形容：</p>
+<ul>
+<li>一个分布式的实时文档存储，每个字段可以被索引与搜索；</li>
+<li>一个分布式实时分析搜索引擎；</li>
+<li>能胜任上百个服务节点的扩展，并支持 PB 级别的结构化或者非结构化数据。</li>
+</ul>
+</li>
+<li>
+<p>Kibana<br>
+Kibana是一个开源的分析和可视化平台，设计用于和Elasticsearch一起工作。可以通过Kibana来搜索，查看，并和存储在Elasticsearch索引中的数据进行交互。也可以轻松地执行高级数据分析，并且以各种图标、表格和地图的形式可视化数据。</p>
+</li>
+<li>
+<p><a href="https://docs.fluentd.org/">Fluentd</a><br>
+一个针对日志的收集、处理、转发系统。通过丰富的插件系统，可以收集来自于各种系统或应用的日志，转化为用户指定的格式后，转发到用户所指定的日志存储系统之中。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645494266175.jpg" alt="" loading="lazy"></p>
+<p>Fluentd 通过一组给定的数据源抓取日志数据，处理后（转换成结构化的数据格式）将它们转发给其他服务，比如 Elasticsearch、对象存储、kafka等等。Fluentd 支持超过300个日志存储和分析服务，所以在这方面是非常灵活的。主要运行步骤如下<br>
+1. 首先 Fluentd 从多个日志源获取数据<br>
+2. 结构化并且标记这些数据<br>
+3. 然后根据匹配的标签将数据发送到多个目标服务</p>
+</li>
+</ul>
+<h1 id="fluentd精讲">Fluentd精讲</h1>
+<h2 id="fluentd架构">Fluentd架构</h2>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645494358250.jpg" alt="" loading="lazy"></figure>
+<p>为什么推荐使用fluentd作为k8s体系的日志收集工具？</p>
+<ul>
+<li>
+<p>云原生：https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch</p>
+</li>
+<li>
+<p>将日志文件JSON化<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645494376848.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>可插拔架构设计<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645494404610.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>极小的资源占用<br>
+基于C和Ruby语言， 30-40MB，13,000 events/second/core<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645494422159.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>极强的可靠性</p>
+<ul>
+<li>基于内存和本地文件的缓存</li>
+<li>强大的故障转移</li>
+</ul>
+</li>
+</ul>
+<h2 id="fluentd事件流的生命周期及指令配置">fluentd事件流的生命周期及指令配置</h2>
+<p>官方文档: https://docs.fluentd.org/v/0.12/quickstart/life-of-a-fluentd-event</p>
+<pre><code class="language-shell">Input -&gt; filter 1 -&gt; ... -&gt; filter N -&gt; Buffer -&gt; Output
+</code></pre>
+<p>启动命令</p>
+<pre><code class="language-shell">$ fluentd -c fluent.conf
+</code></pre>
+<p>指令介绍：</p>
+<ul>
+<li>
+<p><a href="https://docs.fluentd.org/v/0.12/input">source</a> ，数据源，对应Input<br>
+通过使用 source 指令，来选择和配置所需的输入插件来启用 Fluentd 输入源， source 把事件提交到 fluentd 的路由引擎中。使用type来区分不同类型的数据源。如下配置可以监听指定文件的追加输入：</p>
+<pre><code class="language-shell">&lt;source&gt;
+  @type tail
+  path /var/log/httpd-access.log
+  pos_file /var/log/td-agent/httpd-access.log.pos
+  tag myapp.access
+  format apache2
+&lt;/source&gt;
+
+</code></pre>
+</li>
+<li>
+<p>filter，Event processing pipeline（事件处理流）<br>
+filter 可以串联成 pipeline，对数据进行串行处理，最终再交给 match 输出。 如下可以对事件内容进行处理：</p>
+<pre><code class="language-shell">&lt;source&gt;
+  @type http
+  port 9880
+&lt;/source&gt;
+
+&lt;filter myapp.access&gt;
+  @type record_transformer
+  &lt;record&gt;
+    host_param “#{Socket.gethostname}”
+  &lt;/record&gt;
+&lt;/filter&gt;
+</code></pre>
+<p>filter 获取数据后，调用内置的 @type record_transformer 插件，在事件的 record 里插入了新的字段 host_param，然后再交给 match 输出。</p>
+</li>
+<li>
+<p>label指令<br>
+可以在 <code>source</code> 里指定 <code>@label</code>，这个 source 所触发的事件就会被发送给指定的 label 所包含的任务，而不会被后续的其他任务获取到。</p>
+<pre><code class="language-yaml">&lt;source&gt;
+  @type forward
+&lt;/source&gt;
+
+&lt;source&gt;
+### 这个任务指定了 label 为 @SYSTEM
+### 会被发送给 &lt;label @SYSTEM&gt;
+### 而不会被发送给下面紧跟的 filter 和 match
+  @type tail
+  @label @SYSTEM
+  path /var/log/httpd-access.log
+  pos_file /var/log/td-agent/httpd-access.log.pos
+  tag myapp.access
+  format apache2
+&lt;/source&gt;
+
+&lt;filter access.**&gt;
+  @type record_transformer
+  &lt;record&gt;
+  # …
+  &lt;/record&gt;
+&lt;/filter&gt;
+
+&lt;match **&gt;
+  @type elasticsearch
+  # …
+&lt;/match&gt;
+
+&lt;label @SYSTEM&gt;
+  ### 将会接收到上面 @type tail 的 source event
+  &lt;filter var.log.middleware.**&gt;
+    @type grep
+    # …
+  &lt;/filter&gt;
+
+  &lt;match **&gt;
+    @type s3
+    # …
+  &lt;/match&gt;
+&lt;/label&gt;
+</code></pre>
+</li>
+<li>
+<p>match，匹配输出<br>
+查找匹配 “tags” 的事件，并处理它们。match 命令的最常见用法是将事件输出到其他系统（因此，与 match 命令对应的插件称为 “输出插件”）</p>
+<pre><code class="language-shell">&lt;source&gt;
+  @type http
+  port 9880
+&lt;/source&gt;
+
+&lt;filter myapp.access&gt;
+  @type record_transformer
+  &lt;record&gt;
+    host_param “#{Socket.gethostname}”
+  &lt;/record&gt;
+&lt;/filter&gt;
+
+&lt;match myapp.access&gt;
+  @type file
+  path /var/log/fluent/access
+&lt;/match&gt;
+</code></pre>
+</li>
+</ul>
+<p>事件的结构：<br>
+time：事件的处理时间<br>
+tag：事件的来源，在fluentd.conf中配置<br>
+record：真实的日志内容，json对象</p>
+<p>比如，下面这条原始日志：</p>
+<pre><code class="language-yaml">192.168.0.1 - - [28/Feb/2013:12:00:00 +0900] &quot;GET / HTTP/1.1&quot; 200 777
+</code></pre>
+<p>经过fluentd 引擎处理完后的样子可能是：</p>
+<pre><code class="language-shell">2020-07-16 08:40:35 +0000 apache.access: {&quot;user&quot;:&quot;-&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;code&quot;:200,&quot;size&quot;:777,&quot;host&quot;:&quot;192.168.0.1&quot;,&quot;path&quot;:&quot;/&quot;}
+</code></pre>
+<h2 id="fluentd的buffer事件缓冲模型">fluentd的buffer事件缓冲模型</h2>
+<pre><code class="language-shell">Input -&gt; filter 1 -&gt; ... -&gt; filter N -&gt; Buffer -&gt; Output
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645494624804.png" alt="" loading="lazy"></figure>
+<p>因为每个事件数据量通常很小，考虑数据传输效率、稳定性等方面的原因，所以基本不会每条事件处理完后都会立马写入到output端，因此fluentd建立了缓冲模型，模型中主要有两个概念：</p>
+<ul>
+<li>buffer_chunk：事件缓冲块，用来存储本地已经处理完待发送至目的端的事件，可以设置每个块的大小。</li>
+<li>buffer_queue：存储chunk的队列，可以设置长度</li>
+</ul>
+<p>可以设置的参数，主要有：</p>
+<ul>
+<li>buffer_type，缓冲类型，可以设置file或者memory</li>
+<li>buffer_chunk_limit，每个chunk块的大小，默认8MB</li>
+<li>buffer_queue_limit ，chunk块队列的最大长度，默认256</li>
+<li>flush_interval ，flush一个chunk的时间间隔</li>
+<li>retry_limit ，chunk块发送失败重试次数，默认17次，之后就丢弃该chunk数据</li>
+<li>retry_wait ，重试发送chunk数据的时间间隔，默认1s，第2次失败再发送的话，间隔2s，下次4秒，以此类推</li>
+</ul>
+<p>大致的过程为：<br>
+随着fluentd事件的不断生成并写入chunk，缓存块持变大，当缓存块满足buffer_chunk_limit大小或者新的缓存块诞生超过flush_interval时间间隔后，会推入缓存queue队列尾部，该队列大小由buffer_queue_limit决定。</p>
+<p>每次有新的chunk入列，位于队列最前部的chunk块会立即写入配置的存储后端，比如配置的是kafka，则立即把数据推入kafka中。</p>
+<p>比较理想的情况是每次有新的缓存块进入缓存队列，则立马会被写入到后端，同时，新缓存块也持续入列，但是入列的速度不会快于出列的速度，这样基本上缓存队列处于空的状态，队列中最多只有一个缓存块。</p>
+<p>但是实际情况考虑网络等因素，往往缓存块被写入后端存储的时候会出现延迟或者写入失败的情况，当缓存块写入后端失败时，该缓存块还会留在队列中，等retry_wait时间后重试发送，当retry的次数达到retry_limit后，该缓存块被销毁（数据被丢弃）。</p>
+<p>此时缓存队列持续有新的缓存块进来，如果队列中存在很多未及时写入到后端存储的缓存块的话，当队列长度达到buffer_queue_limit大小，则新的事件被拒绝，fluentd报错，error_class=Fluent::Plugin::Buffer::BufferOverflowError error=&quot;buffer space has too many data&quot;。</p>
+<p>还有一种情况是网络传输缓慢的情况，若每3秒钟会产生一个新块，但是写入到后端时间却达到了30s钟，队列长度为100，那么每个块出列的时间内，又有新的10个块进来，那么队列很快就会被占满，导致异常出现。</p>
+<h3 id="实践一实现业务应用日志的收集及字段解析">实践一：实现业务应用日志的收集及字段解析</h3>
+<p>目标：收集容器内的nginx应用的access.log日志，并解析日志字段为JSON格式，原始日志的格式为：</p>
+<pre><code class="language-shell">$ tail -f access.log
+...
+53.49.146.149 1561620585.973 0.005 502 [27/Jun/2019:15:29:45 +0800] 178.73.215.171 33337 GET https
+</code></pre>
+<p>收集并处理成：</p>
+<pre><code class="language-json">{
+    &quot;serverIp&quot;: &quot;53.49.146.149&quot;,
+    &quot;timestamp&quot;: &quot;1561620585.973&quot;,
+    &quot;respondTime&quot;: &quot;0.005&quot;,
+    &quot;httpCode&quot;: &quot;502&quot;,
+    &quot;eventTime&quot;: &quot;27/Jun/2019:15:29:45 +0800&quot;,
+    &quot;clientIp&quot;: &quot;178.73.215.171&quot;,
+    &quot;clientPort&quot;: &quot;33337&quot;,
+    &quot;method&quot;: &quot;GET&quot;,
+    &quot;protocol&quot;: &quot;https&quot;
+}
+</code></pre>
+<p>思路：</p>
+<ul>
+<li>配置fluent.conf
+<ul>
+<li>使用@tail插件通过监听access.log文件</li>
+<li>用filter实现对nginx日志格式解析</li>
+</ul>
+</li>
+<li>启动fluentd服务</li>
+<li>手动追加内容至access.log文件</li>
+<li>观察本地输出内容是否符合预期</li>
+</ul>
+<p><code>fluent.conf</code></p>
+<pre><code class="language-shell">&lt;source&gt;
+	@type tail
+	@label @nginx_access
+	path /var/log/nginx/access.log
+	pos_file /var/log/nginx/nginx_access.posg
+	tag nginx_access
+	format none
+	@log_level trace
+&lt;/source&gt;
+&lt;label @nginx_access&gt;
+   &lt;filter  nginx_access&gt;
+       @type parser
+	   key_name message
+	   format  /(?&lt;serverIp&gt;[^ ]*) (?&lt;timestamp&gt;[^ ]*) (?&lt;respondTime&gt;[^ ]*) (?&lt;httpCode&gt;[^ ]*) \[(?&lt;eventTime&gt;[^\]]*)\] (?&lt;clientIp&gt;[^ ]*) (?&lt;clientPort&gt;[^ ]*) (?&lt;method&gt;[^ ]*) (?&lt;protocol&gt;[^ ]*)/
+   &lt;/filter&gt;
+   &lt;match  nginx_access&gt;
+     @type stdout
+   &lt;/match&gt;
+&lt;/label&gt;
+</code></pre>
+<p>启动服务，追加文件内容：</p>
+<pre><code class="language-shell">$ docker run -u root --rm -ti quay.io/fluentd_elasticsearch/fluentd:v3.1.0 sh
+/ # cat /etc/fluent/fluent.conf
+/ # mkdir /etc/fluent/config.d
+/ # fluentd -c /etc/fluent/fluent.conf
+/ # echo '53.49.146.149 1561620585.973 0.005 502 [27/Jun/2019:15:29:45 +0800] 178.73.215.171 33337 GET https' &gt;&gt;/var/log/nginx/access.log
+</code></pre>
+<p>使用该网站进行正则校验： <a href="http://fluentular.herokuapp.com/">http://fluentular.herokuapp.com</a></p>
+<h3 id="实践二使用ruby实现日志字段的转换及自定义处理">实践二：使用ruby实现日志字段的转换及自定义处理</h3>
+<pre><code class="language-shell">&lt;source&gt;
+	@type tail
+	@label @nginx_access
+	path /var/log/nginx/access.log
+	pos_file /var/log/nginx/nginx_access.posg
+	tag nginx_access
+	format none
+	@log_level trace
+&lt;/source&gt;
+&lt;label @nginx_access&gt;
+   &lt;filter  nginx_access&gt;
+       @type parser
+	   key_name message
+	   format  /(?&lt;serverIp&gt;[^ ]*) (?&lt;timestamp&gt;[^ ]*) (?&lt;respondTime&gt;[^ ]*) (?&lt;httpCode&gt;[^ ]*) \[(?&lt;eventTime&gt;[^\]]*)\] (?&lt;clientIp&gt;[^ ]*) (?&lt;clientPort&gt;[^ ]*) (?&lt;method&gt;[^ ]*) (?&lt;protocol&gt;[^ ]*)/
+   &lt;/filter&gt;
+   &lt;filter  nginx_access&gt;   
+	   @type record_transformer
+	   enable_ruby
+       &lt;record&gt;
+		host_name &quot;#{Socket.gethostname}&quot;
+        my_key  &quot;my_val&quot;
+        tls ${record[&quot;protocol&quot;].index(&quot;https&quot;) ? &quot;true&quot; : &quot;false&quot;}
+       &lt;/record&gt;
+   &lt;/filter&gt;
+   &lt;match  nginx_access&gt;
+     @type stdout
+   &lt;/match&gt;
+&lt;/label&gt;
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
+            <span class="flex-auto">Kubernetes日志采集</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/5EFTJbh_S/">
+                <h3 class="post-title">
+                  k8s日志收集架构
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-22T01:40:43.227Z</updated>
+    <updated>2022-02-22T01:52:12.234Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[使用EFK实现业务日志收集]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/-5NtRktNY/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/-5NtRktNY/">
+        </link>
+        <updated>2022-02-22T01:41:41.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[k8s日志收集架构]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/5EFTJbh_S/</id>
@@ -72,12 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/8wMXd7F36/">
         </link>
         <updated>2022-02-14T15:51:37.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[清理 Docker 占用的磁盘空间]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/eryZMLlpZ/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/eryZMLlpZ/">
-        </link>
-        <updated>2022-02-11T02:32:22.000Z</updated>
     </entry>
 </feed>
