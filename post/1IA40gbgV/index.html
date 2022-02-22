@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645542260794">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645552184864">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645542260794" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645552184864" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -131,7 +131,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">EFK基于k8s部署及验证</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 13 min read
+          2022-02-22 / 14 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/1IA40gbgV.png" alt="">
@@ -227,7 +227,7 @@ data:
     node.name: &quot;${POD_NAME}&quot;
     network.host: 0.0.0.0
     discovery.seed_hosts: &quot;es-svc-headless&quot;
-    cluster.initial_master_nodes: &quot;elasticsearch-0,elasticsearch-1,elasticsearch-2&quot;
+    cluster.initial_master_nodes: &quot;elasticsearch-0,elasticsearch-1,elasticsearch-2&quot; # 指定es初始化节点的标识
 </code></pre>
 <p><code>es-svc-headless.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
@@ -286,7 +286,7 @@ spec:
           mountPath: /usr/share/elasticsearch/data
       containers:
       - name: elasticsearch
-        image: 172.21.51.143:5000/elasticsearch/elasticsearch:7.4.2
+        image: elasticsearch:7.4.2
         env:
           - name: POD_NAME
             valueFrom:
@@ -350,7 +350,7 @@ spec:
 ## 部署服务
 $ kubectl apply -f es-config.yaml
 $ kubectl apply -f es-svc-headless.yaml
-$ kubectl apply -f es-sts.yaml
+$ kubectl apply -f es-statefulset.yaml
 $ kubectl apply -f es-svc.yaml
 
 ## 等待片刻，查看一下es的pod部署到了k8s-slave1节点，状态变为running
@@ -359,15 +359,19 @@ NAME              READY   STATUS    RESTARTS   AGE   IP
 elasticsearch-0   1/1     Running   0          15m   10.244.0.126 
 elasticsearch-1   1/1     Running   0          15m   10.244.0.127
 elasticsearch-2   1/1     Running   0          15m   10.244.0.128
+
 # 然后通过curl命令访问一下服务，验证es是否部署成功
-$ kubectl -n logging get svc  
-es-svc            ClusterIP   10.104.226.175   &lt;none&gt;        9200/TCP   2s
-es-svc-headless   ClusterIP   None             &lt;none&gt;        9300/TCP   32m 
-$ curl 10.104.226.175:9200
+$ kubectl -n logging get svc
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+es-svc            ClusterIP   10.107.100.116   &lt;none&gt;        9200/TCP   45m
+es-svc-headless   ClusterIP   None             &lt;none&gt;        9300/TCP   45m
+
+
+$ curl 10.107.100.116:9200
 {
-  &quot;name&quot; : &quot;elasticsearch-2&quot;,
+  &quot;name&quot; : &quot;elasticsearch-0&quot;,
   &quot;cluster_name&quot; : &quot;luffy-elasticsearch&quot;,
-  &quot;cluster_uuid&quot; : &quot;7FDIACx9T-2ajYcB5qp4hQ&quot;,
+  &quot;cluster_uuid&quot; : &quot;DQM5cr0mTaWa_xYTR3pS9g&quot;,
   &quot;version&quot; : {
     &quot;number&quot; : &quot;7.4.2&quot;,
     &quot;build_flavor&quot; : &quot;default&quot;,
@@ -380,6 +384,8 @@ $ curl 10.104.226.175:9200
     &quot;minimum_index_compatibility_version&quot; : &quot;6.0.0-beta1&quot;
   },
   &quot;tagline&quot; : &quot;You Know, for Search&quot;
+}
+
 </code></pre>
 <h1 id="部署kibana">部署kibana</h1>
 <h2 id="部署分析-2">部署分析</h2>
@@ -408,7 +414,7 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: 172.21.51.143:5000/kibana/kibana:7.4.2
+        image: kibana:7.4.2
         resources:
           limits:
             cpu: 1000m
@@ -423,6 +429,24 @@ spec:
             value: &quot;false&quot;
         ports:
         - containerPort: 5601
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/kibana/config/
+      volumes:
+        - name: config
+          configMap:
+            name: kibana-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config
+  namespace: logging
+data:
+  kibana.yml: |-
+    elasticsearch.requestTimeout: 90000   #延长超时时长
+    server.host: &quot;0&quot;
+    xpack.monitoring.ui.container.elasticsearch.enabled: true
 ---
 apiVersion: v1
 kind: Service
