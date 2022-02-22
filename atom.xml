@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-02-22T05:28:53.775Z</updated>
+    <updated>2022-02-22T14:14:37.575Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -11,14 +11,7 @@
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[EFK功能验证]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/sYhMekwgE/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/sYhMekwgE/">
-        </link>
-        <updated>2022-02-22T03:36:53.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[EFK基于k8s部署]]></title>
+        <title type="html"><![CDATA[EFK基于k8s部署及验证]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/1IA40gbgV/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
         </link>
@@ -79,5 +72,12 @@
         <link href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
         </link>
         <updated>2022-02-17T07:37:53.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Kubernetes调度系统]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/sn0OllrL_/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
+        </link>
+        <updated>2022-02-15T09:45:09.000Z</updated>
     </entry>
 </feed>

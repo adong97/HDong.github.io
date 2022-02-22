@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645507729781">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645538827981">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645507729781" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645538827981" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -53,6 +53,12 @@
 <li><a href="#%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1">部署服务</a></li>
 </ul>
 </li>
+<li><a href="#%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E5%8A%9F%E8%83%BD%E9%AA%8C%E8%AF%81">日志收集功能验证</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E5%AE%B9%E5%99%A8">创建测试容器</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEkibana">配置kibana</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -64,7 +70,7 @@
 
 <div class="menu-container">
   <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
+  <div class="list_overflow">
     
       
         <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
@@ -123,9 +129,9 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">EFK基于k8s部署</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">EFK基于k8s部署及验证</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 12 min read
+          2022-02-22 / 13 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/1IA40gbgV.png" alt="">
@@ -698,6 +704,36 @@ fluentd-es-246pl   		  1/1     Running   0          2m2s
 kibana-944c57766-ftlcw    1/1     Running   0          50m
 </code></pre>
 <p>上述是简化版的k8s日志部署收集的配置，完全版的可以提供 https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch 来查看。</p>
+<h1 id="日志收集功能验证">日志收集功能验证</h1>
+<p>在slave节点中启动服务，同时往标准输出中打印测试日志，到kibana中查看是否可以收集。</p>
+<h2 id="创建测试容器">创建测试容器</h2>
+<p><code>efk/test-pod.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  nodeSelector:
+    fluentd: &quot;true&quot;
+  containers:
+  - name: count
+    image: alpine:3.6
+    args: [/bin/sh, -c,
+            'i=0; while true; do echo &quot;$i: $(date)&quot;; i=$((i+1)); sleep 1; done']
+</code></pre>
+<pre><code class="language-shell">$ kubectl get po  
+NAME                          READY   STATUS    RESTARTS   AGE  
+counter                       1/1     Running   0          6s
+
+</code></pre>
+<h2 id="配置kibana">配置kibana</h2>
+<p>登录kibana界面，按照截图的顺序操作：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645501118780.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501129207.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501135593.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645501141890.png" alt="" loading="lazy"></figure>
+<p>也可以通过其他元数据来过滤日志数据，比如可以单击任何日志条目以查看其他元数据，如容器名称，Kubernetes 节点，命名空间等，比如kubernetes.pod_name : counter</p>
+<p>到这里，我们就在 Kubernetes 集群上成功部署了 EFK ，要了解如何使用 Kibana 进行日志数据分析，可以参考 Kibana 用户指南文档：https://www.elastic.co/guide/en/kibana/current/index.html</p>
 
         </div>
 
@@ -709,15 +745,6 @@ kibana-944c57766-ftlcw    1/1     Running   0          50m
 
 
         <div class="flex justify-between py-8">
-          
-            <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/sYhMekwgE/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  EFK功能验证
-                </h3>
-              </a>
-            </div>
           
 
           

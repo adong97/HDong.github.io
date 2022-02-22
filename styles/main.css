@@ -6503,6 +6503,10 @@ body {
   justify-content: center;
   overflow-y: scroll;
 }
+.menu-container .list_overflow {
+  max-height: 500px;
+  overflow-y: scroll;
+}
 .menu-container .close-menu-btn {
   position: absolute;
   right: 24px;

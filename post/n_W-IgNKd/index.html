@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645507729781">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645538827981">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645507729781" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645538827981" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -51,7 +51,7 @@
 
 <div class="menu-container">
   <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
+  <div class="list_overflow">
     
       
         <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
@@ -137,12 +137,11 @@ spring:
         max-interval: 10000
         multiplier: 2
         max-attempts: 10
-
 </code></pre>
 <p>该配置文件在k8s中可以通过configmap来管理，通常我们有如下两种方式来管理配置文件：</p>
 <ul>
 <li>
-<p>通过kubectl命令行来生成configmap</p>
+<p>通过kubectl命令行来生成configmap（常用）</p>
 <pre><code class="language-shell"># 通过文件直接创建
 $ kubectl -n default create configmap application-config --from-file=application.yml
 
@@ -197,7 +196,7 @@ spec:
       labels:
         app: demo
     spec:
-      volumes:
+      volumes:   #定义
       - configMap:
           name: application-config
         name: config
@@ -205,12 +204,31 @@ spec:
       - name: nginx
         image: nginx:alpine
         imagePullPolicy: IfNotPresent
-        volumeMounts:
+        volumeMounts:  #挂载
         - mountPath: &quot;/etc/application&quot;
-          name: config
+          name: config  #将config挂载到&quot;/etc/application&quot;目录里
 </code></pre>
 <p>创建并查看：</p>
 <pre><code class="language-shell">$ kubectl apply -f demo-deployment.yaml
+
+$ kubectl exec demo-67c7c99d47-54hd8 -- ls /etc/application
+application.yml
+
+$ kubectl exec demo-67c7c99d47-54hd8 -- cat /etc/application/application.yml
+spring:
+  application:
+    name: svca-service
+  cloud:
+    config:
+      uri: http://config:8888
+      fail-fast: true
+      username: user
+      password: ${CONFIG_SERVER_PASSWORD:password}
+      retry:
+        initial-interval: 2000
+        max-interval: 10000
+        multiplier: 2
+        max-attempts: 10
 </code></pre>
 <p>修改configmap文件的内容，观察pod中是否自动感知变化：</p>
 <pre><code class="language-shell">$ kubectl edit cm application-config
@@ -379,7 +397,7 @@ locale
               <a href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
-                  EFK基于k8s部署
+                  EFK基于k8s部署及验证
                 </h3>
               </a>
             </div>

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645507729781">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645538827981">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645507729781" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645538827981" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -65,7 +65,7 @@
 
 <div class="menu-container">
   <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
-  <div>
+  <div class="list_overflow">
     
       
         <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
@@ -217,11 +217,13 @@ https://docs.docker.com/config/containers/logging/configure/</p>
 <p>json-file格式，docker会默认将标准和错误输出保存为宿主机的文件，路径为：<br>
 <code>/var/lib/docker/containers/&lt;container-id&gt;/&lt;container-id&gt;-json.log</code></p>
 <p>并且可以设置日志轮转：</p>
-<pre><code class="language-json">{
+<pre><code class="language-json">cat /etc/docker/daemon.json
+
+{
   &quot;log-driver&quot;: &quot;json-file&quot;,
   &quot;log-opts&quot;: {
-    &quot;max-size&quot;: &quot;10m&quot;,
-    &quot;max-file&quot;: &quot;3&quot;,
+    &quot;max-size&quot;: &quot;10m&quot;,  #文件大小
+    &quot;max-file&quot;: &quot;3&quot;,        #保存文件个数
     &quot;labels&quot;: &quot;production_status&quot;,
     &quot;env&quot;: &quot;os,customer&quot;
   }
@@ -276,7 +278,8 @@ https://docs.docker.com/config/containers/logging/configure/</p>
 </ul>
 <h1 id="使用-sidecar-容器和日志代理">使用 sidecar 容器和日志代理</h1>
 <h2 id="方式一sidecar-容器将应用程序日志传送到自己的标准输出">方式一：sidecar 容器将应用程序日志传送到自己的标准输出。</h2>
-<p>这种方式基于节点级日志代理方案，sidecar 容器和应用容器在同一个 Pod 运行，这个容器的作用就是读取应用容器的日志文件，然后将读取的日志内容重定向到 stdout 和 stderr，然后通过节点级日志代理统一收集。这种方式不推荐使用，缺点就是日志重复存储了，导致磁盘使用会成倍增加。比如应用容器的日志本身打到文件存储了一份，sidecar 容器重定向又存储了一份（存储到了 /var/lib/docker/containers/ 目录下）。这种方式的应用场景是应用本身不支持将日志打到 stdout 和 stderr，所以才需要 sidecar 容器重定向下。</p>
+<p>这种方式基于节点级日志代理方案，sidecar 容器和应用容器在同一个 Pod 运行，这个容器的作用就是读取应用容器的日志文件，然后将读取的日志内容重定向到 stdout 和 stderr，然后通过节点级日志代理统一收集。<br>
+这种方式不推荐使用，缺点就是日志重复存储了，导致磁盘使用会成倍增加。比如应用容器的日志本身打到文件存储了一份，sidecar 容器重定向又存储了一份（存储到了 /var/lib/docker/containers/ 目录下）。这种方式的应用场景是应用本身不支持将日志打到 stdout 和 stderr，所以才需要 sidecar 容器重定向下。</p>
 <p><img src="https://adong97.github.io/HDong.github.io//post-images/1645493876379.png" alt="" loading="lazy"><br>
 思路：在pod中启动一个sidecar容器，把容器内的日志文件吐到标准输出，由宿主机中的日志收集agent进行采集。</p>
 <pre><code class="language-shell">$ cat count-pod.yaml
@@ -333,7 +336,8 @@ $ kubectl logs -f counter -c count-log-1
 <li>增加了一次日志的写入，对磁盘使用率有一定影响</li>
 </ul>
 <h2 id="方式二sidecar-容器运行一个日志代理配置该日志代理以便从应用容器收集日志">方式二：sidecar 容器运行一个日志代理，配置该日志代理以便从应用容器收集日志。</h2>
-<p>这种方式不需要节点级日志代理，和应用容器在一起的 sidecar 容器直接作为日志代理方式运行在 Pod 中，sidecar 容器读取应用容器的日志，然后直接实时传输到日志存储平台。很显然这种方式也存在一个缺点，就是每个应用 Pod 都需要有个 sidecar 容器作为日志代理，而日志代理对系统 CPU、和内存都有一定的消耗，在节点 Pod 数很多的时候这个资源消耗其实是不小的。另外还有个问题就是在这种方式下由于应用容器日志不直接打到 stdout 和 stderr，所以是无法使用 kubectl logs 命令查看 Pod 中容器日志。<br>
+<p>这种方式不需要节点级日志代理，和应用容器在一起的 sidecar 容器直接作为日志代理方式运行在 Pod 中，sidecar 容器读取应用容器的日志，然后直接实时传输到日志存储平台。<br>
+很显然这种方式也存在一个缺点，就是每个应用 Pod 都需要有个 sidecar 容器作为日志代理，而日志代理对系统 CPU、和内存都有一定的消耗，在节点 Pod 数很多的时候这个资源消耗其实是不小的。另外还有个问题就是在这种方式下由于应用容器日志不直接打到 stdout 和 stderr，所以是无法使用 kubectl logs 命令查看 Pod 中容器日志。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645493942290.png" alt="" loading="lazy"></p>
 <p>思路：直接在业务Pod中使用sidecar的方式启动一个日志收集的组件（比如fluentd），这样日志收集可以将容器内的日志当成本地文件来进行收取。</p>
 <p>优势：不用往宿主机存储日志，本地日志完全可以收集<br>
@@ -341,9 +345,8 @@ $ kubectl logs -f counter -c count-log-1
 <p><strong>从应用中直接暴露日志目录</strong><br>
 这种方式就是应用程序本身直接将日志打到统一的日志收集平台，比如 Java 应用可以配置日志的 appender，打到不同的地方，很显然这种方式对应用程序有一定的侵入性，而且还要保证日志系统的健壮性，从这个角度看应用和日志系统还有一定的耦合性，所以不是很推荐这种方式。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1645493984869.png" alt="" loading="lazy"></p>
-<p>**总结：**综合对比上述三种日志收集方案优缺点，更推荐使用节点级日志代理方案，这种方式对应用没有侵入性，而且对系统资源没有额外的消耗，也不影响 kubelet 工具查看 Pod 容器日志。</p>
 <h2 id="企业日志方案选型">企业日志方案选型</h2>
-<p>目前来讲，最建议的是采用节点级的日志代理。</p>
+<p>综合对比上述三种日志收集方案优缺点，更推荐使用节点级日志代理方案，这种方式对应用没有侵入性，而且对系统资源没有额外的消耗，也不影响 kubelet 工具查看 Pod 容器日志。</p>
 <h3 id="方案一自研方案实现一个自研的日志收集agent">方案一：自研方案，实现一个自研的日志收集agent</h3>
 <p>大致思路：</p>
 <ul>
@@ -359,7 +362,8 @@ $ kubectl logs -f counter -c count-log-1
 </li>
 </ul>
 <blockquote>
-<p>fluentd-pilot</p>
+<p>fluent-pilot<br>
+https://www.h3399.cn/201702/43019.html</p>
 </blockquote>
 <h3 id="方案二日志使用开源的agent进行收集efk方案">方案二：日志使用开源的Agent进行收集（EFK方案）</h3>
 <p>适用范围广，可以满足绝大多数日志收集、展示的需求。</p>
