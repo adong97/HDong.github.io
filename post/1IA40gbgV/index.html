@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645756937112">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645800489453">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645756937112" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645800489453" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,10 +34,14 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E9%83%A8%E7%BD%B2es%E6%9C%8D%E5%8A%A1">部署es服务</a>
+<li>
+<ul>
+<li><a href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E7%89%88%E6%9C%AC">实验环境版本：</a></li>
+</ul>
+</li>
+<li><a href="#%E9%83%A8%E7%BD%B2elasticsearch-%E9%9B%86%E7%BE%A4">部署Elasticsearch 集群</a>
 <ul>
 <li><a href="#%E9%83%A8%E7%BD%B2%E5%88%86%E6%9E%90">部署分析</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8statefulset%E7%AE%A1%E7%90%86%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1">使用StatefulSet管理有状态服务</a></li>
 <li><a href="#%E9%83%A8%E7%BD%B2%E5%B9%B6%E9%AA%8C%E8%AF%81">部署并验证</a></li>
 </ul>
 </li>
@@ -131,13 +135,41 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">EFK基于k8s部署及验证</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 14 min read
+          2022-02-22 / 17 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/1IA40gbgV.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="部署es服务">部署es服务</h1>
+          <p>我们先来配置启动一个可扩展的 Elasticsearch 集群，然后在 Kubernetes 集群中创建一个 Kibana 应用，最后通过 DaemonSet 来运行 Fluentd，以便它在每个 Kubernetes 工作节点上都可以运行一个 Pod。</p>
+<h2 id="实验环境版本">实验环境版本：</h2>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kubernetes</td>
+<td>v1.22.5</td>
+</tr>
+<tr>
+<td>Elasticsearch 镜像</td>
+<td>7.6.2</td>
+</tr>
+<tr>
+<td>Kibana 镜像</td>
+<td>7.6.2</td>
+</tr>
+<tr>
+<td>Fluentd 镜像</td>
+<td>v3.0.1</td>
+</tr>
+</tbody>
+</table>
+<h1 id="部署elasticsearch-集群">部署Elasticsearch 集群</h1>
 <h2 id="部署分析">部署分析</h2>
 <ol>
 <li>es生产环境是部署es集群，通常会使用statefulset进行部署</li>
@@ -146,74 +178,8 @@
 https://github.com/helm/charts/tree/master/stable/elasticsearch<br>
 https://staight.github.io/2019/09/16/%E5%9C%A8k8s%E4%B8%8A%E9%83%A8%E7%BD%B2elasticsearch/</li>
 </ol>
-<h2 id="使用statefulset管理有状态服务">使用StatefulSet管理有状态服务</h2>
-<p>使用Deployment创建多副本的pod的情况：</p>
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  namespace: default
-  labels:
-    app: nginx-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx-deployment
-  template:
-    metadata:
-      labels:
-        app: nginx-deployment
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:alpine
-        ports:
-        - containerPort: 80
-</code></pre>
-<p>使用StatefulSet创建多副本pod的情况：</p>
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: nginx-statefulset
-  namespace: default
-  labels:
-    app: nginx-sts
-spec:
-  replicas: 3
-  serviceName: &quot;nginx&quot;
-  selector:
-    matchLabels:
-      app: nginx-sts
-  template:
-    metadata:
-      labels:
-        app: nginx-sts
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:alpine
-        ports:
-        - containerPort: 80
-</code></pre>
-<p>无头服务Headless Service</p>
-<pre><code class="language-yaml">kind: Service
-apiVersion: v1
-metadata:
-  name: nginx
-  namespace: default
-spec:
-  selector:
-    app: nginx-sts
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-  clusterIP: None
-</code></pre>
-<pre><code class="language-shell">$ kubectl -n default exec  -ti nginx-statefulset-0 sh
-/ # curl nginx-statefulset-2.nginx
-</code></pre>
+<p>我们使用3个 Elasticsearch Pod 来避免高可用下多节点集群中出现的“脑裂”问题，当一个或多个节点无法与其他节点通信时会产生“脑裂”，可能会出现几个主节点。<br>
+一个关键点是: 应该设置参数<code>discover.zen.minimum_master_nodes=N/2+1</code>，其中N是 <code>Elasticsearch 集群中符合主节点的节点数</code>，比如我们这里3个节点，意味着N应该设置为2。这样，如果一个节点暂时与集群断开连接，则另外两个节点可以选择一个新的主节点，并且集群可以在最后一个节点尝试重新加入时继续运行，在扩展 Elasticsearch 集群时，一定要记住这个参数。</p>
 <h2 id="部署并验证">部署并验证</h2>
 <p><code>es-config.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
@@ -223,40 +189,50 @@ metadata:
   namespace: logging
 data:
   elasticsearch.yml: |
-    cluster.name: &quot;luffy-elasticsearch&quot;
-    node.name: &quot;${POD_NAME}&quot;
+    cluster.name: &quot;luffy-elasticsearch&quot;  # 定义 Elasticsearch 集群的名称
+    node.name: &quot;${POD_NAME}&quot;  # 节点的名称，通过 metadata.name 来获取
     network.host: 0.0.0.0
-    discovery.seed_hosts: &quot;es-svc-headless&quot;
+    discovery.seed_hosts: &quot;es-svc-headless&quot;  
     cluster.initial_master_nodes: &quot;elasticsearch-0,elasticsearch-1,elasticsearch-2&quot; # 指定es初始化节点的标识
 </code></pre>
-<p><code>es-svc-headless.yaml</code></p>
+<ul>
+<li>cluster.name：Elasticsearch 集群的名称，我们这里命名成 <code>luffy-elasticsearch</code>。</li>
+<li>node.name：节点的名称，通过<code>metadata.name</code>来获取。这将解析为 elasticsearch-0,1,2，取决于节点的指定顺序。</li>
+<li>discovery.seed_hosts：此字段用于设置在<code>Elasticsearch</code> 集群中节点相互连接的发现方法。由于我们之前配置的无头服务，我们的 Pod 具有唯一的 DNS 域elasticsearch-[0,1,2].elasticsearch.logging.svc.cluster.local，因此我们相应地设置此变量。</li>
+</ul>
+<p>创建一个名为 <code>es-svc-headless</code> 的无头服务 Headless Service<br>
+<code>es-svc-headless.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Service
 metadata:
-  name: es-svc-headless
-  namespace: logging
+  name: es-svc-headless  #定义了一个名为 es-svc-headless 的 Service
+  namespace: logging      #指定命名空间logging
   labels:
-    k8s-app: elasticsearch
+    k8s-app: elasticsearch  #指定标签 app=elasticsearch
 spec:
   selector:
     k8s-app: elasticsearch
-  clusterIP: None
+  clusterIP: None  #将该服务设置成无头服务
   ports:
-  - name: in
-    port: 9300
+  - name: in  #定义9300端口，用于节点之间通信
+    port: 9300  
     protocol: TCP
 </code></pre>
-<p><code>es-statefulset.yaml</code></p>
-<pre><code class="language-yaml">apiVersion: apps/v1
-kind: StatefulSet
+<p>Kubernetes StatefulSet 允许我们为 Pod 分配一个稳定的标识和持久化存储，Elasticsearch 需要稳定的存储来保证 Pod 在重新调度或者重启后的数据依然不变，所以需要使用 StatefulSet 来管理 Pod。<br>
+<code>es-statefulset.yaml</code></p>
+<pre><code class="language-yaml">
+# 第一部分解析
+...
+apiVersion: apps/v1
+kind: StatefulSet  #定义 StatefulSet  资源类型
 metadata:
-  name: elasticsearch
+  name: elasticsearch  #定义名为 elasticsearch 的 StatefulSet 对象
   namespace: logging
   labels:
     k8s-app: elasticsearch
 spec:
   replicas: 3
-  serviceName: es-svc-headless
+  serviceName: es-svc-headless  #定义serviceName=es-svc-headless 和前面创建的 Service 相关联
   selector:
     matchLabels:
       k8s-app: elasticsearch
@@ -264,8 +240,18 @@ spec:
     metadata:
       labels:
         k8s-app: elasticsearch
+...
+该内容中，我们定义了一个名为 es 的 StatefulSet 对象，
+然后定义serviceName=es-svc-headless和前面创建的 Service 相关联，
+这可以确保使用以下 DNS 地址访问 StatefulSet 中的每一个 Pod：
+elasticsearch-[0,1,2].elasticsearch.logging.svc.cluster.local，其中0,1,2对应于已分配的 Pod 序号。
+
+然后指定3个副本，将 matchLabels 设置为app=elasticsearch，
+所以 Pod 的模板部分.spec.template.metadata.lables也必须包含app=elasticsearch标签。
+
+...
     spec:
-      initContainers:
+      initContainers:  #初始化容器
       - command:
         - /sbin/sysctl
         - -w
@@ -284,6 +270,12 @@ spec:
         volumeMounts:
         - name: es-data-volume
           mountPath: /usr/share/elasticsearch/data
+...
+这里我们定义了几个在主应用程序之前运行的 Init 容器，
+这些初始容器按照定义的顺序依次执行，执行完成后才会启动主应用容器。
+第一个名为 elasticsearch-logging-init 的容器用来增加操作系统对map计数的限制，默认情况下该值可能太低，导致内存不足的错误,
+最后一个初始化容器是用来授权文件目录权限的。
+...
       containers:
       - name: elasticsearch
         image: elasticsearch:7.4.2
@@ -319,6 +311,11 @@ spec:
             items:
             - key: elasticsearch.yml
               path: elasticsearch.yml
+...
+该部分是定义 StatefulSet 中的 Pod，暴露了9200和9300两个端口，注意名称要和上面定义的 Service 保持一致。
+然后通过 volumeMount 声明了数据持久化目录，然后再来定义 VolumeClaims。
+最后就是我们在容器中设置的一些环境变量了。
+...
   volumeClaimTemplates:
   - metadata:
       name: es-data-volume
@@ -328,8 +325,19 @@ spec:
       resources:
         requests:
           storage: 5Gi
+...
+现在我们已经定义了主应用容器和它之前运行的 Init Containers 来调整一些必要的系统参数，
+接下来我们可以添加数据目录的持久化相关的配置，
+在 StatefulSet 中，使用 volumeClaimTemplates 来定义 volume 模板即可：
+
+我们这里使用 volumeClaimTemplates 来定义持久化模板，
+Kubernetes 会使用它为 Pod 创建 PersistentVolume，设置访问模式为ReadWriteOnce，
+这意味着它只能被 mount 到单个节点上进行读写，然后最重要的是使用了一个 StorageClass 对象，
+这里我们就直接使用前面创建的 Ceph RBD 类型的名为 rook-ceph-block 的 StorageClass 对象即可。
+最后，我们指定了每个 PersistentVolume 的大小为 5GB，我们可以根据自己的实际需要进行调整该值。
 </code></pre>
-<p><code>es-svc.yaml</code></p>
+<p>创建一个对外提供服务的service，暴露集群内部的9200端口<br>
+<code>es-svc.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Service
 metadata:
@@ -345,6 +353,7 @@ spec:
     port: 9200
     protocol: TCP
 </code></pre>
+<p>部署elasticsearch并验证</p>
 <pre><code class="language-shell">$ kubectl create namespace logging
 
 ## 部署服务
@@ -482,6 +491,7 @@ spec:
             port:
               number: 5601
 </code></pre>
+<p>创建kibana并验证</p>
 <pre><code class="language-shell">$ kubectl apply -f kibana.yaml  
 deployment.apps/kibana created
 service/kibana created  
@@ -539,13 +549,13 @@ data:
   containers.input.conf: |-
     &lt;source&gt;
       @id fluentd-containers.log
-      @type tail
-      path /var/log/containers/*.log
+      @type tail    # Fluentd 内置的输入方式，其原理是不停地从源文件中获取新的日志。
+      path /var/log/containers/*.log    # 挂载的服务器Docker容器日志地址
       pos_file /var/log/es-containers.log.pos
-      time_format %Y-%m-%dT%H:%M:%S.%NZ
+      time_format %Y-%m-%dT%H:%M:%S.%NZ    # 时间格式
       localtime
-      tag raw.kubernetes.*
-      format json
+      tag raw.kubernetes.*    # 设置日志标签
+      format json    # JSON 解析器
       read_from_head false
     &lt;/source&gt;
     # Detect exceptions in the log output and forward them as one log entry.
