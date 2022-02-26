@@ -34,12 +34,10 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a>
 <ul>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E7%AB%99">🏠 关于本站</a></li>
-<li><a href="#%E5%8D%9A%E4%B8%BB%E6%98%AF%E8%B0%81">👨‍💻 博主是谁</a></li>
-<li><a href="#%E5%85%B4%E8%B6%A3%E7%88%B1%E5%A5%BD">⛹ 兴趣爱好</a></li>
-<li><a href="#%E8%81%94%E7%B3%BB%E6%88%91%E5%91%80">📬 联系我呀</a></li>
+<li><a href="#elk-%E5%92%8C-efk-%E6%A6%82%E8%BF%B0">ELK 和 EFK 概述</a></li>
+<li><a href="#filebeats-logstash-fluentd-%E4%B8%89%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB">Filebeats、Logstash、Fluentd 三者的区别和联系</a></li>
 </ul>
 </li>
 </ul>
@@ -112,28 +110,61 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">关于</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">开源日志管理方案ELK和EFK的区别</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2019-01-25 / 1 min read
+          2022-02-26 / 4 min read
         </div>
         
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/lqDokfMSo.png" alt="">
+        
         <div class="post-content yue">
-          <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+          <h1 id="前言">前言</h1>
+<p>主流的 ELK (Elasticsearch, Logstash, Kibana) 目前已经转变为 EFK (Elasticsearch, Filebeat or Fluentd, Kibana) ，对于容器云的日志方案业内也普遍推荐采用 Fluentd，我们一起来看下从 ELK 到 EFK 发生了哪些变化。</p>
+<h2 id="elk-和-efk-概述">ELK 和 EFK 概述</h2>
+<p>随着现在各种软件系统的复杂度越来越高，特别是部署到云上之后，再想登录各个节点上查看各个模块的 log，基本是不可行了。因为不仅效率低下，而且有时由于安全性，不可能让工程师直接访问各个物理节点。而且现在大规模的软件系统基本都采用集群的部署方式，意味着对每个 service，会启动多个完全一样的 POD 对外提供服务，每个 container 都会产生自己的 log，仅从产生的 log 来看，你根本不知道是哪个 POD 产生的，这样对查看分布式的日志更加困难。</p>
+<p>所以在云时代，需要一个收集并分析 log 的解决方案。首先需要将分布在各个角落的 log 收集到一个集中的地方，方便查看。收集了之后，还可以进行各种统计分析，甚至用流行的大数据或 maching learning 的方法进行分析。</p>
+<p>ELK 就是这样的解决方案，而且基本就是事实上的标准。ELK 是三个开源项目的首字母缩写，如下：</p>
+<ul>
+<li>E: Elasticsearch</li>
+<li>L: Logstash</li>
+<li>K: Kibana</li>
+</ul>
+<p>Logstash 的主要作用是收集分布在各处的 log 并进行处理；<br>
+Elasticsearch 则是一个集中存储 log 的地方，更重要的是它是一个全文检索以及分析的引擎，它能让用户以近乎实时的方式来查看、分析海量的数据。<br>
+Kibana 则是为 Elasticsearch 开发的前端 GUI，让用户可以很方便的以图形化的接口查询，Elasticsearch 中存储的数据，同时也提供了各种分析的模块，比如构建 dashboard 的功能。</p>
+<p>将 ELK 中的 L 理解成 Logging Agent 更合适。Elasticsearch 和 Kibana 基本就是存储、检索和分析 log 的标准方案，而 Logstash 则并不是唯一的收集 log 的方案，Fluentd 和 Filebeats 也能用于收集 log。所以现在网上有 ELK，EFK 之类的缩写。</p>
+<p>一般采用的架构如下图所示。通常一个小型的 cluster 有三个节点，在这三个节点上可能会运行几十个甚至上百个容器。而我们只需要在每个节点上启动一个 logging agent 的实例（在 kubernetes 中就是 DaemonSet 的概念）即可。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645835475319.jpg" alt="" loading="lazy"></p>
+<h2 id="filebeats-logstash-fluentd-三者的区别和联系">Filebeats、Logstash、Fluentd 三者的区别和联系</h2>
+<p>Filebeats 是一个轻量级的收集本地 log 数据的方案，官方对 Filebeats 的说明如下。可以看出 Filebeats 功能比较单一，它仅仅只能收集本地的 log，但并不能对收集到的 Log 做什么处理，所以通常 Filebeats 通常需要将收集到的 log 发送到 Logstash 做进一步的处理。</p>
+<p>Logstash 和 Fluentd 都具有收集并处理 log 的能力，网上有很多关于二者的对比，提供一个写得比较好的文章链接如下。功能上二者旗鼓相当，但 Logstash 消耗更多的 memory，对此 Logstash 的解决方案是使用 Filebeats 从各个叶子节点上收集 log，当然 Fluentd 也有对应的 Fluent Bit。<br>
+https://logz.io/blog/fluentd-Logstash/</p>
+<p>另外一个重要的区别是 Fluentd 抽象性做得更好，对用户屏蔽了底层细节的繁琐。<br>
+Filebeats、Logstash、Elasticsearch 和 Kibana 是属于同一家公司的开源项目，官方文档如下：   https://www.elastic.co/guide/index.html<br>
+Fluentd 则是另一家公司的开源项目，官方文档如下：<br>
+https://docs.fluentd.org</p>
 
         </div>
 
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
+            <span class="flex-auto">Kubernetes日志采集</span>
+          </a>
         
 
 
         <div class="flex justify-between py-8">
           
 
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
+                <h3 class="post-title">
+                  EFK基于k8s部署及验证
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
           
         </div>
 
