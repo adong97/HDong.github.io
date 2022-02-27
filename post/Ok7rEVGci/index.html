@@ -1,0 +1,665 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645926039488">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645926039488" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#grafana-%E5%AE%89%E8%A3%85">Grafana 安装</a>
+<ul>
+<li><a href="#%E5%AF%BC%E5%85%A5dashboard%E7%9A%84%E9%85%8D%E7%BD%AE">导入Dashboard的配置</a></li>
+<li><a href="#devopsprodigy-kubegraf%E6%8F%92%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8">DevOpsProdigy KubeGraf插件的使用</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF">自定义监控面板</a></li>
+<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B%E4%B8%8Epromql">Metrics指标类型与PromQL</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Grafana安装与配置</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-26 / 15 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/Ok7rEVGci.png" alt="">
+        
+        <div class="post-content yue">
+          <p>可视化面板，功能齐全的度量仪表盘和图形编辑器，支持 Graphite、zabbix、InfluxDB、Prometheus、OpenTSDB、Elasticsearch 等作为数据源，比 Prometheus 自带的图表展示功能强大太多，更加灵活，有丰富的插件，功能更加强大。</p>
+<h1 id="grafana-安装">Grafana 安装</h1>
+<p>注意点：</p>
+<ul>
+<li>使用最新版本的镜像 https://github.com/grafana/grafana</li>
+<li>通过环境变量设置管理员账户密码
+<ul>
+<li>GF_SECURITY_ADMIN_USER</li>
+<li>GF_SECURITY_ADMIN_PASSWORD</li>
+</ul>
+</li>
+<li>通过设置securityContext的方式让grafana进程使用root启动</li>
+<li>数据挂载到本地</li>
+<li>配置ingress暴露访问入口</li>
+</ul>
+<pre><code class="language-shell">$ cat grafana-all.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: monitor
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 200Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitor
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: grafana
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: grafana
+        image: grafana/grafana:7.5.9
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: grafana
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: admin
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /api/health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 30
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 3000
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 150m
+            memory: 512Mi
+          requests:
+            cpu: 150m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitor
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+  selector:
+    app: grafana
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitor
+spec:
+  rules:
+  - host: grafana.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+</code></pre>
+<p>配置数据源：</p>
+<ul>
+<li>URL：http://prometheus:9090</li>
+</ul>
+<p>如何丰富Grafana监控面板：</p>
+<ul>
+<li>导入dashboard</li>
+<li>安装相应的插件</li>
+<li>自定义监控面板</li>
+</ul>
+<h2 id="导入dashboard的配置">导入Dashboard的配置</h2>
+<p>dashboard： https://grafana.com/grafana/dashboards</p>
+<ul>
+<li>Node Exporter  https://grafana.com/grafana/dashboards/8919</li>
+<li>Kubenetes： https://grafana.com/grafana/dashboards/8588 废弃</li>
+<li>Kubenetes： https://grafana.com/grafana/dashboards/13105</li>
+</ul>
+<h2 id="devopsprodigy-kubegraf插件的使用">DevOpsProdigy KubeGraf插件的使用</h2>
+<p>除了直接导入Dashboard，我们还可以通过安装插件的方式获得，Configuration -&gt; Plugins可以查看已安装的插件，通过 <a href="https://grafana.com/grafana/plugins?utm_source=grafana_plugin_list">官方插件列表</a> 我们可以获取更多可用插件。</p>
+<p>Kubernetes相关的插件：</p>
+<ul>
+<li><a href="https://grafana.com/grafana/plugins/grafana-kubernetes-app">grafana-kubernetes-app</a></li>
+<li><a href="https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app">devopsprodigy-kubegraf-app</a></li>
+</ul>
+<p><a href="https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app">DevOpsProdigy KubeGraf</a> 是一个非常优秀的 Grafana Kubernetes 插件，是 Grafana 官方的 Kubernetes 插件的升级版本，该插件可以用来可视化和分析 Kubernetes 集群的性能，通过各种图形直观的展示了 Kubernetes 集群的主要服务的指标和特征，还可以用于检查应用程序的生命周期和错误日志。</p>
+<pre><code class="language-shell"># 进入grafana容器内部执行安装
+$ kubectl -n monitor exec -ti grafana-594f447d6c-jmjsw bash
+bash-5.0# grafana-cli plugins install devopsprodigy-kubegraf-app 1.5.2
+installing devopsprodigy-kubegraf-app @ 1.5.2
+from: https://grafana.com/api/plugins/devopsprodigy-kubegraf-app/versions/1.4.1/download
+into: /var/lib/grafana/plugins
+
+✔ Installed devopsprodigy-kubegraf-app successfully
+
+Restart grafana after installing plugins . &lt;service grafana-server restart&gt;
+
+bash-5.0# grafana-cli plugins install grafana-piechart-panel
+
+# 也可以下载离线包进行安装
+
+# 重建pod生效
+$ kubectl -n monitor delete po grafana-594f447d6c-jmjsw
+</code></pre>
+<p>登录grafana界面，Configuration -&gt; Plugins 中找到安装的插件，点击插件进入插件详情页面，点击 [Enable]按钮启用插件，点击 <code>Set up your first k8s-cluster</code> 创建一个新的 Kubernetes 集群:</p>
+<ul>
+<li>
+<p>Name：luffy-k8s</p>
+</li>
+<li>
+<p>URL：https://kubernetes.default:443</p>
+</li>
+<li>
+<p>Access：使用默认的Server(default)</p>
+</li>
+<li>
+<p>Skip TLS Verify：勾选，跳过证书合法性校验</p>
+</li>
+<li>
+<p>Auth：勾选TLS Client Auth以及With CA Cert，勾选后会下面有三块证书内容需要填写，内容均来自<code>~/.kube/config</code>文件，需要对文件中的内容做一次base64 解码</p>
+<ul>
+<li>CA Cert：使用config文件中的<code>certificate-authority-data</code>对应的内容</li>
+<li>Client Cert：使用config文件中的<code>client-certificate-data</code>对应的内容</li>
+<li>Client Key：使用config文件中的<code>client-key-data</code>对应的内容</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>面板没有数据怎么办？</p>
+</blockquote>
+<ul>
+<li>
+<p>DaemonSet</p>
+<p>label_values(kube_pod_info{namespace=&quot;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi>s</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi><mo separator="true">,</mo><mi>p</mi><mi>o</mi><mi>d</mi><mo>=</mo><mtext> </mtext><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">namespace&quot;,pod=~&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">e</span><span class="mord">&quot;</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mspace nobreak"> </span><span class="mord">&quot;</span></span></span></span>daemonset-.*&quot;},pod)</p>
+</li>
+<li>
+<p>Deployment</p>
+<p>label_values(kube_pod_info{namespace=&quot;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi>s</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi><mo separator="true">,</mo><mi>p</mi><mi>o</mi><mi>d</mi><mo>=</mo><mtext> </mtext><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">namespace&quot;,pod=~&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">e</span><span class="mord">&quot;</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mspace nobreak"> </span><span class="mord">&quot;</span></span></span></span>deployment-.*&quot;},pod)</p>
+</li>
+<li>
+<p>Pod</p>
+<p>label_values(kube_pod_info{namespace=&quot;$namespace&quot;},pod)</p>
+</li>
+</ul>
+<h2 id="自定义监控面板">自定义监控面板</h2>
+<p>通用的监控需求基本上都可以使用第三方的Dashboard来解决，对于业务应用自己实现的指标的监控面板，则需要我们手动进行创建。</p>
+<p>调试Panel：直接输入Metrics，查询数据。</p>
+<p>如，输入<code>node_load1</code>来查看集群节点最近1分钟的平均负载，直接保存即可生成一个panel</p>
+<p>如何根据字段过滤，实现联动效果？</p>
+<p>比如想实现根据集群节点名称进行过滤，可以通过如下方式：</p>
+<ul>
+<li>
+<p>设置 -&gt; Variables -&gt; Add Variable，添加一个变量node，</p>
+<ul>
+<li>Name：node</li>
+<li>Label：选择节点</li>
+<li>Data Source：Prometheus</li>
+<li>Query：label_values(kube_node_info,node)，可以在页面下方的<code>Preview of values</code>查看到当前变量的可选值</li>
+<li>Refresh：<code>On Dashboard Load</code></li>
+<li>Multi-value：true</li>
+<li>Include All Options：true</li>
+</ul>
+</li>
+<li>
+<p>修改Metrics，$node和变量名字保持一致，意思为自动读取当前设置的节点的名字</p>
+<pre><code class="language-powershell">node_load1{instance=~&quot;$node&quot;}
+</code></pre>
+</li>
+</ul>
+<p>再添加一个面板，使用如下的表达式：</p>
+<pre><code class="language-shell">100-avg(irate(node_cpu_seconds_total{mode=&quot;idle&quot;,instance=~&quot;$node&quot;}[5m])) by (instance)*100
+</code></pre>
+<h2 id="metrics指标类型与promql">Metrics指标类型与PromQL</h2>
+<p>TSDB的样本分布示意图：</p>
+<pre><code class="language-powershell">  ^
+  │   . . . . . . . . . . . . . . . . .   . .   node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;idle&quot;}
+  │     . . . . . . . . . . . . . . . . . . .   node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;system&quot;}
+  │     . . . . . . . . . .   . . . . . . . .   node_load1{}
+  │     . . . . . . . . . . . . . . . .   . .   node_cpu_seconds_total{...}
+  v
+    &lt;------------------ 时间 ----------------&gt;
+</code></pre>
+<p>Guage类型：</p>
+<pre><code class="language-shell">$ kubectl -n monitor get po -o wide |grep k8s-master
+node-exporter-ld6sq    1/1     Running   0          4d3h    172.21.51.143   k8s-master
+$ curl -s  172.21.51.143:9100/metrics |grep node_load1
+# HELP node_load1 1m load average.
+# TYPE node_load1 gauge
+node_load1 0.18
+# HELP node_load15 15m load average.
+# TYPE node_load15 gauge
+node_load15 0.37
+</code></pre>
+<p>Gauge类型的指标侧重于反应系统的当前状态。</p>
+<ul>
+<li>这类指标的样本数据可增可减。</li>
+<li>常见指标如：node_memory_MemAvailable_bytes（可用内存大小）、node_load1（系统平均负载）</li>
+</ul>
+<p>Guage类型的数据，通常直接查询就会有比较直观的业务含义，比如：</p>
+<ul>
+<li>node_load5</li>
+<li>node_memory_MemAvailable_bytes</li>
+</ul>
+<p>我们也会对这类数据做简单的处理，比如：</p>
+<ul>
+<li>过滤其中某些节点</li>
+<li>对指标进行数学运算</li>
+</ul>
+<p>这就是PromQL提供的能力，可以对收集到的数据做聚合、计算等处理。</p>
+<p>PromQL（ Prometheus Query Language ）是Prometheus自定义的一套强大的数据查询语言，除了使用监控指标作为查询关键字以为，还内置了大量的函数，帮助用户进一步对时序数据进行处理。</p>
+<p>比如：</p>
+<ul>
+<li>
+<p>只显示k8s-master节点的平均负载</p>
+<pre><code class="language-shell">node_load1{instance=&quot;k8s-master&quot;}
+</code></pre>
+</li>
+<li>
+<p>显示除了k8s-master节点外的其他节点的平均负载</p>
+<pre><code class="language-shell">node_load1{instance!=&quot;k8s-master&quot;}
+</code></pre>
+</li>
+<li>
+<p>正则匹配</p>
+<pre><code class="language-shell">node_load1{instance=~&quot;k8s-master|k8s-slave1&quot;}
+</code></pre>
+</li>
+<li>
+<p>集群各节点系统内存使用率</p>
+<pre><code class="language-shell">(node_memory_MemTotal_bytes - node_memory_MemFree_bytes) / node_memory_MemTotal_bytes
+</code></pre>
+</li>
+</ul>
+<p>counter类型：</p>
+<pre><code class="language-shell">$ curl -s  172.21.51.67:9100/metrics |grep node_cpu_seconds_total
+# HELP node_cpu_seconds_total Seconds the cpus spent in each mode.
+# TYPE node_cpu_seconds_total counter
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;idle&quot;} 294341.02
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;iowait&quot;} 120.78
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;irq&quot;} 0
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;nice&quot;} 0.13
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;softirq&quot;} 1263.29
+</code></pre>
+<p>counter类型的指标其工作方式和计数器一样，只增不减（除非系统发生重置）。常见的监控指标，如http_requests_total，node_cpu_seconds_total都是Counter类型的监控指标。</p>
+<p>通常计数器类型的指标，名称后面都以<code>_total</code>结尾。我们通过理解CPU利用率的PromQL表达式来讲解Counter指标类型的使用。</p>
+<p>各节点CPU的平均使用率表达式：</p>
+<pre><code class="language-shell">(1- sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[2m])) by (instance) / sum(increase(node_cpu_seconds_total{}[2m])) by (instance)) * 100
+</code></pre>
+<p>分析：</p>
+<p><code>node_cpu_seconds_total</code>的指标含义是统计系统运行以来，CPU资源分配的时间总数，单位为秒，是累加的值。比如，直接运行该指标：</p>
+<pre><code class="language-shell">node_cpu_seconds_total
+# 显示的是所有节点、所有CPU核心、在各种工作模式下分配的时间总和
+</code></pre>
+<p>其中mode的值和我们平常在系统中执行<code>top</code>命令看到的CPU显示的信息一致：</p>
+<p>每个mode对应的含义如下：</p>
+<ul>
+<li><code>user</code>(us)<br>
+表示用户态空间或者说是用户进程(running user space processes)使用CPU所耗费的时间。这是日常我们部署的应用所在的层面，最常见常用。</li>
+<li><code>system</code>(sy)<br>
+表示内核态层级使用CPU所耗费的时间。分配内存、IO操作、创建子进程……都是内核操作。这也表明，当IO操作频繁时，System参数会很高。</li>
+<li><code>steal</code>(st)<br>
+当运行在虚拟化环境中，花费在其它 OS 中的时间（基于虚拟机监视器 hypervisor 的调度）；可以理解成由于虚拟机调度器将 cpu 时间用于其它 OS 了，故当前 OS 无法使用 CPU 的时间。</li>
+<li><code>softirq</code>(si)<br>
+从系统启动开始，累计到当前时刻，软中断时间</li>
+<li><code>irq</code>(hi)<br>
+从系统启动开始，累计到当前时刻，硬中断时间</li>
+<li><code>nice</code>(ni)<br>
+从系统启动开始，累计到当前时刻， 低优先级(低优先级意味着进程 nice 值小于 0)用户态的进程所占用的CPU时间</li>
+<li><code>iowait</code>(wa)<br>
+从系统启动开始，累计到当前时刻，IO等待时间</li>
+<li><code>idle</code>(id)<br>
+从系统启动开始，累计到当前时刻，除IO等待时间以外的其它等待时间，亦即空闲时间</li>
+</ul>
+<p>我们通过指标拿到的各核心cpu分配的总时长数据，都是瞬时的数据，如何转换成 CPU的利用率？</p>
+<p>先来考虑如何我们如何计算CPU利用率，假如我的k8s-master节点是4核CPU，我们来考虑如下场景：</p>
+<ul>
+<li>过去60秒内每个CPU核心处于idle状态的时长，假如分别为 :
+<ul>
+<li>cpu0：20s</li>
+<li>cpu1：30s</li>
+<li>cpu2：50s</li>
+<li>cpu3：40s</li>
+</ul>
+</li>
+<li>则四个核心总共可分配的时长是 4*60=240s</li>
+<li>实际空闲状态的总时长为20+30+50+40=140s</li>
+<li>那么我们可以计算出过去1分钟k8s-master节点的CPU利用率为 (1- 140/240) * 100 = 41.7%</li>
+</ul>
+<p>因此，我们只需要使用PromQL取出上述过程中的值即可：</p>
+<pre><code class="language-shell"># 过滤出当前时间点idle的时长
+node_cpu_seconds_total{mode=&quot;idle&quot;}
+
+# 使用[1m]取出1分钟区间内的样本值,注意，1m区间要大于prometheus设置的抓取周期，此处会将周期内所以的样本值取出
+node_cpu_seconds_total{mode=&quot;idle&quot;}[1m]
+
+# 使用increase方法，获取该区间内idle状态的增量值,即1分钟内，mode=&quot;idle&quot;状态增加的时长
+increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m])
+
+# 由于是多个cpu核心，因此需要做累加，使用sum函数
+sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m]))
+
+# 由于是多台机器，因此，需要按照instance的值进行分组累加，使用by关键字做分组,这样就获得了1分钟内，每个节点上 所有CPU核心idle状态的增量时长，即前面示例中的”20+30+50+40=140s“
+sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m])) by (instance)
+
+# 去掉mode=idle的过滤条件，即可获取1分钟内，所有状态的cpu获得的增量总时长，即4*60=240s
+sum(increase(node_cpu_seconds_total{}[1m])) by (instance)
+
+# 最终的语句
+(1- sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m])) by (instance) / sum(increase(node_cpu_seconds_total{}[1m])) by (instance)) * 100
+</code></pre>
+<p>除此之外，还会经常看到avg,irate和rate方法的使用：</p>
+<p><code>irate()</code> 是基于最后两个数据点计算一个时序指标在一个范围内的每秒递增率 ，举个例子：</p>
+<pre><code class="language-shell"># 1min内，k8s-master节点的idle状态的cpu分配时长增量值
+increase(node_cpu_seconds_total{instance=&quot;k8s-master&quot;,mode=&quot;idle&quot;}[1m])
+
+{cpu=&quot;0&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	56.5
+{cpu=&quot;1&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	56.04
+{cpu=&quot;2&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	56.6
+{cpu=&quot;3&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	56.5
+
+#以第一条数据为例，说明过去的1分钟，k8s-master节点的第一个CPU核心，有56.5秒的时长是出于idle状态的
+
+# 1min内，k8s-master节点的idle状态的cpu分配每秒的速率
+irate(node_cpu_seconds_total{instance=&quot;k8s-master&quot;,mode=&quot;idle&quot;}[1m])
+{cpu=&quot;0&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.934
+{cpu=&quot;1&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.932
+{cpu=&quot;2&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.933
+{cpu=&quot;3&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.936
+# 该值如何计算的？
+# irate会取出样本中的最后两个点来作为增长依据，然后做差值计算，并且除以两个样本间的数据时长，也就是说，我们设置2m,5m取出来的值是一样的，因为只会计算最后两个样本差。
+# 以第一条数据为例，表示用irate计算出来的结果是，过去的两分钟内，cpu平均每秒钟有0.934秒的时间是处于idle状态的
+
+
+# rate会1min内第一个和最后一个样本值为依据，计算方式和irate保持一致
+rate(node_cpu_seconds_total{instance=&quot;k8s-master&quot;,mode=&quot;idle&quot;}[1m])
+{cpu=&quot;0&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.933
+{cpu=&quot;1&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.940
+{cpu=&quot;2&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.935
+{cpu=&quot;3&quot;,instance=&quot;k8s-master&quot;,job=&quot;kubernetes-sd-node-exporter&quot;,mode=&quot;idle&quot;}	0.937
+</code></pre>
+<p>因此rate的值，相对来讲更平滑，因为计算的是时间段内的平均，更适合于用作告警。</p>
+<p>取CPU平均使用率也可以用如下表达式表示：<br>
+<code>(1 - avg(rate(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m])) by (instance)) * 100</code></p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Alertmanager安装与配置
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/2--X3r9eT/">
+                <h3 class="post-title">
+                  常用监控对象的指标采集
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

@@ -1,0 +1,953 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645926039488">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645926039488" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%AE%89%E8%A3%85-alertmanager">安装 Alertmanager</a><br>
+*<br>
+*<br>
+*<br>
+*<br>
+* <a href="#%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">配置Prometheus与Alertmanager对话</a><br>
+* <a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a><br>
+* <a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a><br>
+* <a href="#%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">基于Label的动态告警处理</a><br>
+* <a href="#%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">抑制和静默</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Alertmanager安装与配置</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-26 / 21 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/C5N0LMfvT.png" alt="">
+        
+        <div class="post-content yue">
+          <p>Alertmanager是一个独立的告警模块。</p>
+<ul>
+<li>接收Prometheus等客户端发来的警报</li>
+<li>通过分组、删除重复等处理，并将它们通过路由发送给正确的接收器；</li>
+<li>告警方式可以按照不同的规则发送给不同的模块负责人。Alertmanager支持Email, Slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="images%5Calertmanager.png" alt="" loading="lazy"></figure>
+<p>如果集群主机的内存使用率超过80%，且该现象持续了2分钟？想实现这样的监控告警，如何做？</p>
+<p>从上图可得知设置警报和通知的主要步骤是：</p>
+<ul>
+<li>
+<p>安装和配置 Alertmanager</p>
+</li>
+<li>
+<p>配置Prometheus与Alertmanager对话</p>
+</li>
+<li>
+<p>在Prometheus中创建警报规则</p>
+</li>
+</ul>
+<h1 id="安装-alertmanager">安装 Alertmanager</h1>
+<p>Alertmanager，  https://github.com/prometheus/alertmanager#install</p>
+<pre><code class="language-powershell">./alertmanager --config.file=config.yml
+</code></pre>
+<p>alertmanager.yml配置文件格式：</p>
+<pre><code class="language-powershell">$ cat config.yml
+apiVersion: v1
+data:
+  config.yml: |
+    global: 
+      # 当alertmanager持续多长时间未接收到告警后标记告警状态为 resolved
+      resolve_timeout: 5m
+      # 配置邮件发送信息
+      smtp_smarthost: 'smtp.163.com:25'
+      smtp_from: 'earlene163@163.com'
+      smtp_auth_username: 'earlene163@163.com'
+      smtp_auth_password: 'GENLAXFHNDWNVVVL'
+      smtp_require_tls: false
+    # 所有报警信息进入后的根路由，用来设置报警的分发策略
+    route:
+      # 接收到的报警信息里面有许多alertname=NodeLoadHigh 这样的标签的报警信息将会批量被聚合到一个分组里面
+      group_by: ['alertname']
+      # 当一个新的报警分组被创建后，需要等待至少 group_wait 时间来初始化通知，如果在等待时间内当前group接收到了新的告警，这些告警将会合并为一个通知向receiver发送
+      group_wait: 30s
+
+      # 相同的group发送告警通知的时间间隔
+      group_interval: 30s
+      # 如果一个报警信息已经发送成功了，等待 repeat_interval 时间来重新发送
+      repeat_interval: 1m
+
+      # 默认的receiver：如果一个报警没有被一个route匹配，则发送给默认的接收器
+      receiver: default
+
+      # 上面所有的属性都由所有子路由继承，并且可以在每个子路由上进行覆盖。
+      routes:
+      - {}
+    # 配置告警接收者的信息
+    receivers:
+    - name: 'default'
+      email_configs:
+      - to: '654147123@qq.com'
+        send_resolved: true  # 接受告警恢复的通知
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: monitor
+</code></pre>
+<p>主要配置的作用：</p>
+<ul>
+<li><a href="https://prometheus.io/docs/alerting/configuration/#configuration-file">global</a>: 全局配置，包括报警解决后的超时时间、SMTP 相关配置、各种渠道通知的 API 地址等等。</li>
+<li><a href="https://prometheus.io/docs/alerting/configuration/#route">route</a>: 用来设置报警的分发策略，它是一个树状结构，按照深度优先从左向右的顺序进行匹配。</li>
+<li><a href="https://prometheus.io/docs/alerting/configuration/#receiver">receivers</a>: 配置告警消息接受者信息，例如常用的 email、wechat、slack、webhook 等消息通知方式。</li>
+</ul>
+<p>配置文件：</p>
+<pre><code class="language-powershell">$ kubectl apply -f  config.yml
+</code></pre>
+<p>其他资源清单文件:</p>
+<pre><code class="language-powershell">$ cat alertmanager-all.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitor
+  labels:
+    app: alertmanager
+spec:
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: alertmanager
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager:v0.21.0
+        imagePullPolicy: IfNotPresent
+        args:
+        - &quot;--config.file=/etc/alertmanager/config.yml&quot;
+        - &quot;--log.level=debug&quot;
+        ports:
+        - containerPort: 9093
+          name: http
+        volumeMounts:
+        - mountPath: &quot;/etc/alertmanager&quot;
+          name: config
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: monitor
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9093
+  selector:
+    app: alertmanager
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: monitor
+spec:
+  rules:
+  - host: alertmanager.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager
+            port:
+              number: 9093
+</code></pre>
+<h6 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h6>
+<figure data-type="image" tabindex="2"><img src="images%5Calertmanager.png" alt="" loading="lazy"></figure>
+<p>是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
+<pre><code class="language-powershell">    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+</code></pre>
+<p>因此，修改Prometheus的配置文件，然后重新加载pod</p>
+<pre><code class="language-powershell"># 编辑prometheus-configmap.yaml配置，添加alertmanager内容
+$ kuectl -n monitor edit configmap prometheus-config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitor
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 30s
+      evaluation_interval: 30s
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+...
+  
+  
+$ kubectl apply -f prometheus-configmap.yaml
+
+# 现在已经有监控数据了，因此使用prometheus提供的reload的接口，进行服务重启
+
+# 查看配置文件是否已经自动加载到pod中
+$ kubectl -n monitor get po -o wide
+prometheus-dcb499cbf-pljfn            1/1     Running   0          47h    10.244.1.167  
+
+$ kubectl -n monitor exec -ti prometheus-dcb499cbf-pljfn cat /etc/prometheus/prometheus.yml |grep alertmanager
+
+# 使用软加载的方式，
+$ curl -X POST 10.244.1.167:9090/-/reload
+</code></pre>
+<h6 id="配置报警规则">配置报警规则</h6>
+<p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
+<p>在哪里配置？同样是在prometheus-configmap中：</p>
+<pre><code class="language-powershell">$ kuectl -n monitor edit configmap prometheus-config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitor
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 30s
+      evaluation_interval: 30s
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+    # Load rules once and periodically evaluate them according to the global  'evaluation_interval'.
+    rule_files:
+      - /etc/prometheus/alert_rules.yml
+      # - &quot;first_rules.yml&quot;
+      # - &quot;second_rules.yml&quot;
+    scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+      - targets: ['localhost:9090']
+...
+</code></pre>
+<p>rules.yml我们同样使用configmap的方式挂载到prometheus容器内部，因此只需要在已有的configmap中加一个数据项目</p>
+<pre><code class="language-powershell">$ vim prometheus-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitor
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+    # Load rules once and periodically evaluate them according to the global  'evaluation_interval'.
+    rule_files:
+      - /etc/prometheus/alert_rules.yml
+      # - &quot;first_rules.yml&quot;
+      # - &quot;second_rules.yml&quot;
+    scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+      - targets: ['localhost:9090']
+... # 省略中间部分
+  alert_rules.yml: |
+    groups:
+    - name: node_metrics
+      rules:
+      - alert: NodeLoad
+        expr: node_load15 &lt; 1
+        for: 2m
+        annotations:
+          summary: &quot;{{$labels.instance}}: Low node load detected&quot;
+          description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
+</code></pre>
+<p>告警规则的几个要素：</p>
+<ul>
+<li><code>group.name</code>：告警分组的名称，一个组下可以配置一类告警规则，比如都是物理节点相关的告警</li>
+<li><code>alert</code>：告警规则的名称</li>
+<li><code>expr</code>：是用于进行报警规则 PromQL 查询语句，expr通常是布尔表达式，可以让Prometheus根据计算的指标值做 true or false 的判断</li>
+<li><code>for</code>：评估等待时间（Pending Duration），用于表示只有当触发条件持续一段时间后才发送告警，在等待期间新产生的告警状态为<code>pending</code>，屏蔽掉瞬时的问题，把焦点放在真正有持续影响的问题上</li>
+<li><code>labels</code>：自定义标签，允许用户指定额外的标签列表，把它们附加在告警上，可以用于后面做路由判断，通知到不同的终端，通常被用于添加告警级别的标签</li>
+<li><code>annotations</code>：指定了另一组标签，它们不被当做告警实例的身份标识，它们经常用于存储一些额外的信息，用于报警信息的展示之类的</li>
+</ul>
+<p>规则配置中，支持模板的方式，其中：</p>
+<ul>
+<li>
+<p>{{<span class='katex-error' title='ParseError: KaTeX parse error: Expected &#039;EOF&#039;, got &#039;}&#039; at position 7: labels}̲}可以获取当前指标的所有标签，…'>labels}}可以获取当前指标的所有标签，支持{{</span>labels.instance}}或者{{$labels.job}}这种形式</p>
+</li>
+<li>
+<p>{{ $value }}可以获取当前计算出的指标值</p>
+</li>
+</ul>
+<p>更新配置并软重启，并查看Prometheus报警规则。</p>
+<p>一个报警信息在生命周期内有下面3种状态：</p>
+<ul>
+<li><code>inactive</code>: 表示当前报警信息处于非活动状态，即不满足报警条件</li>
+<li><code>pending</code>: 表示在设置的阈值时间范围内被激活了，即满足报警条件，但是还在观察期内</li>
+<li><code>firing</code>: 表示超过设置的阈值时间被激活了，即满足报警条件，且报警触发时间超过了观察期，会发送到Alertmanager端</li>
+</ul>
+<p>对于已经 <code>pending</code> 或者 <code>firing</code> 的告警，Prometheus 也会将它们存储到时间序列<code>ALERTS{}</code>中。当然我们也可以通过表达式去查询告警实例：</p>
+<pre><code class="language-powershell">ALERTS{}
+</code></pre>
+<p>查看Alertmanager日志：</p>
+<pre><code class="language-powershell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
+</code></pre>
+<p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
+<h6 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h6>
+<p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
+<p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
+<pre><code class="language-powershell">name: &lt;string&gt;
+email_configs:
+  [ - &lt;email_config&gt;, ... ]
+hipchat_configs:
+  [ - &lt;hipchat_config&gt;, ... ]
+slack_configs:
+  [ - &lt;slack_config&gt;, ... ]
+opsgenie_configs:
+  [ - &lt;opsgenie_config&gt;, ... ]
+webhook_configs:
+  [ - &lt;webhook_config&gt;, ... ]
+</code></pre>
+<p>如果想实现告警消息推送给企业常用的即时聊天工具，如钉钉或者企业微信，如何配置？</p>
+<p>Alertmanager的通知方式中还可以支持Webhook，通过这种方式开发者可以实现更多个性化的扩展支持。</p>
+<pre><code class="language-powershell"># 警报接收者
+receivers:
+#ops 
+- name: 'demo-webhook'
+  webhook_configs:
+  - send_resolved: true
+    url: http://demo-webhook/alert/send
+</code></pre>
+<p>当我们配置了上述webhook地址，则当告警路由到<code>demo-webhook</code>时，alertmanager端会向webhook地址推送POST请求：</p>
+<pre><code class="language-powershell">$ curl -X POST -d&quot;$demoAlerts&quot;  http://demo-webhook/alert/send
+$ echo $demoAlerts
+{
+  &quot;version&quot;: &quot;4&quot;,
+  &quot;groupKey&quot;: &lt;string&gt;, alerts (e.g. to deduplicate) ,
+  &quot;status&quot;: &quot;&lt;resolved|firing&gt;&quot;, 
+  &quot;receiver&quot;: &lt;string&gt;, 
+  &quot;groupLabels&quot;: &lt;object&gt;, 
+  &quot;commonLabels&quot;: &lt;object&gt;, 
+  &quot;commonAnnotations&quot;: &lt;object&gt;, 
+  &quot;externalURL&quot;: &lt;string&gt;, // backlink to the Alertmanager. 
+  &quot;alerts&quot;: 
+   [{ 
+     &quot;labels&quot;: &lt;object&gt;, 
+      &quot;annotations&quot;: &lt;object&gt;, 
+      &quot;startsAt&quot;: &quot;&lt;rfc3339&gt;&quot;, 
+      &quot;endsAt&quot;: &quot;&lt;rfc3339&gt;&quot; 
+   }] 
+} 
+</code></pre>
+<p>因此，假如我们想把报警消息自动推送到钉钉群聊，只需要：</p>
+<ul>
+<li>实现一个webhook，部署到k8s集群
+<ul>
+<li>接收POST请求，将Alertmanager传过来的数据做解析，调用dingtalk的API，实现消息推送</li>
+</ul>
+</li>
+<li>配置alertmanager的receiver为webhook地址</li>
+</ul>
+<p>如何给钉钉群聊发送消息？ 钉钉机器人</p>
+<p>钉钉群聊机器人设置：</p>
+<p>每个群聊机器人在创建的时候都会生成唯一的一个访问地址：</p>
+<pre><code class="language-powershell">https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
+</code></pre>
+<p>这样，我们就可以使用如下方式来模拟给群聊机器人发送请求，实现消息的推送：</p>
+<pre><code class="language-powershell">curl 'https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9' \
+   -H 'Content-Type: application/json' \
+   -d '{&quot;msgtype&quot;: &quot;text&quot;,&quot;text&quot;: {&quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;}}'
+</code></pre>
+<p>https://gitee.com/agagin/prometheus-webhook-dingtalk</p>
+<p>镜像地址：timonwong/prometheus-webhook-dingtalk:master</p>
+<p>二进制运行：</p>
+<pre><code class="language-powershell">$ ./prometheus-webhook-dingtalk --config.file=config.yml
+</code></pre>
+<p>假如使用如下配置：</p>
+<pre><code class="language-powershell">targets:
+  webhook_dev:
+    url: https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
+  webhook_ops:
+    url: https://oapi.dingtalk.com/robot/send?access_token=d4e7b72eab6d1b2245bc0869d674f627dc187577a3ad485d9c1d131b7d67b15b
+</code></pre>
+<p>则prometheus-webhook-dingtalk启动后会自动支持如下API的POST访问：</p>
+<pre><code class="language-powershell">http://locahost:8060/dingtalk/webhook_dev/send
+http://localhost:8060/dingtalk/webhook_ops/send
+</code></pre>
+<p>这样可以使用一个prometheus-webhook-dingtalk来实现多个钉钉群的webhook地址</p>
+<p>部署prometheus-webhook-dingtalk，从Dockerfile可以得知需要注意的点：</p>
+<ul>
+<li>默认使用配置文件<code>/etc/prometheus-webhook-dingtalk/config.yml</code>，可以通过configmap挂载</li>
+<li>该目录下还有模板文件，因此需要使用subpath的方式挂载</li>
+<li>部署Service，作为Alertmanager的默认访问，服务端口默认8060</li>
+</ul>
+<p>配置文件：</p>
+<pre><code class="language-powershell">$ cat webhook-dingtalk-configmap.yaml
+apiVersion: v1
+data:
+  config.yml: |
+    targets:
+      webhook_dev:
+        url: https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
+kind: ConfigMap
+metadata:
+  name: webhook-dingtalk-config
+  namespace: monitor
+</code></pre>
+<p>Deployment和Service</p>
+<pre><code class="language-powershell">$ cat webhook-dingtalk-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-dingtalk
+  namespace: monitor
+spec:
+  selector:
+    matchLabels:
+      app: webhook-dingtalk
+  template:
+    metadata:
+      labels:
+        app: webhook-dingtalk
+    spec:
+      containers:
+      - name: webhook-dingtalk
+        image: timonwong/prometheus-webhook-dingtalk:master
+        args:
+        - &quot;--config.file=/etc/prometheus-webhook-dingtalk/config.yml&quot;
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: &quot;/etc/prometheus-webhook-dingtalk/config.yml&quot;
+          name: config
+          subPath: config.yml
+        ports:
+        - containerPort: 8060
+          name: http
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 50m
+            memory: 100Mi
+      volumes:
+      - name: config
+        configMap:
+          name: webhook-dingtalk-config
+          items:
+          - key: config.yml
+            path: config.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhook-dingtalk
+  namespace: monitor
+spec:
+  selector:
+    app: webhook-dingtalk
+  ports:
+  - name: hook
+    port: 8060
+    targetPort: http
+</code></pre>
+<p>创建：</p>
+<pre><code class="language-powershell">$ kubectl apply -f webhook-dingtalk-configmap.yaml
+$ kubectl apply -f webhook-dingtalk-deploy.yaml
+
+# 查看日志，可以得知当前的可用webhook日志
+$ kubectl -n monitor logs -f webhook-dingtalk-f7f5589c9-qglkd
+...
+file=/etc/prometheus-webhook-dingtalk/config.yml msg=&quot;Completed loading of configuration file&quot;
+level=info ts=2020-07-30T14:05:40.963Z caller=main.go:117 component=configuration msg=&quot;Loading templates&quot; templates=
+ts=2020-07-30T14:05:40.963Z caller=main.go:133 component=configuration msg=&quot;Webhook urls for prometheus alertmanager&quot; urls=&quot;http://localhost:8060/dingtalk/webhook_dev/send http://localhost:8060/dingtalk/webhook_ops/send&quot;
+level=info ts=2020-07-30T14:05:40.963Z caller=web.go:210 component=web msg=&quot;Start listening for connections&quot; address=:8060
+</code></pre>
+<p>修改Alertmanager路由及webhook配置：</p>
+<pre><code class="language-powershell">$ kubectl -n monitor edit configmap alertmanager
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: monitor
+data:
+  config.yml: |-
+    global:
+      # 当alertmanager持续多长时间未接收到告警后标记告警状态为 resolved
+      resolve_timeout: 5m
+      # 配置邮件发送信息
+      smtp_smarthost: 'smtp.163.com:25'
+      smtp_from: 'earlene163@163.com'
+      smtp_auth_username: 'earlene163@163.com'
+      # 注意这里不是邮箱密码，是邮箱开启第三方客户端登录后的授权码
+      smtp_auth_password: 'GXIWNXKMMEVMNHAJ'
+      smtp_require_tls: false
+    # 所有报警信息进入后的根路由，用来设置报警的分发策略
+    route:
+      # 按照告警名称分组
+      group_by: ['alertname']
+      # 当一个新的报警分组被创建后，需要等待至少 group_wait 时间来初始化通知，这种方式可以确保您能有足够的时间为同一分组来获取多个警报，然后一起触发这个报警信息。
+      group_wait: 30s
+
+      # 相同的group之间发送告警通知的时间间隔
+      group_interval: 30s
+
+      # 如果一个报警信息已经发送成功了，等待 repeat_interval 时间来重新发送他们，不同类型告警发送频率需要具体配置
+      repeat_interval: 1m
+
+      # 默认的receiver：如果一个报警没有被一个route匹配，则发送给默认的接收器
+      receiver: default
+
+      # 路由树，默认继承global中的配置，并且可以在每个子路由上进行覆盖。
+      routes:
+      - {}
+    receivers:
+    - name: 'default'
+      email_configs:
+      - to: '654147123@qq.com'
+        send_resolved: true  # 接受告警恢复的通知
+      webhook_configs:
+      - send_resolved: true
+        url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send
+</code></pre>
+<p>验证钉钉消息是否正常收到。</p>
+<h6 id="基于label的动态告警处理">基于Label的动态告警处理</h6>
+<p>真实的场景中，我们往往期望可以给告警设置级别，而且可以实现不同的报警级别可以由不同的receiver接收告警消息。</p>
+<p>Alertmanager中路由负责对告警信息进行分组匹配，并向告警接收器发送通知。告警接收器可以通过以下形式进行配置：</p>
+<pre><code class="language-powershell">routes:
+- receiver: ops
+  group_wait: 10s
+  match:
+    severity: critical
+- receiver: dev
+  group_wait: 10s
+  match_re:
+    severity: normal|middle
+receivers:
+  - ops
+    ...
+  - dev
+    ...
+  - &lt;receiver&gt; ...
+</code></pre>
+<p>因此可以为了更全面的感受报警的逻辑，我们再添加两个报警规则：</p>
+<pre><code class="language-powershell">  alert_rules.yml: |
+    groups:
+    - name: node_metrics
+      rules:
+      - alert: NodeLoad
+        expr: node_load15 &lt; 1
+        for: 2m
+        labels:
+          severity: normal
+        annotations:
+          summary: &quot;{{$labels.instance}}: Low node load detected&quot;
+          description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
+      - alert: NodeMemoryUsage
+        expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) / node_memory_MemTotal_bytes * 100 &gt; 30
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;{{$labels.instance}}: High Memory usage detected&quot;
+          description: &quot;{{$labels.instance}}: Memory usage is above 40% (current value is: {{ $value }}&quot;
+    - name: targets_status
+      rules:
+      - alert: TargetStatus
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;{{$labels.instance}}: prometheus target down&quot;
+          description: &quot;{{$labels.instance}}: prometheus target down，job is {{$labels.job}}&quot;
+</code></pre>
+<p>我们为不同的报警规则设置了不同的标签，如<code>severity: critical</code>，针对规则中的label，来配置alertmanager路由规则，实现转发给不同的接收者。</p>
+<pre><code class="language-powershell">$ cat alertmanager-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager
+  namespace: monitor
+data:
+  config.yml: |-
+    global:
+      # 当alertmanager持续多长时间未接收到告警后标记告警状态为 resolved
+      resolve_timeout: 5m
+      # 配置邮件发送信息
+      smtp_smarthost: 'smtp.163.com:25'
+      smtp_from: 'earlene163@163.com'
+      smtp_auth_username: 'earlene163@163.com'
+      # 注意这里不是邮箱密码，是邮箱开启第三方客户端登录后的授权码
+      smtp_auth_password: 'RMAOPQVHKLPYFVHZ'
+      smtp_require_tls: false
+    # 所有报警信息进入后的根路由，用来设置报警的分发策略
+    route:
+      # 按照告警名称分组
+      group_by: ['alertname']
+      # 当一个新的报警分组被创建后，需要等待至少 group_wait 时间来初始化通知，这种方式可以确保您能有足够的时间为同一分组来获取多个警报，然后一起触发这个报警信息。
+      group_wait: 30s
+
+      # 相同的group之间发送告警通知的时间间隔
+      group_interval: 30s
+
+      # 如果一个报警信息已经发送成功了，等待 repeat_interval 时间来重新发送他们，不同类型告警发送频率需要具体配置
+      repeat_interval: 1m
+
+      # 默认的receiver：如果一个报警没有被一个route匹配，则发送给默认的接收器
+      receiver: default
+
+      # 路由树，默认继承global中的配置，并且可以在每个子路由上进行覆盖。
+      routes:
+      - receiver: critical_alerts
+        group_wait: 10s
+        match:
+          severity: critical
+      - receiver: normal_alerts
+        group_wait: 10s
+        match_re:
+          severity: normal|middle
+    receivers:
+    - name: 'default'
+      email_configs:
+      - to: '654147123@qq.com'
+        send_resolved: true  # 接受告警恢复的通知
+    - name: 'critical_alerts'
+      webhook_configs:
+      - send_resolved: true
+        url: http://webhook-dingtalk:8060/dingtalk/webhook_ops/send
+    - name: 'normal_alerts'
+      webhook_configs:
+      - send_resolved: true
+        url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send
+</code></pre>
+<p>再配置一个钉钉机器人，修改webhook-dingtalk的配置，添加webhook_ops的配置：</p>
+<pre><code class="language-powershell">$ cat webhook-dingtalk-configmap.yaml
+apiVersion: v1
+data:
+  config.yml: |
+    targets:
+      webhook_dev:
+        url: https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
+      webhook_ops:
+        url: https://oapi.dingtalk.com/robot/send?access_token=5a68888fbecde75b1832ff024d7374e51f2babd33f1078e5311cdbb8e2c00c3a
+kind: ConfigMap
+metadata:
+  name: webhook-dingtalk-config
+  namespace: monitor
+</code></pre>
+<p>分别更新Prometheus和Alertmanager配置，查看报警的发送。</p>
+<h6 id="抑制和静默">抑制和静默</h6>
+<p>前面我们知道，告警的<code>group(分组)</code>功能通过把多条告警数据聚合，有效的减少告警的频繁发送。除此之外，Alertmanager还支持<code>Inhibition(抑制)</code> 和 <code>Silences(静默)</code>，帮助我们抑制或者屏蔽报警。</p>
+<ul>
+<li>
+<p>Inhibition 抑制</p>
+<p>抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。</p>
+<p>比如当机房出现网络故障时，所有服务都将不可用而产生大量服务不可用告警，但这些警告并不能反映真实问题在哪，真正需要发出的应该是网络故障告警。当出现网络故障告警的时候，应当抑制服务不可用告警的通知。</p>
+<p>在Alertmanager配置文件中，使用inhibit_rules定义一组告警的抑制规则：</p>
+<pre><code class="language-powershell">inhibit_rules:
+  [ - &lt;inhibit_rule&gt; ... ]
+</code></pre>
+<p>每一条抑制规则的具体配置如下：</p>
+<pre><code class="language-powershell">target_match:
+  [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
+target_match_re:
+  [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
+
+source_match:
+  [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
+source_match_re:
+  [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
+
+[ equal: '[' &lt;labelname&gt;, ... ']' ]
+</code></pre>
+<p>当已经发送的告警通知匹配到target_match或者target_match_re规则，当有新的告警规则如果满足source_match或者定义的匹配规则，并且已发送的告警与新产生的告警中equal定义的标签完全相同，则启动抑制机制，新的告警不会发送。</p>
+<p>例如，定义如下抑制规则：</p>
+<pre><code class="language-powershell">- source_match:
+    alertname: NodeDown
+    severity: critical
+  target_match:
+    severity: critical
+  equal:
+    - node
+</code></pre>
+<p>如当集群中的某一个主机节点异常宕机导致告警NodeDown被触发，同时在告警规则中定义了告警级别severity=critical。由于主机异常宕机，该主机上部署的所有服务，中间件会不可用并触发报警。根据抑制规则的定义，如果有新的告警级别为severity=critical，并且告警中标签node的值与NodeDown告警的相同，则说明新的告警是由NodeDown导致的，则启动抑制机制停止向接收器发送通知。</p>
+<p>演示：实现如果 NodeMemoryUsage 报警触发，则抑制NodeLoad指标规则引起的报警。</p>
+<pre><code class="language-powershell">    inhibit_rules:
+    - source_match:
+        alertname: NodeMemoryUsage
+        severity: critical
+      target_match:
+        severity: normal
+      equal:
+        - instance
+</code></pre>
+</li>
+<li>
+<p>Silences： 静默</p>
+<p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
+</li>
+</ul>
+<p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：</p>
+<figure data-type="image" tabindex="3"><img src="images%5Calertmanager-process.png" alt="" loading="lazy"></figure>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/NetHMaIIz/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  自定义指标实现业务伸缩
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/">
+                <h3 class="post-title">
+                  Grafana安装与配置
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
