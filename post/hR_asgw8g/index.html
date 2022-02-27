@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645926039488">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645926535221">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645926039488" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645926535221" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -231,10 +231,9 @@ scrape_configs:
     - targets: ['localhost:9090']
     
 # kubectl -n monitor create configmap prometheus-config --from-file=prometheus.yml
-
-
-# pvc
-$ cat pvc.yaml
+</code></pre>
+<p>创建pvc</p>
+<pre><code>$ cat pvc.yaml
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -247,10 +246,9 @@ spec:
   resources:
     requests:
       storage: 200Gi
-
-
-# prometheus的资源文件
-# 出现Prometheus数据存储权限问题，因为Prometheus内部使用nobody启动进程，挂载数据目录后权限为root，因此使用initContainer进行目录权限修复：
+</code></pre>
+<p>创建prometheus的deployment资源文件</p>
+<pre><code># 出现Prometheus数据存储权限问题，因为Prometheus内部使用nobody启动进程，挂载数据目录后权限为root，因此使用initContainer进行目录权限修复：
 $ cat prometheus-deployment.yaml
 
 apiVersion: apps/v1
@@ -313,8 +311,9 @@ spec:
       - configMap:
           name: prometheus-config
         name: config-volume
-        
-# rbac,prometheus会调用k8s api做服务发现进行抓取指标
+</code></pre>
+<p>创建rbac</p>
+<pre><code># rbac,prometheus会调用k8s api做服务发现进行抓取指标
 $ cat prometheus-rbac.yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -372,8 +371,9 @@ subjects:
   name: prometheus
   namespace: monitor
 
-
-# 提供Service，为Ingress使用
+</code></pre>
+<p>创建service</p>
+<pre><code># 提供Service，为Ingress使用
 $ cat prometheus-svc.yaml
 apiVersion: v1
 kind: Service
@@ -390,8 +390,9 @@ spec:
     - name: web
       port: 9090
       targetPort: http
-
-$ cat prometheus-ingress.yaml
+</code></pre>
+<p>创建ingress资源</p>
+<pre><code>$ cat prometheus-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
