@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1645926676893">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646756424407">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1645926676893" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646756424407" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,7 +34,11 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E6%B7%BB%E5%8A%A0%E7%9B%91%E6%8E%A7%E7%9B%AE%E6%A0%87">添加监控目标</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%9B%91%E6%8E%A7%E7%9B%AE%E6%A0%87">添加监控目标</a>
+<ul>
+<li><a href="#coredns">CoreDNS：</a></li>
+</ul>
+</li>
 <li><a href="#%E5%B8%B8%E7%94%A8%E7%9B%91%E6%8E%A7%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">常用监控对象的指标采集</a>
 <ul>
 <li><a href="#%E7%9B%91%E6%8E%A7kube-apiserver">监控kube-apiserver</a></li>
@@ -118,7 +122,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">常用监控对象的指标采集</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 17 min read
+          2022-02-26 / 18 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/2--X3r9eT.png" alt="">
@@ -126,8 +130,8 @@
         <div class="post-content yue">
           <h1 id="添加监控目标">添加监控目标</h1>
 <p>无论是业务应用还是k8s系统组件，只要提供了metrics api，并且该api返回的数据格式满足标准的Prometheus数据格式要求即可。</p>
-<p>其实，很多组件已经为了适配Prometheus采集指标，添加了对应的/metrics api，比如<br>
-CoreDNS：</p>
+<p>其实，很多组件已经为了适配Prometheus采集指标，添加了对应的/metrics api，比如</p>
+<h2 id="coredns">CoreDNS：</h2>
 <pre><code class="language-shell">$ kubectl -n kube-system get po -owide|grep coredns
 coredns-58cc8c89f4-nshx2             1/1     Running   6          22d   10.244.0.20  
 coredns-58cc8c89f4-t9h2r             1/1     Running   7          22d   10.244.0.21
@@ -141,15 +145,17 @@ $ curl 10.244.0.20:9153/metrics
       - job_name: 'prometheus'
         static_configs:
         - targets: ['localhost:9090']
-      - job_name: 'coredns'
+      - job_name: 'coredns'  #添加coredns
         static_configs:
-        - targets: ['10.96.0.10:9153']
+        - targets: ['10.96.0.10:9153'] #kube-dns的svc地址
       
 $ kubectl apply -f prometheus-configmap.yaml
 
 # 等待30s左右，重启Prometheus进程
 $ kubectl -n monitor get po -owide
 prometheus-5cd4d47557-758r5   1/1     Running   0          12m   10.244.2.104
+
+##软重启，重新加载配置
 $ curl -XPOST 10.244.2.104:9090/-/reload
 </code></pre>
 <h1 id="常用监控对象的指标采集">常用监控对象的指标采集</h1>
@@ -166,8 +172,17 @@ $ curl -XPOST 10.244.2.104:9090/-/reload
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   23d
 
-$ kubectl -n monitor describe secret prometheus-token-pkzfx
-$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InhXcmtaSG5ZODF1TVJ6dUcycnRLT2c4U3ZncVdoVjlLaVRxNG1wZ0pqVmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi10b2tlbi1xNXBueiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJhZG1pbiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImViZDg2ODZjLWZkYzAtNDRlZC04NmZlLTY5ZmE0ZTE1YjBmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDphZG1pbiJ9.iEIVMWg2mHPD88GQ2i4uc_60K4o17e39tN0VI_Q_s3TrRS8hmpi0pkEaN88igEKZm95Qf1qcN9J5W5eqOmcK2SN83Dd9dyGAGxuNAdEwi0i73weFHHsjDqokl9_4RGbHT5lRY46BbIGADIphcTeVbCggI6T_V9zBbtl8dcmsd-lD_6c6uC2INtPyIfz1FplynkjEVLapp_45aXZ9IMy76ljNSA8Uc061Uys6PD3IXsUD5JJfdm7lAt0F7rn9SdX1q10F2lIHYCMcCcfEpLr4Vkymxb4IU4RCR8BsMOPIO_yfRVeYZkG4gU2C47KwxpLsJRrTUcUXJktSEPdeYYXf9w&quot; https://10.96.0.1:6443/metrics
+$ kubectl -n monitor describe secret prometheus-token-pg299
+$ kubectl -n monitor exec -it prometheus-7d6799c84c-hn6bq -- sh
+~ $ df -h
+Filesystem                Size      Used Available Use% Mounted on
+...
+tmpfs                   512.0M     12.0K    512.0M   0% /var/run/secrets/kubernetes.io/serviceaccount
+...
+~ $ cd /var/run/secrets/kubernetes.io/serviceaccount
+$ cat token
+
+$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJ6OGh1d2g4RzBCLUVidWFLdEtLcnhpSVcxM210NUpiMGk3UENNeTZCdWcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmxpbnV4LmxvY2FsIl0sImV4cCI6MTY3NzQ3MzI3NCwiaWF0IjoxNjQ1OTM3Mjc0LCJpc3MiOiJodHRwczovL2t1YmVybmV0ZXMuZGVmYXVsdC5zdmMubGludXgubG9jYWwiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6Im1vbml0b3IiLCJwb2QiOnsibmFtZSI6InByb21ldGhldXMtN2Q2Nzk5Yzg0Yy1objZicSIsInVpZCI6IjUyMWJjN2FhLWY5YzktNGY2NS05MzZmLWYyMjUxMzNhNWMzMyJ9LCJzZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoicHJvbWV0aGV1cyIsInVpZCI6IjgxOTRjZGU4LTJmMDgtNDA2OS04ZjZlLTZiNGUxZmIyZmEyMCJ9LCJ3YXJuYWZ0ZXIiOjE2NDU5NDA4ODF9LCJuYmYiOjE2NDU5MzcyNzQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptb25pdG9yOnByb21ldGhldXMifQ.MzUJj-QPvDrMdNo8YcKf9i75pyTI0X70U_Kb_e2K_-CObcP_7QRC3zUyxOc5N2luo_x4wfRhB3dXjMWtDPqXWP_Vq_ZDoQ2eD7Otxg30As9m5MxtXTDfcGz8YSIXTh25QXI2fwkrRqsbvSIcT7yYuO1r_ZNfth_YJX1VmAO5RCRebfnO3JUy_2DWjxnl4uxJdud2oevQWNnbyAa7eUk9lJf1gm7lXhvFrsRDB8c7CtXq9pkIBtuCX6owdX3eqIaqDRPjw0U0dmESfcqCLYuZ9_MbTKvDxzCm8c_J-on0J6M3AIjblKhV7qOAhgIvxJ3aU1atLc0pGlfeVRmmrTjgHg&quot; https://10.96.0.1:6443/metrics
 </code></pre>
 <p>可以通过手动配置如下job来试下对apiserver服务的监控，</p>
 <pre><code class="language-shell">$ kubectl -n monitor edit configmap prometheus-config

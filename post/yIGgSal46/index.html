@@ -1,0 +1,1109 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646756424407">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646756424407" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7">持续集成工具：</a></li>
+</ul>
+</li>
+<li><a href="#devops-ci-cd%E4%BB%8B%E7%BB%8D">DevOps、CI、CD介绍</a>
+<ul>
+<li><a href="#%E7%80%91%E5%B8%83%E5%BC%8F%E6%B5%81%E7%A8%8B">瀑布式流程</a></li>
+<li><a href="#%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91">敏捷开发</a></li>
+<li><a href="#devops">DevOps</a></li>
+<li><a href="#devops%E5%B7%A5%E5%85%B7%E9%93%BE">DevOps工具链</a></li>
+</ul>
+</li>
+<li><a href="#jenkins">Jenkins</a>
+<ul>
+<li><a href="#kubernetes%E7%8E%AF%E5%A2%83%E4%B8%AD%E9%83%A8%E7%BD%B2jenkins">Kubernetes环境中部署jenkins</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E6%B1%89%E5%8C%96%E6%8F%92%E4%BB%B6">安装汉化插件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jenkins-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">Jenkins 基本使用</a>
+<ul>
+<li><a href="#%E6%BC%94%E7%A4%BA%E7%9B%AE%E6%A0%87">演示目标</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA%E5%87%86%E5%A4%87">演示准备</a>
+<ul>
+<li><a href="#%E6%BC%94%E7%A4%BA%E8%BF%87%E7%A8%8B">演示过程</a></li>
+</ul>
+</li>
+<li><a href="#master-slavesagent%E6%A8%A1%E5%BC%8F">Master-Slaves（agent）模式</a>
+<ul>
+<li><a href="#jenkins%E5%AE%9A%E5%88%B6%E5%8C%96%E5%AE%B9%E5%99%A8">Jenkins定制化容器</a><br>
+*
+<ul>
+<li><a href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93">本章小结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">基于Kubernetes的DevOps平台实践</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-03-08 / 20 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/yIGgSal46.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="持续集成工具">持续集成工具：</h2>
+<ul>
+<li>Jenkins</li>
+<li>gitlabci</li>
+<li>Tekton</li>
+</ul>
+<p>本章基于k8s集群部署gitlab、sonarQube、Jenkins等工具，并把上述工具集成到Jenkins中，以Django项目和SpringBoot项目为例，通过多分支流水线及Jenkinsfile实现项目代码提交到不同的仓库分支，实现自动代码扫描、单元测试、docker容器构建、k8s服务的自动部署。</p>
+<ul>
+<li>DevOps、CI、CD介绍</li>
+<li>Jenkins、sonarQube、gitlab的快速部署</li>
+<li>Jenkins初体验</li>
+<li>流水线入门及Jenkinsfile使用</li>
+<li>Jenkins与Kubernetes的集成</li>
+<li>sonarQube代码扫描与Jenkins的集成</li>
+<li>实践Django项目的基于Jenkinsfile实现开发、测试环境的CI/CD</li>
+</ul>
+<h1 id="devops-ci-cd介绍">DevOps、CI、CD介绍</h1>
+<p>Continuous Integration (<em>CI</em>) / Continuous Delivery (<em>CD</em>)</p>
+<p>软件交付流程</p>
+<figure data-type="image" tabindex="1"><img src="images%5Cdevops-roles.jpg" alt="" loading="lazy"></figure>
+<p>一个软件从零开始到最终交付，大概包括以下几个阶段：规划、编码、构建、测试、发布、部署和维护，基于这些阶段，我们的软件交付模型大致经历了几个阶段：</p>
+<h2 id="瀑布式流程">瀑布式流程</h2>
+<figure data-type="image" tabindex="2"><img src="images%5Cdevops-waterfall.jpg" alt="" loading="lazy"></figure>
+<p>前期需求确立之后，软件开发人员花费数周和数月编写代码，把所有需求一次性开发完，然后将代码交给QA（质量保障）团队进行测试，然后将最终的发布版交给运维团队去部署。瀑布模型，简单来说，就是等一个阶段所有工作完成之后，再进入下一个阶段。这种模式的问题也很明显，产品迭代周期长，灵活性差。一个周期动辄几周几个月，适应不了当下产品需要快速迭代的场景。</p>
+<h2 id="敏捷开发">敏捷开发</h2>
+<p><img src="images%5Cdevops-agile.jpg" alt="" loading="lazy"><br>
+任务由大拆小，开发、测试协同工作，注重开发敏捷，不重视交付敏捷</p>
+<h2 id="devops">DevOps</h2>
+<p><img src="images%5Cdevops-compire.jpg" alt="" loading="lazy"><br>
+开发、测试、运维协同工作, 持续开发+持续交付。</p>
+<p>我们是否可以认为DevOps = 提倡开发、测试、运维协同工作来实现持续开发、持续交付的一种软件交付模式？</p>
+<p>为什么最初的开发模式没有直接进入DevOps的时代？<br>
+原因是：沟通成本。</p>
+<p>各角色人员去沟通协作的时候都是手动去做，交流靠嘴，靠人去指挥，很显然会出大问题。所以说不能认为DevOps就是一种交付模式，因为解决不了沟通协作成本，这种模式就不具备可落地性。</p>
+<p>那DevOps时代如何解决角色之间的成本问题？<br>
+DevOps的核心就是自动化。自动化的能力靠什么来支撑，工具和技术。</p>
+<h2 id="devops工具链">DevOps工具链</h2>
+<figure data-type="image" tabindex="3"><img src="images%5Cdevops-tools.jpg" alt="" loading="lazy"></figure>
+<p>靠这些工具和技术，才实现了自动化流程，进而解决了协作成本，使得devops具备了可落地性。因此我们可以大致给devops一个定义：</p>
+<p>devops = 提倡开发、测试、运维协同工作来实现持续开发、持续交付的一种软件交付模式 + 基于工具和技术支撑的自动化流程的落地实践。</p>
+<p>因此devops不是某一个具体的技术，而是一种思想+自动化能力，来使得构建、测试、发布软件能够更加地便捷、频繁和可靠的落地实践。本次课程核心内容就是要教会大家如何利用工具和技术来实现完整的DevOps平台的建设。我们主要使用的工具有：</p>
+<ol>
+<li>gitlab，代码仓库，企业内部使用最多的代码版本管理工具。</li>
+<li>Jenkins， 一个可扩展的持续集成引擎，用于自动化各种任务，包括构建、测试和部署软件。</li>
+<li>robotFramework， 基于Python的自动化测试框架</li>
+<li>sonarqube，代码质量管理平台</li>
+<li>maven，java包构建管理工具</li>
+<li>Kubernetes</li>
+<li>Docker</li>
+</ol>
+<h1 id="jenkins">Jenkins</h1>
+<h2 id="kubernetes环境中部署jenkins">Kubernetes环境中部署jenkins</h2>
+<p><a href="https://jenkins.io/zh/doc/book/installing/">其他部署方式</a></p>
+<p>注意点：</p>
+<ol>
+<li>第一次启动很慢</li>
+<li>因为后面Jenkins会与kubernetes集群进行集成，会需要调用kubernetes集群的api，因此安装的时候创建了ServiceAccount并赋予了cluster-admin的权限</li>
+<li>初始化容器来设置权限</li>
+<li>ingress来外部访问</li>
+<li>数据存储通过pvc挂载到宿主机中</li>
+</ol>
+<p><code>jenkins/jenkins-all.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Namespace
+metadata:
+  name: jenkins
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 200Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins
+  namespace: jenkins
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: jenkins-crb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: jenkins
+  namespace: jenkins
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-master
+  namespace: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      devops: jenkins-master
+  template:
+    metadata:
+      labels:
+        devops: jenkins-master
+    spec:
+      serviceAccount: jenkins #Pod 需要使用的服务账号
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /var/jenkins_home&quot;]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: jenkinshome
+          mountPath: /var/jenkins_home
+      containers:
+      - name: jenkins
+        image: jenkinsci/blueocean:1.24.7
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http #Jenkins Master Web 服务端口
+          containerPort: 8080
+        - name: slavelistener #Jenkins Master 供未来 Slave 连接的端口
+          containerPort: 50000
+        volumeMounts:
+        - name: jenkinshome
+          mountPath: /var/jenkins_home
+        env:
+        - name: JAVA_OPTS
+          value: &quot;-Xms4096m -Xmx5120m -Duser.timezone=Asia/Shanghai -Dhudson.model.DirectoryBrowserSupport.CSP=&quot;
+      volumes:
+      - name: jenkinshome
+        persistentVolumeClaim:
+          claimName: jenkins
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: jenkins
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: slavelistener
+    port: 50000
+    targetPort: 50000
+  type: ClusterIP
+  selector:
+    devops: jenkins-master
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-web
+  namespace: jenkins
+spec:
+  rules:
+  - host: jenkins.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: jenkins
+            port:
+              number: 8080
+</code></pre>
+<p>创建服务：</p>
+<pre><code class="language-shell">## 部署服务
+$ kubectl create -f jenkins-all.yaml
+
+## 查看服务
+$ kubectl -n jenkins get po
+NAME                              READY   STATUS    RESTARTS   AGE
+jenkins-master-767df9b574-lgdr5   1/1     Running   0          20s
+
+# 查看日志，第一次启动提示需要完成初始化设置
+$ kubectl -n jenkins logs -f jenkins-master-767df9b574-lgdr5
+......
+*************************************************************
+
+Jenkins initial setup is required. An admin user has been created and a password generated.
+Please use the following password to proceed to installation:
+
+5396b4e1c395450f8360efd8ee641b18
+
+This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+
+*************************************************************
+
+</code></pre>
+<p>访问服务：</p>
+<p>配置hosts解析，<code>172.21.51.143 jenkins.luffy.com</code>，然后使用浏览器域名访问服务。第一次访问需要大概几分钟的初始化时间。</p>
+<figure data-type="image" tabindex="4"><img src="images%5Cjenkins_setup.jpg" alt="" loading="lazy"></figure>
+<p>使用jenkins启动日志中的密码，或者执行下面的命令获取解锁的管理员密码：</p>
+<pre><code class="language-shell">$ kubectl -n jenkins exec jenkins-master-767df9b574-lgdr5 bash 
+/ # cat /var/jenkins_home/secrets/initialAdminPassword
+35b083de1d25409eaef57255e0da481a
+
+</code></pre>
+<p>点击叉号，跳过选择安装推荐的插件环节，直接进入Jenkins。由于默认的插件地址安装非常慢，我们可以替换成国内清华的源，进入 jenkins 工作目录，目录下面有一个 <code>updates</code> 的目录，下面有一个 <code>default.json</code> 文件，我们执行下面的命令替换插件地址：</p>
+<pre><code class="language-shell">$ cd /var/jenkins_home/updates
+$ sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' default.json 
+$ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
+
+</code></pre>
+<blockquote>
+<p>暂时先不用重新启动pod，汉化后一起重启。</p>
+</blockquote>
+<p>选择右上角admin-&gt;configure-&gt;password重新设置管理员密码，设置完后，会退出要求重新登录，使用admin/xxxxxx(新密码)，登录即可。</p>
+<figure data-type="image" tabindex="5"><img src="images%5Cjenkins-mainpage.jpg" alt="" loading="lazy"></figure>
+<h3 id="安装汉化插件">安装汉化插件</h3>
+<p>Jenkins -&gt; manage Jenkins -&gt; Plugin Manager -&gt; Avaliable，搜索 <code>chinese</code>关键字</p>
+<figure data-type="image" tabindex="6"><img src="images%5Cjenkins-install-plugins.jpg" alt="" loading="lazy"></figure>
+<p>选中后，选择[Install without restart]，等待下载完成，然后点击[ Restart Jenkins when installation is complete and no jobs are running ]，让Jenkins自动重启</p>
+<p>启动后，界面默认变成中文。</p>
+<h1 id="jenkins-基本使用">Jenkins 基本使用</h1>
+<h2 id="演示目标">演示目标</h2>
+<ul>
+<li>代码提交gitlab，自动触发Jenkins任务</li>
+<li>Jenkins任务完成后发送钉钉消息通知</li>
+</ul>
+<h2 id="演示准备">演示准备</h2>
+<p><em>gitlab代码仓库搭建</em></p>
+<p>https://github.com/sameersbn/docker-gitlab</p>
+<pre><code class="language-shell">## 全量部署的组件
+$ gitlab-ctl status
+run: alertmanager: (pid 1987) 27s; run: log: (pid 1986) 27s
+run: gitaly: (pid 1950) 28s; run: log: (pid 1949) 28s
+run: gitlab-exporter: (pid 1985) 27s; run: log: (pid 1984) 27s
+run: gitlab-workhorse: (pid 1956) 28s; run: log: (pid 1955) 28s
+run: logrotate: (pid 1960) 28s; run: log: (pid 1959) 28s
+run: nginx: (pid 2439) 1s; run: log: (pid 1990) 27s
+run: node-exporter: (pid 1963) 28s; run: log: (pid 1962) 28s
+run: postgres-exporter: (pid 1989) 27s; run: log: (pid 1988) 27s
+run: postgresql: (pid 1945) 28s; run: log: (pid 1944) 28s
+run: prometheus: (pid 1973) 28s; run: log: (pid 1972) 28s
+run: puma: (pid 1968) 28s; run: log: (pid 1966) 28s
+run: redis: (pid 1952) 28s; run: log: (pid 1951) 28s
+run: redis-exporter: (pid 1971) 28s; run: log: (pid 1964) 28s
+run: sidekiq: (pid 1969) 28s; run: log: (pid 1967) 28s
+</code></pre>
+<p>部署分析：</p>
+<ol>
+<li>依赖postgres</li>
+<li>依赖redis</li>
+</ol>
+<p>使用k8s部署：</p>
+<ol>
+<li>
+<p>准备secret文件</p>
+<pre><code class="language-shell">$ cat gitlab-secret.txt
+postgres.user.root=root
+postgres.pwd.root=1qaz2wsx
+
+$ kubectl -n jenkins create secret generic gitlab-secret --from-env-file=gitlab-secret.txt
+</code></pre>
+</li>
+<li>
+<p>部署postgres</p>
+<p>注意点：</p>
+<ul>
+<li>使用secret来引用账户密码</li>
+<li>使用postgres=true来指定节点</li>
+</ul>
+<pre><code class="language-shell">$ cat postgres.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+  namespace: jenkins
+spec:
+  ports:
+  - name: server
+    port: 5432
+    targetPort: 5432
+    protocol: TCP
+  selector:
+    app: postgres
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgredb
+  namespace: jenkins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 200Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: jenkins
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      tolerations:
+      - operator: &quot;Exists&quot;
+      containers:
+      - name: postgres
+        image:  postgres:11.4
+        imagePullPolicy: &quot;IfNotPresent&quot;
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER           #PostgreSQL 用户名
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-secret
+              key: postgres.user.root
+        - name: POSTGRES_PASSWORD       #PostgreSQL 密码
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-secret
+              key: postgres.pwd.root
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2048Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+      volumes:
+      - name: postgredb
+        persistentVolumeClaim:
+          claimName: postgredb
+          
+
+
+#创建postgres
+$ kubectl create -f postgres.yaml
+
+# 创建数据库gitlab,为后面部署gitlab组件使用
+$ kubectl -n jenkins exec -ti postgres-7ff9b49f4c-nt8zh bash
+root@postgres-7ff9b49f4c-nt8zh:/# psql
+root=# create database gitlab;
+CREATE DATABASE
+</code></pre>
+</li>
+<li>
+<p>部署redis</p>
+<pre><code class="language-shell">$ cat redis.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    app: redis
+  namespace: jenkins
+spec:
+  ports:
+  - name: server
+    port: 6379
+    targetPort: 6379
+    protocol: TCP
+  selector:
+    app: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: jenkins
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      tolerations:
+      - operator: &quot;Exists&quot;
+      containers:
+      - name: redis
+        image:  sameersbn/redis:4.0.9-2
+        imagePullPolicy: &quot;IfNotPresent&quot;
+        ports:
+        - containerPort: 6379
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2048Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+            
+# 创建
+$ kubectl create -f redis.yaml
+</code></pre>
+</li>
+<li>
+<p>部署gitlab</p>
+<p>注意点：</p>
+<ul>
+<li>使用ingress暴漏服务</li>
+<li>添加annotation，指定nginx端上传大小限制，否则推送代码时会默认被限制1m大小，相当于给nginx设置client_max_body_size的限制大小</li>
+<li>使用服务发现地址来访问postgres和redis</li>
+<li>在secret中引用数据库账户和密码</li>
+<li>数据库名称为gitlab</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-shell">   $ cat gitlab.yaml
+
+   apiVersion: networking.k8s.io/v1
+   kind: Ingress
+   metadata:
+     name: gitlab
+     namespace: jenkins
+     annotations:
+       nginx.ingress.kubernetes.io/proxy-body-size: &quot;50m&quot;
+   spec:
+     rules:
+     - host: gitlab.luffy.com
+       http:
+         paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service: 
+               name: gitlab
+               port:
+                 number: 80
+   ---
+   kind: PersistentVolumeClaim
+   apiVersion: v1
+   metadata:
+     name: gitlab
+     namespace: jenkins
+   spec:
+     accessModes:
+       - ReadWriteOnce
+     storageClassName: nfs
+     resources:
+       requests:
+         storage: 200Gi
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: gitlab
+     labels:
+       app: gitlab
+     namespace: jenkins
+   spec:
+     ports:
+     - name: server
+       port: 80
+       targetPort: 80
+       protocol: TCP
+     selector:
+       app: gitlab
+   ---
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     namespace: jenkins
+     name: gitlab
+     labels:
+       app: gitlab
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: gitlab
+     template:
+       metadata:
+         labels:
+           app: gitlab
+       spec:
+         tolerations:
+         - operator: &quot;Exists&quot;
+         containers:
+         - name: gitlab
+           image:  sameersbn/gitlab:13.2.2
+           imagePullPolicy: &quot;IfNotPresent&quot;
+           env:
+           - name: GITLAB_HOST
+             value: &quot;gitlab.luffy.com&quot;
+           - name: GITLAB_PORT
+             value: &quot;80&quot;
+           - name: GITLAB_SECRETS_DB_KEY_BASE
+             value: &quot;long-and-random-alpha-numeric-string&quot;
+           - name: GITLAB_SECRETS_DB_KEY_BASE
+             value: &quot;long-and-random-alpha-numeric-string&quot;
+           - name: GITLAB_SECRETS_SECRET_KEY_BASE
+             value: &quot;long-and-random-alpha-numeric-string&quot;
+           - name: GITLAB_SECRETS_OTP_KEY_BASE
+             value: &quot;long-and-random-alpha-numeric-string&quot;
+           - name: DB_HOST
+             value: &quot;postgres&quot;
+           - name: DB_NAME
+             value: &quot;gitlab&quot;
+           - name: DB_USER
+             valueFrom:
+               secretKeyRef:
+                 name: gitlab-secret
+                 key: postgres.user.root
+           - name: DB_PASS
+             valueFrom:
+               secretKeyRef:
+                 name: gitlab-secret
+                 key: postgres.pwd.root
+           - name: REDIS_HOST
+             value: &quot;redis&quot;
+           - name: REDIS_PORT
+             value: &quot;6379&quot;
+           ports:
+           - containerPort: 80
+           resources:
+             limits:
+               cpu: 2000m
+               memory: 5048Mi
+             requests:
+               cpu: 100m
+               memory: 500Mi
+           volumeMounts:
+        - mountPath: /home/git/data
+             name: data
+         volumes:
+         - name: data
+           persistentVolumeClaim:
+             claimName: gitlab
+   
+   
+   # 创建
+   $ kubectl create -f gitlab.yaml
+</code></pre>
+<p>配置hosts解析：</p>
+<pre><code class="language-powershell">172.21.51.143 gitlab.luffy.com
+</code></pre>
+<p><em>设置root密码</em></p>
+<p>访问http://gitlab.luffy.com，设置管理员密码</p>
+<p><em>配置k8s-master节点的hosts</em></p>
+<pre><code class="language-shell">$ echo &quot;172.21.51.143 gitlab.luffy.com&quot; &gt;&gt;/etc/hosts
+</code></pre>
+<p><em>myblog项目推送到gitlab</em></p>
+<pre><code class="language-shell">mkdir demo
+cp -r python-demo demo/
+cd demo/myblog
+git remote rename origin old-origin
+git remote add origin http://gitlab.luffy.com/root/myblog.git
+git push -u origin --all
+git push -u origin --tags
+
+</code></pre>
+<p><em>钉钉推送</em></p>
+<p><a href="https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq">官方文档</a></p>
+<ul>
+<li>
+<p>配置机器人</p>
+</li>
+<li>
+<p>试验发送消息</p>
+<pre><code class="language-powershell">$ curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+   -H 'Content-Type: application/json' \
+   -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+        &quot;text&quot;: {
+             &quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;
+        }
+      }'
+
+</code></pre>
+</li>
+</ul>
+<h3 id="演示过程">演示过程</h3>
+<p>流程示意图：</p>
+<figure data-type="image" tabindex="7"><img src="images%5Cjenkins-gitlab.png" alt="" loading="lazy"></figure>
+<ol>
+<li>
+<p>安装gitlab plugin</p>
+<p>插件中心搜索并安装gitlab，直接安装即可</p>
+</li>
+<li>
+<p>配置Gitlab</p>
+<p>系统管理-&gt;系统配置-&gt;Gitlab，其中的API Token，需要从下个步骤中获取</p>
+<figure data-type="image" tabindex="8"><img src="images%5Cgitlab-connection.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>获取AccessToken</p>
+<p>登录gitlab，选择user-&gt;Settings-&gt;access tokens新建一个访问token</p>
+</li>
+<li>
+<p>配置host解析</p>
+<p>由于我们的Jenkins和gitlab域名是本地解析，因此需要让gitlab和Jenkins服务可以解析到对方的域名。两种方式：</p>
+<ul>
+<li>
+<p>在容器内配置hosts</p>
+</li>
+<li>
+<p>配置coredns的静态解析</p>
+<pre><code class="language-powershell">        hosts {
+            172.21.51.143 jenkins.luffy.com  gitlab.luffy.com
+            fallthrough
+        }
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>创建自由风格项目</p>
+<ul>
+<li>gitlab connection 选择为刚创建的gitlab</li>
+<li>源码管理选择Git，填项项目地址</li>
+<li>新建一个 Credentials 认证，使用用户名密码方式，配置gitlab的用户和密码</li>
+<li>构建触发器选择 Build when a change is pushed to GitLab</li>
+<li>生成一个Secret token</li>
+<li>保存</li>
+</ul>
+</li>
+<li>
+<p>到gitlab配置webhook</p>
+<ul>
+<li>进入项目下settings-&gt;Integrations</li>
+<li>URL： http://jenkins.luffy.com/project/free</li>
+<li>Secret Token 填入在Jenkins端生成的token</li>
+<li>Add webhook</li>
+<li>test push events，报错：Requests to the local network are not allowed</li>
+</ul>
+</li>
+<li>
+<p>设置gitlab允许向本地网络发送webhook请求</p>
+<p>访问 Admin Aera -&gt; Settings -&gt; Network ，展开Outbound requests</p>
+<p>Collapse，勾选第一项即可。再次test push events，成功。</p>
+<figure data-type="image" tabindex="9"><img src="images%5Cgitlab-webhook-success.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>配置free项目，增加构建步骤，执行shell，将发送钉钉消息的shell保存</p>
+</li>
+<li>
+<p>提交代码到gitlab仓库，查看构建是否自动执行</p>
+</li>
+</ol>
+<h2 id="master-slavesagent模式">Master-Slaves（agent）模式</h2>
+<p>上面演示的任务，默认都是在master节点执行的，多个任务都在master节点执行，对master节点的性能会造成一定影响，如何将任务分散到不同的节点，做成多slave的方式？</p>
+<ol>
+<li>
+<p>添加slave节点</p>
+<ul>
+<li>系统管理 -&gt; 节点管理 -&gt; 新建节点</li>
+<li>比如添加172.21.51.68，选择固定节点，保存</li>
+<li>远程工作目录/opt/jenkins_jobs</li>
+<li>标签为任务选择节点的依据，如172.21.51.68</li>
+<li>启动方式选择通过java web启动代理，代理是运行jar包，通过JNLP（是一种允许客户端启动托管在远程Web服务器上的应用程序的协议 ）启动连接到master节点服务中</li>
+</ul>
+<figure data-type="image" tabindex="10"><img src="images%5Cjenkins-new-node.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>执行java命令启动agent服务</p>
+<pre><code class="language-powershell">## 登录172.21.51.68，下载agent.jar
+$ wget http://jenkins.luffy.com/jnlpJars/agent.jar
+## 会提示找不到agent错误，因为没有配置地址解析，由于连接jenkins master会通过50000端口，直接使用cluster-ip
+$ kubectl -n jenkins get svc #在master节点执行查询cluster-ip地址
+NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)              AGE
+jenkins   ClusterIP   10.99.204.208   &lt;none&gt;        8080/TCP,50000/TCP   4h8m
+
+## 再次回到68节点
+$ wget 10.99.204.208:8080/jnlpJars/agent.jar
+$ java -jar agent.jar -jnlpUrl http://10.99.204.208:8080/computer/172.21.51.68/slave-agent.jnlp -secret 4be4d164f861d2830835653567867a1e695b30c320d35eca2be9f5624f8712c8 -workDir &quot;/opt/jenkins_jobs&quot;
+...
+INFO: Remoting server accepts the following protocols: [JNLP4-connect, Ping]
+Apr 01, 2020 7:03:51 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Agent discovery successful
+  Agent address: 10.99.204.208
+  Agent port:    50000
+  Identity:      e4:46:3a:de:86:24:8e:15:09:13:3d:a7:4e:07:04:37
+Apr 01, 2020 7:03:51 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Handshaking
+Apr 01, 2020 7:03:51 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Connecting to 10.99.204.208:50000
+Apr 01, 2020 7:03:51 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Trying protocol: JNLP4-connect
+Apr 01, 2020 7:04:02 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Remote identity confirmed: e4:46:3a:de:86:24:8e:15:09:13:3d:a7:4e:07:04:37
+Apr 01, 2020 7:04:03 PM hudson.remoting.jnlp.Main$CuiListener status
+INFO: Connected
+</code></pre>
+<p>若出现如下错误:</p>
+<pre><code class="language-powershell">SEVERE: http://jenkins.luffy.com/ provided port:50000 is not reachable
+java.io.IOException: http://jenkins.luffy.com/ provided port:50000 is not reachable
+        at org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver.resolve(JnlpAgentEndpointResolver.java:311)
+        at hudson.remoting.Engine.innerRun(Engine.java:689)
+        at hudson.remoting.Engine.run(Engine.java:514)
+</code></pre>
+<p>可以选择： 配置从节点 -&gt; 高级 -&gt; Tunnel连接位置，参考下图进行设置:</p>
+<figure data-type="image" tabindex="11"><img src="images%5Cslave-tunnel.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>查看Jenkins节点列表，新节点已经处于可用状态</p>
+<figure data-type="image" tabindex="12"><img src="images%5Cjenkins-node-lists.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>测试使用新节点执行任务</p>
+<ul>
+<li>
+<p>配置free项目</p>
+</li>
+<li>
+<p>限制项目的运行节点 ，标签表达式选择172.21.51.68</p>
+</li>
+<li>
+<p>立即构建</p>
+</li>
+<li>
+<p>查看构建日志</p>
+<pre><code class="language-powershell">Started by user admin
+Running as SYSTEM
+Building remotely on 172.21.51.68 in workspace /opt/jenkins_jobs/workspace/free-demo
+using credential gitlab-user
+Cloning the remote Git repository
+Cloning repository http://gitlab.luffy.com/root/myblog.git
+ &gt; git init /opt/jenkins_jobs/workspace/free-demo # timeout=10
+ ...
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote></blockquote>
+<h3 id="jenkins定制化容器">Jenkins定制化容器</h3>
+<p>由于每次新部署Jenkins环境，均需要安装很多必要的插件，因此考虑把插件提前做到镜像中</p>
+<p><em>Dockerfile</em></p>
+<pre><code class="language-dockerfile">FROM jenkinsci/blueocean:1.23.2
+LABEL maintainer=&quot;inspur_lyx@hotmail.com&quot;
+
+ENV JENKINS_UC https://updates.jenkins-zh.cn
+ENV JENKINS_UC_DOWNLOAD https://mirrors.tuna.tsinghua.edu.cn/jenkins
+ENV JENKINS_OPTS=&quot;-Dhudson.model.UpdateCenter.updateCenterUrl=https://updates.jenkins-zh.cn/update-center.json&quot;
+ENV JENKINS_OPTS=&quot;-Djenkins.install.runSetupWizard=false&quot;
+
+## 用最新的插件列表文件替换默认插件文件
+COPY plugins.txt /usr/share/jenkins/ref/
+
+## 执行插件安装
+RUN /usr/local/bin/install-plugins.sh &lt; /usr/share/jenkins/ref/plugins.txt
+
+</code></pre>
+<p><em>plugins.txt</em></p>
+<pre><code class="language-python">ace-editor:1.1
+allure-jenkins-plugin:2.28.1
+ant:1.10
+antisamy-markup-formatter:1.6
+apache-httpcomponents-client-4-api:4.5.10-1.0
+authentication-tokens:1.3
+...
+
+</code></pre>
+<p><em>get_plugin.sh</em></p>
+<blockquote>
+<p>admin:123456@localhost 需要替换成Jenkins的用户名、密码及访问地址</p>
+</blockquote>
+<pre><code class="language-powershell">#!/usr/bin/env bash
+curl -sSL  &quot;http://admin:123456@localhost:8080/pluginManager/api/xml?depth=1&amp;xpath=/*/*/shortName|/*/*/version&amp;wrapper=plugins&quot; | perl -pe 's/.*?&lt;shortName&gt;([\w-]+).*?&lt;version&gt;([^&lt;]+)()(&lt;\/\w+&gt;)+/\1:\2\n/g'|sed 's/ /:/' &gt; plugins.txt
+
+</code></pre>
+<pre><code class="language-powershell">## 执行构建，定制jenkins容器
+$ docker build . -t 172.21.51.143:5000/jenkins:v20200414 -f Dockerfile
+$ docker push 172.21.51.143:5000/jenkins:v20200414
+
+</code></pre>
+<p>至此，我们可以使用定制化的镜像启动jenkins服务</p>
+<pre><code class="language-powershell">## 删掉当前服务
+$ kubectl delete -f jenkins-all.yaml
+
+## 删掉已挂载的数据
+$ rm -rf /var/jenkins_home
+
+## 替换使用定制化镜像
+$ sed -i 's#jenkinsci/blueocean#172.21.51.143:5000/jenkins:v20200404#g' jenkins-all.yaml
+
+## 重新创建服务
+$ kubectl create -f jenkins-all.yaml
+
+</code></pre>
+<h5 id="本章小结">本章小结</h5>
+<p>自由风格项目弊端：</p>
+<ul>
+<li>任务的完成需要在Jenkins端维护大量的配置</li>
+<li>没法做版本控制</li>
+<li>可读性、可移植性很差，不够优雅</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH/">
+            <span class="flex-auto">Devops</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/NetHMaIIz/">
+                <h3 class="post-title">
+                  自定义指标实现业务伸缩
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
