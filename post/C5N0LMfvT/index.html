@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646842025218">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646843090734">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646842025218" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646843090734" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,16 +34,15 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%AE%89%E8%A3%85-alertmanager">安装 Alertmanager</a><br>
-*<br>
-*<br>
-*<br>
-*<br>
-* <a href="#%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">配置Prometheus与Alertmanager对话</a><br>
-* <a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a><br>
-* <a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a><br>
-* <a href="#%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">基于Label的动态告警处理</a><br>
-* <a href="#%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">抑制和静默</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85-alertmanager">安装 Alertmanager</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">配置Prometheus与Alertmanager对话</a>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a></li>
+<li><a href="#%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">基于Label的动态告警处理</a></li>
+<li><a href="#%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">抑制和静默</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -128,7 +127,7 @@
 <li>通过分组、删除重复等处理，并将它们通过路由发送给正确的接收器；</li>
 <li>告警方式可以按照不同的规则发送给不同的模块负责人。Alertmanager支持Email, Slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具。</li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="images%5Calertmanager.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1646842757866.png" alt="" loading="lazy"></figure>
 <p>如果集群主机的内存使用率超过80%，且该现象持续了2分钟？想实现这样的监控告警，如何做？</p>
 <p>从上图可得知设置警报和通知的主要步骤是：</p>
 <ul>
@@ -272,9 +271,9 @@ spec:
             port:
               number: 9093
 </code></pre>
-<h6 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h6>
-<figure data-type="image" tabindex="2"><img src="images%5Calertmanager.png" alt="" loading="lazy"></figure>
-<p>是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
+<h1 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h1>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1646842842773.png" alt="" loading="lazy"><br>
+是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
 <pre><code class="language-powershell">    alerting:
       alertmanagers:
       - static_configs:
@@ -315,7 +314,7 @@ $ kubectl -n monitor exec -ti prometheus-dcb499cbf-pljfn cat /etc/prometheus/pro
 # 使用软加载的方式，
 $ curl -X POST 10.244.1.167:9090/-/reload
 </code></pre>
-<h6 id="配置报警规则">配置报警规则</h6>
+<h2 id="配置报警规则">配置报警规则</h2>
 <p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
 <p>在哪里配置？同样是在prometheus-configmap中：</p>
 <pre><code class="language-powershell">$ kuectl -n monitor edit configmap prometheus-config
@@ -415,7 +414,7 @@ data:
 <pre><code class="language-powershell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
 </code></pre>
 <p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
-<h6 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h6>
+<h2 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h2>
 <p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
 <p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
 <pre><code class="language-powershell">name: &lt;string&gt;
@@ -633,7 +632,7 @@ data:
         url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send
 </code></pre>
 <p>验证钉钉消息是否正常收到。</p>
-<h6 id="基于label的动态告警处理">基于Label的动态告警处理</h6>
+<h2 id="基于label的动态告警处理">基于Label的动态告警处理</h2>
 <p>真实的场景中，我们往往期望可以给告警设置级别，而且可以实现不同的报警级别可以由不同的receiver接收告警消息。</p>
 <p>Alertmanager中路由负责对告警信息进行分组匹配，并向告警接收器发送通知。告警接收器可以通过以下形式进行配置：</p>
 <pre><code class="language-powershell">routes:
@@ -759,7 +758,7 @@ metadata:
   namespace: monitor
 </code></pre>
 <p>分别更新Prometheus和Alertmanager配置，查看报警的发送。</p>
-<h6 id="抑制和静默">抑制和静默</h6>
+<h2 id="抑制和静默">抑制和静默</h2>
 <p>前面我们知道，告警的<code>group(分组)</code>功能通过把多条告警数据聚合，有效的减少告警的频繁发送。除此之外，Alertmanager还支持<code>Inhibition(抑制)</code> 和 <code>Silences(静默)</code>，帮助我们抑制或者屏蔽报警。</p>
 <ul>
 <li>
@@ -810,8 +809,8 @@ source_match_re:
 <p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
 </li>
 </ul>
-<p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：</p>
-<figure data-type="image" tabindex="3"><img src="images%5Calertmanager-process.png" alt="" loading="lazy"></figure>
+<p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1646842948861.png" alt="" loading="lazy"></p>
 
         </div>
 

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646842025218">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646843090734">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646842025218" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646843090734" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -37,11 +37,11 @@
 <li><a href="#kubernetes-metrics-api%E4%BD%93%E7%B3%BB%E5%9B%9E%E9%A1%BE">Kubernetes Metrics API体系回顾</a>
 <ul>
 <li><a href="#adapter%E5%AE%89%E8%A3%85%E5%AF%B9%E6%8E%A5">Adapter安装对接</a></li>
-<li><a href="#%E9%80%9A%E7%94%A8%E6%8C%87%E6%A0%87%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2">通用指标示例程序部署</a><br>
+<li><a href="#%E9%80%9A%E7%94%A8%E6%8C%87%E6%A0%87%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2">通用指标示例程序部署</a></li>
+<li><a href="#adapter%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">Adapter配置自定义指标</a><br>
 *<br>
 *<br>
 *<br>
-* <a href="#adapter%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">Adapter配置自定义指标</a><br>
 * <a href="#%E9%85%8D%E7%BD%AEhpa%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87%E7%9A%84%E4%B8%9A%E5%8A%A1%E4%BC%B8%E7%BC%A9">配置HPA实现自定义指标的业务伸缩</a></li>
 </ul>
 </li>
@@ -124,8 +124,8 @@
         
         <div class="post-content yue">
           <h1 id="kubernetes-metrics-api体系回顾">Kubernetes Metrics API体系回顾</h1>
-<p>前面章节，我们讲过基于CPU和内存的HPA，即利用metrics-server及HPA，可以实现业务服务可以根据pod的cpu和内存进行弹性伸缩。</p>
-<figure data-type="image" tabindex="1"><img src="images%5Chpa-prometheus-custom.png" alt="" loading="lazy"></figure>
+<p>前面章节，我们讲过基于CPU和内存的HPA，即利用metrics-server及HPA，可以实现业务服务可以根据pod的cpu和内存进行弹性伸缩。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1646842972498.png" alt="" loading="lazy"></p>
 <p>k8s对监控接口进行了标准化：</p>
 <ul>
 <li>
@@ -269,7 +269,7 @@ $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
 }                                                    
 </code></pre>
 <h2 id="通用指标示例程序部署">通用指标示例程序部署</h2>
-<figure data-type="image" tabindex="2"><img src="images%5Chpa-prometheus-custom.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1646843046204.png" alt="" loading="lazy"></figure>
 <p>为了演示效果，我们新建一个deployment来模拟业务应用。</p>
 <pre><code class="language-powershell">$ cat custom-metrics-demo.yaml
 apiVersion: apps/v1
@@ -363,8 +363,8 @@ spec:
 </code></pre>
 </li>
 </ul>
-<h6 id="adapter配置自定义指标">Adapter配置自定义指标</h6>
-<figure data-type="image" tabindex="3"><img src="images%5Ccustomer-metrics.png" alt="" loading="lazy"></figure>
+<h2 id="adapter配置自定义指标">Adapter配置自定义指标</h2>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1646843081113.png" alt="" loading="lazy"></figure>
 <p>思考：</p>
 <p>前面讲CPU的平均使用率的采集，其实是通过<code>node_cpu_seconds_total</code>指标计算得到的。</p>
 <pre><code class="language-powershell">  ^
