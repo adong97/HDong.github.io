@@ -1,0 +1,1060 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646840761883">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646840761883" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95">流水线基础语法</a>
+<ul>
+<li><a href="#%E8%84%9A%E6%9C%AC%E7%A4%BA%E4%BE%8B">脚本示例</a></li>
+<li><a href="#%E8%84%9A%E6%9C%AC%E8%A7%A3%E9%87%8A">脚本解释：</a></li>
+<li><a href="#blue-ocean">Blue Ocean:</a></li>
+</ul>
+</li>
+<li><a href="#jenkinsflie">Jenkinsflie</a>
+<ul>
+<li><a href="#%E6%BC%94%E7%A4%BA1%E4%BD%BF%E7%94%A8jenkinsfile%E7%AE%A1%E7%90%86-pipeline">演示1：使用Jenkinsfile管理 pipeline</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA2%E4%BC%98%E5%8C%96%E5%8F%8A%E4%B8%B0%E5%AF%8C%E6%B5%81%E6%B0%B4%E7%BA%BF%E5%86%85%E5%AE%B9">演示2：优化及丰富流水线内容</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA3%E4%BD%BF%E7%94%A8k8s%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1">演示3：使用k8s部署服务</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA4%E4%BD%BF%E7%94%A8%E5%87%AD%E6%8D%AE%E7%AE%A1%E7%90%86%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF">演示4：使用凭据管理敏感信息</a></li>
+<li><a href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93">本章小结</a></li>
+</ul>
+</li>
+<li><a href="#%E5%A4%9A%E5%88%86%E6%94%AF%E6%B5%81%E6%B0%B4%E7%BA%BF">多分支流水线</a>
+<ul>
+<li><a href="#%E6%BC%94%E7%A4%BA1%E5%A4%9A%E5%88%86%E6%94%AF%E6%B5%81%E6%B0%B4%E7%BA%BF%E7%9A%84%E4%BD%BF%E7%94%A8">演示1：多分支流水线的使用</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA2%E7%BE%8E%E5%8C%96%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5%E5%86%85%E5%AE%B9">演示2：美化消息通知内容</a></li>
+<li><a href="#%E6%BC%94%E7%A4%BA3%E9%80%9A%E7%9F%A5gitlab%E6%9E%84%E5%BB%BA%E7%8A%B6%E6%80%81">演示3：通知gitlab构建状态</a></li>
+<li><a href="#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E8%8A%82">本章小节</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Jenkins流水线 Pipeline</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-03-09 / 20 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/3ddZYx7mp.png" alt="">
+        
+        <div class="post-content yue">
+          <p><a href="https://jenkins.io/zh/doc/book/pipeline/getting-started/">官方文档</a></p>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1646839647733.png" alt="" loading="lazy"></figure>
+<p>为什么叫做流水线，和工厂产品的生产线类似，pipeline是从源码到发布到线上环境。关于流水线，需要知道的几个点：</p>
+<ul>
+<li>
+<p>重要的功能插件，帮助Jenkins定义了一套工作流框架；</p>
+</li>
+<li>
+<p>Pipeline 的实现方式是一套 Groovy DSL（ 领域专用语言 ），所有的发布流程都可以表述为一段 Groovy 脚本；</p>
+</li>
+<li>
+<p>将WebUI上需要定义的任务，以脚本代码的方式表述出来；</p>
+</li>
+<li>
+<p>帮助jenkins实现持续集成CI（Continue Integration）和持续部署CD（Continue Deliver）的重要手段；</p>
+</li>
+</ul>
+<h2 id="流水线基础语法">流水线基础语法</h2>
+<p><a href="https://jenkins.io/zh/doc/book/pipeline/syntax/">官方文档</a></p>
+<p>两种语法类型：</p>
+<ul>
+<li>Scripted Pipeline，脚本式流水线，最初支持的类型</li>
+<li>Declarative Pipeline，声明式流水线，为Pipeline plugin在2.5版本之后新增的一种脚本类型，后续Open Blue Ocean所支持的类型。与原先的Scripted Pipeline一样，都可以用来编写脚本。Declarative Pipeline 是后续Open Blue Ocean所支持的类型，写法简单，支持内嵌Scripted Pipeline代码</li>
+</ul>
+<p><em>为与BlueOcean脚本编辑器兼容，通常建议使用Declarative Pipeline的方式进行编写,从jenkins社区的动向来看，很明显这种语法结构也会是未来的趋势。</em></p>
+<h3 id="脚本示例">脚本示例</h3>
+<pre><code class="language-json">pipeline { 
+    agent {label '172.21.51.68'}
+    environment { 
+        PROJECT = 'myblog'
+    }
+    stages {
+        stage('Checkout') { 
+            steps { 
+                checkout scm 
+            }
+        }
+        stage('Build') { 
+            steps { 
+                sh 'make' 
+            }
+        }
+        stage('Test'){
+            steps {
+                sh 'make check'
+                junit 'reports/**/*.xml' 
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
+            }
+        }
+    }
+	post {
+        success { 
+            echo 'Congratulations!'
+        }
+		failure { 
+            echo 'Oh no!'
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<h3 id="脚本解释">脚本解释：</h3>
+<ul>
+<li>
+<p><code>checkout</code>步骤为检出代码; <code>scm</code>是一个特殊变量，指示<code>checkout</code>步骤克隆触发此Pipeline运行的特定修订</p>
+</li>
+<li>
+<p>agent：指明使用哪个agent节点来执行任务，定义于pipeline顶层或者stage内部</p>
+<ul>
+<li>
+<p>any，可以使用任意可用的agent来执行</p>
+</li>
+<li>
+<p>label，在提供了标签的 Jenkins 环境中可用的代理上执行流水线或阶段。 例如: <code>agent { label 'my-defined-label' }</code>，最常见的使用方式</p>
+</li>
+<li>
+<p>none，当在 <code>pipeline</code> 块的顶部没有全局代理， 该参数将会被分配到整个流水线的运行中并且每个 <code>stage</code> 部分都需要包含他自己的 <code>agent</code> 部分。比如: <code>agent none</code></p>
+</li>
+<li>
+<p>docker， 使用给定的容器执行流水线或阶段。 在指定的节点中，通过运行容器来执行任务</p>
+<pre><code class="language-json">agent {
+    docker {
+        image 'maven:3-alpine'
+        label 'my-defined-label'
+        args  '-v /tmp:/tmp'
+    }
+}
+
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>options:  允许从流水线内部配置特定于流水线的选项。</p>
+<ul>
+<li>buildDiscarder , 为最近的流水线运行的特定数量保存组件和控制台输出。例如: <code>options { buildDiscarder(logRotator(numToKeepStr: '10')) }</code></li>
+<li>disableConcurrentBuilds ,不允许同时执行流水线。 可被用来防止同时访问共享资源等。 例如: <code>options { disableConcurrentBuilds() }</code></li>
+<li>timeout ,设置流水线运行的超时时间, 在此之后，Jenkins将中止流水线。例如: <code>options { timeout(time: 1, unit: 'HOURS') }</code></li>
+<li>retry，在失败时, 重新尝试整个流水线的指定次数。 For example: <code>options { retry(3) }</code></li>
+</ul>
+</li>
+<li>
+<p>environment:  指令制定一个 键-值对序列，该序列将被定义为所有步骤的环境变量</p>
+</li>
+<li>
+<p>stages: 包含一系列一个或多个 <a href="https://jenkins.io/zh/doc/book/pipeline/syntax/#stage">stage</a>指令, <code>stages</code> 部分是流水线描述的大部分&quot;work&quot; 的位置。 建议 <code>stages</code> 至少包含一个 <a href="https://jenkins.io/zh/doc/book/pipeline/syntax/#stage">stage</a> 指令用于连续交付过程的每个离散部分,比如构建, 测试, 和部署。</p>
+<pre><code class="language-groovy">pipeline {
+    agent any
+    stages { 
+        stage('Example') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+
+</code></pre>
+</li>
+<li>
+<p>steps: 在给定的 <code>stage</code> 指令中执行的定义了一系列的一个或多个<a href="https://jenkins.io/zh/doc/book/pipeline/syntax/#declarative-steps">steps</a>。</p>
+</li>
+<li>
+<p>post:  定义一个或多个<a href="https://jenkins.io/zh/doc/book/pipeline/syntax/#declarative-steps">steps</a> ，这些阶段根据流水线或阶段的完成情况而运行<code>post</code> 支持以下 <a href="https://jenkins.io/zh/doc/book/pipeline/syntax/#post-conditions">post-condition</a> 块中的其中之一: <code>always</code>, <code>changed</code>, <code>failure</code>, <code>success</code>, <code>unstable</code>, 和 <code>aborted</code>。</p>
+<ul>
+<li>always, 无论流水线或阶段的完成状态如何，都允许在 <code>post</code> 部分运行该步骤</li>
+<li>changed, 当前流水线或阶段的完成状态与它之前的运行不同时，才允许在 <code>post</code> 部分运行该步骤</li>
+<li>failure,  当前流水线或阶段的完成状态为&quot;failure&quot;，才允许在 <code>post</code> 部分运行该步骤, 通常web UI是红色</li>
+<li>success,  当前流水线或阶段的完成状态为&quot;success&quot;，才允许在 <code>post</code> 部分运行该步骤, 通常web UI是蓝色或绿色</li>
+<li>unstable,  当前流水线或阶段的完成状态为&quot;unstable&quot;，才允许在 <code>post</code> 部分运行该步骤, 通常由于测试失败,代码违规等造成。通常web UI是黄色</li>
+<li>aborted， 只有当前流水线或阶段的完成状态为&quot;aborted&quot;，才允许在 <code>post</code> 部分运行该步骤, 通常由于流水线被手动的aborted。通常web UI是灰色</li>
+</ul>
+</li>
+</ul>
+<p>创建pipeline示意：</p>
+<p>新建任务 -&gt; 流水线</p>
+<p><code>jenkins/pipelines/p1.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+   agent {label '172.21.51.68'}
+   environment { 
+      PROJECT = 'myblog'
+   }
+   stages {
+      stage('printenv') {
+         steps {
+            echo 'Hello World'
+            sh 'printenv'
+         }
+      }
+      stage('check') {
+         steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitlab-user', url: 'http://gitlab.luffy.com/root/myblog.git']]])
+         }
+      }
+      stage('build-image') {
+         steps {
+            sh 'docker build . -t myblog:latest -f Dockerfile'
+         }
+      }
+      stage('send-msg') {
+         steps {
+            sh &quot;&quot;&quot;
+            curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+   -H 'Content-Type: application/json' \
+   -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+        &quot;text&quot;: {
+             &quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;
+        }
+      }'
+      &quot;&quot;&quot;
+         }
+      }
+   }
+}
+
+</code></pre>
+<p>点击“立即构建”，同样的，我们可以配置触发器，使用webhook的方式接收项目的push事件，</p>
+<ul>
+<li>构建触发器选择 Build when a change is pushed to GitLab.</li>
+<li>生成 Secret token</li>
+<li>配置gitlab，创建webhook，发送test push events测试</li>
+</ul>
+<h3 id="blue-ocean">Blue Ocean:</h3>
+<p><a href="https://jenkins.io/zh/doc/book/blueocean/getting-started/">官方文档</a></p>
+<p>我们需要知道的几点：</p>
+<ul>
+<li>是一个插件， 旨在为Pipeline提供丰富的体验 ；</li>
+<li>连续交付（CD）Pipeline的复杂可视化，允许快速和直观地了解Pipeline的状态；</li>
+<li>目前支持的类型仅针对于Pipeline，尚不能替代Jenkins 经典版UI</li>
+</ul>
+<p>思考：</p>
+<ol>
+<li>每个项目都把大量的pipeline脚本写在Jenkins端，对于谁去维护及维护成本是一个问题</li>
+<li>没法做版本控制</li>
+</ol>
+<h2 id="jenkinsflie">Jenkinsflie</h2>
+<p>Jenkins Pipeline 提供了一套可扩展的工具，用于将“简单到复杂”的交付流程实现为“持续交付即代码”。Jenkins Pipeline 的定义通常被写入到一个文本文件（称为 <code>Jenkinsfile</code> ）中，该文件可以被放入项目的源代码控制库中。</p>
+<h3 id="演示1使用jenkinsfile管理-pipeline">演示1：使用Jenkinsfile管理 pipeline</h3>
+<ul>
+<li>在项目中新建Jenkinsfile文件，拷贝已有script内容</li>
+<li>配置pipeline任务，流水线定义为Pipeline Script from SCM</li>
+<li>执行push 代码测试</li>
+</ul>
+<p>Jenkinsfile:</p>
+<p><code>jenkins/pipelines/p2.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+   agent {label '172.21.51.68'}
+   environment { 
+      PROJECT = 'myblog'
+   }
+   stages {
+      stage('printenv') {
+         steps {
+            echo 'Hello World'
+            sh 'printenv'
+         }
+      }
+      stage('check') {
+         steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitlab-user', url: 'http://gitlab.luffy.com/root/myblog.git']]])
+         }
+      }
+      stage('build-image') {
+         steps {
+            sh 'docker build . -t myblog:latest -f Dockerfile'
+         }
+      }
+      stage('send-msg') {
+         steps {
+            sh &quot;&quot;&quot;
+            curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+   -H 'Content-Type: application/json' \
+   -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+        &quot;text&quot;: {
+             &quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;
+        }
+      }'
+      &quot;&quot;&quot;
+         }
+      }
+   }
+}
+</code></pre>
+<h3 id="演示2优化及丰富流水线内容">演示2：优化及丰富流水线内容</h3>
+<ul>
+<li>
+<p>优化代码检出阶段</p>
+<p>由于目前已经配置了使用git仓库地址，且使用SCM来检测项目，因此代码检出阶段完全没有必要再去指定一次</p>
+</li>
+<li>
+<p>构建镜像的tag使用git的commit id</p>
+</li>
+<li>
+<p>增加post阶段的消息通知，丰富通知内容</p>
+</li>
+<li>
+<p>配置webhook，实现myblog代码推送后，触发Jenkinsfile任务执行</p>
+</li>
+</ul>
+<p><code>jenkins/pipelines/p3.yaml</code></p>
+<pre><code class="language-groovy">pipeline {
+    agent { label '172.21.51.68'}
+
+    stages {
+        stage('printenv') {
+            steps {
+            echo 'Hello World'
+            sh 'printenv'
+            }
+        }
+        stage('check') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('build-image') {
+            steps {
+            	retry(2) { sh 'docker build . -t myblog:${GIT_COMMIT}'}
+            }
+        }
+    }
+    post {
+        success { 
+            echo 'Congratulations!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😄👍构建成功👍😄\n 关键字：luffy\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        failure {
+            echo 'Oh no!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😖❌构建失败❌😖\n 关键字：luffy\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<h3 id="演示3使用k8s部署服务">演示3：使用k8s部署服务</h3>
+<ul>
+<li>
+<p>新建deploy目录，将k8s所需的文件放到deploy目录中</p>
+</li>
+<li>
+<p>将镜像地址改成模板，在pipeline中使用新构建的镜像进行替换</p>
+</li>
+<li>
+<p>执行kubectl apply -f deploy应用更改，需要配置kubectl认证</p>
+<pre><code class="language-powershell">$ scp -r k8s-master:/root/.kube /root
+</code></pre>
+</li>
+</ul>
+<p><code>jenkins/pipelines/p4.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+    agent { label '172.21.51.68'}
+
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/myblog&quot;
+    }
+
+    stages {
+        stage('printenv') {
+            steps {
+              echo 'Hello World'
+              sh 'printenv'
+            }
+        }
+        stage('check') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('build-image') {
+            steps {
+                retry(2) { sh 'docker build . -t ${IMAGE_REPO}:${GIT_COMMIT}'}
+            }
+        }
+        stage('push-image') {
+            steps {
+                retry(2) { sh 'docker push ${IMAGE_REPO}:${GIT_COMMIT}'}
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh &quot;sed -i 's#{{IMAGE_URL}}#${IMAGE_REPO}:${GIT_COMMIT}#g' manifests/*&quot;
+                timeout(time: 1, unit: 'MINUTES') {
+                    sh &quot;kubectl apply -f manifests/&quot;
+                }
+            }
+        }
+    }
+    post {
+        success { 
+            echo 'Congratulations!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😄👍构建成功👍😄\n 关键字：myblog\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        failure {
+            echo 'Oh no!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😖❌构建失败❌😖\n 关键字：luffy\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<h3 id="演示4使用凭据管理敏感信息">演示4：使用凭据管理敏感信息</h3>
+<p>上述Jenkinsfile中存在的问题是敏感信息使用明文，暴漏在代码中，如何管理流水线中的敏感信息（包含账号密码），之前我们在对接gitlab的时候，需要账号密码，已经使用过凭据来管理这类敏感信息，同样的，我们可以使用凭据来存储钉钉的token信息，那么，创建好凭据后，如何在Jenkinsfile中获取已有凭据的内容？</p>
+<p>Jenkins 的声明式流水线语法有一个 <code>credentials()</code> 辅助方法（在<a href="https://jenkins.io/zh/doc/book/pipeline/jenkinsfile/#../syntax#environment"><code>environment</code></a> 指令中使用），它支持 <a href="https://jenkins.io/zh/doc/book/pipeline/jenkinsfile/##secret-text">secret 文本</a>，<a href="https://jenkins.io/zh/doc/book/pipeline/jenkinsfile/##usernames-and-passwords">带密码的用户名</a>，以及 <a href="https://jenkins.io/zh/doc/book/pipeline/jenkinsfile/##secret-files">secret 文件</a>凭据。</p>
+<p>下面的流水线代码片段展示了如何创建一个使用带密码的用户名凭据的环境变量的流水线。</p>
+<p>在该示例中，带密码的用户名凭据被分配了环境变量，用来使你的组织或团队以一个公用账户访问 Bitbucket 仓库；这些凭据已在 Jenkins 中配置了凭据 ID <code>jenkins-bitbucket-common-creds</code>。</p>
+<p>当在 <a href="https://jenkins.io/zh/doc/book/pipeline/jenkinsfile/#../syntax#environment"><code>environment</code></a> 指令中设置凭据环境变量时：</p>
+<pre><code>environment {
+    BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds')
+}
+
+</code></pre>
+<p>这实际设置了下面的三个环境变量：</p>
+<ul>
+<li><code>BITBUCKET_COMMON_CREDS</code> - 包含一个以冒号分隔的用户名和密码，格式为 <code>username:password</code>。</li>
+<li><code>BITBUCKET_COMMON_CREDS_USR</code> - 附加的一个仅包含用户名部分的变量。</li>
+<li><code>BITBUCKET_COMMON_CREDS_PSW</code> - 附加的一个仅包含密码部分的变量。</li>
+</ul>
+<pre><code class="language-groovy">pipeline {
+    agent {
+        // 此处定义 agent 的细节
+    }
+    environment {
+        //顶层流水线块中使用的 environment 指令将适用于流水线中的所有步骤。 
+        BITBUCKET_COMMON_CREDS = credentials('jenkins-bitbucket-common-creds')
+    }
+    stages {
+        stage('Example stage 1') {
+ 			//在一个 stage 中定义的 environment 指令只会将给定的环境变量应用于 stage 中的步骤。
+            environment {
+                BITBUCKET_COMMON_CREDS = credentials('another-credential-id')
+            }
+            steps {
+                // 
+            }
+        }
+        stage('Example stage 2') {
+            steps {
+                // 
+            }
+        }
+    }
+}
+
+</code></pre>
+<p>因此对Jenkinsfile做改造：</p>
+<p><code>jenkins/pipelines/p5.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+    agent { label '172.21.51.68'}
+
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/myblog&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+    }
+
+    stages {
+        stage('printenv') {
+            steps {
+            echo 'Hello World'
+            sh 'printenv'
+            }
+        }
+        stage('check') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('build-image') {
+            steps {
+                retry(2) { sh 'docker build . -t ${IMAGE_REPO}:${GIT_COMMIT}'}
+            }
+        }
+        stage('push-image') {
+            steps {
+                retry(2) { sh 'docker push ${IMAGE_REPO}:${GIT_COMMIT}'}
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh &quot;sed -i 's#{{IMAGE_URL}}#${IMAGE_REPO}:${GIT_COMMIT}#g' manifests/*&quot;
+                timeout(time: 1, unit: 'MINUTES') {
+                    sh &quot;kubectl apply -f manifests/&quot;
+                }
+            }
+        }
+    }
+    post {
+        success { 
+            echo 'Congratulations!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😄👍构建成功👍😄\n 关键字：luffy\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        failure {
+            echo 'Oh no!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
+                            &quot;text&quot;: {
+                                &quot;content&quot;: &quot;😖❌构建失败❌😖\n 关键字：luffy\n 项目名称: ${JOB_BASE_NAME}\n Commit Id: ${GIT_COMMIT}\n 构建地址：${RUN_DISPLAY_URL}&quot;
+                        }
+                }'
+            &quot;&quot;&quot;
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<h3 id="本章小结">本章小结</h3>
+<p>上面我们已经通过Jenkinsfile完成了最简单的项目的构建和部署，那么我们来思考目前的方式：</p>
+<ol>
+<li>目前都是在项目的单一分支下进行操作，企业内一般会使用feature、develop、release、master等多个分支来管理整个代码提交流程，如何根据不同的分支来做构建？</li>
+<li>构建视图中如何区分不同的分支?</li>
+<li>如何不配置webhook的方式实现构建？</li>
+<li>如何根据不同的分支选择发布到不同的环境(开发、测试、生产)？</li>
+</ol>
+<blockquote></blockquote>
+<h2 id="多分支流水线">多分支流水线</h2>
+<p><a href="https://jenkins.io/zh/doc/tutorials/build-a-multibranch-pipeline-project/">官方示例</a></p>
+<p>我们简化一下流程，假如使用develop分支作为开发分支，master分支作为集成测试分支，看一下如何使用多分支流水线来管理。</p>
+<h3 id="演示1多分支流水线的使用">演示1：多分支流水线的使用</h3>
+<ol>
+<li>提交develop分支：</li>
+</ol>
+<pre><code class="language-powershell">$ git checkout -b develop
+$ git push --set-upstream origin develop
+
+</code></pre>
+<ol start="2">
+<li>
+<p>禁用pipeline项目</p>
+</li>
+<li>
+<p>Jenkins端创建多分支流水线项目</p>
+<ul>
+<li>增加git分支源</li>
+<li>发现标签</li>
+<li>根据名称过滤，develop|master|v.*</li>
+<li>高级克隆，设置浅克隆</li>
+</ul>
+</li>
+</ol>
+<p>保存后，会自动检索项目中所有存在Jenkinsfile文件的分支和标签，若匹配我们设置的过滤正则表达式，则会添加到多分支的构建视图中。所有添加到视图中的分支和标签，会默认执行一次构建任务。</p>
+<h3 id="演示2美化消息通知内容">演示2：美化消息通知内容</h3>
+<ul>
+<li>添加构建阶段记录</li>
+<li>使用markdown格式，添加构建分支消息</li>
+</ul>
+<p><code>jenkins/pipelines/p6.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+    agent { label '172.21.51.68'}
+
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/myblog&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+        TAB_STR = &quot;\n                    \n&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;
+    }
+
+    stages {
+        stage('printenv') {
+            steps {
+                script{
+                    sh &quot;git log --oneline -n 1 &gt; gitlog.file&quot;
+                    env.GIT_LOG = readFile(&quot;gitlog.file&quot;).trim()
+                }
+                sh 'printenv'
+            }
+        }
+        stage('checkout') {
+            steps {
+                checkout scm
+                script{
+                    env.BUILD_TASKS = env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('build-image') {
+            steps {
+                retry(2) { sh 'docker build . -t ${IMAGE_REPO}:${GIT_COMMIT}'}
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('push-image') {
+            steps {
+                retry(2) { sh 'docker push ${IMAGE_REPO}:${GIT_COMMIT}'}
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh &quot;sed -i 's#{{IMAGE_URL}}#${IMAGE_REPO}:${GIT_COMMIT}#g' manifests/*&quot;
+                timeout(time: 1, unit: 'MINUTES') {
+                    sh &quot;kubectl apply -f manifests/&quot;
+                }
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+    }
+    post {
+        success { 
+            echo 'Congratulations!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        &quot;msgtype&quot;: &quot;markdown&quot;,
+                        &quot;markdown&quot;: {
+                            &quot;title&quot;:&quot;myblog&quot;,
+                            &quot;text&quot;: &quot;😄👍 构建成功 👍😄  \n**项目名称**：luffy  \n**Git log**: ${GIT_LOG}   \n**构建分支**: ${GIT_BRANCH}   \n**构建地址**：${RUN_DISPLAY_URL}  \n**构建任务**：${BUILD_TASKS}&quot;
+                        }
+                    }'
+            &quot;&quot;&quot; 
+        }
+        failure {
+            echo 'Oh no!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        &quot;msgtype&quot;: &quot;markdown&quot;,
+                        &quot;markdown&quot;: {
+                            &quot;title&quot;:&quot;myblog&quot;,
+                            &quot;text&quot;: &quot;😖❌ 构建失败 ❌😖  \n**项目名称**：luffy  \n**Git log**: ${GIT_LOG}   \n**构建分支**: ${GIT_BRANCH}  \n**构建地址**：${RUN_DISPLAY_URL}  \n**构建任务**：${BUILD_TASKS}&quot;
+                        }
+                    }'
+            &quot;&quot;&quot;
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<h3 id="演示3通知gitlab构建状态">演示3：通知gitlab构建状态</h3>
+<p>Jenkins端做了构建，可以通过gitlab通过的api将构建状态通知过去，作为开发人员发起Merge Request或者合并Merge Request的依据之一。</p>
+<p><em>注意一定要指定gitLabConnection('gitlab')，不然没法认证到Gitlab端</em></p>
+<p><code>jenkins/pipelines/p7.yaml</code></p>
+<pre><code class="language-powershell">pipeline {
+    agent { label '172.21.51.68'}
+    
+    options {
+		buildDiscarder(logRotator(numToKeepStr: '10'))
+		disableConcurrentBuilds()
+		timeout(time: 20, unit: 'MINUTES')
+		gitLabConnection('gitlab')
+	}
+
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/demo/myblog&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+        TAB_STR = &quot;\n                    \n&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;
+    }
+
+    stages {
+        stage('printenv') {
+            steps {
+                script{
+                    sh &quot;git log --oneline -n 1 &gt; gitlog.file&quot;
+                    env.GIT_LOG = readFile(&quot;gitlog.file&quot;).trim()
+                }
+                sh 'printenv'
+            }
+        }
+        stage('checkout') {
+            steps {
+                checkout scm
+                updateGitlabCommitStatus(name: env.STAGE_NAME, state: 'success')
+                script{
+                    env.BUILD_TASKS = env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('build-image') {
+            steps {
+                retry(2) { sh 'docker build . -t ${IMAGE_REPO}:${GIT_COMMIT}'}
+                updateGitlabCommitStatus(name: env.STAGE_NAME, state: 'success')
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('push-image') {
+            steps {
+                retry(2) { sh 'docker push ${IMAGE_REPO}:${GIT_COMMIT}'}
+                updateGitlabCommitStatus(name: env.STAGE_NAME, state: 'success')
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh &quot;sed -i 's#{{IMAGE_URL}}#${IMAGE_REPO}:${GIT_COMMIT}#g' manifests/*&quot;
+                timeout(time: 1, unit: 'MINUTES') {
+                    sh &quot;kubectl apply -f manifests/&quot;
+                }
+                updateGitlabCommitStatus(name: env.STAGE_NAME, state: 'success')
+                script{
+                    env.BUILD_TASKS += env.STAGE_NAME + &quot;√...&quot; + env.TAB_STR
+                }
+            }
+        }
+    }
+    post {
+        success { 
+            echo 'Congratulations!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        &quot;msgtype&quot;: &quot;markdown&quot;,
+                        &quot;markdown&quot;: {
+                            &quot;title&quot;:&quot;myblog&quot;,
+                            &quot;text&quot;: &quot;😄👍 构建成功 👍😄  \n**项目名称**：luffy  \n**Git log**: ${GIT_LOG}   \n**构建分支**: ${BRANCH_NAME}   \n**构建地址**：${RUN_DISPLAY_URL}  \n**构建任务**：${BUILD_TASKS}&quot;
+                        }
+                    }'
+            &quot;&quot;&quot; 
+        }
+        failure {
+            echo 'Oh no!'
+            sh &quot;&quot;&quot;
+                curl 'https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_CREDS_PSW}' \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                        &quot;msgtype&quot;: &quot;markdown&quot;,
+                        &quot;markdown&quot;: {
+                            &quot;title&quot;:&quot;myblog&quot;,
+                            &quot;text&quot;: &quot;😖❌ 构建失败 ❌😖  \n**项目名称**：luffy  \n**Git log**: ${GIT_LOG}   \n**构建分支**: ${BRANCH_NAME}  \n**构建地址**：${RUN_DISPLAY_URL}  \n**构建任务**：${BUILD_TASKS}&quot;
+                        }
+                    }'
+            &quot;&quot;&quot;
+        }
+        always { 
+            echo 'I will always say Hello again!'
+        }
+    }
+}
+
+</code></pre>
+<p>我们可以访问gitlab，然后找到commit记录，查看同步状态</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1646839722925.jpg" alt="" loading="lazy"></figure>
+<p>提交merge request，也可以查看到相关的任务状态，可以作为项目owner合并代码的依据之一：</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1646839740192.jpg" alt="" loading="lazy"></figure>
+<h3 id="本章小节">本章小节</h3>
+<p>优势:</p>
+<ul>
+<li>根据分支展示, 视图人性化</li>
+<li>自动检测各分支的变更</li>
+</ul>
+<p>思考：</p>
+<ul>
+<li>Jenkins的slave端，没有任务的时候处于闲置状态，slave节点多的话造成资源浪费</li>
+<li>是否可以利用kubernetes的Pod来启动slave，动态slave pod来执行构建任务</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH/">
+            <span class="flex-auto">Devops</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/Gm-AWOnGN/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  工具集成与Jenkinsfile实践
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/yIGgSal46/">
+                <h3 class="post-title">
+                  基于Kubernetes的DevOps平台实践
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
