@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/favicon.ico?v=1646835812257">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646836088896">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/images/avatar.png?v=1646835812257" alt="">
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646836088896" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -112,7 +112,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -123,7 +123,7 @@
           2022-02-18 / 19 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/post-images/qJwfGvnw1.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/qJwfGvnw1.png" alt="">
         
         <div class="post-content yue">
           <h1 id="pv与pvc快速入门">PV与PVC快速入门</h1>
@@ -219,7 +219,7 @@ spec:
 </ul>
 </li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/post-images/1645154071426.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154071426.webp" alt="" loading="lazy"></figure>
 <ul>
 <li>persistentVolumeReclaimPolicy，pv的回收策略, 目前只有 NFS 和 HostPath 两种类型支持回收策略
 <ul>
@@ -434,9 +434,9 @@ $ kubectl create -f deployment.yaml
 # 删除pvc
 </code></pre>
 <h2 id="storageclass实现动态挂载">storageClass实现动态挂载</h2>
-<p><img src="https://adong97.github.io/post-images/1645342751450.jpg" alt="" loading="lazy"><br>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645342751450.jpg" alt="" loading="lazy"><br>
 创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass(存储类)  +  provisioner(驱动器)的方式来实现通过PVC自动创建并绑定PV。<br>
-<img src="https://adong97.github.io/post-images/1645154117942.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1645154117942.png" alt="" loading="lazy"></p>
 <p>部署： https://github.com/kubernetes-retired/external-storage</p>
 <p>部署之前，需要修改api-server的参数，否则会报错</p>
 <pre><code>unexpected error getting claim reference: selfLink was empty, can't  make reference
@@ -623,7 +623,7 @@ persistentvolume/pvc-0bc7310a-358e-4f10-989d-539677115d55   200Mi      RWX      
 <h1 id="对接ceph存储实践">对接Ceph存储实践</h1>
 <p>ceph的安装及使用参考 http://docs.ceph.org.cn/start/intro/</p>
 <p>单点快速安装：  https://blog.csdn.net/h106140873/article/details/90201379</p>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/post-images/1645154148566.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154148566.png" alt="" loading="lazy"></figure>
 <pre><code class="language-powershell"># CephFS需要使用两个Pool来分别存储数据和元数据
 ceph osd pool create cephfs_data 128
 ceph osd pool create cephfs_meta 128
@@ -643,7 +643,7 @@ $ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc07
 </code></pre>
 <h2 id="storageclass实现动态挂载-2">storageClass实现动态挂载</h2>
 <p>创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass  +  provisioner的方式来实现通过PVC自动创建并绑定PV。</p>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/post-images/1645154168771.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io//post-images/1645154168771.png" alt="" loading="lazy"></figure>
 <p>比如，针对cephfs，可以创建如下类型的storageclass：</p>
 <pre><code class="language-yaml">kind: StorageClass
 apiVersion: storage.k8s.io/v1
@@ -857,7 +857,7 @@ $ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kub
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -866,7 +866,7 @@ $ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kub
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/post/5VA_pluXP/">
+              <a href="https://adong97.github.io/HDong.github.io/post/5VA_pluXP/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   Kubernetes集群的网络实现
@@ -877,7 +877,7 @@ $ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kub
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/post/KB7k12Lu1/">
+              <a href="https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/">
                 <h3 class="post-title">
                    kubernetes通过HPA实现业务应用的动态扩缩容
                   <i class="ri-arrow-right-line"></i>
@@ -892,7 +892,7 @@ $ findmnt /var/lib/kubelet/pods/61ba43c5-d2e9-4274-ac8c-008854e4fa8e/volumes/kub
       </div>
     </div>
 
-    <script src="https://adong97.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()

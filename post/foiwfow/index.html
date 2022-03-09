@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/favicon.ico?v=1646835812257">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646836088896">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/images/avatar.png?v=1646835812257" alt="">
+        <a href="https://adong97.github.io/HDong.github.io/">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646836088896" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -109,7 +109,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -120,14 +120,14 @@
           2021-12-09 / 15 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/post-images/foiwfow.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/foiwfow.png" alt="">
         
         <div class="post-content yue">
           <h1 id="docker-镜像管理">Docker 镜像管理</h1>
 <p>Docker镜像含有启动容器所需要的文件系统及所需要的内容，因此镜像主要用于创建并启动docker容器。<br>
 Docker镜像含里面是一层层文件系统,叫做Union FS（联合文件系统）,联合文件系统，可以将几层目录挂载到一起，形成一个虚拟文件系统,虚拟文件系统的目录结构就像普通linux的目录结构一样，docker通过这些文件再加上宿主机的内核提供了一个linux的虚拟环境,每一层文件系统我们叫做一层layer，联合文件系统可以对每一层文件系统设置三种权限，只读（readonly）、读写（readwrite）和写出（whiteout-able），但是docker镜像中每一层文件系统都是只读的,构建镜像的时候,从一个最基本的操作系统开始,每个构建的操作都相当于做一层的修改,增加了一层文件系统,一层层往上叠加,上层的修改会覆盖底层该位置的可见性，这也很容易理解，就像上层把底层遮住了一样,当使用镜像的时候，我们只会看到一个完全的整体，不知道里面有几层也不需要知道里面有几层，结构如下：</p>
-<p><img src="https://adong97.github.io/post-images/1639065242854.png" alt="" loading="lazy"><br>
-<img src="https://adong97.github.io/post-images/1639065293589.png" alt="" loading="lazy"></p>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1639065242854.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1639065293589.png" alt="" loading="lazy"></p>
 <pre><code>第一层（layer1）：官方镜像这个是由官方提供的，
 第二层（layer2）：我们就是在这层的镜像层之上配置我们的东西,就是那些所谓的运行环境,也就是第二层，
 这一层我们通常加一些我们常用的命令，然后我们又在官方的镜像层之上我们又装了一些东西，
@@ -150,9 +150,9 @@ rootfs(root file system) 包含的就是典型Linux系统中的/dev，/proc，/b
 docker镜像直接调用宿主机的内核，镜像中只提供rootfs，也就是只需要包括最基本的命令、工具和程序库就可以了，比如alpine镜像，在5M左右。 
 下图就是有两个不同的镜像在一个宿主机内核上实现不同的 rootfs。 
 </code></pre>
-<p><img src="https://adong97.github.io/post-images/1639065418280.png" alt="" loading="lazy"><br>
+<p><img src="https://adong97.github.io/HDong.github.io//post-images/1639065418280.png" alt="" loading="lazy"><br>
 容器、镜像父镜像：<br>
-<img src="https://adong97.github.io/post-images/1639065443426.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1639065443426.png" alt="" loading="lazy"></p>
 <pre><code>在内核中安装了lxc,aufs/btrfs文件系统
 上层就是镜像,base images就是官方提供的镜像,基础层
 基于base image往上可以自定义一些层面,例如安装一些常用命令或者安装一些服务称为自定义镜像
@@ -276,7 +276,7 @@ ONBUILD：创建镜像，作为其他镜像的基础镜像运行操作指令
 ENTRYPOINT：指定运行容器启动过程执行命令，覆盖CMD参数
 </code></pre>
 <p>用一张图解释常用指令的意义<br>
-<img src="https://adong97.github.io/post-images/1639065820336.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1639065820336.png" alt="" loading="lazy"></p>
 <h2 id="二-dockerfile文件说明">二、Dockerfile文件说明</h2>
 <p><strong>1、FROM</strong></p>
 <pre><code>指定基础镜像，必须为第一个命令
@@ -472,7 +472,7 @@ exec执行
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/tag/KZzTEma9t/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
             <span class="flex-auto">Docker</span>
           </a>
         
@@ -481,7 +481,7 @@ exec执行
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/post/fisubdefs/">
+              <a href="https://adong97.github.io/HDong.github.io/post/fisubdefs/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   Docker 镜像制作(实操)
@@ -492,7 +492,7 @@ exec执行
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/post/hjaoidsa/">
+              <a href="https://adong97.github.io/HDong.github.io/post/hjaoidsa/">
                 <h3 class="post-title">
                   Docker 存储引擎与服务进程
                   <i class="ri-arrow-right-line"></i>
@@ -507,7 +507,7 @@ exec执行
       </div>
     </div>
 
-    <script src="https://adong97.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()
