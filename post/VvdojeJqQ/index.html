@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1646844785114">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647340083901">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1646844785114" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647340083901" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -69,7 +69,12 @@
 <li><a href="#%E4%BA%94-master%E8%8A%82%E7%82%B9%E5%88%9D%E5%A7%8B%E5%8C%96">五 Master节点初始化</a>
 <ul>
 <li><a href="#51-%E6%8F%90%E5%89%8D%E5%87%86%E5%A4%87%E9%95%9C%E5%83%8F">5.1 提前准备镜像</a></li>
-<li><a href="#52-%E5%88%9D%E5%A7%8B%E5%8C%96master%E8%8A%82%E7%82%B9">5.2 初始化Master节点</a></li>
+<li><a href="#52-%E5%88%9D%E5%A7%8B%E5%8C%96master%E8%8A%82%E7%82%B9">5.2 初始化Master节点</a>
+<ul>
+<li><a href="#521-%E4%BD%BF%E7%94%A8kubeadmyaml%E6%96%87%E4%BB%B6%E5%88%9D%E5%A7%8B%E5%8C%96">5.2.1 使用kubeadm.yaml文件初始化</a></li>
+<li><a href="#522-%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E5%88%9D%E5%A7%8B%E5%8C%96">5.2.2 使用命令初始化</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#%E5%85%AD-%E5%AE%89%E8%A3%85%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6">六 安装网络插件</a>
@@ -99,7 +104,7 @@
   <div>
     
       
-        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+        <a href="./HDong.github.io/" class="menu" style="animation-delay: 0s">
           首页
         </a>
       
@@ -385,9 +390,6 @@ net.bridge.bridge-nf-call-ip6tables = 1    #开启网桥模式
 net.bridge.bridge-nf-call-iptables = 1      #开启网桥模式
 net.ipv4.ip_forward=1
 vm.max_map_count=262144 
-net.ipv4.ip_forward = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.bridge.bridge-nf-call-ip6tables = 1
 fs.may_detach_mounts = 1
 vm.overcommit_memory=1
 vm.panic_on_oom=0
@@ -493,7 +495,7 @@ apt-get update
 ~]# apt-cache madison kubeadm kubelet kubectl
 
 ##本次kubernetes安装使用1.22.5版本
-~]# apt-get install kubectl=1.22.5 kubeadm=1.22.5 kubelet=1.22.5 -y
+~]# apt-get install kubectl=1.22.5-00 kubeadm=1.22.5-00 kubelet=1.22.5-00 -y
 
 ## 查看kubeadm版本
 $ kubeadm version
@@ -693,6 +695,52 @@ docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.5.0-0
 docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.8.4
 </code></pre>
 <h2 id="52-初始化master节点">5.2 初始化Master节点</h2>
+<h3 id="521-使用kubeadmyaml文件初始化">5.2.1 使用kubeadm.yaml文件初始化</h3>
+<pre><code>$ kubeadm config print init-defaults &gt; kubeadm.yaml
+$ cat kubeadm.yaml
+apiVersion: kubeadm.k8s.io/v1beta2
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: abcdef.0123456789abcdef
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 10.1.13.156    #改为#master节点主机IP
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: k8s-master
+  taints: null
+---
+apiServer:
+  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta2
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: registry.aliyuncs.com/google_containers    #更换国内镜像地址
+kind: ClusterConfiguration
+kubernetesVersion: 1.21.5  #更改镜像版本号
+networking:
+  dnsDomain: cluster.local
+  podSubnet: 10.244.0.0/16  #添加pod网段
+  serviceSubnet: 10.96.0.0/12
+scheduler: {}
+
+
+执行初始化
+kubeadm init --config kubeadm.yaml
+</code></pre>
+<h3 id="522-使用命令初始化">5.2.2 使用命令初始化</h3>
 <ul>
 <li>操作节点：只在master1节点（k8s-master）执行</li>
 </ul>
