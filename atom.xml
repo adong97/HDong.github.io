@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io/</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-03-15T10:46:02.137Z</updated>
+    <updated>2022-03-15T11:11:05.583Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[hello world]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/Y7ws3wMpg/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/Y7ws3wMpg/">
+        </link>
+        <updated>2022-03-15T11:09:31.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[基于sharedLibrary进行CI/CD流程的优化]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/T-kfr_98s/</id>
@@ -72,12 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/hR_asgw8g/">
         </link>
         <updated>2022-02-26T00:51:07.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[开源日志管理方案ELK和EFK的区别]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/lqDokfMSo/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/lqDokfMSo/">
-        </link>
-        <updated>2022-02-26T00:19:47.000Z</updated>
     </entry>
 </feed>
