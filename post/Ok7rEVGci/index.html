@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647649556665">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647669719213">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647649556665" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647669719213" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -39,9 +39,9 @@
 <li><a href="#%E5%AF%BC%E5%85%A5dashboard%E7%9A%84%E9%85%8D%E7%BD%AE">导入Dashboard的配置</a></li>
 <li><a href="#devopsprodigy-kubegraf%E6%8F%92%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8">DevOpsProdigy KubeGraf插件的使用</a></li>
 <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF">自定义监控面板</a></li>
-<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B%E4%B8%8Epromql">Metrics指标类型与PromQL</a></li>
 </ul>
 </li>
+<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B%E4%B8%8Epromql">Metrics指标类型与PromQL</a></li>
 </ul>
 
           </div>
@@ -114,7 +114,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Grafana安装与配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 15 min read
+          2022-02-26 / 16 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/Ok7rEVGci.png" alt="">
@@ -136,6 +136,7 @@
 <li>配置ingress暴露访问入口</li>
 </ul>
 <pre><code class="language-shell">$ cat grafana-all.yaml
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -144,7 +145,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: nfs
+  storageClassName: nfs-storage
   resources:
     requests:
       storage: 200Gi
@@ -269,6 +270,8 @@ spec:
 <p><a href="https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app">DevOpsProdigy KubeGraf</a> 是一个非常优秀的 Grafana Kubernetes 插件，是 Grafana 官方的 Kubernetes 插件的升级版本，该插件可以用来可视化和分析 Kubernetes 集群的性能，通过各种图形直观的展示了 Kubernetes 集群的主要服务的指标和特征，还可以用于检查应用程序的生命周期和错误日志。</p>
 <pre><code class="language-shell"># 进入grafana容器内部执行安装
 $ kubectl -n monitor exec -ti grafana-594f447d6c-jmjsw bash
+
+##安装devopsprodigy-kubegraf-app
 bash-5.0# grafana-cli plugins install devopsprodigy-kubegraf-app 1.5.2
 installing devopsprodigy-kubegraf-app @ 1.5.2
 from: https://grafana.com/api/plugins/devopsprodigy-kubegraf-app/versions/1.4.1/download
@@ -278,7 +281,15 @@ into: /var/lib/grafana/plugins
 
 Restart grafana after installing plugins . &lt;service grafana-server restart&gt;
 
+##安装grafana-piechart-panel
 bash-5.0# grafana-cli plugins install grafana-piechart-panel
+installing grafana-piechart-panel @ 1.6.2
+from: https://grafana.com/api/plugins/grafana-piechart-panel/versions/1.6.2/download
+into: /var/lib/grafana/plugins
+
+✔ Installed grafana-piechart-panel successfully
+
+Restart grafana after installing plugins . &lt;service grafana-server restart&gt;
 
 # 也可以下载离线包进行安装
 
@@ -303,11 +314,92 @@ $ kubectl -n monitor delete po grafana-594f447d6c-jmjsw
 <p>Auth：勾选TLS Client Auth以及With CA Cert，勾选后会下面有三块证书内容需要填写，内容均来自<code>~/.kube/config</code>文件，需要对文件中的内容做一次base64 解码</p>
 <ul>
 <li>CA Cert：使用config文件中的<code>certificate-authority-data</code>对应的内容</li>
-<li>Client Cert：使用config文件中的<code>client-certificate-data</code>对应的内容</li>
-<li>Client Key：使用config文件中的<code>client-key-data</code>对应的内容</li>
 </ul>
 </li>
 </ul>
+<pre><code class="language-shell">echo LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeU1ETXhOakUxTVRVek5Wb1hEVE15TURNeE16RTFNVFV6TlZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBS2Z6CmRZenlhcFBUTk5MTW5qanVDVzdiclZIVTRJWlorak9xVDF6VXlIaURNT3RkekluR1pkWEhFR2VGNk1ranovSjcKMitFcHdvSlRzV3laUDIxMEUzSCsrNkRDOTYwTHhWYks5VHhrZ2M3SkJwcm15Z1BMYW9uMDRjVGhIcUhUQndIbwpxaXgzQU40M0FRUzVFUDloN25ZU0xqTE52NEx1bmpNZUpRTTE3TW9ERzhxUUM1N3FaMWVmandSMktuK3JmbndrCkNVNWdablhoT0RyTm5vSGJoaFVvQldqa05vN3NMM2htQk9Jd3hMbG1jdlJOQWNSWXR2cjdIR3pYVDkwNk1TOU0KSVlBTUlteTB1TmRkOHJiL2tOSlFTRC9HWXNFaUttT0l5dWVKWmhDdHB2UngyeitrZHNmeS9EOGlmZW1WVTNucAprTFRGd0lkZUxQTGJFVDhxWGZzQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZNdGk0cTlNVFpvSFIxaVZ5NXZyclRYYUM2UTVNQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBSitQcStmaktlakJyYlA1Yks3RAo2ejBDNERYNVJBc2xsb3ZKSnh2Z1FDNXFrckF3ZzBTYWNqMCtmQVRIRHBzY29Rc0VURTkrb0hGeGxiSTU2Tko0CjRMaUVaTjMvdlhiMlNzVXZ5WjAyNWdhTGk0MEpZcnozMTFPVlRpRkNtMGw2T2RUZ2x2ekFhdTRlRzh4U2hoYkUKZjRVSHZldm9BRllyaFUySW95bVBMcmp6OHpIdEdsaHh0a05ndzhvQWNISWk4V01EVW9WMGkzNWNRYXQ3elo1NwpZc0lTM3duMEJrNS9abkN3SEZGRUJIMHRGWHdQVlhDOHNUN3o1ckZ3MnozbVd1ZEZpSmJSdHBvaFZodDFrN1ZsCkpHK3U5cVg3OVpwWEV3dXZrRjJXeTYvWnhJa0d2c1pDZEV1Z2tEaGdNR3Nia05RZUVMOHQ2Q1JYeHZHV0x3cXAKNFdZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==|base64 -d
+
+得到以下数据：
+-----BEGIN CERTIFICATE-----
+MIIC/jCCAeagAwIBAgIBADANBgkqhkiG9w0BAQsFADAVMRMwEQYDVQQDEwprdWJl
+cm5ldGVzMB4XDTIyMDMxNjE1MTUzNVoXDTMyMDMxMzE1MTUzNVowFTETMBEGA1UE
+AxMKa3ViZXJuZXRlczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKfz
+dYzyapPTNNLMnjjuCW7brVHU4IZZ+jOqT1zUyHiDMOtdzInGZdXHEGeF6Mkjz/J7
+2+EpwoJTsWyZP210E3H++6DC960LxVbK9Txkgc7JBprmygPLaon04cThHqHTBwHo
+qix3AN43AQS5EP9h7nYSLjLNv4LunjMeJQM17MoDG8qQC57qZ1efjwR2Kn+rfnwk
+CU5gZnXhODrNnoHbhhUoBWjkNo7sL3hmBOIwxLlmcvRNAcRYtvr7HGzXT906MS9M
+IYAMImy0uNdd8rb/kNJQSD/GYsEiKmOIyueJZhCtpvRx2z+kdsfy/D8ifemVU3np
+kLTFwIdeLPLbET8qXfsCAwEAAaNZMFcwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB
+/wQFMAMBAf8wHQYDVR0OBBYEFMti4q9MTZoHR1iVy5vrrTXaC6Q5MBUGA1UdEQQO
+MAyCCmt1YmVybmV0ZXMwDQYJKoZIhvcNAQELBQADggEBAJ+Pq+fjKejBrbP5bK7D
+6z0C4DX5RAsllovJJxvgQC5qkrAwg0Sacj0+fATHDpscoQsETE9+oHFxlbI56NJ4
+4LiEZN3/vXb2SsUvyZ025gaLi40JYrz311OVTiFCm0l6OdTglvzAau4eG8xShhbE
+f4UHvevoAFYrhU2IoymPLrjz8zHtGlhxtkNgw8oAcHIi8WMDUoV0i35cQat7zZ57
+YsIS3wn0Bk5/ZnCwHFFEBH0tFXwPVXC8sT7z5rFw2z3mWudFiJbRtpohVht1k7Vl
+JG+u9qX79ZpXEwuvkF2Wy6/ZxIkGvsZCdEugkDhgMGsbkNQeEL8t6CRXxvGWLwqp
+4WY=
+-----END CERTIFICATE-----
+</code></pre>
+<ul>
+<li>Client Cert：使用config文件中的<code>client-certificate-data</code>对应的内容</li>
+</ul>
+<pre><code class="language-shell">echo LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURJVENDQWdtZ0F3SUJBZ0lJTm11cFdyT1Y3RWt3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TWpBek1UWXhOVEUxTXpWYUZ3MHlNekF6TVRZeE5URTFNemxhTURReApGekFWQmdOVkJBb1REbk41YzNSbGJUcHRZWE4wWlhKek1Sa3dGd1lEVlFRREV4QnJkV0psY201bGRHVnpMV0ZrCmJXbHVNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXZ2MW03SnlQUXl2a1IzL0UKdFZNbjhjNTFwMk1MSFhqd3cxR2lVeUFRbjZoS1l2RUpqS3dZc245aHhDblhtZytKc1Z3MXdMaTNzSTkwTnlDRwpmWkN2YmhPYnc3ZnhaMnU1YlhEZnBrYVhZcUhDQmk3dXk1ekJtOGNDbnZxMXFYSWwzbXZpd3lrT0gwNVpOTy9hCjljbHpNZERMamJuLzhvSW5Dc3J3V2haSWNrR25PdFpoUStuWXpsTkVkY1NXOHRiV2lnRVVPTUt5dGsrenUwQTYKUnVnYzVpNFRxajZVdDZqWkJ1TGZwVS9RNGlRNkN5WWlHYSszRzhURGM1aTNZVmNjUGo5Zk9HK2FlcGxyVlMwegp6eDBWSDlINHhlSlFvVG1HQkoxVnNQWWV5M2wvUlFKTVhkS212ekx0N1czaFdhZDcxT3JSN2hvUFhHYUFaSXc1CkgwUjZhUUlEQVFBQm8xWXdWREFPQmdOVkhROEJBZjhFQkFNQ0JhQXdFd1lEVlIwbEJBd3dDZ1lJS3dZQkJRVUgKQXdJd0RBWURWUjBUQVFIL0JBSXdBREFmQmdOVkhTTUVHREFXZ0JUTFl1S3ZURTJhQjBkWWxjdWI2NjAxMmd1awpPVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBTitXZXhUd2RkMUM1NEl6SVpHNkV6Z1V0N2Rtb2VkQ2ZaUGc0Ck1VUVBSYlJGZ3FObmJyT0RQdHNiYmxXcC9OOVNYaTFuZEhNRGh3YnIxQjN1Zmg2dWtmaXUxZXVlVDI1bHJtVmUKd21VWStwakJZYlhkbksxRVRKNE0xaFJBaWQ5SERBTUxTZnNCY0k3djZJRWhMa0VFbXllSW9Kb0FTcFoxRkVQQgovOU4vLzQyMFpJMlJYbTNseDZYK29jYnl0cmZsdUdwV2wwVkR5T3N5RDIyemZyN1NOZEZlK21hZlRhMUdnbUt0CjVqVzZWMVNkVURyZzBLQ3BsK2pBUnJLV1ZRY1VIS3ZLaTRuRkZtYnZ1TG81MjVnemh1RElYNlUvelpLVHo0VmkKYkU3MS9OYStBd21SNk9GTlFkbmJmZElQbEFKZlU5b05ITEVOTllrMkFzVnZ4WCtkdUE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==|base64 -d
+
+得到以下数据：
+-----BEGIN CERTIFICATE-----
+MIIDITCCAgmgAwIBAgIINmupWrOV7EkwDQYJKoZIhvcNAQELBQAwFTETMBEGA1UE
+AxMKa3ViZXJuZXRlczAeFw0yMjAzMTYxNTE1MzVaFw0yMzAzMTYxNTE1MzlaMDQx
+FzAVBgNVBAoTDnN5c3RlbTptYXN0ZXJzMRkwFwYDVQQDExBrdWJlcm5ldGVzLWFk
+bWluMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvv1m7JyPQyvkR3/E
+tVMn8c51p2MLHXjww1GiUyAQn6hKYvEJjKwYsn9hxCnXmg+JsVw1wLi3sI90NyCG
+fZCvbhObw7fxZ2u5bXDfpkaXYqHCBi7uy5zBm8cCnvq1qXIl3mviwykOH05ZNO/a
+9clzMdDLjbn/8oInCsrwWhZIckGnOtZhQ+nYzlNEdcSW8tbWigEUOMKytk+zu0A6
+Rugc5i4Tqj6Ut6jZBuLfpU/Q4iQ6CyYiGa+3G8TDc5i3YVccPj9fOG+aeplrVS0z
+zx0VH9H4xeJQoTmGBJ1VsPYey3l/RQJMXdKmvzLt7W3hWad71OrR7hoPXGaAZIw5
+H0R6aQIDAQABo1YwVDAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUH
+AwIwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBTLYuKvTE2aB0dYlcub66012guk
+OTANBgkqhkiG9w0BAQsFAAOCAQEAN+WexTwdd1C54IzIZG6EzgUt7dmoedCfZPg4
+MUQPRbRFgqNnbrODPtsbblWp/N9SXi1ndHMDhwbr1B3ufh6ukfiu1eueT25lrmVe
+wmUY+pjBYbXdnK1ETJ4M1hRAid9HDAMLSfsBcI7v6IEhLkEEmyeIoJoASpZ1FEPB
+/9N//420ZI2RXm3lx6X+ocbytrfluGpWl0VDyOsyD22zfr7SNdFe+mafTa1GgmKt
+5jW6V1SdUDrg0KCpl+jARrKWVQcUHKvKi4nFFmbvuLo525gzhuDIX6U/zZKTz4Vi
+bE71/Na+AwmR6OFNQdnbfdIPlAJfU9oNHLENNYk2AsVvxX+duA==
+-----END CERTIFICATE-----
+</code></pre>
+<ul>
+<li>Client Key：使用config文件中的<code>client-key-data</code>对应的内容</li>
+</ul>
+<pre><code class="language-shell">echo LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBdnYxbTdKeVBReXZrUjMvRXRWTW44YzUxcDJNTEhYand3MUdpVXlBUW42aEtZdkVKCmpLd1lzbjloeENuWG1nK0pzVncxd0xpM3NJOTBOeUNHZlpDdmJoT2J3N2Z4WjJ1NWJYRGZwa2FYWXFIQ0JpN3UKeTV6Qm04Y0NudnExcVhJbDNtdml3eWtPSDA1Wk5PL2E5Y2x6TWRETGpibi84b0luQ3Nyd1doWklja0duT3RaaApRK25ZemxORWRjU1c4dGJXaWdFVU9NS3l0ayt6dTBBNlJ1Z2M1aTRUcWo2VXQ2alpCdUxmcFUvUTRpUTZDeVlpCkdhKzNHOFREYzVpM1lWY2NQajlmT0crYWVwbHJWUzB6engwVkg5SDR4ZUpRb1RtR0JKMVZzUFlleTNsL1JRSk0KWGRLbXZ6THQ3VzNoV2FkNzFPclI3aG9QWEdhQVpJdzVIMFI2YVFJREFRQUJBb0lCQVFDS2FVeVk5MUVmeGdSWApDTEovRWplbGx4Rk84SWxTbjU0a2Z0bmIwaVlaL3JXQ0JOcjkxbzdEZFd0ZDVWRDV0bjc4U1M0dmIrNjNodzhiCkVIaEhNWDdoa0ZaWFBjdzJQaXlRc3JkeVlrQTkyNnFvSG9VeWpIVUhOdStnVldNbjNMQ3pBNDdBRHRYTVBGU0wKOTdQQVluRVlUZy9tczBCWStKZmd5M2ZxWWJHNUVyYkFuV0pySXZVODNCNnJHbGdsdVpPKzFldm81SXByb2JkcwpnZGhqa25McEZTMHBOR0tsNGNFYUgyTnZUSzU5NmJXUVJLU2ZRY0FIdy9VRzA0aC9wc3RFSVh2aWRlMk1WdTNjClE5VStpZDVnU2MrL0RSVGFhaUk1SUpaaGxiaVYzRTNiRHQrakR1a28xb1AxUHM2WlRIS0tFZUpEUjdmbWFiMjUKbUh0bUFkZWRBb0dCQVBoQk9JWGIxcHZhSkJ3ZUtxbENJeTJySHlEdGNrVVJpdEJ5cFFOZ0Nkb1BLcnVZWUZWRApCSk1qNjFwNmdNckFRbG9NRWtLTFl1THlDM3ZvYUhJWTBoQnNNQ2s4SUJ5cEFzZFdYOUNqa2Q1TTdIR05XaFZrCmtlQVN0WEo4STNtbExNRVdrT0FoU0ZKTVBaeWowYXY3RlZVc1dyR3AxcGliVUovQi9LaUJtRnFiQW9HQkFNVHkKMEV3QWJ2UDVRbnZCM0VpdlBobXVsWkhJc2VPckhpbXJ3L1Awakl1ajY1OEM3MDdpeVBhTkhmYmZMNCtLK0lyOQpmSWhEd2x6SmRvdm13R1lKbmNseXJ4blprVHZYMlY1RXljb2Jhb3VxNkNpS1JJV3YySE9jZ0dyazhSNlc2THR5ClcrbXNnL2ZzeW9idmw2WTdIVzQ0SDl4SCs1WXk4N2J6dGs3OVVUMUxBb0dBZi8xQUl1TWdWZUcxVkRuSlROSW8KU05jOGlVRmg5SElDMjB6Ly9pbDVhczcrL1JDbU9jNy9nTXkzL2tIQ1BNVzZiNnBoajZWRktqUVg3NTMybXp4bwpzTWJXWGF2OThrakFnZnpxRVNzRGZWU3pZaWU2RmVWdnY5SmxjY3pHaldTM0dpV0VNOGwwKzlrS3VzTkt5aHY4Cjk1aVNlWjVTWVFOU0ljdGxjNHE4L1prQ2dZQmhCNy9Yc2Q3NEZEWE5BeFdrT2JJK3RPUzdqa1VXQlpnMnI0azcKQjZDMnEydktTNGZiTmFBTTJEbUxCeXBIYmhCRmFkMlF4TkZkSldSaVNLMUJtRHRFcEZ2Z1FIQnRLMHJNUnRlagoyeDRDOFpDdmFHK1o3YWlXVE9SM3haT0ZucFBLeGV6Q2sxdnhLWmdlSXF4MEdXdkdnYUF3eHNZTW1jMjR0Umw4CmtSRVZRUUtCZ1FEaXY1NHNhLzVCN0xsMXNxVko3ZWxML3kvV25EdHBPSmphQVJrVU9idGVORzh5dnE1eXhGbmwKRDZWcC9oR28vQXNNcTh2Mk5pMTdnSTI1RlppVkU3aEhLU004enVZb3VjTFVPN1JRc0FsODNwaittdlFBRUVINwp4YmxLUE1CcWRpdEZ0M0E4UGROaldiVXl6MWJwaVlhNE95Q0VzV3oxYTFidlRSbEoxcEhyNHc9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=|base64 -d
+
+得到以下数据：
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAvv1m7JyPQyvkR3/EtVMn8c51p2MLHXjww1GiUyAQn6hKYvEJ
+jKwYsn9hxCnXmg+JsVw1wLi3sI90NyCGfZCvbhObw7fxZ2u5bXDfpkaXYqHCBi7u
+y5zBm8cCnvq1qXIl3mviwykOH05ZNO/a9clzMdDLjbn/8oInCsrwWhZIckGnOtZh
+Q+nYzlNEdcSW8tbWigEUOMKytk+zu0A6Rugc5i4Tqj6Ut6jZBuLfpU/Q4iQ6CyYi
+Ga+3G8TDc5i3YVccPj9fOG+aeplrVS0zzx0VH9H4xeJQoTmGBJ1VsPYey3l/RQJM
+XdKmvzLt7W3hWad71OrR7hoPXGaAZIw5H0R6aQIDAQABAoIBAQCKaUyY91EfxgRX
+CLJ/EjellxFO8IlSn54kftnb0iYZ/rWCBNr91o7DdWtd5VD5tn78SS4vb+63hw8b
+EHhHMX7hkFZXPcw2PiyQsrdyYkA926qoHoUyjHUHNu+gVWMn3LCzA47ADtXMPFSL
+97PAYnEYTg/ms0BY+Jfgy3fqYbG5ErbAnWJrIvU83B6rGlgluZO+1evo5Iprobds
+gdhjknLpFS0pNGKl4cEaH2NvTK596bWQRKSfQcAHw/UG04h/pstEIXvide2MVu3c
+Q9U+id5gSc+/DRTaaiI5IJZhlbiV3E3bDt+jDuko1oP1Ps6ZTHKKEeJDR7fmab25
+mHtmAdedAoGBAPhBOIXb1pvaJBweKqlCIy2rHyDtckURitBypQNgCdoPKruYYFVD
+BJMj61p6gMrAQloMEkKLYuLyC3voaHIY0hBsMCk8IBypAsdWX9Cjkd5M7HGNWhVk
+keAStXJ8I3mlLMEWkOAhSFJMPZyj0av7FVUsWrGp1pibUJ/B/KiBmFqbAoGBAMTy
+0EwAbvP5QnvB3EivPhmulZHIseOrHimrw/P0jIuj658C707iyPaNHfbfL4+K+Ir9
+fIhDwlzJdovmwGYJnclyrxnZkTvX2V5Eycobaouq6CiKRIWv2HOcgGrk8R6W6Lty
+W+msg/fsyobvl6Y7HW44H9xH+5Yy87bztk79UT1LAoGAf/1AIuMgVeG1VDnJTNIo
+SNc8iUFh9HIC20z//il5as7+/RCmOc7/gMy3/kHCPMW6b6phj6VFKjQX7532mzxo
+sMbWXav98kjAgfzqESsDfVSzYie6FeVvv9JlcczGjWS3GiWEM8l0+9kKusNKyhv8
+95iSeZ5SYQNSIctlc4q8/ZkCgYBhB7/Xsd74FDXNAxWkObI+tOS7jkUWBZg2r4k7
+B6C2q2vKS4fbNaAM2DmLBypHbhBFad2QxNFdJWRiSK1BmDtEpFvgQHBtK0rMRtej
+2x4C8ZCvaG+Z7aiWTOR3xZOFnpPKxezCk1vxKZgeIqx0GWvGgaAwxsYMmc24tRl8
+kREVQQKBgQDiv54sa/5B7Ll1sqVJ7elL/y/WnDtpOJjaARkUObteNG8yvq5yxFnl
+D6Vp/hGo/AsMq8v2Ni17gI25FZiVE7hHKSM8zuYoucLUO7RQsAl83pj+mvQAEEH7
+xblKPMBqditFt3A8PdNjWbUyz1bpiYa4OyCEsWz1a1bvTRlJ1pHr4w==
+-----END RSA PRIVATE KEY-----
+</code></pre>
 <blockquote>
 <p>面板没有数据怎么办？</p>
 </blockquote>
@@ -346,14 +438,14 @@ $ kubectl -n monitor delete po grafana-594f447d6c-jmjsw
 </li>
 <li>
 <p>修改Metrics，$node和变量名字保持一致，意思为自动读取当前设置的节点的名字</p>
-<pre><code class="language-powershell">node_load1{instance=~&quot;$node&quot;}
+<pre><code class="language-shell">node_load1{instance=~&quot;$node&quot;}
 </code></pre>
 </li>
 </ul>
 <p>再添加一个面板，使用如下的表达式：</p>
 <pre><code class="language-shell">100-avg(irate(node_cpu_seconds_total{mode=&quot;idle&quot;,instance=~&quot;$node&quot;}[5m])) by (instance)*100
 </code></pre>
-<h2 id="metrics指标类型与promql">Metrics指标类型与PromQL</h2>
+<h1 id="metrics指标类型与promql">Metrics指标类型与PromQL</h1>
 <p>TSDB的样本分布示意图：</p>
 <pre><code class="language-powershell">  ^
   │   . . . . . . . . . . . . . . . . .   . .   node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;idle&quot;}

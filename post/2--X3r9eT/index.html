@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647649556665">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647669719213">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647649556665" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647669719213" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -42,10 +42,14 @@
 <li><a href="#%E5%B8%B8%E7%94%A8%E7%9B%91%E6%8E%A7%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">常用监控对象的指标采集</a>
 <ul>
 <li><a href="#%E7%9B%91%E6%8E%A7kube-apiserver">监控kube-apiserver</a></li>
-<li><a href="#%E7%9B%91%E6%8E%A7%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%9F%BA%E7%A1%80%E6%8C%87%E6%A0%87">监控集群节点基础指标</a></li>
+<li><a href="#%E7%9B%91%E6%8E%A7%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%9F%BA%E7%A1%80%E6%8C%87%E6%A0%87-node_exporter">监控集群节点基础指标 Node_exporter</a></li>
 <li><a href="#prometheus%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8Erelabeling">Prometheus的服务发现与Relabeling</a></li>
+<li><a href="#%E5%AE%B9%E5%99%A8%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">容器指标采集</a>
+<ul>
 <li><a href="#%E4%BD%BF%E7%94%A8cadvisor%E5%AE%9E%E7%8E%B0%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E7%9A%84%E9%87%87%E9%9B%86%E5%BA%9F%E5%BC%83">使用cadvisor实现容器监控指标的采集（废弃）</a></li>
 <li><a href="#%E4%BD%BF%E7%94%A8cadvisor%E5%AE%9E%E7%8E%B0%E5%AE%B9%E5%99%A8%E6%8C%87%E6%A0%87%E7%9A%84%E9%87%87%E9%9B%86%E6%96%B0">使用cadvisor实现容器指标的采集（新）</a></li>
+</ul>
+</li>
 <li><a href="#%E9%9B%86%E7%BE%A4service%E6%9C%8D%E5%8A%A1%E7%9A%84%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">集群Service服务的监控指标采集</a></li>
 </ul>
 </li>
@@ -122,7 +126,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">常用监控对象的指标采集</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 18 min read
+          2022-02-26 / 20 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/2--X3r9eT.png" alt="">
@@ -156,7 +160,7 @@ $ kubectl -n monitor get po -owide
 prometheus-5cd4d47557-758r5   1/1     Running   0          12m   10.244.2.104
 
 ##软重启，重新加载配置
-$ curl -XPOST 10.244.2.104:9090/-/reload
+$ curl -XPOST 10.110.125.214:9090/-/reload
 </code></pre>
 <h1 id="常用监控对象的指标采集">常用监控对象的指标采集</h1>
 <p>对于集群的监控一般我们需要考虑以下几个方面：</p>
@@ -172,39 +176,52 @@ $ curl -XPOST 10.244.2.104:9090/-/reload
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   23d
 
+#查看prometheus的token
 $ kubectl -n monitor describe secret prometheus-token-pg299
+
+##或者进入prometheus pod中查看
 $ kubectl -n monitor exec -it prometheus-7d6799c84c-hn6bq -- sh
 ~ $ df -h
 Filesystem                Size      Used Available Use% Mounted on
 ...
 tmpfs                   512.0M     12.0K    512.0M   0% /var/run/secrets/kubernetes.io/serviceaccount
 ...
+
 ~ $ cd /var/run/secrets/kubernetes.io/serviceaccount
 $ cat token
 
-$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJ6OGh1d2g4RzBCLUVidWFLdEtLcnhpSVcxM210NUpiMGk3UENNeTZCdWcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmxpbnV4LmxvY2FsIl0sImV4cCI6MTY3NzQ3MzI3NCwiaWF0IjoxNjQ1OTM3Mjc0LCJpc3MiOiJodHRwczovL2t1YmVybmV0ZXMuZGVmYXVsdC5zdmMubGludXgubG9jYWwiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6Im1vbml0b3IiLCJwb2QiOnsibmFtZSI6InByb21ldGhldXMtN2Q2Nzk5Yzg0Yy1objZicSIsInVpZCI6IjUyMWJjN2FhLWY5YzktNGY2NS05MzZmLWYyMjUxMzNhNWMzMyJ9LCJzZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoicHJvbWV0aGV1cyIsInVpZCI6IjgxOTRjZGU4LTJmMDgtNDA2OS04ZjZlLTZiNGUxZmIyZmEyMCJ9LCJ3YXJuYWZ0ZXIiOjE2NDU5NDA4ODF9LCJuYmYiOjE2NDU5MzcyNzQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptb25pdG9yOnByb21ldGhldXMifQ.MzUJj-QPvDrMdNo8YcKf9i75pyTI0X70U_Kb_e2K_-CObcP_7QRC3zUyxOc5N2luo_x4wfRhB3dXjMWtDPqXWP_Vq_ZDoQ2eD7Otxg30As9m5MxtXTDfcGz8YSIXTh25QXI2fwkrRqsbvSIcT7yYuO1r_ZNfth_YJX1VmAO5RCRebfnO3JUy_2DWjxnl4uxJdud2oevQWNnbyAa7eUk9lJf1gm7lXhvFrsRDB8c7CtXq9pkIBtuCX6owdX3eqIaqDRPjw0U0dmESfcqCLYuZ9_MbTKvDxzCm8c_J-on0J6M3AIjblKhV7qOAhgIvxJ3aU1atLc0pGlfeVRmmrTjgHg&quot; https://10.96.0.1:6443/metrics
+##退出pod 使用token curl接口
+$ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJ6OGh1d2g4RzBCLUVidWFLdEtLcnhpSVcxM210NUpiMGk3UENNeTZCdWcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmxpbnV4LmxvY2FsIl0sImV4cCI6MTY3NzQ3MzI3NCwiaWF0IjoxNjQ1OTM3Mjc0LCJpc3MiOiJodHRwczovL2t1YmVybmV0ZXMuZGVmYXVsdC5zdmMubGludXgubG9jYWwiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6Im1vbml0b3IiLCJwb2QiOnsibmFtZSI6InByb21ldGhldXMtN2Q2Nzk5Yzg0Yy1objZicSIsInVpZCI6IjUyMWJjN2FhLWY5YzktNGY2NS05MzZmLWYyMjUxMzNhNWMzMyJ9LCJzZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoicHJvbWV0aGV1cyIsInVpZCI6IjgxOTRjZGU4LTJmMDgtNDA2OS04ZjZlLTZiNGUxZmIyZmEyMCJ9LCJ3YXJuYWZ0ZXIiOjE2NDU5NDA4ODF9LCJuYmYiOjE2NDU5MzcyNzQsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptb25pdG9yOnByb21ldGhldXMifQ.MzUJj-QPvDrMdNo8YcKf9i75pyTI0X70U_Kb_e2K_-CObcP_7QRC3zUyxOc5N2luo_x4wfRhB3dXjMWtDPqXWP_Vq_ZDoQ2eD7Otxg30As9m5MxtXTDfcGz8YSIXTh25QXI2fwkrRqsbvSIcT7yYuO1r_ZNfth_YJX1VmAO5RCRebfnO3JUy_2DWjxnl4uxJdud2oevQWNnbyAa7eUk9lJf1gm7lXhvFrsRDB8c7CtXq9pkIBtuCX6owdX3eqIaqDRPjw0U0dmESfcqCLYuZ9_MbTKvDxzCm8c_J-on0J6M3AIjblKhV7qOAhgIvxJ3aU1atLc0pGlfeVRmmrTjgHg&quot; https://10.96.0.1:443/metrics
 </code></pre>
 <p>可以通过手动配置如下job来试下对apiserver服务的监控，</p>
 <pre><code class="language-shell">$ kubectl -n monitor edit configmap prometheus-config
 ...
-      - job_name: 'kubernetes-apiserver'
-        static_configs:
+      - job_name: 'kubernetes-apiserver'   #名称
+        static_configs:   #抓取的目标
         - targets: ['10.96.0.1']
         scheme: https
         tls_config:
-          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt   
           insecure_skip_verify: true
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+...
+##ca_file和bearer_token挂载在pod内部
+
+##软重启，重新加载配置
+$ curl -XPOST 10.110.125.214:9090/-/reload
+刷新prometheus页面，就可以看到apiserver的监控项了，在“Graph”中可以获取Apiserver的指标。
 </code></pre>
-<h2 id="监控集群节点基础指标">监控集群节点基础指标</h2>
-<p>node_exporter  https://github.com/prometheus/node_exporter</p>
+<h2 id="监控集群节点基础指标-node_exporter">监控集群节点基础指标 Node_exporter</h2>
+<p><strong>node_exporter：</strong>  https://github.com/prometheus/node_exporter</p>
 <p>分析：</p>
 <ul>
 <li>每个节点都需要监控，因此可以使用DaemonSet类型来管理node_exporter</li>
 <li>添加节点的容忍配置</li>
 <li>挂载宿主机中的系统文件信息</li>
 </ul>
-<pre><code class="language-shell">apiVersion: apps/v1
+<pre><code class="language-shell">$ cat node-exporter.ds.yaml
+
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: node-exporter
@@ -281,12 +298,16 @@ spec:
 <pre><code class="language-shell">$ kubectl apply -f node-exporter.yaml
 
 $ kubectl -n monitor get po -owide
-node-exporter-djcqx           1/1     Running   0          110s   172.21.51.68
+NAME                          READY   STATUS    RESTARTS   AGE    IP            NODE          NOMINATED NODE   READINESS GATES
+node-exporter-5x2jn           1/1     Running   0          56s    10.1.13.158   k8s-node2     &lt;none&gt;           &lt;none&gt;
+node-exporter-dhm2w           1/1     Running   0          56s    10.1.13.157   k8s-node1     &lt;none&gt;           &lt;none&gt;
+node-exporter-s4qkm           1/1     Running   0          56s    10.1.13.156   k8s-master1   &lt;none&gt;           &lt;none&gt;
 
 
-$ curl 172.21.51.143:9100/metrics
+监控9100端口，可以通过curl命令返回数据
+$ curl 10.1.13.158:9100/metrics
 </code></pre>
-<p>如何添加到Prometheus的target中？</p>
+<p>如何将Node-exporter添加到Prometheus的target中？</p>
 <ul>
 <li>配置一个Service，后端挂载node-exporter的服务，把Service的地址配置到target中
 <ul>
@@ -305,31 +326,55 @@ $ curl 172.21.51.143:9100/metrics
 <p>配置job即可：</p>
 <pre><code class="language-shell">      - job_name: 'kubernetes-sd-node-exporter'
         kubernetes_sd_configs:
-          - role: node
+          - role: node   #指定使用node类型的服务发现
+
+注意：
+之前配置config，都是使用`static_configs:`表示静态的，写死的。
+现在使用`kubernetes_sd_configs:`动态获取
+
+#编辑prometheus-config文件，添加job
+$ kubectl -n monitor edit cm prometheus-config
+
+#查看是否添加到yml文件中
+$ kubectl -n monitor exec prometheus-7d6799c84c-2kntg -- cat /etc/prometheus/prometheus.yml
+...
+  - job_name: 'kubernetes-sd-node-exporter'
+    kubernetes_sd_configs:
+      - role: node
+...
 </code></pre>
-<p>重新reload后查看效果：<br>
-<img src="images%5Cprometheus-target-err1.jpg" alt="" loading="lazy"></p>
+<p>重新reload后查看效果：</p>
+<pre><code class="language-shell">$ curl -XPOST 10.244.1.7:9090/-/reload
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="images%5Cprometheus-target-err1.jpg" alt="" loading="lazy"></figure>
 <p>默认访问的地址是http://node-ip/10250/metrics，10250是kubelet API的服务端口，说明Prometheus的node类型的服务发现模式，默认是和kubelet的10250绑定的，而我们是期望使用node-exporter作为采集的指标来源，因此需要把访问的endpoint替换成http://node-ip:9100/metrics。</p>
-<figure data-type="image" tabindex="1"><img src="images%5Cwhen-relabel-work.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="images%5Cwhen-relabel-work.png" alt="" loading="lazy"></figure>
 <p>在真正抓取数据前，Prometheus提供了relabeling的能力。怎么理解？</p>
-<p>查看Target的Label列，可以发现，每个target对应会有很多Before Relabeling的标签，这些__开头的label是系统内部使用，不会存储到样本的数据里，但是，我们在查看数据的时候，可以发现，每个数据都有两个默认的label，即：</p>
+<p>查看Target的Label列，可以发现，每个target对应会有很多Before Relabeling的标签，这些<code>__</code>开头的label是系统内部使用，不会存储到样本的数据里，但是，我们在查看数据的时候，可以发现，每个数据都有两个默认的label，即：</p>
 <pre><code class="language-shell">prometheus_notifications_dropped_total{instance=&quot;localhost:9090&quot;,job=&quot;prometheus&quot;}	
 </code></pre>
-<p>instance的值其实则取自于<code>__address__</code></p>
-<p>这种发生在采集样本数据之前，对Target实例的标签进行重写的机制在Prometheus被称为Relabeling。</p>
-<p>因此，利用relabeling的能力，只需要将<code>__address__</code>替换成node_exporter的服务地址即可。</p>
+<p>instance的值其实则取自于<code>__address__</code><br>
+这种发生在采集样本数据之前，对Target实例的标签进行重写的机制在Prometheus被称为Relabeling。<br>
+因此，利用relabeling的能力，只需要将<code>__address__</code>替换成node_exporter的服务地址即可。</p>
 <pre><code class="language-shell">      - job_name: 'kubernetes-sd-node-exporter'
         kubernetes_sd_configs:
           - role: node
-        relabel_configs:
-        - source_labels: [__address__]
-          regex: '(.*):10250'
-          replacement: '${1}:9100'
-          target_label: __address__
-          action: replace
+        relabel_configs:    #添加reloabel配置
+        - source_labels: [__address__]  #找到要替换的原始对象
+          regex: '(.*):10250'  #正则表达式，匹配`__address__`中的内容。(.*)表示取出IP地址   
+          replacement: '${1}:9100'  #替换成&quot;:9100&quot;
+          target_label: __address__  #用&quot;replacement&quot;替换体去替换&quot;__address__&quot;中的内容
+          action: replace  #动作：替换
 </code></pre>
-<p>再次更新Prometheus服务后，查看targets列表及node-exporter提供的指标，node_load1</p>
-<h2 id="使用cadvisor实现容器监控指标的采集废弃">使用cadvisor实现容器监控指标的采集（废弃）</h2>
+<pre><code class="language-shell">$ kubectl -n monitor exec prometheus-7d6799c84c-2kntg -- cat /etc/prometheus/prometheus.yml
+
+$ curl -XPOST 10.244.1.7:9090/-/reload
+</code></pre>
+<p>再次更新Prometheus服务后，查看targets列表及node-exporter提供的指标，node_load1<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1647655128203.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1647655188105.png" alt="" loading="lazy"></p>
+<h2 id="容器指标采集">容器指标采集</h2>
+<h3 id="使用cadvisor实现容器监控指标的采集废弃">使用cadvisor实现容器监控指标的采集（废弃）</h3>
 <p><code>cAdvisor</code> 指标访问路径为 <code>https://10.96.0.1/api/v1/nodes/&lt;node_name&gt;/proxy/metrics/cadvisor</code></p>
 <pre><code class="language-shell">https://10.96.0.1/api/v1/nodes/k8s-master/proxy/metrics/cadvisor
 https://10.96.0.1/api/v1/nodes/k8s-slave1/proxy/metrics/cadvisor
@@ -344,7 +389,7 @@ https://10.96.0.1/api/v1/nodes/k8s-slave2/proxy/metrics/cadvisor
         - role: node
 </code></pre>
 <p>默认添加的target列表为：<code>__schema__://__address__ __metrics_path__</code></p>
-<pre><code class="language-powershell">http://172.21.51.143:10250/metrics
+<pre><code class="language-shell">http://172.21.51.143:10250/metrics
 http://172.21.51.68:10250/metrics
 http://172.21.51.69:10250/metrics
 </code></pre>
@@ -407,7 +452,7 @@ http://10.96.0.1/api/v1/nodes/k8s-slave2/proxy/metrics/cadvisor
 </ul>
 <p>重新应用配置，然后重建Prometheus的pod。查看targets列表，查看cadvisor指标，比如container_cpu_system_seconds_total，container_memory_usage_bytes</p>
 <p>综上，利用node类型，可以实现对daemonset类型服务的目标自动发现以及监控数据抓取。</p>
-<h2 id="使用cadvisor实现容器指标的采集新">使用cadvisor实现容器指标的采集（新）</h2>
+<h3 id="使用cadvisor实现容器指标的采集新">使用cadvisor实现容器指标的采集（新）</h3>
 <p>目前cAdvisor集成到了kubelet组件内 ，因此可以通过kubelet的接口实现容器指标的采集，具体的API为:</p>
 <pre><code class="language-shell">https://&lt;node-ip&gt;:10250/metrics/cadvisor    # node上的cadvisor采集到的容器指标
 https://&lt;node-ip&gt;:10250/metrics             # node上的kubelet的指标数据
@@ -438,19 +483,22 @@ http://172.21.51.68:10250/metrics
 <pre><code class="language-yaml">      - job_name: 'kubernetes-sd-cadvisor'
         kubernetes_sd_configs:
           - role: node
-        scheme: https
-        tls_config:
+        scheme: https  #更改为https
+        tls_config:  #tls认证，指定ca证书和token路径
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           insecure_skip_verify: true
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         relabel_configs:
         - target_label: __metrics_path__
-          replacement: /metrics/cadvisor
+          replacement: /metrics/cadvisor  #替换为&quot;/metrics/cadvisor&quot;,写死即可
 </code></pre>
-<p>重新应用配置，然后重建Prometheus的pod。查看targets列表，查看cadvisor指标，比如container_cpu_system_seconds_total，container_memory_usage_bytes</p>
+<p>重新应用配置，然后重建Prometheus的pod。</p>
+<pre><code>$ curl -XPOST 10.244.1.7:9090/-/reload
+</code></pre>
+<p>查看targets列表，查看cadvisor指标，比如container_cpu_system_seconds_total，container_memory_usage_bytes</p>
 <p>综上，利用node类型，可以实现对daemonset类型服务的目标自动发现以及监控数据抓取。</p>
-<p>补充：</p>
-<p>若想采集kubelet的指标：</p>
+<p>补充：<br>
+若想采集kubelet的指标：</p>
 <pre><code class="language-yaml">      - job_name: 'kubernetes-sd-kubelet'
         kubernetes_sd_configs:
           - role: node
@@ -461,42 +509,49 @@ http://172.21.51.68:10250/metrics
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
 </code></pre>
 <h2 id="集群service服务的监控指标采集">集群Service服务的监控指标采集</h2>
-<p>比如集群中存在100个业务应用，每个业务应用都需要被Prometheus监控。</p>
-<p>每个服务是不是都需要手动添加配置？有没有更好的方式？</p>
+<p>比如集群中存在100个业务应用，每个业务应用都需要被Prometheus监控。<br>
+每个服务是不是都需要手动添加配置？有没有更好的方式？</p>
+<p>采用自动发现<code>Endpoints</code>的方式：</p>
 <pre><code class="language-shell">      - job_name: 'kubernetes-sd-endpoints'
         kubernetes_sd_configs:
           - role: endpoints
 </code></pre>
-<p>reload prometheush，此使的Target列表中，<code>kubernetes-sd-endpoints</code>下出现了N多条数据，</p>
-<figure data-type="image" tabindex="2"><img src="images%5Cprometheus-target-err2.png" alt="" loading="lazy"></figure>
+<p>reload prometheush，此使的Target列表中，<code>kubernetes-sd-endpoints</code>下出现了N多条数据，<br>
+<img src="images%5Cprometheus-target-err2.png" alt="" loading="lazy"></p>
 <p>可以发现，实际上endpoint这个类型，目标是去抓取整个集群中所有的命名空间的Endpoint列表，然后使用默认的/metrics进行数据抓取，我们可以通过查看集群中的所有ep列表来做对比：</p>
 <pre><code class="language-shell">$ kubectl get endpoints --all-namespaces
 </code></pre>
-<p>但是实际上并不是每个服务都已经实现了/metrics监控的，也不是每个实现了/metrics接口的服务都需要注册到Prometheus中，因此，我们需要一种方式对需要采集的服务实现自主可控。这就需要利用relabeling中的keep功能。</p>
-<figure data-type="image" tabindex="3"><img src="images%5Cwhen-relabel-work.png" alt="" loading="lazy"></figure>
+<p>但是实际上并不是每个服务都已经实现了/metrics监控的，也不是每个实现了/metrics接口的服务都需要注册到Prometheus中。因此，我们需要一种方式对需要采集的服务实现自主可控。<br>
+这就需要利用relabeling中的keep功能。<br>
+<img src="images%5Cwhen-relabel-work.png" alt="" loading="lazy"></p>
 <p>我们知道，relabel的作用对象是target的Before Relabling标签，比如说，假如通过如下定义:</p>
 <pre><code class="language-shell">- job_name: 'kubernetes-sd-endpoints'
   kubernetes_sd_configs:
   - role: endpoints
   relabel_configs:
   - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
-    action: keep
+    action: keep   #保留
     regex: true
+
+以上配置表示：
+保留source_labels中有&quot;__meta_kubernetes_service_annotation_prometheus_io_scrape&quot;这样一段配置选项，
+同时这段配置选项是&quot;ture&quot;的话，才会被&quot;keep&quot;下来，其他的都会被丢弃。
 </code></pre>
-<p>那么就可以实现target的Before Relabling中若存在<code>__meta_kubernetes_service_annotation_prometheus_io_scrape</code>，且值为<code>true</code>的话，则会加入到kubernetes-sd-endpoints这个target中，否则就会被删除。</p>
+<p>这样就可以实现<code>target</code>的<code>Before Relabling</code>中若存在<code>__meta_kubernetes_service_annotation_prometheus_io_scrape</code>，且值为<code>true</code>的话，则会加入到kubernetes-sd-endpoints这个target中，否则就会被删除。</p>
 <p>因此可以为我们期望被采集的服务，加上对应的Prometheus的label即可。</p>
-<p>问题来了，怎么加？</p>
-<p>查看coredns的metrics类型Before Relabling中的值，可以发现，存在如下类型的Prometheus的标签：</p>
+<p>问题来了，怎么加？<br>
+查看coredns的metrics类型Before Relabling中的值，可以发现，存在如下类型的Prometheus的标签：</p>
 <pre><code class="language-shell">__meta_kubernetes_service_annotation_prometheus_io_scrape=&quot;true&quot;
 __meta_kubernetes_service_annotation_prometheus_io_port=&quot;9153&quot;
 </code></pre>
 <p>这些内容是如何生成的呢，查看coredns对应的服务属性：</p>
 <pre><code class="language-shell">$ kubectl -n kube-system get service kube-dns -oyaml
+
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    prometheus.io/port: &quot;9153&quot;
+    prometheus.io/port: &quot;9153&quot;  
     prometheus.io/scrape: &quot;true&quot;
   creationTimestamp: &quot;2021-06-06T02:39:44Z&quot;
   labels:
@@ -507,7 +562,7 @@ metadata:
   namespace: kube-system
   ...
 </code></pre>
-<p>发现存在annotations声明，因此，可以联想到二者存在对应关系，Service的定义中的annotations里的特殊字符会被转换成Prometheus中的label中的下划线。</p>
+<p>发现存在annotations声明中，因此，可以联想到二者存在对应关系，Service的定义中的annotations里的特殊字符会被转换成Prometheus中的label中的下划线。</p>
 <p>我们即可以使用如下配置，来定义服务是否要被抓取监控数据。</p>
 <pre><code class="language-shell">- job_name: 'kubernetes-sd-endpoints'
   kubernetes_sd_configs:
@@ -522,7 +577,7 @@ metadata:
 	prometheus.io/scrape: &quot;true&quot;
 </code></pre>
 <p>有些时候，我们业务应用提供监控数据的path地址并不一定是/metrics，如何实现兼容？</p>
-<p>同样的思路，我们知道，Prometheus会默认使用Before Relabling中的<code>__metrics_path</code>作为采集路径，因此，我们再自定义一个annotation，<code>prometheus.io/path</code></p>
+<p>同样的思路，我们知道，Prometheus会默认使用Before Relabling中的<code>__metrics_path__</code>作为采集路径,默认为&quot;/metrics&quot;。因此，我们再自定义一个annotation，<code>prometheus.io/path</code></p>
 <pre><code class="language-shell">  annotations:
 	prometheus.io/scrape: &quot;true&quot;
 	prometheus.io/path: &quot;/path/to/metrics&quot;
@@ -539,9 +594,9 @@ metadata:
     action: keep
     regex: true
   - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
-    action: replace
-    target_label: __metrics_path__
-    regex: (.+)
+    action: replace   #动作：替换
+    target_label: __metrics_path__ 
+    regex: (.+)  #全部替换
 </code></pre>
 <p>有些时候，业务服务的metrics是独立的端口，比如coredns，业务端口是53，监控指标采集端口是9153，这种情况，如何处理？</p>
 <p>很自然的，我们会想到通过自定义annotation来处理，</p>
@@ -569,7 +624,7 @@ __address__=&quot;10.244.0.21&quot;
 </code></pre>
 <p>需要注意的几点：</p>
 <ul>
-<li><code>__address__</code>中的<code>:53</code>有可能不存在，因此，使用<code>()?</code>的匹配方式进行</li>
+<li><code>__address__</code>中的<code>:53</code>有可能不存在，因此，使用<code>()?</code>的匹配方式进行匹配</li>
 <li>表达式中，三段<code>()</code>我们只需要第一和第三段，不需要中间括号部分的内容，因此使用<code>?:</code>的方式来做非获取匹配，即可以匹配内容，但是不会被记录到$1,$2这种变量中</li>
 <li>多个source_labels中间默认使用<code>;</code>号分割，因此匹配的时候需要注意添加<code>;</code>号</li>
 </ul>
@@ -611,8 +666,8 @@ __address__=&quot;10.244.0.21&quot;
           action: replace
           target_label: kubernetes_pod_name   
 </code></pre>
-<p>验证一下：</p>
-<p>更新configmap并重启Prometheus服务，查看target列表。</p>
+<p>验证一下：<br>
+更新configmap并重启Prometheus服务，查看target列表。</p>
 <h1 id="kube-state-metrics监控">kube-state-metrics监控</h1>
 <p>已经有了cadvisor，容器运行的指标已经可以获取到，但是下面这种情况却无能为力：</p>
 <ul>
@@ -656,10 +711,10 @@ __address__=&quot;10.244.0.21&quot;
 <li>ConfigMap Metrics</li>
 </ul>
 <p>部署： https://github.com/kubernetes/kube-state-metrics#kubernetes-deployment</p>
-<pre><code class="language-shell">$ wget https://github.com/kubernetes/kube-state-metrics/archive/v2.1.0.tar.gz
+<pre><code class="language-shell">$ wget https://github.com/kubernetes/kube-state-metrics/archive/v2.4.0.tar.gz
 
-$ tar zxf kube-state-metrics-2.1.0.tar.gz
-$  cp -r kube-state-metrics-2.1.0/examples/standard/ .
+$ tar zxf kube-state-metrics-2.4.0.tar.gz
+$  cp -r kube-state-metrics-2.4.0/examples/standard/ .
 
 $ ll standard/
 total 20
@@ -672,8 +727,8 @@ total 20
 # 替换namespace为monitor
 $ sed -i 's/namespace: kube-system/namespace: monitor/g' standard/*
 
-# 替换镜像地址为image: bitnami/kube-state-metrics:2.1.0
-$ sed -i 's#k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.1.0#bitnami/kube-state-metrics:2.1.0/g' standard/deployment.yaml
+# 替换镜像地址为image: bitnami/kube-state-metrics:2.4.0
+$ sed -i 's#k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.4.0#bitnami/kube-state-metrics:2.4.0#g' standard/deployment.yaml
 
 $ kubectl apply -f standard/
 clusterrolebinding.rbac.authorization.k8s.io/kube-state-metrics created
@@ -683,13 +738,15 @@ serviceaccount/kube-state-metrics created
 service/kube-state-metrics created
 </code></pre>
 <p>如何添加到Prometheus监控target中？</p>
-<pre><code class="language-shell">$ cat standard/service.yaml
+<pre><code class="language-shell">##在service的annotations中添加声明
+$ cat standard/service.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    prometheus.io/scrape: &quot;true&quot;
-    prometheus.io/port: &quot;8080&quot;
+    prometheus.io/scrape: &quot;true&quot;  #添加
+    prometheus.io/port: &quot;8080&quot;    #添加
   labels:
     app.kubernetes.io/name: kube-state-metrics
     app.kubernetes.io/version: 2.1.0
@@ -710,9 +767,16 @@ spec:
 $ kubectl apply -f standard/service.yaml
 </code></pre>
 <p>查看target列表，观察是否存在kube-state-metrics的target。</p>
-<p>kube_pod_container_status_running</p>
-<p>kube_deployment_status_replicas</p>
-<p>kube_deployment_status_replicas_unavailable</p>
+<p>查看Graph，查询指标</p>
+<pre><code>#pod中容器运行的数量
+kube_pod_container_status_running
+
+#deployment副本数
+kube_deployment_status_replicas
+
+#deployment不可用副本数
+kube_deployment_status_replicas_unavailable
+</code></pre>
 
         </div>
 
