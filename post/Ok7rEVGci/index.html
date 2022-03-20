@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647735603895">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647741436015">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647735603895" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647741436015" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -41,7 +41,12 @@
 <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF">自定义监控面板</a></li>
 </ul>
 </li>
-<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B%E4%B8%8Epromql">Metrics指标类型与PromQL</a></li>
+<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B%E4%B8%8Epromql">Metrics指标类型与PromQL</a>
+<ul>
+<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8Bguage%E7%B1%BB%E5%9E%8B">Metrics指标类型：Guage类型</a></li>
+<li><a href="#metrics%E6%8C%87%E6%A0%87%E7%B1%BB%E5%9E%8B-counter%E7%B1%BB%E5%9E%8B">Metrics指标类型： counter类型</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -455,10 +460,11 @@ xblKPMBqditFt3A8PdNjWbUyz1bpiYa4OyCEsWz1a1bvTRlJ1pHr4w==
   v
     &lt;------------------ 时间 ----------------&gt;
 </code></pre>
-<p>Guage类型：</p>
+<h2 id="metrics指标类型guage类型">Metrics指标类型：Guage类型</h2>
 <pre><code class="language-shell">$ kubectl -n monitor get po -o wide |grep k8s-master
-node-exporter-ld6sq    1/1     Running   0          4d3h    172.21.51.143   k8s-master
-$ curl -s  172.21.51.143:9100/metrics |grep node_load1
+node-exporter-ld6sq    1/1     Running   0          4d3h    10.1.13.156   k8s-master
+
+$ curl -s  10.1.13.156:9100/metrics |grep node_load1
 # HELP node_load1 1m load average.
 # TYPE node_load1 gauge
 node_load1 0.18
@@ -506,7 +512,7 @@ node_load15 0.37
 </code></pre>
 </li>
 </ul>
-<p>counter类型：</p>
+<h2 id="metrics指标类型-counter类型">Metrics指标类型： counter类型</h2>
 <pre><code class="language-shell">$ curl -s  172.21.51.67:9100/metrics |grep node_cpu_seconds_total
 # HELP node_cpu_seconds_total Seconds the cpus spent in each mode.
 # TYPE node_cpu_seconds_total counter
@@ -521,8 +527,8 @@ node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;softirq&quot;} 1263.29
 <p>各节点CPU的平均使用率表达式：</p>
 <pre><code class="language-shell">(1- sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[2m])) by (instance) / sum(increase(node_cpu_seconds_total{}[2m])) by (instance)) * 100
 </code></pre>
-<p>分析：</p>
-<p><code>node_cpu_seconds_total</code>的指标含义是统计系统运行以来，CPU资源分配的时间总数，单位为秒，是累加的值。比如，直接运行该指标：</p>
+<p>分析：<br>
+<code>node_cpu_seconds_total</code>的指标含义是统计系统运行以来，CPU资源分配的时间总数，单位为秒，是累加的值。比如，直接运行该指标：</p>
 <pre><code class="language-shell">node_cpu_seconds_total
 # 显示的是所有节点、所有CPU核心、在各种工作模式下分配的时间总和
 </code></pre>
@@ -583,8 +589,8 @@ sum(increase(node_cpu_seconds_total{}[1m])) by (instance)
 # 最终的语句
 (1- sum(increase(node_cpu_seconds_total{mode=&quot;idle&quot;}[1m])) by (instance) / sum(increase(node_cpu_seconds_total{}[1m])) by (instance)) * 100
 </code></pre>
-<p>除此之外，还会经常看到avg,irate和rate方法的使用：</p>
-<p><code>irate()</code> 是基于最后两个数据点计算一个时序指标在一个范围内的每秒递增率 ，举个例子：</p>
+<p>除此之外，还会经常看到avg,irate和rate方法的使用：<br>
+<code>irate()</code> 是基于最后两个数据点计算一个时序指标在一个范围内的每秒递增率 ，举个例子：</p>
 <pre><code class="language-shell"># 1min内，k8s-master节点的idle状态的cpu分配时长增量值
 increase(node_cpu_seconds_total{instance=&quot;k8s-master&quot;,mode=&quot;idle&quot;}[1m])
 

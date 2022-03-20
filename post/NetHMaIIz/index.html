@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647735603895">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647741436015">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647735603895" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647741436015" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -38,11 +38,13 @@
 <ul>
 <li><a href="#adapter%E5%AE%89%E8%A3%85%E5%AF%B9%E6%8E%A5">Adapter安装对接</a></li>
 <li><a href="#%E9%80%9A%E7%94%A8%E6%8C%87%E6%A0%87%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2">通用指标示例程序部署</a></li>
-<li><a href="#adapter%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">Adapter配置自定义指标</a><br>
-*<br>
-*<br>
-*<br>
-* <a href="#%E9%85%8D%E7%BD%AEhpa%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87%E7%9A%84%E4%B8%9A%E5%8A%A1%E4%BC%B8%E7%BC%A9">配置HPA实现自定义指标的业务伸缩</a></li>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践：</a></li>
+<li><a href="#adapter%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">Adapter配置自定义指标</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEhpa%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87%E7%9A%84%E4%B8%9A%E5%8A%A1%E4%BC%B8%E7%BC%A9">配置HPA实现自定义指标的业务伸缩</a>
+<ul>
+<li><a href="#%E8%A1%A5%E5%85%85coredns%E9%80%9A%E7%94%A8%E6%8C%87%E6%A0%87%E7%9A%84hpa">补充：coredns通用指标的hpa</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -138,12 +140,12 @@
 </li>
 </ul>
 <p>安装完metrics-server后，利用kube-aggregator的功能，实现了metrics api的注册。可以通过如下命令</p>
-<pre><code class="language-powershell">$ kubectl api-versions
+<pre><code class="language-shell">$ kubectl api-versions
 ...
 metrics.k8s.io/v1beta1
 </code></pre>
 <p>HPA通过使用该API获取监控的CPU和内存资源：</p>
-<pre><code class="language-powershell"># 查询nodes节点的cpu和内存数据
+<pre><code class="language-shell"># 查询nodes节点的cpu和内存数据
 $ kubectl get --raw=&quot;/apis/metrics.k8s.io/v1beta1/nodes&quot;|jq
 
 $ kubectl get --raw=&quot;/apis/metrics.k8s.io/v1beta1/pods&quot;|jq
@@ -156,7 +158,7 @@ $ yum install -y jq
 <p>同样，为了实现通用指标的采集，需要部署Prometheus Adapter，来提供<code>custom.metrics.k8s.io</code>，作为HPA获取通用指标的入口。</p>
 <h2 id="adapter安装对接">Adapter安装对接</h2>
 <p>项目地址为： https://github.com/DirectXMan12/k8s-prometheus-adapter</p>
-<pre><code class="language-powershell">$ git clone https://github.com/DirectXMan12/k8s-prometheus-adapter.git
+<pre><code class="language-shell">$ git clone https://github.com/DirectXMan12/k8s-prometheus-adapter.git
 
 # 最新release版本v0.7.0，代码切换到v0.7.0分支
 $ git checkout v0.7.0
@@ -169,7 +171,7 @@ $ git checkout v0.7.0
 </li>
 <li>
 <p>准备证书</p>
-<pre><code class="language-powershell">$ export PURPOSE=serving
+<pre><code class="language-shell">$ export PURPOSE=serving
 $ openssl req -x509 -sha256 -new -nodes -days 365 -newkey rsa:2048 -keyout ${PURPOSE}.key -out ${PURPOSE}.crt -subj &quot;/CN=ca&quot;
 
 $ kubectl -n monitor create secret generic cm-adapter-serving-certs --from-file=./serving.crt --from-file=./serving.key 
@@ -180,7 +182,7 @@ $ kubectl -n monitor describe secret cm-adapter-serving-certs
 </li>
 <li>
 <p>准备资源清单</p>
-<pre><code class="language-powershell">$ mkdir yamls
+<pre><code class="language-shell">$ mkdir yamls
 $ cp manifests/custom-metrics-apiserver-deployment.yaml yamls/
 $ cp manifests/custom-metrics-apiserver-service.yaml yamls/
 $ cp manifests/custom-metrics-apiservice.yaml yamls/
@@ -209,6 +211,7 @@ subjects:
   
 # 新建配置文件
 $ vi custom-metrics-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -222,14 +225,14 @@ data:
 </li>
 <li>
 <p>替换命名空间</p>
-<pre><code class="language-powershell"># 资源清单文件默认用的命名空间是custom-metrics，替换为本例中使用的monitor
+<pre><code class="language-shell"># 资源清单文件默认用的命名空间是custom-metrics，替换为本例中使用的monitor
 $ sed -i 's/namespace: custom-metrics/namespace: monitor/g' yamls/*
 
 </code></pre>
 </li>
 <li>
 <p>配置adapter对接的Prometheus地址</p>
-<pre><code class="language-powershell"># 由于adapter会和Prometheus交互，因此需要配置对接的Prometheus地址
+<pre><code class="language-shell"># 由于adapter会和Prometheus交互，因此需要配置对接的Prometheus地址
 # 替换掉28行：yamls/custom-metrics-apiserver-deployment.yaml 中的--prometheus-url
 $ vim yamls/custom-metrics-apiserver-deployment.yaml
 ...
@@ -252,12 +255,12 @@ $ vim yamls/custom-metrics-apiserver-deployment.yaml
 </li>
 <li>
 <p>部署服务</p>
-<pre><code class="language-powershell">$ kubectl apply -f yamls/
+<pre><code class="language-shell">$ kubectl apply -f yamls/
 </code></pre>
 </li>
 </ol>
 <p>验证一下：</p>
-<pre><code class="language-powershell">$ kubectl api-versions 
+<pre><code class="language-shell">$ kubectl api-versions 
 custom.metrics.k8s.io/v1beta1
 
 $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
@@ -271,7 +274,8 @@ $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
 <h2 id="通用指标示例程序部署">通用指标示例程序部署</h2>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1646843046204.png" alt="" loading="lazy"></figure>
 <p>为了演示效果，我们新建一个deployment来模拟业务应用。</p>
-<pre><code class="language-powershell">$ cat custom-metrics-demo.yaml
+<pre><code class="language-shell">$ cat custom-metrics-demo.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -298,7 +302,7 @@ spec:
           name: http
 </code></pre>
 <p>部署：</p>
-<pre><code class="language-powershell">$ kubectl apply -f custom-metrics-demo.yaml
+<pre><code class="language-shell">$ kubectl apply -f custom-metrics-demo.yaml
 
 $ kubectl get po -o wide
 custom-metrics-demo-95b5bc949-xpppl   1/1     Running   0          65s   10.244.1.194
@@ -314,7 +318,8 @@ nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;} 8
 ...
 </code></pre>
 <p>注册为Prometheus的target：</p>
-<pre><code class="language-powershell">$ cat custom-metrics-demo-svc.yaml
+<pre><code class="language-shell">$ cat custom-metrics-demo-svc.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -332,18 +337,18 @@ spec:
     app: custom-metrics-demo
   type: ClusterIP
 </code></pre>
-<p>自动注册为Prometheus的采集Targets。</p>
-<p>通常web类的应用，会把每秒钟的请求数作为业务伸缩的指标依据。</p>
-<p>实践：</p>
+<p>自动注册为Prometheus的采集Targets。<br>
+通常web类的应用，会把每秒钟的请求数作为业务伸缩的指标依据。</p>
+<h2 id="实践">实践：</h2>
 <p>使用案例应用<code>custom-metrics-demo</code>，如果<code>custom-metrics-demo</code>最近2分钟内每秒钟的请求数超过10次，则自动扩充业务应用的副本数。</p>
 <ul>
 <li>
-<p>配置自定义指标</p>
-<p>告诉Adapter去采集转换哪些指标，Adapter支持转换的指标，才可以作为HPA的依据</p>
+<p>配置自定义指标<br>
+告诉Adapter去采集转换哪些指标，Adapter支持转换的指标，才可以作为HPA的依据</p>
 </li>
 <li>
 <p>配置HPA规则</p>
-<pre><code class="language-powershell">apiVersion: autoscaling/v2beta1
+<pre><code class="language-shell">apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: nginx-custom-hpa
@@ -365,9 +370,9 @@ spec:
 </ul>
 <h2 id="adapter配置自定义指标">Adapter配置自定义指标</h2>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1646843081113.png" alt="" loading="lazy"></figure>
-<p>思考：</p>
-<p>前面讲CPU的平均使用率的采集，其实是通过<code>node_cpu_seconds_total</code>指标计算得到的。</p>
-<pre><code class="language-powershell">  ^
+<p>思考：<br>
+前面讲CPU的平均使用率的采集，其实是通过<code>node_cpu_seconds_total</code>指标计算得到的。</p>
+<pre><code class="language-shell">  ^
   │   . . . . . . . . . . . . . . . . .   . .   node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;idle&quot;}
   │     . . . . . . . . . . . . . . . . . . .   node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;system&quot;}
   │     . . . . . . . . . .   . . . . . . . .   node_load1{}
@@ -376,7 +381,7 @@ spec:
     &lt;------------------ 时间 ----------------&gt;
 </code></pre>
 <p>同样，如果想获得每个业务应用最近2分钟内每秒的访问次数，也是根据总数来做计算，因此，需要使用业务自定义指标<code>nginx_vts_server_requests_total</code>，配合<code>rate</code>方法即可获取每秒钟的请求数。</p>
-<pre><code class="language-powershell">rate(nginx_vts_server_requests_total[2m])
+<pre><code class="language-shell">rate(nginx_vts_server_requests_total[2m])
 
 # 如查询有多条数据，需做汇聚，需要使用sum
 sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
@@ -384,21 +389,20 @@ sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
 <ol>
 <li>
 <p>自定义指标可以配置多个，因此，需要将规则使用数组来配置</p>
-<pre><code class="language-powershell">rules:
+<pre><code class="language-shell">rules:
 - {}
 </code></pre>
 </li>
 <li>
 <p>告诉Adapter，哪些自定义指标可以使用</p>
-<pre><code class="language-powershell">rules:
+<pre><code class="language-shell">rules:
 - seriesQuery: 'nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;}'
-
 </code></pre>
 <p>seriesQuery是PromQL语句，和直接用<code>nginx_vts_server_requests_total</code>查询到的结果一样，凡是seriesQuery可以查询到的指标，都可以用作自定义指标</p>
 </li>
 <li>
 <p>告诉Adapter，指标中的标签和k8s中的资源对象的关联关系</p>
-<pre><code class="language-powershell">rules:
+<pre><code class="language-shell">rules:
 - seriesQuery: 'nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;}'
   resources:
     overrides:
@@ -406,13 +410,13 @@ sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
       kubernetes_pod_name: {resource: &quot;pod&quot;}
 </code></pre>
 <p>我们查询到的可用指标格式为：</p>
-<pre><code class="language-powershell">nginx_vts_server_requests_total{code=&quot;1xx&quot;,host=&quot;*&quot;,instance=&quot;10.244.1.194:80&quot;,job=&quot;kubernetes-sd-endpoints&quot;,kubernetes_name=&quot;custom-metrics-demo&quot;,kubernetes_namespace=&quot;default&quot;,kubernetes_pod_name=&quot;custom-metrics-demo-95b5bc949-xpppl&quot;}	
+<pre><code class="language-shell">nginx_vts_server_requests_total{code=&quot;1xx&quot;,host=&quot;*&quot;,instance=&quot;10.244.1.194:80&quot;,job=&quot;kubernetes-sd-endpoints&quot;,kubernetes_name=&quot;custom-metrics-demo&quot;,kubernetes_namespace=&quot;default&quot;,kubernetes_pod_name=&quot;custom-metrics-demo-95b5bc949-xpppl&quot;}	
 </code></pre>
 <p>由于HPA在调用Adapter接口的时候，告诉Adapter的是查询哪个命名空间下的哪个Pod的指标，因此，Adapter在去查询的时候，需要做一层适配转换（因为并不是每个prometheus查询到的结果中都是叫做<code>kubernetes_namespace</code>和<code>kubernetes_pod_name</code>）</p>
 </li>
 <li>
 <p>指定自定义的指标名称，供HPA配置使用</p>
-<pre><code class="language-powershell">rules:
+<pre><code class="language-shell">rules:
 - seriesQuery: 'nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;}'
   resources:
     overrides:
@@ -426,7 +430,7 @@ sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
 </li>
 <li>
 <p>告诉Adapter如何获取最终的自定义指标值</p>
-<pre><code class="language-powershell">    rules:
+<pre><code class="language-shell">    rules:
     - seriesQuery: 'nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;}'
       resources:
         overrides:
@@ -438,10 +442,10 @@ sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
       metricsQuery: 'sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[2m])) by (&lt;&lt;.GroupBy&gt;&gt;)'
 </code></pre>
 <p>我们最终期望的写法可能是这样：</p>
-<pre><code class="language-powershell">sum(rate(nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;,kubernetes_namespace=&quot;default&quot;}[2m])) by (kubernetes_pod_name)
+<pre><code class="language-shell">sum(rate(nginx_vts_server_requests_total{host=&quot;*&quot;,code=&quot;total&quot;,kubernetes_namespace=&quot;default&quot;}[2m])) by (kubernetes_pod_name)
 </code></pre>
 <p>但是Adapter提供了更简单的写法：</p>
-<pre><code class="language-powershell">sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[2m])) by (&lt;&lt;.GroupBy&gt;&gt;)
+<pre><code class="language-shell">sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[2m])) by (&lt;&lt;.GroupBy&gt;&gt;)
 </code></pre>
 <ul>
 <li><code>Series</code>: 指标名称</li>
@@ -451,7 +455,8 @@ sum(rate(nginx_vts_server_requests_total[2m])) by(kubernetes_pod_name)
 </li>
 </ol>
 <p>更新Adapter的配置：</p>
-<pre><code class="language-powershell">$ vi custom-metrics-configmap.yaml
+<pre><code class="language-shell">$ vi custom-metrics-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -470,15 +475,14 @@ data:
         matches: &quot;^(.*)_total&quot;
         as: &quot;${1}_per_second&quot;
       metricsQuery: (sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;}[1m])) by (&lt;&lt;.GroupBy&gt;&gt;))
-
 </code></pre>
 <p>需要更新configmap并重启adapter服务：</p>
-<pre><code class="language-powershell">$ kubectl apply -f custom-metrics-configmap.yaml
+<pre><code class="language-shell">$ kubectl apply -f custom-metrics-configmap.yaml
 
 $ kubectl -n monitor delete po custom-metrics-apiserver-c689ff947-zp8gq
 </code></pre>
 <p>再次查看可用的指标数据：</p>
-<pre><code class="language-powershell">$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
+<pre><code class="language-shell">$ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
 {
   &quot;kind&quot;: &quot;APIResourceList&quot;,
   &quot;apiVersion&quot;: &quot;v1&quot;,
@@ -506,11 +510,11 @@ $ kubectl -n monitor delete po custom-metrics-apiserver-c689ff947-zp8gq
 }
 </code></pre>
 <p>我们发现有两个可用的resources，引用官方的一段解释：</p>
-<pre><code class="language-powershell">Notice that we get an entry for both &quot;pods&quot; and &quot;namespaces&quot; -- the adapter exposes the metric on each resource that we've associated the metric with (and all namespaced resources must be associated with a namespace), and will fill in the &lt;&lt;.GroupBy&gt;&gt; section with the appropriate label depending on which we ask for.
+<pre><code class="language-shell">Notice that we get an entry for both &quot;pods&quot; and &quot;namespaces&quot; -- the adapter exposes the metric on each resource that we've associated the metric with (and all namespaced resources must be associated with a namespace), and will fill in the &lt;&lt;.GroupBy&gt;&gt; section with the appropriate label depending on which we ask for.
 
 We can now connect to $KUBERNETES/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second, and we should see
 </code></pre>
-<pre><code class="language-powershell">$ kubectl get --raw &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second&quot; | jq 
+<pre><code class="language-shell">$ kubectl get --raw &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second&quot; | jq 
 {
   &quot;kind&quot;: &quot;MetricValueList&quot;,
   &quot;apiVersion&quot;: &quot;custom.metrics.k8s.io/v1beta1&quot;,
@@ -536,8 +540,9 @@ We can now connect to $KUBERNETES/apis/custom.metrics.k8s.io/v1beta1/namespaces/
 <p>其中133m等于0.133，即当前指标查询每秒钟请求数为0.133次</p>
 <p>https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/config-walkthrough.md</p>
 <p>https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/config.md</p>
-<h6 id="配置hpa实现自定义指标的业务伸缩">配置HPA实现自定义指标的业务伸缩</h6>
-<pre><code class="language-powershell">$ cat hpa-custom-metrics.yaml
+<h2 id="配置hpa实现自定义指标的业务伸缩">配置HPA实现自定义指标的业务伸缩</h2>
+<pre><code class="language-shell">$ cat hpa-custom-metrics.yaml
+
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -561,28 +566,28 @@ $ kubectl get hpa
 </code></pre>
 <p>注意metricName为自定义的指标名称。</p>
 <p>使用ab命令压测custom-metrics-demo服务，观察hpa的变化：</p>
-<pre><code class="language-powershell">$ kubectl get svc -o wide
+<pre><code class="language-shell">$ kubectl get svc -o wide
 custom-metrics-demo   ClusterIP   10.104.110.245   &lt;none&gt;        80/TCP    16h
 
 $ ab -n1000 -c 5 http://10.104.110.245:80/
 </code></pre>
 <p>观察hpa变化:</p>
-<pre><code class="language-powershell">$ kubectl describe hpa nginx-custom-hpa
+<pre><code class="language-shell">$ kubectl describe hpa nginx-custom-hpa
 </code></pre>
 <p>查看adapter日志：</p>
-<pre><code class="language-powershell">$ kubectl -n monitor logs --tail=100 -f custom-metrics-apiserver-c689ff947-m5vlr
+<pre><code class="language-shell">$ kubectl -n monitor logs --tail=100 -f custom-metrics-apiserver-c689ff947-m5vlr
 ...
 I0802 04:43:58.404559       1 httplog.go:90] GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/%2A/nginx_vts_server_requests_per_second?labelSelector=app%3Dcustom-metrics-demo: (20.713209ms) 200 [kube-controller-manager/v1.16.0 (linux/amd64) kubernetes/2bd9643/system:serviceaccount:kube-system:horizontal-pod-autoscaler 172.21.51.143:60626]
-
 </code></pre>
 <p>实际的请求：</p>
-<pre><code class="language-powershell">http://prometheus:9090/api/v1/query?query=%28sum%28rate%28nginx_vts_server_requests_per_second%7Bkubernetes_namespace%3D%22default%22%2Ckubernetes_pod_name%3D~%22custom-metrics-demo-95b5bc949-9vd8q%7Ccustom-metrics-demo-95b5bc949-qrpnp%22%2Cjob%3D%22kubernetes-sd-endpoints%22%7D%5B1m%5D%29%29+by+%28kubernetes_pod_name
+<pre><code class="language-shell">http://prometheus:9090/api/v1/query?query=%28sum%28rate%28nginx_vts_server_requests_per_second%7Bkubernetes_namespace%3D%22default%22%2Ckubernetes_pod_name%3D~%22custom-metrics-demo-95b5bc949-9vd8q%7Ccustom-metrics-demo-95b5bc949-qrpnp%22%2Cjob%3D%22kubernetes-sd-endpoints%22%7D%5B1m%5D%29%29+by+%28kubernetes_pod_name
 
 I1028 08:56:05.289421       1 api.go:74] GET http://prometheus:9090/api/v1/query?query=%28sum%28rate%28nginx_vts_server_requests_total%7Bkubernetes_namespace%3D%22default%22%2Ckubernetes_pod_name%3D~%22custom-metrics-demo-95b5bc949-9vd8q%7Ccustom-metrics-demo-95b5bc949-qrpnp%22%7D%5B1m%5D%29%29+by+%28kubernetes_pod_name%29%29&amp;time=1603875365.284 200 OK
 </code></pre>
-<p>补充：coredns通用指标的hpa</p>
+<h3 id="补充coredns通用指标的hpa">补充：coredns通用指标的hpa</h3>
 <p>添加指标：</p>
 <pre><code class="language-yaml">$ cat custom-metrics-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -631,10 +636,11 @@ spec:
       targetAverageValue: 1
 </code></pre>
 <p>hpa会拿pod、namespace去通过adaptor提供的api查询指标数据：</p>
-<pre><code class="language-powershell">sum(rate(coredns_dns_request_count_total{kubernetes_namespace=&quot;default&quot;,kubernetes_pod_name=~&quot;custom-metrics-demo-95b5bc949-9vd8q|custom-metrics-demo-95b5bc949-qrpnp&quot;,job=&quot;kubernetes-sd-endpoints&quot;}[1m])) by (kubernetes_pod_name)
+<pre><code class="language-shell">sum(rate(coredns_dns_request_count_total{kubernetes_namespace=&quot;default&quot;,kubernetes_pod_name=~&quot;custom-metrics-demo-95b5bc949-9vd8q|custom-metrics-demo-95b5bc949-qrpnp&quot;,job=&quot;kubernetes-sd-endpoints&quot;}[1m])) by (kubernetes_pod_name)
 </code></pre>
 <p>追加：Adapter查询数据和直接查询Prometheus数据不一致（相差4倍）的问题。</p>
-<pre><code class="language-powershell">$ vi custom-metrics-configmap.yaml
+<pre><code class="language-shell">$ vi custom-metrics-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -655,7 +661,7 @@ data:
       metricsQuery: (sum(rate(&lt;&lt;.Series&gt;&gt;{&lt;&lt;.LabelMatchers&gt;&gt;,host=&quot;*&quot;,code=&quot;total&quot;}[1m])) by (&lt;&lt;.GroupBy&gt;&gt;))
 </code></pre>
 <p>查询验证：</p>
-<pre><code class="language-powershell">$ kubectl get --raw &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second&quot; | jq 
+<pre><code class="language-shell">$ kubectl get --raw &quot;/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/pods/*/nginx_vts_server_requests_per_second&quot; | jq 
 {
   &quot;kind&quot;: &quot;MetricValueList&quot;,
   &quot;apiVersion&quot;: &quot;custom.metrics.k8s.io/v1beta1&quot;,

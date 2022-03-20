@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647735603895">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647741436015">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647735603895" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647741436015" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -131,22 +131,17 @@
 <p>如果集群主机的内存使用率超过80%，且该现象持续了2分钟？想实现这样的监控告警，如何做？</p>
 <p>从上图可得知设置警报和通知的主要步骤是：</p>
 <ul>
-<li>
-<p>安装和配置 Alertmanager</p>
-</li>
-<li>
-<p>配置Prometheus与Alertmanager对话</p>
-</li>
-<li>
-<p>在Prometheus中创建警报规则</p>
-</li>
+<li>安装和配置 Alertmanager</li>
+<li>配置Prometheus与Alertmanager对话</li>
+<li>在Prometheus中创建警报规则</li>
 </ul>
 <h1 id="安装-alertmanager">安装 Alertmanager</h1>
 <p>Alertmanager，  https://github.com/prometheus/alertmanager#install</p>
-<pre><code class="language-powershell">./alertmanager --config.file=config.yml
+<pre><code class="language-shell">./alertmanager --config.file=config.yml
 </code></pre>
 <p>alertmanager.yml配置文件格式：</p>
-<pre><code class="language-powershell">$ cat config.yml
+<pre><code class="language-shell">$ cat config.yml
+
 apiVersion: v1
 data:
   config.yml: |
@@ -194,11 +189,12 @@ metadata:
 <li><a href="https://prometheus.io/docs/alerting/configuration/#route">route</a>: 用来设置报警的分发策略，它是一个树状结构，按照深度优先从左向右的顺序进行匹配。</li>
 <li><a href="https://prometheus.io/docs/alerting/configuration/#receiver">receivers</a>: 配置告警消息接受者信息，例如常用的 email、wechat、slack、webhook 等消息通知方式。</li>
 </ul>
-<p>配置文件：</p>
-<pre><code class="language-powershell">$ kubectl apply -f  config.yml
+<p>生效配置文件：</p>
+<pre><code class="language-shell">$ kubectl apply -f  config.yml
 </code></pre>
 <p>其他资源清单文件:</p>
-<pre><code class="language-powershell">$ cat alertmanager-all.yaml
+<pre><code class="language-shell">$ cat alertmanager-all.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -271,18 +267,24 @@ spec:
             port:
               number: 9093
 </code></pre>
+<p>部署Alertmanager</p>
+<pre><code>$ kubectl create -f alertmanager-all.yaml
+</code></pre>
 <h1 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h1>
 <p><img src="https://adong97.github.io/HDong.github.io//post-images/1646842842773.png" alt="" loading="lazy"><br>
 是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
-<pre><code class="language-powershell">    alerting:
+<pre><code class="language-shell">...
+    alerting:
       alertmanagers:
       - static_configs:
         - targets:
           - alertmanager:9093
+...
 </code></pre>
 <p>因此，修改Prometheus的配置文件，然后重新加载pod</p>
-<pre><code class="language-powershell"># 编辑prometheus-configmap.yaml配置，添加alertmanager内容
+<pre><code class="language-shell"># 编辑prometheus-configmap.yaml配置，添加alertmanager内容
 $ kuectl -n monitor edit configmap prometheus-config
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -293,6 +295,7 @@ data:
     global:
       scrape_interval: 30s
       evaluation_interval: 30s
+    #添加alertmanager配置
     alerting:
       alertmanagers:
       - static_configs:
@@ -300,10 +303,11 @@ data:
           - alertmanager:9093
 ...
   
-  
-$ kubectl apply -f prometheus-configmap.yaml
+# 确保prometheus配置已经生效
+$ kubectl -n monitor exec prometheus-7d6799c84c-2kntg -- cat /etc/prometheus/prometheus.yml|grep -n5 alert
 
 # 现在已经有监控数据了，因此使用prometheus提供的reload的接口，进行服务重启
+$ curl -XPOST 10.244.1.7:9090/-/reload
 
 # 查看配置文件是否已经自动加载到pod中
 $ kubectl -n monitor get po -o wide
@@ -316,8 +320,10 @@ $ curl -X POST 10.244.1.167:9090/-/reload
 </code></pre>
 <h2 id="配置报警规则">配置报警规则</h2>
 <p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
-<p>在哪里配置？同样是在prometheus-configmap中：</p>
-<pre><code class="language-powershell">$ kuectl -n monitor edit configmap prometheus-config
+<p>在哪里配置？<br>
+同样是在prometheus-configmap中：</p>
+<pre><code class="language-shell">$ kuectl -n monitor edit configmap prometheus-config
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -345,7 +351,8 @@ data:
 ...
 </code></pre>
 <p>rules.yml我们同样使用configmap的方式挂载到prometheus容器内部，因此只需要在已有的configmap中加一个数据项目</p>
-<pre><code class="language-powershell">$ vim prometheus-configmap.yaml
+<pre><code class="language-shell">$ vim prometheus-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -408,16 +415,16 @@ data:
 <li><code>firing</code>: 表示超过设置的阈值时间被激活了，即满足报警条件，且报警触发时间超过了观察期，会发送到Alertmanager端</li>
 </ul>
 <p>对于已经 <code>pending</code> 或者 <code>firing</code> 的告警，Prometheus 也会将它们存储到时间序列<code>ALERTS{}</code>中。当然我们也可以通过表达式去查询告警实例：</p>
-<pre><code class="language-powershell">ALERTS{}
+<pre><code class="language-shell">ALERTS{}
 </code></pre>
 <p>查看Alertmanager日志：</p>
-<pre><code class="language-powershell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
+<pre><code class="language-shell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
 </code></pre>
 <p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
 <h2 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h2>
 <p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
 <p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
-<pre><code class="language-powershell">name: &lt;string&gt;
+<pre><code class="language-shell">name: &lt;string&gt;
 email_configs:
   [ - &lt;email_config&gt;, ... ]
 hipchat_configs:
@@ -429,9 +436,9 @@ opsgenie_configs:
 webhook_configs:
   [ - &lt;webhook_config&gt;, ... ]
 </code></pre>
-<p>如果想实现告警消息推送给企业常用的即时聊天工具，如钉钉或者企业微信，如何配置？</p>
-<p>Alertmanager的通知方式中还可以支持Webhook，通过这种方式开发者可以实现更多个性化的扩展支持。</p>
-<pre><code class="language-powershell"># 警报接收者
+<p>如果想实现告警消息推送给企业常用的即时聊天工具，如钉钉或者企业微信，如何配置？<br>
+Alertmanager的通知方式中还可以支持Webhook，通过这种方式开发者可以实现更多个性化的扩展支持。</p>
+<pre><code class="language-shell"># 警报接收者
 receivers:
 #ops 
 - name: 'demo-webhook'
@@ -440,7 +447,8 @@ receivers:
     url: http://demo-webhook/alert/send
 </code></pre>
 <p>当我们配置了上述webhook地址，则当告警路由到<code>demo-webhook</code>时，alertmanager端会向webhook地址推送POST请求：</p>
-<pre><code class="language-powershell">$ curl -X POST -d&quot;$demoAlerts&quot;  http://demo-webhook/alert/send
+<pre><code class="language-shell">$ curl -X POST -d&quot;$demoAlerts&quot;  http://demo-webhook/alert/send
+
 $ echo $demoAlerts
 {
   &quot;version&quot;: &quot;4&quot;,
@@ -470,29 +478,29 @@ $ echo $demoAlerts
 <li>配置alertmanager的receiver为webhook地址</li>
 </ul>
 <p>如何给钉钉群聊发送消息？ 钉钉机器人</p>
-<p>钉钉群聊机器人设置：</p>
-<p>每个群聊机器人在创建的时候都会生成唯一的一个访问地址：</p>
-<pre><code class="language-powershell">https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
+<p>钉钉群聊机器人设置：<br>
+每个群聊机器人在创建的时候都会生成唯一的一个访问地址：</p>
+<pre><code class="language-shell">https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
 </code></pre>
 <p>这样，我们就可以使用如下方式来模拟给群聊机器人发送请求，实现消息的推送：</p>
-<pre><code class="language-powershell">curl 'https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9' \
+<pre><code class="language-shell">curl 'https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9' \
    -H 'Content-Type: application/json' \
    -d '{&quot;msgtype&quot;: &quot;text&quot;,&quot;text&quot;: {&quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;}}'
 </code></pre>
 <p>https://gitee.com/agagin/prometheus-webhook-dingtalk</p>
 <p>镜像地址：timonwong/prometheus-webhook-dingtalk:master</p>
 <p>二进制运行：</p>
-<pre><code class="language-powershell">$ ./prometheus-webhook-dingtalk --config.file=config.yml
+<pre><code class="language-shell">$ ./prometheus-webhook-dingtalk --config.file=config.yml
 </code></pre>
 <p>假如使用如下配置：</p>
-<pre><code class="language-powershell">targets:
+<pre><code class="language-shell">targets:
   webhook_dev:
     url: https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
   webhook_ops:
     url: https://oapi.dingtalk.com/robot/send?access_token=d4e7b72eab6d1b2245bc0869d674f627dc187577a3ad485d9c1d131b7d67b15b
 </code></pre>
 <p>则prometheus-webhook-dingtalk启动后会自动支持如下API的POST访问：</p>
-<pre><code class="language-powershell">http://locahost:8060/dingtalk/webhook_dev/send
+<pre><code class="language-shell">http://locahost:8060/dingtalk/webhook_dev/send
 http://localhost:8060/dingtalk/webhook_ops/send
 </code></pre>
 <p>这样可以使用一个prometheus-webhook-dingtalk来实现多个钉钉群的webhook地址</p>
@@ -503,7 +511,8 @@ http://localhost:8060/dingtalk/webhook_ops/send
 <li>部署Service，作为Alertmanager的默认访问，服务端口默认8060</li>
 </ul>
 <p>配置文件：</p>
-<pre><code class="language-powershell">$ cat webhook-dingtalk-configmap.yaml
+<pre><code class="language-shell">$ cat webhook-dingtalk-configmap.yaml
+
 apiVersion: v1
 data:
   config.yml: |
@@ -516,7 +525,8 @@ metadata:
   namespace: monitor
 </code></pre>
 <p>Deployment和Service</p>
-<pre><code class="language-powershell">$ cat webhook-dingtalk-deploy.yaml
+<pre><code class="language-shell">$ cat webhook-dingtalk-deploy.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -573,7 +583,7 @@ spec:
     targetPort: http
 </code></pre>
 <p>创建：</p>
-<pre><code class="language-powershell">$ kubectl apply -f webhook-dingtalk-configmap.yaml
+<pre><code class="language-shell">$ kubectl apply -f webhook-dingtalk-configmap.yaml
 $ kubectl apply -f webhook-dingtalk-deploy.yaml
 
 # 查看日志，可以得知当前的可用webhook日志
@@ -585,7 +595,7 @@ ts=2020-07-30T14:05:40.963Z caller=main.go:133 component=configuration msg=&quot
 level=info ts=2020-07-30T14:05:40.963Z caller=web.go:210 component=web msg=&quot;Start listening for connections&quot; address=:8060
 </code></pre>
 <p>修改Alertmanager路由及webhook配置：</p>
-<pre><code class="language-powershell">$ kubectl -n monitor edit configmap alertmanager
+<pre><code class="language-shell">$ kubectl -n monitor edit configmap alertmanager
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -635,7 +645,7 @@ data:
 <h2 id="基于label的动态告警处理">基于Label的动态告警处理</h2>
 <p>真实的场景中，我们往往期望可以给告警设置级别，而且可以实现不同的报警级别可以由不同的receiver接收告警消息。</p>
 <p>Alertmanager中路由负责对告警信息进行分组匹配，并向告警接收器发送通知。告警接收器可以通过以下形式进行配置：</p>
-<pre><code class="language-powershell">routes:
+<pre><code class="language-shell">routes:
 - receiver: ops
   group_wait: 10s
   match:
@@ -652,7 +662,7 @@ receivers:
   - &lt;receiver&gt; ...
 </code></pre>
 <p>因此可以为了更全面的感受报警的逻辑，我们再添加两个报警规则：</p>
-<pre><code class="language-powershell">  alert_rules.yml: |
+<pre><code class="language-shell">  alert_rules.yml: |
     groups:
     - name: node_metrics
       rules:
@@ -684,7 +694,7 @@ receivers:
           description: &quot;{{$labels.instance}}: prometheus target down，job is {{$labels.job}}&quot;
 </code></pre>
 <p>我们为不同的报警规则设置了不同的标签，如<code>severity: critical</code>，针对规则中的label，来配置alertmanager路由规则，实现转发给不同的接收者。</p>
-<pre><code class="language-powershell">$ cat alertmanager-configmap.yaml
+<pre><code class="language-shell">$ cat alertmanager-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -743,7 +753,7 @@ data:
         url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send
 </code></pre>
 <p>再配置一个钉钉机器人，修改webhook-dingtalk的配置，添加webhook_ops的配置：</p>
-<pre><code class="language-powershell">$ cat webhook-dingtalk-configmap.yaml
+<pre><code class="language-shell">$ cat webhook-dingtalk-configmap.yaml
 apiVersion: v1
 data:
   config.yml: |
@@ -766,11 +776,11 @@ metadata:
 <p>抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。</p>
 <p>比如当机房出现网络故障时，所有服务都将不可用而产生大量服务不可用告警，但这些警告并不能反映真实问题在哪，真正需要发出的应该是网络故障告警。当出现网络故障告警的时候，应当抑制服务不可用告警的通知。</p>
 <p>在Alertmanager配置文件中，使用inhibit_rules定义一组告警的抑制规则：</p>
-<pre><code class="language-powershell">inhibit_rules:
+<pre><code class="language-shell">inhibit_rules:
   [ - &lt;inhibit_rule&gt; ... ]
 </code></pre>
 <p>每一条抑制规则的具体配置如下：</p>
-<pre><code class="language-powershell">target_match:
+<pre><code class="language-shell">target_match:
   [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
 target_match_re:
   [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
@@ -784,7 +794,7 @@ source_match_re:
 </code></pre>
 <p>当已经发送的告警通知匹配到target_match或者target_match_re规则，当有新的告警规则如果满足source_match或者定义的匹配规则，并且已发送的告警与新产生的告警中equal定义的标签完全相同，则启动抑制机制，新的告警不会发送。</p>
 <p>例如，定义如下抑制规则：</p>
-<pre><code class="language-powershell">- source_match:
+<pre><code class="language-shell">- source_match:
     alertname: NodeDown
     severity: critical
   target_match:
@@ -792,9 +802,11 @@ source_match_re:
   equal:
     - node
 </code></pre>
+</li>
+</ul>
 <p>如当集群中的某一个主机节点异常宕机导致告警NodeDown被触发，同时在告警规则中定义了告警级别severity=critical。由于主机异常宕机，该主机上部署的所有服务，中间件会不可用并触发报警。根据抑制规则的定义，如果有新的告警级别为severity=critical，并且告警中标签node的值与NodeDown告警的相同，则说明新的告警是由NodeDown导致的，则启动抑制机制停止向接收器发送通知。</p>
 <p>演示：实现如果 NodeMemoryUsage 报警触发，则抑制NodeLoad指标规则引起的报警。</p>
-<pre><code class="language-powershell">    inhibit_rules:
+<pre><code class="language-shell">    inhibit_rules:
     - source_match:
         alertname: NodeMemoryUsage
         severity: critical
@@ -803,12 +815,10 @@ source_match_re:
       equal:
         - instance
 </code></pre>
-</li>
-<li>
-<p>Silences： 静默</p>
-<p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
-</li>
+<ul>
+<li>Silences： 静默</li>
 </ul>
+<p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
 <p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1646842948861.png" alt="" loading="lazy"></p>
 
