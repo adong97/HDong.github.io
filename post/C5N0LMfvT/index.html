@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647741436015">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647763497018">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647741436015" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647763497018" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -38,7 +38,15 @@
 <li><a href="#%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">配置Prometheus与Alertmanager对话</a>
 <ul>
 <li><a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a></li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a>
+<ul>
+<li><a href="#%E9%92%89%E9%92%89%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81%E9%85%8D%E7%BD%AE">钉钉消息推送配置</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85dingtalk">安装dingtalk</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">基于Label的动态告警处理</a></li>
 <li><a href="#%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">抑制和静默</a></li>
 </ul>
@@ -115,7 +123,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Alertmanager安装与配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 21 min read
+          2022-02-26 / 23 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/C5N0LMfvT.png" alt="">
@@ -313,7 +321,22 @@ $ curl -XPOST 10.244.1.7:9090/-/reload
 $ kubectl -n monitor get po -o wide
 prometheus-dcb499cbf-pljfn            1/1     Running   0          47h    10.244.1.167  
 
-$ kubectl -n monitor exec -ti prometheus-dcb499cbf-pljfn cat /etc/prometheus/prometheus.yml |grep alertmanager
+$ kubectl -n monitor exec -ti prometheus-7d6799c84c-2kntg cat /etc/prometheus/prometheus.yml |grep -n5 alertm
+4-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+5-  # scrape_timeout is set to the global default (10s).
+6-
+7-# Alertmanager configuration
+8-alerting:
+9:  alertmanagers:
+10-  - static_configs:
+11-    - targets:
+12:      - alertmanager:9093
+13-
+14-# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+15-rule_files:
+16-  # - &quot;first_rules.yml&quot;
+17-  # - &quot;second_rules.yml&quot;
+
 
 # 使用软加载的方式，
 $ curl -X POST 10.244.1.167:9090/-/reload
@@ -322,7 +345,7 @@ $ curl -X POST 10.244.1.167:9090/-/reload
 <p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
 <p>在哪里配置？<br>
 同样是在prometheus-configmap中：</p>
-<pre><code class="language-shell">$ kuectl -n monitor edit configmap prometheus-config
+<pre><code class="language-shell">$ kubectl -n monitor edit configmap prometheus-config
 
 apiVersion: v1
 kind: ConfigMap
@@ -341,7 +364,7 @@ data:
           - alertmanager:9093
     # Load rules once and periodically evaluate them according to the global  'evaluation_interval'.
     rule_files:
-      - /etc/prometheus/alert_rules.yml
+      - /etc/prometheus/alert_rules.yml    #添加rule_files
       # - &quot;first_rules.yml&quot;
       # - &quot;second_rules.yml&quot;
     scrape_configs:
@@ -377,7 +400,8 @@ data:
     - job_name: 'prometheus'
       static_configs:
       - targets: ['localhost:9090']
-... # 省略中间部分
+... 
+# 省略中间部分,添加以下配置
   alert_rules.yml: |
     groups:
     - name: node_metrics
@@ -388,6 +412,33 @@ data:
         annotations:
           summary: &quot;{{$labels.instance}}: Low node load detected&quot;
           description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
+</code></pre>
+<p>或者新创建一个<code>alert_rules.yml</code>文件:</p>
+<pre><code>$ cat alert_rules.yml
+
+groups:
+- name: node_metrics
+  rules:
+  - alert: NodeLoad
+    expr: node_load15 &lt; 1
+    for: 2m
+    annotations:
+      summary: &quot;{{$labels.instance}}: Low node load detected&quot;
+      description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
+</code></pre>
+<pre><code>##删除正在使用的配置文件，重新生成
+$ kubectl -n monitor delete cm prometheus-config
+
+##重新创建创建prometheus-config configmap
+$ kubectl -n monitor create cm prometheus-config --from-file=prometheus.yml --from-file=alert_rules.yml
+
+#查看peometheus pod中/etc/prometheus目录下的配置文件
+$ kubectl -n monitor exec prometheus-7d6799c84c-k7dck -- ls /etc/prometheus
+alert_rules.yml
+prometheus.yml
+
+#软重启，生效配置
+$ curl -XPOST 10.244.1.10:9090/-/reload
 </code></pre>
 <p>告警规则的几个要素：</p>
 <ul>
@@ -408,6 +459,20 @@ data:
 </li>
 </ul>
 <p>更新配置并软重启，并查看Prometheus报警规则。</p>
+<pre><code>$ kubectl -n monitor exec prometheus-7d6799c84c-k7dck  -- cat /etc/prometheus/alert_rules.yml
+
+groups:
+- name: node_metrics
+  rules:
+  - alert: NodeLoad
+    expr: node_load15 &gt; 1
+    for: 2m
+    annotations:
+      summary: &quot;{{$labels.instance}}: Low node load detected&quot;
+      description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
+
+$ curl -XPOST 10.244.1.10:9090/-/reload
+</code></pre>
 <p>一个报警信息在生命周期内有下面3种状态：</p>
 <ul>
 <li><code>inactive</code>: 表示当前报警信息处于非活动状态，即不满足报警条件</li>
@@ -421,6 +486,7 @@ data:
 <pre><code class="language-shell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
 </code></pre>
 <p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1647761962736.jpg" alt="" loading="lazy"></figure>
 <h2 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h2>
 <p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
 <p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
@@ -477,6 +543,7 @@ $ echo $demoAlerts
 </li>
 <li>配置alertmanager的receiver为webhook地址</li>
 </ul>
+<h3 id="钉钉消息推送配置">钉钉消息推送配置</h3>
 <p>如何给钉钉群聊发送消息？ 钉钉机器人</p>
 <p>钉钉群聊机器人设置：<br>
 每个群聊机器人在创建的时候都会生成唯一的一个访问地址：</p>
@@ -487,6 +554,7 @@ $ echo $demoAlerts
    -H 'Content-Type: application/json' \
    -d '{&quot;msgtype&quot;: &quot;text&quot;,&quot;text&quot;: {&quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;}}'
 </code></pre>
+<h4 id="安装dingtalk">安装dingtalk</h4>
 <p>https://gitee.com/agagin/prometheus-webhook-dingtalk</p>
 <p>镜像地址：timonwong/prometheus-webhook-dingtalk:master</p>
 <p>二进制运行：</p>
@@ -772,8 +840,8 @@ metadata:
 <p>前面我们知道，告警的<code>group(分组)</code>功能通过把多条告警数据聚合，有效的减少告警的频繁发送。除此之外，Alertmanager还支持<code>Inhibition(抑制)</code> 和 <code>Silences(静默)</code>，帮助我们抑制或者屏蔽报警。</p>
 <ul>
 <li>
-<p>Inhibition 抑制</p>
-<p>抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。</p>
+<p>Inhibition 抑制<br>
+抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。</p>
 <p>比如当机房出现网络故障时，所有服务都将不可用而产生大量服务不可用告警，但这些警告并不能反映真实问题在哪，真正需要发出的应该是网络故障告警。当出现网络故障告警的时候，应当抑制服务不可用告警的通知。</p>
 <p>在Alertmanager配置文件中，使用inhibit_rules定义一组告警的抑制规则：</p>
 <pre><code class="language-shell">inhibit_rules:

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647741436015">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647763497018">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647741436015" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647763497018" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -37,6 +37,10 @@
 <li><a href="#kubernetes-metrics-api%E4%BD%93%E7%B3%BB%E5%9B%9E%E9%A1%BE">Kubernetes Metrics API体系回顾</a>
 <ul>
 <li><a href="#adapter%E5%AE%89%E8%A3%85%E5%AF%B9%E6%8E%A5">Adapter安装对接</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">配置自定义指标</a>
+<ul>
 <li><a href="#%E9%80%9A%E7%94%A8%E6%8C%87%E6%A0%87%E7%A4%BA%E4%BE%8B%E7%A8%8B%E5%BA%8F%E9%83%A8%E7%BD%B2">通用指标示例程序部署</a></li>
 <li><a href="#%E5%AE%9E%E8%B7%B5">实践：</a></li>
 <li><a href="#adapter%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E6%A0%87">Adapter配置自定义指标</a></li>
@@ -131,12 +135,13 @@
 <p>k8s对监控接口进行了标准化：</p>
 <ul>
 <li>
-<p>Resource Metrics</p>
-<p>对应的接口是 metrics.k8s.io，主要的实现就是 metrics-server</p>
+<p>Resource Metrics<br>
+对应的接口是 metrics.k8s.io，主要的实现就是 metrics-server</p>
 </li>
 <li>
-<p>Custom Metrics</p>
-<p>对应的接口是 custom.metrics.k8s.io，主要的实现是 Prometheus， 它提供的是资源监控和自定义监控</p>
+<p>Custom Metrics<br>
+对应的接口是 custom.metrics.k8s.io(通用类指标的接口)，主要的实现是 Prometheus， 它提供的是资源监控和自定义监控<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1647763180709.png" alt="" loading="lazy"></p>
 </li>
 </ul>
 <p>安装完metrics-server后，利用kube-aggregator的功能，实现了metrics api的注册。可以通过如下命令</p>
@@ -271,6 +276,7 @@ $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
   &quot;resources&quot;: []                                    
 }                                                    
 </code></pre>
+<h1 id="配置自定义指标">配置自定义指标</h1>
 <h2 id="通用指标示例程序部署">通用指标示例程序部署</h2>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1646843046204.png" alt="" loading="lazy"></figure>
 <p>为了演示效果，我们新建一个deployment来模拟业务应用。</p>
