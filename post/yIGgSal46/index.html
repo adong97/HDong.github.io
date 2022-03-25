@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1647763497018">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1648215595313">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1647763497018" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1648215595313" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -63,11 +63,11 @@
 <ul>
 <li><a href="#gitlab%E4%BB%A3%E7%A0%81%E4%BB%93%E5%BA%93%E6%90%AD%E5%BB%BA">gitlab代码仓库搭建</a>
 <ul>
-<li><a href="#%E4%BD%BF%E7%94%A8k8s%E9%83%A8%E7%BD%B2">使用k8s部署：</a></li>
-</ul>
-</li>
+<li><a href="#%E9%83%A8%E7%BD%B2postgres">部署postgres</a></li>
 <li><a href="#%E9%83%A8%E7%BD%B2redis">部署redis</a></li>
 <li><a href="#%E9%83%A8%E7%BD%B2gitlab">部署gitlab</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#%E6%BC%94%E7%A4%BA%E8%BF%87%E7%A8%8B">演示过程</a></li>
@@ -148,7 +148,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">基于Kubernetes的DevOps平台实践</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-03-08 / 20 min read
+          2022-03-08 / 22 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/yIGgSal46.png" alt="">
@@ -269,7 +269,7 @@ spec:
         devops: jenkins-master
     spec:
       serviceAccount: jenkins #Pod 需要使用的服务账号
-      initContainers:
+      initContainers:   #初始化容器
       - name: fix-permissions
         image: busybox
         command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /var/jenkins_home&quot;]
@@ -280,7 +280,7 @@ spec:
           mountPath: /var/jenkins_home
       containers:
       - name: jenkins
-        image: jenkinsci/blueocean:1.24.7
+        image: jenkinsci/blueocean:1.25.2
         imagePullPolicy: IfNotPresent
         ports:
         - name: http #Jenkins Master Web 服务端口
@@ -350,7 +350,7 @@ $ kubectl -n jenkins logs -f jenkins-master-767df9b574-lgdr5
 Jenkins initial setup is required. An admin user has been created and a password generated.
 Please use the following password to proceed to installation:
 
-5396b4e1c395450f8360efd8ee641b18
+1ef127c2d2894313b2f8c55c194a7885
 
 This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 
@@ -360,17 +360,24 @@ This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
 <p>访问服务：</p>
 <p>配置hosts解析，<code>172.21.51.143 jenkins.luffy.com</code>，然后使用浏览器域名访问服务。第一次访问需要大概几分钟的初始化时间。<br>
 <img src="https://adong97.github.io/HDong.github.io//post-images/1646756903035.jpg" alt="" loading="lazy"></p>
-<p>使用jenkins启动日志中的密码，或者执行下面的命令获取解锁的管理员密码：</p>
-<pre><code class="language-shell">$ kubectl -n jenkins exec jenkins-master-767df9b574-lgdr5 bash 
+<p>使用jenkins启动日志中的密码，<br>
+或者执行下面的命令获取解锁的管理员密码：</p>
+<pre><code class="language-shell">#进入jenkins容器内部
+$ kubectl -n jenkins exec jenkins-master-767df9b574-lgdr5 bash 
+
 / # cat /var/jenkins_home/secrets/initialAdminPassword
-35b083de1d25409eaef57255e0da481a
+1ef127c2d2894313b2f8c55c194a7885
 
 </code></pre>
-<p>点击叉号，跳过选择安装推荐的插件环节，直接进入Jenkins。由于默认的插件地址安装非常慢，我们可以替换成国内清华的源，进入 jenkins 工作目录，目录下面有一个 <code>updates</code> 的目录，下面有一个 <code>default.json</code> 文件，我们执行下面的命令替换插件地址：</p>
-<pre><code class="language-shell">$ cd /var/jenkins_home/updates
+<p>点击叉号，跳过选择安装推荐的插件环节，直接进入Jenkins。</p>
+<p>由于默认的插件地址安装非常慢，我们可以替换成国内清华的源，进入 jenkins 工作目录，目录下面有一个 <code>updates</code> 的目录，下面有一个 <code>default.json</code> 文件，我们执行下面的命令替换插件地址：</p>
+<pre><code class="language-shell">#进入jenkens容器内部
+$ kubectl  -n jenkins exec -it  jenkins-master-59d66cd66c-g826w -- bash
+
+$ cd /var/jenkins_home/updates
+#替换为清华的源
 $ sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' default.json 
 $ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
-
 </code></pre>
 <blockquote>
 <p>暂时先不用重新启动pod，汉化后一起重启。</p>
@@ -390,8 +397,8 @@ $ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' default.json
 </ul>
 <h2 id="演示准备">演示准备</h2>
 <h3 id="gitlab代码仓库搭建">gitlab代码仓库搭建</h3>
-<p>https://github.com/sameersbn/docker-gitlab</p>
-<pre><code class="language-shell">## 全量部署的组件
+<p>docker部署gitlab地址： https://github.com/sameersbn/docker-gitlab</p>
+<pre><code class="language-shell">## 全量部署gitlab的组件
 $ gitlab-ctl status
 
 run: alertmanager: (pid 1987) 27s; run: log: (pid 1986) 27s
@@ -414,14 +421,17 @@ run: sidekiq: (pid 1969) 28s; run: log: (pid 1967) 28s
 <li>依赖postgres</li>
 <li>依赖redis</li>
 </ol>
-<h4 id="使用k8s部署">使用k8s部署：</h4>
+<h4 id="部署postgres">部署postgres</h4>
 <ol>
 <li>
 <p>准备secret文件</p>
-<pre><code class="language-shell">$ cat gitlab-secret.txt
+<pre><code class="language-shell">
+#用于存储gitlab账号密码
+$ cat gitlab-secret.txt
 postgres.user.root=root
 postgres.pwd.root=1qaz2wsx
 
+#创建secret
 $ kubectl -n jenkins create secret generic gitlab-secret --from-env-file=gitlab-secret.txt
 </code></pre>
 </li>
@@ -432,295 +442,318 @@ $ kubectl -n jenkins create secret generic gitlab-secret --from-env-file=gitlab-
 <li>使用secret来引用账户密码</li>
 <li>使用postgres=true来指定节点</li>
 </ul>
-<pre><code class="language-shell">$ cat postgres.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-  namespace: jenkins
-spec:
-  ports:
-  - name: server
-    port: 5432
-    targetPort: 5432
-    protocol: TCP
-  selector:
-    app: postgres
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: postgredb
-  namespace: jenkins
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: nfs
-  resources:
-    requests:
-      storage: 200Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: jenkins
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      tolerations:
-      - operator: &quot;Exists&quot;
-      containers:
-      - name: postgres
-        image:  postgres:11.4
-        imagePullPolicy: &quot;IfNotPresent&quot;
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_USER           #PostgreSQL 用户名
-          valueFrom:
-            secretKeyRef:
-              name: gitlab-secret
-              key: postgres.user.root
-        - name: POSTGRES_PASSWORD       #PostgreSQL 密码
-          valueFrom:
-            secretKeyRef:
-              name: gitlab-secret
-              key: postgres.pwd.root
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 2048Mi
-          requests:
-            cpu: 50m
-            memory: 100Mi
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgredb
-      volumes:
-      - name: postgredb
-        persistentVolumeClaim:
-          claimName: postgredb
-          
-
-
-#创建postgres
-$ kubectl create -f postgres.yaml
-
-# 创建数据库gitlab,为后面部署gitlab组件使用
-$ kubectl -n jenkins exec -ti postgres-7ff9b49f4c-nt8zh bash
-root@postgres-7ff9b49f4c-nt8zh:/# psql
-root=# create database gitlab;
-CREATE DATABASE
-</code></pre>
 </li>
 </ol>
-<h3 id="部署redis">部署redis</h3>
-<pre><code class="language-shell">$ cat redis.yaml
+<pre><code class="language-shell">   $ cat postgres.yaml
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis
-  labels:
-    app: redis
-  namespace: jenkins
-spec:
-  ports:
-  - name: server
-    port: 6379
-    targetPort: 6379
-    protocol: TCP
-  selector:
-    app: redis
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: jenkins
-  name: redis
-  labels:
-    app: redis
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis
-  template:
-    metadata:
-      labels:
-        app: redis
-    spec:
-      tolerations:
-      - operator: &quot;Exists&quot;
-      containers:
-      - name: redis
-        image:  sameersbn/redis:4.0.9-2
-        imagePullPolicy: &quot;IfNotPresent&quot;
-        ports:
-        - containerPort: 6379
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 2048Mi
-          requests:
-            cpu: 50m
-            memory: 100Mi
-            
-# 创建
-$ kubectl create -f redis.yaml
-</code></pre>
-<h3 id="部署gitlab">部署gitlab</h3>
-<p>注意点：</p>
-<ul>
-<li>使用ingress暴漏服务</li>
-<li>添加annotation，指定nginx端上传大小限制，否则推送代码时会默认被限制1m大小，相当于给nginx设置client_max_body_size的限制大小</li>
-<li>使用服务发现地址来访问postgres和redis</li>
-<li>在secret中引用数据库账户和密码</li>
-<li>数据库名称为gitlab</li>
-</ul>
-<pre><code class="language-shell">   $ cat gitlab.yaml
-
-   apiVersion: networking.k8s.io/v1
-   kind: Ingress
-   metadata:
-     name: gitlab
-     namespace: jenkins
-     annotations:
-       nginx.ingress.kubernetes.io/proxy-body-size: &quot;50m&quot;
-   spec:
-     rules:
-     - host: gitlab.luffy.com
-       http:
-         paths:
-         - path: /
-           pathType: Prefix
-           backend:
-             service: 
-               name: gitlab
-               port:
-                 number: 80
-   ---
-   kind: PersistentVolumeClaim
-   apiVersion: v1
-   metadata:
-     name: gitlab
-     namespace: jenkins
-   spec:
-     accessModes:
-       - ReadWriteOnce
-     storageClassName: nfs
-     resources:
-       requests:
-         storage: 200Gi
-   ---
+   #创建service，用于gitlab连接
    apiVersion: v1
    kind: Service
    metadata:
-     name: gitlab
+     name: postgres
      labels:
-       app: gitlab
+       app: postgres
      namespace: jenkins
    spec:
      ports:
      - name: server
-       port: 80
-       targetPort: 80
+       port: 5432
+       targetPort: 5432
        protocol: TCP
      selector:
-       app: gitlab
+       app: postgres
+   ---
+   kind: PersistentVolumeClaim
+   apiVersion: v1
+   metadata:
+     name: postgredb
+     namespace: jenkins
+   spec:
+     accessModes:
+       - ReadWriteOnce
+     storageClassName: nfs-storage
+     resources:
+       requests:
+         storage: 200Gi
    ---
    apiVersion: apps/v1
    kind: Deployment
    metadata:
      namespace: jenkins
-     name: gitlab
+     name: postgres
      labels:
-       app: gitlab
+       app: postgres
    spec:
      replicas: 1
      selector:
        matchLabels:
-         app: gitlab
+         app: postgres
      template:
        metadata:
          labels:
-           app: gitlab
+           app: postgres
        spec:
          tolerations:
          - operator: &quot;Exists&quot;
          containers:
-         - name: gitlab
-           image:  sameersbn/gitlab:13.2.2
+         - name: postgres
+           image:  postgres:11.4
            imagePullPolicy: &quot;IfNotPresent&quot;
+           ports:
+           - containerPort: 5432
            env:
-           - name: GITLAB_HOST
-             value: &quot;gitlab.luffy.com&quot;
-           - name: GITLAB_PORT
-             value: &quot;80&quot;
-           - name: GITLAB_SECRETS_DB_KEY_BASE
-             value: &quot;long-and-random-alpha-numeric-string&quot;
-           - name: GITLAB_SECRETS_DB_KEY_BASE
-             value: &quot;long-and-random-alpha-numeric-string&quot;
-           - name: GITLAB_SECRETS_SECRET_KEY_BASE
-             value: &quot;long-and-random-alpha-numeric-string&quot;
-           - name: GITLAB_SECRETS_OTP_KEY_BASE
-             value: &quot;long-and-random-alpha-numeric-string&quot;
-           - name: DB_HOST
-             value: &quot;postgres&quot;
-           - name: DB_NAME
-             value: &quot;gitlab&quot;
-           - name: DB_USER
+           - name: POSTGRES_USER           #PostgreSQL 用户名
              valueFrom:
                secretKeyRef:
                  name: gitlab-secret
                  key: postgres.user.root
-           - name: DB_PASS
+           - name: POSTGRES_PASSWORD       #PostgreSQL 密码
              valueFrom:
                secretKeyRef:
                  name: gitlab-secret
                  key: postgres.pwd.root
-           - name: REDIS_HOST
-             value: &quot;redis&quot;
-           - name: REDIS_PORT
-             value: &quot;6379&quot;
-           ports:
-           - containerPort: 80
            resources:
              limits:
-               cpu: 2000m
-               memory: 5048Mi
+               cpu: 1000m
+               memory: 2048Mi
              requests:
-               cpu: 100m
-               memory: 500Mi
+               cpu: 50m
+               memory: 100Mi
            volumeMounts:
-        - mountPath: /home/git/data
-             name: data
+           - mountPath: /var/lib/postgresql/data
+             name: postgredb
          volumes:
-         - name: data
+         - name: postgredb
            persistentVolumeClaim:
-             claimName: gitlab
-   
-   
-   # 创建
-   $ kubectl create -f gitlab.yaml
+             claimName: postgredb
 </code></pre>
-<p>配置hosts解析：</p>
-<pre><code class="language-powershell">172.21.51.143 gitlab.luffy.com
+<pre><code class="language-shell">   #创建postgres
+   $ kubectl create -f postgres.yaml
+   
+   # 创建数据库gitlab,为后面部署gitlab组件使用
+   ## 进入postgres 数据库容器
+   $ kubectl -n jenkins exec -ti postgres-7ff9b49f4c-nt8zh bash
+  
+  
+## 进入paql，创建gitlab数据库
+root@postgres-7ff9b49f4c-nt8zh:/# psql
+root=# create database gitlab;
+CREATE DATABASE
+
+root=# \l
+                             List of databases
+   Name    | Owner | Encoding |  Collate   |   Ctype    | Access privileges
+-----------+-------+----------+------------+------------+-------------------
+ gitlab    | root  | UTF8     | en_US.utf8 | en_US.utf8 |
+ postgres  | root  | UTF8     | en_US.utf8 | en_US.utf8 |
+ root      | root  | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | root  | UTF8     | en_US.utf8 | en_US.utf8 | =c/root          +
+           |       |          |            |            | root=CTc/root
+ template1 | root  | UTF8     | en_US.utf8 | en_US.utf8 | =c/root          +
+           |       |          |            |            | root=CTc/root
+(5 rows)
+
+gitlab数据库创建完成。
+</code></pre>
+<h4 id="部署redis">部署redis</h4>
+<pre><code class="language-shell">   $ cat redis.yaml
+
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: redis
+     labels:
+       app: redis
+     namespace: jenkins
+   spec:
+     ports:
+     - name: server
+       port: 6379
+       targetPort: 6379
+       protocol: TCP
+     selector:
+       app: redis
+   ---
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     namespace: jenkins
+     name: redis
+     labels:
+       app: redis
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: redis
+     template:
+       metadata:
+         labels:
+           app: redis
+       spec:
+         tolerations:
+         - operator: &quot;Exists&quot;
+         containers:
+         - name: redis
+           image:  sameersbn/redis:4.0.9-2
+           imagePullPolicy: &quot;IfNotPresent&quot;
+           ports:
+           - containerPort: 6379
+           resources:
+             limits:
+               cpu: 1000m
+               memory: 2048Mi
+             requests:
+               cpu: 50m
+               memory: 100Mi
+               
+   # 创建redis容器
+   $ kubectl create -f redis.yaml
+</code></pre>
+<h4 id="部署gitlab">部署gitlab</h4>
+<p>注意点：</p>
+<ul>
+<li>使用ingress暴漏服务</li>
+<li>添加annotation声明，指定nginx端上传大小限制，否则推送代码时会默认被限制1m大小，相当于给nginx设置client_max_body_size的限制大小</li>
+<li>使用服务发现地址来访问postgres和redis</li>
+<li>在secret中引用数据库账户和密码</li>
+<li>数据库名称为gitlab</li>
+</ul>
+<pre><code class="language-shell">$ cat gitlab.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitlab
+  namespace: jenkins
+  annotations:    #添加声明
+    nginx.ingress.kubernetes.io/proxy-body-size: &quot;50m&quot;  #指定nginx端上传大小限制
+spec:
+  rules:
+  - host: gitlab.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: gitlab
+            port:
+              number: 80
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: gitlab
+  namespace: jenkins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-storage
+  resources:
+    requests:
+      storage: 200Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab
+  labels:
+    app: gitlab
+  namespace: jenkins
+spec:
+  ports:
+  - name: server
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: gitlab
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: jenkins
+  name: gitlab
+  labels:
+    app: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      tolerations:
+      - operator: &quot;Exists&quot;
+      containers:
+      - name: gitlab
+        image:  sameersbn/gitlab:13.2.2
+        imagePullPolicy: &quot;IfNotPresent&quot;
+        env:    # 添加环境变量
+        - name: GITLAB_HOST
+          value: &quot;gitlab.luffy.com&quot;
+        - name: GITLAB_PORT
+          value: &quot;80&quot;
+        - name: GITLAB_SECRETS_DB_KEY_BASE
+          value: &quot;long-and-random-alpha-numeric-string&quot;
+        - name: GITLAB_SECRETS_DB_KEY_BASE
+          value: &quot;long-and-random-alpha-numeric-string&quot;
+        - name: GITLAB_SECRETS_SECRET_KEY_BASE
+          value: &quot;long-and-random-alpha-numeric-string&quot;
+        - name: GITLAB_SECRETS_OTP_KEY_BASE
+          value: &quot;long-and-random-alpha-numeric-string&quot;
+        - name: DB_HOST  #同一命名空间下，可以使用svc名称
+          value: &quot;postgres&quot;
+        - name: DB_NAME #创建gitlab的库
+          value: &quot;gitlab&quot;
+        - name: DB_USER  # 从gitlab-secret中引用
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-secret
+              key: postgres.user.root
+        - name: DB_PASS  # 从gitlab-secret中引用
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-secret
+              key: postgres.pwd.root
+        - name: REDIS_HOST
+          value: &quot;redis&quot;
+        - name: REDIS_PORT
+          value: &quot;6379&quot;
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 5048Mi
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        volumeMounts:
+     - mountPath: /home/git/data
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: gitlab
+   
+   
+# 创建gitlab
+$ kubectl create -f gitlab.yaml
+</code></pre>
+<p>配置gitlab  hosts解析：</p>
+<pre><code class="language-shell">10.1.13.156  gitlab.luffy.com
 </code></pre>
 <p><em>设置root密码</em></p>
-<p>访问http://gitlab.luffy.com，设置管理员密码</p>
+<pre><code>访问http://gitlab.luffy.com，设置管理员密码
+
+user:root
+password:Weixd123.
+</code></pre>
 <p><em>配置k8s-master节点的hosts</em></p>
 <pre><code class="language-shell">$ echo &quot;172.21.51.143 gitlab.luffy.com&quot; &gt;&gt;/etc/hosts
 </code></pre>
@@ -742,14 +775,13 @@ git push -u origin --tags
 </li>
 <li>
 <p>试验发送消息</p>
-<pre><code class="language-powershell">$ curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
+<pre><code class="language-shell">$ curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
    -H 'Content-Type: application/json' \
    -d '{&quot;msgtype&quot;: &quot;text&quot;, 
         &quot;text&quot;: {
              &quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;
         }
       }'
-
 </code></pre>
 </li>
 </ul>
@@ -779,13 +811,25 @@ git push -u origin --tags
 </li>
 <li>
 <p>配置coredns的静态解析</p>
-<pre><code class="language-powershell">        hosts {
-            172.21.51.143 jenkins.luffy.com  gitlab.luffy.com
-            fallthrough
-        }
+<pre><code class="language-shell">#编辑coredns配置文件
 </code></pre>
 </li>
 </ul>
+<p>$ kubectl -n kube-system edit cm coredns</p>
+<pre><code>      #ready后面添加hosts解析配置
+      hosts {
+          10.1.13.156 jenkins.luffy.com  gitlab.luffy.com
+          fallthrough
+      }
+</code></pre>
+<p>#重启coredns<br>
+$ kubectl -n kube-system scale deployment coredns --replicas=0<br>
+$ kubectl -n kube-system scale deployment coredns --replicas=2</p>
+<p>#进入jenkins容器测试<br>
+$ kubectl -n jenkins exec -it  jenkins-master-59d66cd66c-g826w -- bash<br>
+bash-5.1$ curl gitlab.luffy.com</p>
+ <html><body>You are being <a href="http://gitlab.luffy.com/users/sign_in">redirected</a>.</body></html>
+  ```
 </li>
 <li>
 <p>创建自由风格项目</p>
