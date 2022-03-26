@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1648215595313">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1648285699334">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1648215595313" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1648285699334" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -795,8 +795,8 @@ git push -u origin --tags
 </li>
 <li>
 <p>配置Gitlab</p>
-<p>系统管理-&gt;系统配置-&gt;Gitlab，其中的API Token，需要从下个步骤中获取</p>
-<figure data-type="image" tabindex="4"><img src="images%5Cgitlab-connection.jpg" alt="" loading="lazy"></figure>
+<p>系统管理-&gt;系统配置-&gt;Gitlab，其中的API Token，需要从下个步骤中获取<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1648215860496.jpg" alt="" loading="lazy"></p>
 </li>
 <li>
 <p>获取AccessToken</p>
@@ -816,12 +816,11 @@ git push -u origin --tags
 </li>
 </ul>
 <p>$ kubectl -n kube-system edit cm coredns</p>
-<pre><code>      #ready后面添加hosts解析配置
-      hosts {
-          10.1.13.156 jenkins.luffy.com  gitlab.luffy.com
-          fallthrough
-      }
-</code></pre>
+<p>#ready后面添加hosts解析配置<br>
+hosts {<br>
+10.1.13.156 jenkins.luffy.com  gitlab.luffy.com<br>
+fallthrough<br>
+}</p>
 <p>#重启coredns<br>
 $ kubectl -n kube-system scale deployment coredns --replicas=0<br>
 $ kubectl -n kube-system scale deployment coredns --replicas=2</p>
@@ -834,18 +833,19 @@ bash-5.1$ curl gitlab.luffy.com</p>
 <li>
 <p>创建自由风格项目</p>
 <ul>
-<li>gitlab connection 选择为刚创建的gitlab</li>
-<li>源码管理选择Git，填项项目地址</li>
-<li>新建一个 Credentials 认证，使用用户名密码方式，配置gitlab的用户和密码</li>
-<li>构建触发器选择 Build when a change is pushed to GitLab</li>
+<li>gitlab connection 选择为刚创建的gitlab(用来调用gitlab API)</li>
+<li>源码管理-&gt; 选择Git，填项项目地址（http://gitlab.luffy.com/luffy/myblog.git）</li>
+<li>新建一个 Credentials 认证，使用用户名密码方式，配置gitlab的用户和密码(要有访问gitlab的访问权限)</li>
+<li>构建触发器选择 -&gt; Build when a change is pushed to GitLab (当更改推送到 GitLab 时构建)</li>
+<li>构建 -&gt; 执行shell，或添加更多。会串行执行</li>
 <li>生成一个Secret token</li>
 <li>保存</li>
 </ul>
 </li>
 <li>
-<p>到gitlab配置webhook</p>
+<p>到gitlab配置webhook，当有push事件推过来的时候</p>
 <ul>
-<li>进入项目下settings-&gt;Integrations</li>
+<li>进入项目下 settings-&gt;Integrations</li>
 <li>URL： http://jenkins.luffy.com/project/free</li>
 <li>Secret Token 填入在Jenkins端生成的token</li>
 <li>Add webhook</li>
@@ -855,8 +855,8 @@ bash-5.1$ curl gitlab.luffy.com</p>
 <li>
 <p>设置gitlab允许向本地网络发送webhook请求</p>
 <p>访问 Admin Aera -&gt; Settings -&gt; Network ，展开Outbound requests</p>
-<p>Collapse，勾选第一项即可。再次test push events，成功。</p>
-<figure data-type="image" tabindex="5"><img src="images%5Cgitlab-webhook-success.jpg" alt="" loading="lazy"></figure>
+<p>Collapse，勾选第一项即可。再次test push events，成功。<br>
+<img src="https://adong97.github.io/HDong.github.io//post-images/1648215899045.jpg" alt="" loading="lazy"></p>
 </li>
 <li>
 <p>配置free项目，增加构建步骤，执行shell，将发送钉钉消息的shell保存</p>
@@ -879,7 +879,7 @@ bash-5.1$ curl gitlab.luffy.com</p>
 </ul>
 </li>
 </ol>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757161994.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757161994.jpg" alt="" loading="lazy"></figure>
 <ol start="2">
 <li>
 <p>执行java命令启动agent服务</p>
@@ -921,11 +921,11 @@ java.io.IOException: http://jenkins.luffy.com/ provided port:50000 is not reacha
 <p>可以选择： 配置从节点 -&gt; 高级 -&gt; Tunnel连接位置，参考下图进行设置:</p>
 </li>
 </ol>
-<figure data-type="image" tabindex="7"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757184119.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757184119.jpg" alt="" loading="lazy"></figure>
 <ol start="3">
 <li>查看Jenkins节点列表，新节点已经处于可用状态</li>
 </ol>
-<figure data-type="image" tabindex="8"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757198820.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io//post-images/1646757198820.jpg" alt="" loading="lazy"></figure>
 <ol start="4">
 <li>
 <p>测试使用新节点执行任务</p>
