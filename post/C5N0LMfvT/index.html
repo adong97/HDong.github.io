@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://HDong.github.io/favicon.ico?v=1648976000152">
+<link rel="shortcut icon" href="https://adong97.github.io/hdong.github.io/favicon.ico?v=1648976204172">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://HDong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/hdong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://HDong.github.io/images/avatar.png?v=1648976000152" alt="">
+        <a href="https://adong97.github.io/hdong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/hdong.github.io/images/avatar.png?v=1648976204172" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -115,7 +115,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://HDong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/hdong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -126,7 +126,7 @@
           2022-02-26 / 23 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://HDong.github.io/post-images/C5N0LMfvT.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/hdong.github.io/post-images/C5N0LMfvT.png" alt="">
         
         <div class="post-content yue">
           <p>Alertmanager是一个独立的告警模块。</p>
@@ -135,7 +135,7 @@
 <li>通过分组、删除重复等处理，并将它们通过路由发送给正确的接收器；</li>
 <li>告警方式可以按照不同的规则发送给不同的模块负责人。Alertmanager支持Email, Slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具。</li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://HDong.github.io/post-images/1646842757866.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/hdong.github.io/post-images/1646842757866.png" alt="" loading="lazy"></figure>
 <p>如果集群主机的内存使用率超过80%，且该现象持续了2分钟？想实现这样的监控告警，如何做？</p>
 <p>从上图可得知设置警报和通知的主要步骤是：</p>
 <ul>
@@ -279,7 +279,7 @@ spec:
 <pre><code>$ kubectl create -f alertmanager-all.yaml
 </code></pre>
 <h1 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h1>
-<p><img src="https://HDong.github.io/post-images/1646842842773.png" alt="" loading="lazy"><br>
+<p><img src="https://adong97.github.io/hdong.github.io/post-images/1646842842773.png" alt="" loading="lazy"><br>
 是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
 <pre><code class="language-shell">...
     alerting:
@@ -486,7 +486,7 @@ $ curl -XPOST 10.244.1.10:9090/-/reload
 <pre><code class="language-shell">level=warn ts=2020-07-28T13:43:59.430Z caller=notify.go:674 component=dispatcher receiver=email integration=email[0] msg=&quot;Notify attempt failed, will retry later&quot; attempts=1 err=&quot;*email.loginAuth auth: 550 User has no permission&quot;
 </code></pre>
 <p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
-<figure data-type="image" tabindex="2"><img src="https://HDong.github.io/post-images/1647761962736.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/hdong.github.io/post-images/1647761962736.jpg" alt="" loading="lazy"></figure>
 <h2 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h2>
 <p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
 <p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
@@ -888,16 +888,16 @@ source_match_re:
 </ul>
 <p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
 <p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：<br>
-<img src="https://HDong.github.io/post-images/1646842948861.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/hdong.github.io/post-images/1646842948861.png" alt="" loading="lazy"></p>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://HDong.github.io/tag/JaV1Typc8/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/JaV1Typc8/">
             <span class="flex-auto">Prometheus监控</span>
           </a>
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://HDong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -906,7 +906,7 @@ source_match_re:
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://HDong.github.io/post/NetHMaIIz/">
+              <a href="https://adong97.github.io/hdong.github.io/post/NetHMaIIz/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   自定义指标实现业务伸缩
@@ -917,7 +917,7 @@ source_match_re:
 
           
             <div class="next-post">
-              <a href="https://HDong.github.io/post/Ok7rEVGci/">
+              <a href="https://adong97.github.io/hdong.github.io/post/Ok7rEVGci/">
                 <h3 class="post-title">
                   Grafana安装与配置
                   <i class="ri-arrow-right-line"></i>
@@ -932,7 +932,7 @@ source_match_re:
       </div>
     </div>
 
-    <script src="https://HDong.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/hdong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()

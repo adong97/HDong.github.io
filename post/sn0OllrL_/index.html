@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://HDong.github.io/favicon.ico?v=1648976000152">
+<link rel="shortcut icon" href="https://adong97.github.io/hdong.github.io/favicon.ico?v=1648976204172">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://HDong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/hdong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://HDong.github.io/images/avatar.png?v=1648976000152" alt="">
+        <a href="https://adong97.github.io/hdong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/hdong.github.io/images/avatar.png?v=1648976204172" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -111,7 +111,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://HDong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/hdong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -122,7 +122,7 @@
           2022-02-15 / 12 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://HDong.github.io/post-images/sn0OllrL_.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/hdong.github.io/post-images/sn0OllrL_.png" alt="">
         
         <div class="post-content yue">
           <h1 id="为何要控制pod应该如何调度">为何要控制Pod应该如何调度</h1>
@@ -132,7 +132,7 @@
 <li>......</li>
 </ul>
 <p>Kubernetes Scheduler 的作用是将待调度的 Pod 按照一定的调度算法和策略绑定到集群中一个合适的 Worker Node 上，并将绑定信息写入到 etcd 中，之后目标 Node 中 kubelet 服务通过 API Server 监听到 Scheduler 产生的 Pod 绑定事件获取 Pod 信息，然后下载镜像启动容器。</p>
-<p><img src="https://HDong.github.io/post-images/1644918439871.jpg" alt="" loading="lazy"><br>
+<p><img src="https://adong97.github.io/hdong.github.io/post-images/1644918439871.jpg" alt="" loading="lazy"><br>
 kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，其监听kube-apiserver，查询未分配 Node的Pod（未分配、分配失败及尝试多次无法分配），根据配置的调度策略，将Pod调度到最优的工作节点上，从而高效、合理的利用集群的资源，该特性是用户选择K8S系统的关键因素之一，帮助用户提升效率、降低能耗。</p>
 <p>在上述过程中，需要考虑以下问题：</p>
 <ul>
@@ -151,7 +151,7 @@ kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，
 </ul>
 <h1 id="调度的过程">调度的过程</h1>
 <p>首先我们通过下面的整体的交互图，来构建Pod调度的直观感受。<br>
-<img src="https://HDong.github.io/post-images/1645177672161.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/hdong.github.io/post-images/1645177672161.png" alt="" loading="lazy"><br>
 上述以创建一个Pod为例，简要介绍调度流程：</p>
 <ol>
 <li>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略 kube-controller-manager)</li>
@@ -174,11 +174,11 @@ kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，
 <p>经过预选筛选和优选打分之后，K8S选择分数最高的 Node 来运行 Pod，如果最终有多个 Node 的分数最高，那么 Scheduler 将从当中随机选择一个 Node 来运行 Pod。</p>
 <p>如果在过滤阶段没有节点满足条件，Pod会一直处在Pending状态直到出现满足的节点，在此期间调度器会不断的进行重试。如果有多个节点评分一致，那么kube-scheduler任意选择其一。</p>
 <p>​ 注：Pod首先进入调度队列，失败后进入backoff，多次失败后进入unschedule，该部分内容后续介绍。<br>
-<img src="https://HDong.github.io/post-images/1644918490773.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/hdong.github.io/post-images/1644918490773.png" alt="" loading="lazy"></p>
 <h2 id="预选">预选：</h2>
-<figure data-type="image" tabindex="1"><img src="https://HDong.github.io/post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/hdong.github.io/post-images/1644918512952.jpg" alt="" loading="lazy"></figure>
 <h2 id="优选">优选：</h2>
-<figure data-type="image" tabindex="2"><img src="https://HDong.github.io/post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/hdong.github.io/post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
 <h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
 <p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，Pod 的调度可以根据节点的 label 进行特定的部署。</p>
 <p>查看节点的label：</p>
@@ -381,7 +381,7 @@ $ kubectl drain k8s-slave2
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://HDong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -390,7 +390,7 @@ $ kubectl drain k8s-slave2
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://HDong.github.io/post/9EYVBpAc7/">
+              <a href="https://adong97.github.io/hdong.github.io/post/9EYVBpAc7/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   Kubernetes认证与授权 
@@ -401,7 +401,7 @@ $ kubectl drain k8s-slave2
 
           
             <div class="next-post">
-              <a href="https://HDong.github.io/post/TcpMtOSFQ/">
+              <a href="https://adong97.github.io/hdong.github.io/post/TcpMtOSFQ/">
                 <h3 class="post-title">
                   ETCD数据的访问
                   <i class="ri-arrow-right-line"></i>
@@ -416,7 +416,7 @@ $ kubectl drain k8s-slave2
       </div>
     </div>
 
-    <script src="https://HDong.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/hdong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()
