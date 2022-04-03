@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/hdong.github.io/favicon.ico?v=1648976204172">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1648977171207">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/hdong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/hdong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/hdong.github.io/images/avatar.png?v=1648976204172" alt="">
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1648977171207" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -134,7 +134,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/hdong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -145,7 +145,7 @@
           2021-12-11 / 14 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/hdong.github.io/post-images/ai-RB8y79.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ai-RB8y79.png" alt="">
         
         <div class="post-content yue">
           <h2 id="一-环境准备">一、环境准备</h2>
@@ -194,7 +194,7 @@
 </ul>
 <h3 id="22-架构图">2.2 架构图</h3>
 <p>作为一个监控系统，Prometheus 项目的作用和工作方式，其实可以用如下所示的一张官方示意图来解释：</p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/hdong.github.io/post-images/1639211373384.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1639211373384.png" alt="" loading="lazy"></figure>
 <p>可以看到，Prometheus项目工作的核心，是使用Pull（抓取）的方式去搜集被监控对象的Metrics数据（监控指标数据），然后，再把这些数据保存在一个TSDB（时间序列数据库，比如 OpenTSDB、InfluxDB 等）当中，以便后续可以按照时间进行检索。</p>
 <p>有了这套核心监控机制，Prometheus剩下的组件就是用来配合这套机制的运行。比如Pushgateway，可以允许被监控对象以Push的方式向Prometheus推送Metrics数据。而Alertmanager，则可以根据Metrics信息灵活地设置报警。当然，Prometheus最受用户欢迎的功能，还是通过Grafana对外暴露出的、可以灵活配置的监控数据可视化界面。</p>
 <h3 id="23-基本原理">2.3 基本原理</h3>
@@ -228,7 +228,7 @@
 <li>Target Services通过标签：基于常见的Kubernetes label查询，自动生成监控target配置；不需要学习Prometheus特定的配置语言。</li>
 </ul>
 <h3 id="41-prometheus-operator架构图">4.1 Prometheus Operator架构图</h3>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/hdong.github.io/post-images/1639211468590.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1639211468590.png" alt="" loading="lazy"></figure>
 <p>Operator：Operator资源会根据自定义资源(Custom Resource Definition/CRDs)来部署和管理Prometheus Server，同时监控这些自定义资源事件的变化来做相应的处理，是整个系统的控制中心。</p>
 <p>Prometheus：Prometheus资源是声明性地描述Prometheus部署的期望状态。</p>
 <p>Prometheus Server：Operator根据自定义资源Prometheus类型中定义的内容而部署的Prometheus Server集群，这些自定义资源可以看作是用来管理Prometheus Server集群的StatefulSets资源。</p>
@@ -417,11 +417,11 @@ kubectl get pods -n monitoring
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/13oNyyBgZ/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/13oNyyBgZ/">
             <span class="flex-auto">prometheus</span>
           </a>
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -430,7 +430,7 @@ kubectl get pods -n monitoring
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/bq2VWq1rc/">
+              <a href="https://adong97.github.io/HDong.github.io/post/bq2VWq1rc/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   安装krew插件
@@ -441,7 +441,7 @@ kubectl get pods -n monitoring
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/Esgw6lb6O/">
+              <a href="https://adong97.github.io/HDong.github.io/post/Esgw6lb6O/">
                 <h3 class="post-title">
                   Kubeadm 部署 Kubernetes 1.20
                   <i class="ri-arrow-right-line"></i>
@@ -456,7 +456,7 @@ kubectl get pods -n monitoring
       </div>
     </div>
 
-    <script src="https://adong97.github.io/hdong.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()

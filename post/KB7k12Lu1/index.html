@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/hdong.github.io/favicon.ico?v=1648976204172">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1648977171207">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/hdong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/hdong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/hdong.github.io/images/avatar.png?v=1648976204172" alt="">
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1648977171207" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -114,7 +114,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/hdong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -125,7 +125,7 @@
           2022-02-18 / 13 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/hdong.github.io/post-images/KB7k12Lu1.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/KB7k12Lu1.png" alt="">
         
         <div class="post-content yue">
           <h1 id="hpa-自动伸缩控制器介绍">HPA 自动伸缩控制器介绍</h1>
@@ -135,10 +135,10 @@
 <pre><code class="language-shell">$ kubectl -n luffy scale deployment myblog --replicas=2
 </code></pre>
 <p>但是这个过程是手动操作的。在实际项目中，我们需要做到是的是一个自动化感知并自动扩容的操作。Kubernetes 也为提供了这样的一个资源对象：Horizontal Pod Autoscaling（Pod 水平自动伸缩），简称<a href="https://v1-14.docs.kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">HPA</a></p>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/hdong.github.io/post-images/1645153673923.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1645153673923.png" alt="" loading="lazy"></figure>
 <h1 id="hpa伸缩基本原理">HPA伸缩基本原理</h1>
 <p>HPA 通过监控分析控制器控制的所有 Pod 的负载变化情况来确定是否需要调整 Pod 的副本数量。<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645269595066.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645269595066.png" alt="" loading="lazy"><br>
 具体伸缩的方式就是上面的这张图，图中是通过 <code>kubectl autoscale deployment foo --min=2 --max=5 --cpu-percent=80</code> 命令，创建一个 HPA 控制器，类型是一个 foo 的 deployment 并且最大是 5 个 pod，最小 2 个 pod，而且实在 cpu 利用率在百分之 80 的时候触发，如果 pod cpu 利用率超过了百分之 80 就会扩容 pod ，直到 cpu 利用率低于 80 为止。</p>
 <p>如果该 deployment 中的 pod 运行一段时间后 CPU 利用率降低了，HPA 会自动将该 deployment 中的 pod 自动删掉两个，如果说后来高峰期访问量又上去了原有的 pod CPU 利用率升高到达 80% 他又会自动的进行扩容。</p>
 <p>所以我们需要对那个范围和那种控制器类型进行 HPA 创建，创建好之后就会生产一个 HPA 控制器，HPA 控制器会基于 API server 每隔多少秒进行一次数据的查询，可以通过 CPU 内存、或自定义的数据指标进行查询。</p>
@@ -185,7 +185,7 @@ $ kubectl get --raw /api/v1/namespaces/default/pods|jq
 $ kubectl get --raw /api/v1/namespaces/luffy/pods/mysql-864c8fb64f-bh47z|jq
 </code></pre>
 <p>目前的采集流程：<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645153727835.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645153727835.png" alt="" loading="lazy"></p>
 <h1 id="metric-server">Metric Server</h1>
 <p><a href="https://v1-14.docs.kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server">官方介绍</a></p>
 <pre><code>...
@@ -263,13 +263,13 @@ $ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJ6OGh1d2
 </li>
 </ul>
 <p>Metrics数据流：<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645153791494.webp" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645153791494.webp" alt="" loading="lazy"></p>
 <p>思考：<br>
 Metrics Server是独立的一个服务，只能服务内部实现自己的api，是如何做到通过标准的kubernetes 的API格式暴露出去的？</p>
 <p><a href="https://github.com/kubernetes/kube-aggregator">kube-aggregator</a></p>
 <h2 id="kube-aggregator聚合器及metric-server的实现">kube-aggregator聚合器及Metric-Server的实现</h2>
 <p>kube-aggregator是对 apiserver 的api的一种拓展机制，它允许开发人员编写一个自己的服务，并把这个服务注册到k8s的api里面，即扩展 API 。<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645153809568.webp" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645153809568.webp" alt="" loading="lazy"></p>
 <p>定义一个APIService对象：</p>
 <pre><code class="language-yaml">apiVersion: apiregistration.k8s.io/v1
 kind: APIService
@@ -337,7 +337,7 @@ $ curl -k  -H &quot;Authorization: Bearer xxxx&quot; https://172.21.51.143:6443/
 </code></pre>
 <h1 id="hpa实践">HPA实践</h1>
 <h2 id="基于cpu和内存的动态伸缩">基于CPU和内存的动态伸缩</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/hdong.github.io/post-images/1645153832880.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1645153832880.png" alt="" loading="lazy"></figure>
 <p>创建hpa对象：</p>
 <pre><code class="language-shell"># 方式一
 #定义一个HPA对象，这个HPA对象去监听myblog这个deployment。
@@ -415,14 +415,14 @@ The value for this option is a duration that specifies how long the autoscaler h
 <p>是一个逐步的过程，当前的缩放完成后，下次缩放的时间间隔，比如从3个副本降低到1个副本，中间大概会等待2*5min = 10分钟</p>
 <h2 id="基于自定义指标的动态伸缩">基于自定义指标的动态伸缩</h2>
 <p>除了基于 CPU 和内存来进行自动扩缩容之外，我们还可以根据自定义的监控指标来进行。这个我们就需要使用 <code>Prometheus Adapter</code>，Prometheus 用于监控应用的负载和集群本身的各种指标，<code>Prometheus Adapter</code> 可以帮我们使用 Prometheus 收集的指标并使用它们来制定扩展策略，这些指标都是通过 APIServer 暴露的，而且 HPA 资源对象也可以很轻易的直接使用。</p>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/hdong.github.io/post-images/1645153865309.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1645153865309.webp" alt="" loading="lazy"></figure>
 <p>架构图：<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645153879688.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645153879688.png" alt="" loading="lazy"></p>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -431,7 +431,7 @@ The value for this option is a duration that specifies how long the autoscaler h
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/qJwfGvnw1/">
+              <a href="https://adong97.github.io/HDong.github.io/post/qJwfGvnw1/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   kubernetes对接分部式存储
@@ -442,7 +442,7 @@ The value for this option is a duration that specifies how long the autoscaler h
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/9EYVBpAc7/">
+              <a href="https://adong97.github.io/HDong.github.io/post/9EYVBpAc7/">
                 <h3 class="post-title">
                   Kubernetes认证与授权 
                   <i class="ri-arrow-right-line"></i>
@@ -457,7 +457,7 @@ The value for this option is a duration that specifies how long the autoscaler h
       </div>
     </div>
 
-    <script src="https://adong97.github.io/hdong.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()

@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/hdong.github.io/favicon.ico?v=1648976204172">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1648977171207">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/hdong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/hdong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/hdong.github.io/images/avatar.png?v=1648976204172" alt="">
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1648977171207" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -105,7 +105,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/hdong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -116,13 +116,13 @@
           2022-02-17 / 22 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/hdong.github.io/post-images/9EYVBpAc7.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/9EYVBpAc7.png" alt="">
         
         <div class="post-content yue">
           <p>其实就是k8s去写入ETCD,要经过的一个认证环节。</p>
 <h1 id="apiserver安全控制">APIServer安全控制</h1>
 <p>所有的外部请求要通过API server写入etcd,都会经过以下的环节。<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645108108270.svg" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645108108270.svg" alt="" loading="lazy"></p>
 <ul>
 <li>
 <p><strong>Authentication：身份认证</strong></p>
@@ -231,9 +231,9 @@ spec:
 </li>
 </ul>
 <h1 id="认证授权整体流程图">认证授权整体流程图</h1>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/hdong.github.io/post-images/1645254112624.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1645254112624.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubectl的认证授权">kubectl的认证授权</h1>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/hdong.github.io/post-images/1645238694988.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1645238694988.jpg" alt="" loading="lazy"></figure>
 <p>kubectl的日志调试级别：</p>
 <table>
 <thead>
@@ -334,7 +334,7 @@ Certificate:
 </code></pre>
 <p>认证通过后，提取出签发证书时指定的CN(Common Name),<code>kubernetes-admin</code>，作为请求的用户名 (User Name), 从证书中提取O(Organization)字段作为请求用户所属的组 (Group)，<code>group = system:masters</code>，然后传递给后面的授权模块。</p>
 <p>kubeadm在init初始引导集群启动过程中，创建了许多默认的RBAC规则， 在k8s有关RBAC的官方文档中，我们看到下面一些<code>default clusterrole</code>列表:</p>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/hdong.github.io/post-images/1645156072690.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1645156072690.png" alt="" loading="lazy"></figure>
 <p>其中第一个<code>cluster-admin</code>这个<code>cluster role binding</code>绑定了<code>system:masters group</code>，这和<code>authentication</code>环节传递过来的身份信息不谋而合。 沿着<code>system:masters group</code>对应的<code>cluster-admin clusterrolebinding</code>“追查”下去，真相就会浮出水面。</p>
 <p>我们查看一下这一binding：</p>
 <pre><code class="language-yaml">$ kubectl describe clusterrolebinding cluster-admin
@@ -362,7 +362,7 @@ PolicyRule:
              [*]                []              [*]
 </code></pre>
 <p>非资源类，如查看集群健康状态。<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645153314816.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645153314816.png" alt="" loading="lazy"></p>
 <p>我们在通过<code>kubectl</code>操作资源的时候，其实是通过读取<code>config文件</code>在<code>Authentication</code>环节，使用client证书这种方式，做的身份认证。完成身份认证以后，同时读出来证书的<code>Group</code>用的<code>system-master</code>。<code>system-master</code>这个<code>Group</code>刚好通过<code>RBAC</code>绑定了一个名为<code>cluster-admin</code>的<code>ClusterRole</code>。</p>
 <h1 id="rbac">RBAC</h1>
 <p><code>Role-Based Access Control</code>，基于角色的访问控制。 apiserver启动参数添加<code>--authorization-mode=RBAC</code> 来启用RBAC认证模式，kubeadm安装的集群默认已开启。<br>
@@ -478,7 +478,7 @@ roleRef:
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/hdong.github.io/post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1645153350149.jpg" alt="" loading="lazy"></figure>
 <h1 id="kubelet的认证授权">kubelet的认证授权</h1>
 <p>查看kubelet进程</p>
 <pre><code class="language-shell">$ systemctl status kubelet
@@ -593,7 +593,7 @@ kube-apiserver --authorization-mode=Node,RBAC  --enable-admission-plugins=NodeRe
 <p><em>In order to be authorized by the Node authorizer, kubelets must use a credential that identifies them as being in the <code>system:nodes</code> group, with a username of <code>system:node:&lt;nodeName&gt;</code></em></p>
 <h1 id="service-account及k8s-api调用">Service Account及K8S Api调用</h1>
 <p>前面说，认证可以通过证书，也可以通过使用ServiceAccount（服务账户）的方式来做认证。大多数时候，我们在基于k8s做二次开发时都是选择通过ServiceAccount + RBAC 的方式。我们之前访问dashboard的时候，是如何做的？<br>
-<img src="https://adong97.github.io/hdong.github.io/post-images/1645251847337.jpg" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645251847337.jpg" alt="" loading="lazy"><br>
 deployment中定义了一个ServiceAcconut name,这个ServiceAcconut可以绑定Role或ClusterRole,然后ServiceAcconut会生成名为A-Token-xxx的Secret,这个Secret里面会有一个Token。Token的权限来自于绑定给SA的ClusterRole或Role，将token写到pod中。</p>
 <pre><code class="language-yaml">## 新建一个名为admin的serviceaccount，并且把名为cluster-admin的这个集群角色的权限授予新建的serviceaccount
 
@@ -651,7 +651,7 @@ token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2V
 
 
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/hdong.github.io/post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1645153381486.jpg" alt="" loading="lazy"></figure>
 <p>只允许访问luffy命名空间的pod资源：</p>
 <pre><code class="language-shell">$ cat luffy-admin-rbac.yaml
 apiVersion: v1
@@ -694,7 +694,7 @@ $ curl -k  -H &quot;Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InBtQUZfRl
 
 # https://172.21.51.143:6443/api/v1/nodes
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/hdong.github.io/post-images/1645158926236.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1645158926236.jpg" alt="" loading="lazy"></figure>
 <h1 id="创建用户认证授权的kubeconfig文件">创建用户认证授权的kubeconfig文件</h1>
 <p>签发证书对：</p>
 <pre><code class="language-shell"># 生成私钥
@@ -767,7 +767,7 @@ roleRef:
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/hdong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -776,7 +776,7 @@ roleRef:
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/KB7k12Lu1/">
+              <a href="https://adong97.github.io/HDong.github.io/post/KB7k12Lu1/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                    kubernetes通过HPA实现业务应用的动态扩缩容
@@ -787,7 +787,7 @@ roleRef:
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/hdong.github.io/post/sn0OllrL_/">
+              <a href="https://adong97.github.io/HDong.github.io/post/sn0OllrL_/">
                 <h3 class="post-title">
                   Kubernetes调度系统
                   <i class="ri-arrow-right-line"></i>
@@ -802,7 +802,7 @@ roleRef:
       </div>
     </div>
 
-    <script src="https://adong97.github.io/hdong.github.io/media/prism.js"></script>  
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()
