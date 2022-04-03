@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1648285699334">
+<link rel="shortcut icon" href="https://adong97.github.io/favicon.ico?v=1648973572335">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1648285699334" alt="">
+        <a href="https://adong97.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/images/avatar.png?v=1648973572335" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -107,7 +107,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -118,7 +118,7 @@
           2021-12-09 / 9 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/hjaoidsa.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/post-images/hjaoidsa.png" alt="">
         
         <div class="post-content yue">
           <h1 id="三-docker-存储引擎">三、docker 存储引擎</h1>
@@ -255,7 +255,7 @@ containerd处理grpc请求，根据请求做相应动作。
  
 5.在整个容器生命周期中，containerd通过epoll监控容器文件，监控容器事件。 
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1639064963234.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/post-images/1639064963234.png" alt="" loading="lazy"></figure>
 <pre><code>创建容器和访问容器都是先访问到dockerd，然后dockerd通过GRPC发送request请求给containerd(发送给containerd.sock文件,本地调用)
 然后containerd收到以后,处理request请求,不同的消息会有不同的处理方式，如果要创建容器或者启动容器,他会调用shim进程。
 然后拉起一个容器,拉起容器以后就会创建一个containerd-shim的进程,再调用runc进程,执行create/start/ex rc，
@@ -273,7 +273,7 @@ https://www.grpc.io/
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/tag/KZzTEma9t/">
             <span class="flex-auto">Docker</span>
           </a>
         
@@ -282,7 +282,7 @@ https://www.grpc.io/
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/foiwfow/">
+              <a href="https://adong97.github.io/post/foiwfow/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   Docker 镜像管理与Dockerfile文件参数详解
@@ -293,7 +293,7 @@ https://www.grpc.io/
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/uhibadjs/">
+              <a href="https://adong97.github.io/post/uhibadjs/">
                 <h3 class="post-title">
                   Docker 安装及基础命令介绍
                   <i class="ri-arrow-right-line"></i>
@@ -308,7 +308,7 @@ https://www.grpc.io/
       </div>
     </div>
 
-    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+    <script src="https://adong97.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()

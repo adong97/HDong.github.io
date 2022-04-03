@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io//favicon.ico?v=1648285699334">
+<link rel="shortcut icon" href="https://adong97.github.io/favicon.ico?v=1648973572335">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io//styles/main.css">
+<link rel="stylesheet" href="https://adong97.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/HDong.github.io/">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io//images/avatar.png?v=1648285699334" alt="">
+        <a href="https://adong97.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/images/avatar.png?v=1648973572335" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -118,7 +118,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/HDong.github.io//atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://adong97.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -129,7 +129,7 @@
           2022-02-22 / 10 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io//post-images/5EFTJbh_S.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/post-images/5EFTJbh_S.png" alt="">
         
         <div class="post-content yue">
           <h1 id="k8s日志收集架构">k8s日志收集架构</h1>
@@ -141,7 +141,7 @@
 <li>将日志直接从应用程序中推送到日志记录后端。</li>
 </ul>
 <h2 id="使用节点级日志代理">使用节点级日志代理</h2>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io//post-images/1645493781018.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/post-images/1645493781018.png" alt="" loading="lazy"></figure>
 <h2 id="docker基于日志驱动loging-driver的日志管理机制">Docker基于日志驱动(loging driver)的日志管理机制</h2>
 <p>Docker 提供了一套通用、灵活的日志管理机制，Docker 将所有容器打到 stdout 和 stderr 的日志都统一通过日志驱动重定向到某个地方。</p>
 <p>Docker 支持的日志驱动有很多，比如 local、json-file、syslog、journald 等等，类似插件一样，不同的日志驱动可以将日志重定向到不同的地方，这体现了 Docker 日志管理的灵活性，以热插拔的方式实现日志不同目的地的输出。</p>
@@ -149,7 +149,7 @@
 <blockquote>
 <p>注意：只有日志驱动为：local、json-file 或者 journald 时，docker logs 命令才能查看到容器打到 stdout/stderr 的日志。</p>
 </blockquote>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io//post-images/1645506832430.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/post-images/1645506832430.png" alt="" loading="lazy"></figure>
 <h2 id="下面为官方支持的日志驱动列表">下面为官方支持的日志驱动列表：</h2>
 <table>
 <thead>
@@ -280,7 +280,7 @@ https://docs.docker.com/config/containers/logging/configure/</p>
 <h2 id="方式一sidecar-容器将应用程序日志传送到自己的标准输出">方式一：sidecar 容器将应用程序日志传送到自己的标准输出。</h2>
 <p>这种方式基于节点级日志代理方案，sidecar 容器和应用容器在同一个 Pod 运行，这个容器的作用就是读取应用容器的日志文件，然后将读取的日志内容重定向到 stdout 和 stderr，然后通过节点级日志代理统一收集。<br>
 这种方式不推荐使用，缺点就是日志重复存储了，导致磁盘使用会成倍增加。比如应用容器的日志本身打到文件存储了一份，sidecar 容器重定向又存储了一份（存储到了 /var/lib/docker/containers/ 目录下）。这种方式的应用场景是应用本身不支持将日志打到 stdout 和 stderr，所以才需要 sidecar 容器重定向下。</p>
-<p><img src="https://adong97.github.io/HDong.github.io//post-images/1645493876379.png" alt="" loading="lazy"><br>
+<p><img src="https://adong97.github.io/post-images/1645493876379.png" alt="" loading="lazy"><br>
 思路：在pod中启动一个sidecar容器，把容器内的日志文件吐到标准输出，由宿主机中的日志收集agent进行采集。</p>
 <pre><code class="language-shell">$ cat count-pod.yaml
 apiVersion: v1
@@ -338,13 +338,13 @@ $ kubectl logs -f counter -c count-log-1
 <h2 id="方式二sidecar-容器运行一个日志代理配置该日志代理以便从应用容器收集日志">方式二：sidecar 容器运行一个日志代理，配置该日志代理以便从应用容器收集日志。</h2>
 <p>这种方式不需要节点级日志代理，和应用容器在一起的 sidecar 容器直接作为日志代理方式运行在 Pod 中，sidecar 容器读取应用容器的日志，然后直接实时传输到日志存储平台。<br>
 很显然这种方式也存在一个缺点，就是每个应用 Pod 都需要有个 sidecar 容器作为日志代理，而日志代理对系统 CPU、和内存都有一定的消耗，在节点 Pod 数很多的时候这个资源消耗其实是不小的。另外还有个问题就是在这种方式下由于应用容器日志不直接打到 stdout 和 stderr，所以是无法使用 kubectl logs 命令查看 Pod 中容器日志。<br>
-<img src="https://adong97.github.io/HDong.github.io//post-images/1645493942290.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/post-images/1645493942290.png" alt="" loading="lazy"></p>
 <p>思路：直接在业务Pod中使用sidecar的方式启动一个日志收集的组件（比如fluentd），这样日志收集可以将容器内的日志当成本地文件来进行收取。</p>
 <p>优势：不用往宿主机存储日志，本地日志完全可以收集<br>
 劣势：每个业务应用额外启动一个日志agent，带来额外的资源损耗</p>
 <p><strong>从应用中直接暴露日志目录</strong><br>
 这种方式就是应用程序本身直接将日志打到统一的日志收集平台，比如 Java 应用可以配置日志的 appender，打到不同的地方，很显然这种方式对应用程序有一定的侵入性，而且还要保证日志系统的健壮性，从这个角度看应用和日志系统还有一定的耦合性，所以不是很推荐这种方式。<br>
-<img src="https://adong97.github.io/HDong.github.io//post-images/1645493984869.png" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/post-images/1645493984869.png" alt="" loading="lazy"></p>
 <h2 id="企业日志方案选型">企业日志方案选型</h2>
 <p>综合对比上述三种日志收集方案优缺点，更推荐使用节点级日志代理方案，这种方式对应用没有侵入性，而且对系统资源没有额外的消耗，也不影响 kubelet 工具查看 Pod 容器日志。</p>
 <h3 id="方案一自研方案实现一个自研的日志收集agent">方案一：自研方案，实现一个自研的日志收集agent</h3>
@@ -371,7 +371,7 @@ https://www.h3399.cn/201702/43019.html</p>
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/tag/dzCVBEmgM/">
             <span class="flex-auto">Kubernetes日志采集</span>
           </a>
         
@@ -380,7 +380,7 @@ https://www.h3399.cn/201702/43019.html</p>
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/-5NtRktNY/">
+              <a href="https://adong97.github.io/post/-5NtRktNY/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   使用EFK实现业务日志收集
@@ -391,7 +391,7 @@ https://www.h3399.cn/201702/43019.html</p>
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/7We4vZ_36/">
+              <a href="https://adong97.github.io/post/7We4vZ_36/">
                 <h3 class="post-title">
                   使用Helm3管理复杂应用的部署
                   <i class="ri-arrow-right-line"></i>
@@ -406,7 +406,7 @@ https://www.h3399.cn/201702/43019.html</p>
       </div>
     </div>
 
-    <script src="https://adong97.github.io/HDong.github.io//media/prism.js"></script>  
+    <script src="https://adong97.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()
