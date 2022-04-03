@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://adong97.github.io</id>
+    <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-04-03T08:23:20.410Z</updated>
+    <updated>2022-04-03T08:28:26.518Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://adong97.github.io"/>
-    <link rel="self" href="https://adong97.github.io/atom.xml"/>
+    <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
+    <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
     <subtitle>人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。</subtitle>
-    <logo>https://adong97.github.io/images/avatar.png</logo>
-    <icon>https://adong97.github.io/favicon.ico</icon>
+    <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
+    <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[基于sharedLibrary进行CI/CD流程的优化]]></title>
-        <id>https://adong97.github.io/post/T-kfr_98s/</id>
-        <link href="https://adong97.github.io/post/T-kfr_98s/">
+        <id>https://adong97.github.io/HDong.github.io/post/T-kfr_98s/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/T-kfr_98s/">
         </link>
         <updated>2022-03-09T16:15:34.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[工具集成与Jenkinsfile实践]]></title>
-        <id>https://adong97.github.io/post/z2HnIoXOA/</id>
-        <link href="https://adong97.github.io/post/z2HnIoXOA/">
+        <id>https://adong97.github.io/HDong.github.io/post/z2HnIoXOA/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/z2HnIoXOA/">
         </link>
         <updated>2022-03-09T16:14:51.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Jenkins流水线 Pipeline]]></title>
-        <id>https://adong97.github.io/post/3ddZYx7mp/</id>
-        <link href="https://adong97.github.io/post/3ddZYx7mp/">
+        <id>https://adong97.github.io/HDong.github.io/post/3ddZYx7mp/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/3ddZYx7mp/">
         </link>
         <updated>2022-03-09T15:21:13.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[基于Kubernetes的DevOps平台实践]]></title>
-        <id>https://adong97.github.io/post/yIGgSal46/</id>
-        <link href="https://adong97.github.io/post/yIGgSal46/">
+        <id>https://adong97.github.io/HDong.github.io/post/yIGgSal46/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/yIGgSal46/">
         </link>
         <updated>2022-03-08T15:59:15.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[自定义指标实现业务伸缩]]></title>
-        <id>https://adong97.github.io/post/NetHMaIIz/</id>
-        <link href="https://adong97.github.io/post/NetHMaIIz/">
+        <id>https://adong97.github.io/HDong.github.io/post/NetHMaIIz/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/NetHMaIIz/">
         </link>
         <updated>2022-02-26T08:34:52.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Alertmanager安装与配置]]></title>
-        <id>https://adong97.github.io/post/C5N0LMfvT/</id>
-        <link href="https://adong97.github.io/post/C5N0LMfvT/">
+        <id>https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/">
         </link>
         <updated>2022-02-26T08:32:33.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Grafana安装与配置]]></title>
-        <id>https://adong97.github.io/post/Ok7rEVGci/</id>
-        <link href="https://adong97.github.io/post/Ok7rEVGci/">
+        <id>https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/">
         </link>
         <updated>2022-02-26T08:28:58.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[常用监控对象的指标采集]]></title>
-        <id>https://adong97.github.io/post/2--X3r9eT/</id>
-        <link href="https://adong97.github.io/post/2--X3r9eT/">
+        <id>https://adong97.github.io/HDong.github.io/post/2--X3r9eT/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/2--X3r9eT/">
         </link>
         <updated>2022-02-26T01:13:05.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[Prometheus实现k8s集群的服务监控]]></title>
-        <id>https://adong97.github.io/post/hR_asgw8g/</id>
-        <link href="https://adong97.github.io/post/hR_asgw8g/">
+        <id>https://adong97.github.io/HDong.github.io/post/hR_asgw8g/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/hR_asgw8g/">
         </link>
         <updated>2022-02-26T00:51:07.000Z</updated>
     </entry>
     <entry>
         <title type="html"><![CDATA[开源日志管理方案ELK和EFK的区别]]></title>
-        <id>https://adong97.github.io/post/lqDokfMSo/</id>
-        <link href="https://adong97.github.io/post/lqDokfMSo/">
+        <id>https://adong97.github.io/HDong.github.io/post/lqDokfMSo/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/lqDokfMSo/">
         </link>
         <updated>2022-02-26T00:19:47.000Z</updated>
     </entry>
