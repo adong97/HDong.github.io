@@ -4,13 +4,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1648974499418">
+<link rel="shortcut icon" href="https://HDong.github.io/favicon.ico?v=1648976000152">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
-<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+<link rel="stylesheet" href="https://HDong.github.io/styles/main.css">
 
 
 
@@ -22,8 +22,8 @@
     <div class="sidebar-content">
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
-        <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1648974499418" alt="">
+        <a href="https://HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://HDong.github.io/images/avatar.png?v=1648976000152" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -115,7 +115,7 @@
   </div>
   <div class="site-footer">
     <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
-    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+    <a class="rss" href="https://HDong.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
 <div class="mask" onclick="closeMenu()">
@@ -126,12 +126,12 @@
           2022-02-26 / 16 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/NetHMaIIz.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://HDong.github.io/post-images/NetHMaIIz.png" alt="">
         
         <div class="post-content yue">
           <h1 id="kubernetes-metrics-api体系回顾">Kubernetes Metrics API体系回顾</h1>
 <p>前面章节，我们讲过基于CPU和内存的HPA，即利用metrics-server及HPA，可以实现业务服务可以根据pod的cpu和内存进行弹性伸缩。<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1646842972498.png" alt="" loading="lazy"></p>
+<img src="https://HDong.github.io/post-images/1646842972498.png" alt="" loading="lazy"></p>
 <p>k8s对监控接口进行了标准化：</p>
 <ul>
 <li>
@@ -141,7 +141,7 @@
 <li>
 <p>Custom Metrics<br>
 对应的接口是 custom.metrics.k8s.io(通用类指标的接口)，主要的实现是 Prometheus， 它提供的是资源监控和自定义监控<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1647763180709.png" alt="" loading="lazy"></p>
+<img src="https://HDong.github.io/post-images/1647763180709.png" alt="" loading="lazy"></p>
 </li>
 </ul>
 <p>安装完metrics-server后，利用kube-aggregator的功能，实现了metrics api的注册。可以通过如下命令</p>
@@ -278,7 +278,7 @@ $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 |jq
 </code></pre>
 <h1 id="配置自定义指标">配置自定义指标</h1>
 <h2 id="通用指标示例程序部署">通用指标示例程序部署</h2>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1646843046204.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://HDong.github.io/post-images/1646843046204.png" alt="" loading="lazy"></figure>
 <p>为了演示效果，我们新建一个deployment来模拟业务应用。</p>
 <pre><code class="language-shell">$ cat custom-metrics-demo.yaml
 
@@ -375,7 +375,7 @@ spec:
 </li>
 </ul>
 <h2 id="adapter配置自定义指标">Adapter配置自定义指标</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1646843081113.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://HDong.github.io/post-images/1646843081113.png" alt="" loading="lazy"></figure>
 <p>思考：<br>
 前面讲CPU的平均使用率的采集，其实是通过<code>node_cpu_seconds_total</code>指标计算得到的。</p>
 <pre><code class="language-shell">  ^
@@ -694,11 +694,11 @@ data:
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://HDong.github.io/tag/JaV1Typc8/">
             <span class="flex-auto">Prometheus监控</span>
           </a>
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://HDong.github.io/tag/V-jtFh-Fz/">
             <span class="flex-auto">Kubernetes</span>
           </a>
         
@@ -707,7 +707,7 @@ data:
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/yIGgSal46/">
+              <a href="https://HDong.github.io/post/yIGgSal46/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
                   基于Kubernetes的DevOps平台实践
@@ -718,7 +718,7 @@ data:
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/">
+              <a href="https://HDong.github.io/post/C5N0LMfvT/">
                 <h3 class="post-title">
                   Alertmanager安装与配置
                   <i class="ri-arrow-right-line"></i>
@@ -733,7 +733,7 @@ data:
       </div>
     </div>
 
-    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+    <script src="https://HDong.github.io/media/prism.js"></script>  
 <script>
 
 Prism.highlightAll()
