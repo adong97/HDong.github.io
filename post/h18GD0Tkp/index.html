@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650277538650">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650277538650" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -407,22 +407,22 @@ controller-manager根据定义的deployment yaml文件来生成pod的模板，
 10、开发环境与线上环境等价：尽可能的保持开发，预发布，线上环境相同。<br>
 11、日志：将所有运行中进程和后端服务的输出流按照时间顺序统一收集存储和展示。<br>
 12、管理进程：一次性管理进程(数据备份等)应该和正常的常驻进程使用同样的运行环境。</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650278571057.png" alt="" loading="lazy"></figure>
 <h1 id="三-实践-集群安装">三、实践--集群安装</h1>
 <h2 id="31-k8s集群主流安装方式">3.1 k8s集群主流安装方式</h2>
 <ul>
 <li>minikube</li>
 <li>二进制安装</li>
-<li>kubeadm等安装工具</li>
+<li>kubeadm等安装工具<br>
+kubeadm使用文档:  https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/</li>
 </ul>
-<p>kubeadm使用文档:  https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/</p>
-<p>kubeadmin安装文档:《Kubernetes安装手册（非高可用版）》</p>
 <h2 id="32-核心组件">3.2 核心组件</h2>
 <p>静态Pod的方式：</p>
-<pre><code class="language-powershell">## etcd、apiserver、controller-manager、kube-scheduler
+<pre><code class="language-shell">## etcd、apiserver、controller-manager、kube-scheduler
 $ kubectl -n kube-system get pod
 </code></pre>
 <p>systemd服务方式：</p>
-<pre><code class="language-powershell">$ systemctl status kubelet
+<pre><code class="language-shell">$ systemctl status kubelet
 </code></pre>
 <blockquote>
 <p>kubectl：二进制命令行工具</p>
@@ -430,11 +430,11 @@ $ kubectl -n kube-system get pod
 <h2 id="33-理解集群资源">3.3 理解集群资源</h2>
 <p>组件是为了支撑k8s平台的运行，安装好的软件。</p>
 <p>资源是如何去使用k8s的能力的定义。比如，k8s可以使用Pod来管理业务应用，那么Pod就是k8s集群中的一类资源，集群中的所有资源可以提供如下方式查看：</p>
-<pre><code class="language-powershell">$ kubectl api-resources
+<pre><code class="language-shell">$ kubectl api-resources
 </code></pre>
 <p><strong>如何理解namespace：</strong></p>
 <p>命名空间，集群内一个虚拟的概念，类似于资源池的概念，一个池子里可以有各种资源类型，绝大多数的资源都必须属于某一个namespace。集群初始化安装好之后，会默认有如下几个namespace：</p>
-<pre><code class="language-powershell">$ kubectl get namespaces
+<pre><code class="language-shell">$ kubectl get namespaces
 NAME                   STATUS   AGE
 default                Active   84m
 kube-node-lease        Active   84m
@@ -451,7 +451,7 @@ kubernetes-dashboard   Active   71m
 <h2 id="34-kubectl的使用">3.4 kubectl的使用</h2>
 <p>类似于docker，kubectl是命令行工具，用于与APIServer交互，内置了丰富的子命令，功能极其强大。</p>
 <p>kubectl使用官方文档： https://kubernetes.io/docs/reference/kubectl/overview/</p>
-<pre><code class="language-powershell">$ kubectl -h
+<pre><code class="language-shell">$ kubectl -h
 $ kubectl get -h
 $ kubectl create -h
 $ kubectl create namespace -h
