@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650249205597">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650270741925">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650249205597" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650270741925" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -148,7 +148,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">kubeasz 二进制部署K8S</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-04-18 / 15 min read
+          2022-04-18 / 16 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/2o5pbCK7.png" alt="">
@@ -405,8 +405,8 @@ vrrp_instance VI_1 {
 </code></pre>
 <h3 id="23-部署harbor">2.3 部署harbor</h3>
 <p>部署节点：</p>
-<p>master01: 10.1.13.186</p>
-<p>master02: 10.1.13.187</p>
+<p>master01: 10.1.13.186<br>
+master02: 10.1.13.187</p>
 <h4 id="231-添加docker-ce软件源">2.3.1 添加Docker-ce软件源</h4>
 <pre><code class="language-shell">sudo apt-get update
 sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
@@ -434,20 +434,29 @@ sudo apt-get -y install docker-ce
 <h4 id="232-安装docker-compose">2.3.2 安装docker-compose</h4>
 <pre><code>从github下载docker-compose二进制文件安装即可
 https://github.com/docker/compose/releases/download/v2.4.1/docker-compose-linux-x86_64
+
+ ~]#wget https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+​
+ ~]#mv docker-compose-Linux-x86_64 /usr/local/bin/docker-compose
+​
+ ~]#chmod a+x /usr/local/bin/docker-compose
+​
+~]#docker-compose --version
+docker-compose version 1.29.2, build 5becea4c
 </code></pre>
 <h4 id="233-安装harbor">2.3.3 安装harbor</h4>
 <pre><code class="language-shell">1. 解压harbor二进制文件到/opt目录
+~# wget  https://github.com/goharbor/harbor/releases/download/v2.4.2/harbor-offline-installer-v2.4.2.tgz
 ~# tar -zxvf harbor-offline-installer-v2.4.2.tgz -C /opt
 
-2.修改配置文件
-~# cd /opt/harbor/
-~# cp harbor.yml.tmpl harbor.yml
-
-3.自签发https证书
+2.自签发https证书
 ~# mkdir certs
 ~# openssl genrsa -out /opt/harbor/certs/harbor-ca.key  ##生成私有key
 ~# openssl req -x509 -new -nodes -key /opt/harbor/certs/harbor-ca.key -subj &quot;/CN=harbor.weixd.com&quot; -days 7120 -out /opt/harbor/certs/harbor-ca.crt  ##签证
 
+3.修改配置文件
+~# cd /opt/harbor/
+~# cp harbor.yml.tmpl harbor.yml
 ~# vim harbor.yml
 hostname: harbor.weixd.com   ##修改域名或IP地址
 https:
@@ -476,6 +485,7 @@ Please set --with-chartmuseum if needs enable Chartmuseum in Harbor ##支持helm
 6.页面访问测试
 harbor.weixd.com
 </code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650270183977.png" alt="" loading="lazy"></figure>
 <h4 id="234-配置harbor-https上传镜像">2.3.4 配置harbor https上传镜像</h4>
 <pre><code class="language-shell">在需要上传镜像的服务器上创建目录
 ~# mkdir -p /etc/docker/certs.d/harbor.weixd.com  &lt;- 必须以harbor的域名为目录名称
@@ -484,11 +494,11 @@ harbor.weixd.com
 ~# scp harbor-ca.crt 10.1.13.186:/etc/docker/certs.d/harbor.weixd.com
 
 因为客户端k8s-master01(10.1.13.186)没有域名解析，所以在hosts中配置一下。
-vim /etc/hosts
+~# vim /etc/hosts
 10.1.13.187  harbor.weixd.com
 
 然后可以docker login 登录测试。
-# docker login harbor.weixd.com
+~# docker login harbor.weixd.com
 Username: admin
 Password: 
 WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
@@ -498,13 +508,13 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 </code></pre>
 <h2 id="三-kubeasz安装k8s">三、kubeasz安装k8s</h2>
-<p>github项目地址：https://github.com/easzlab/kubeasz</p>
-<ul>
-<li>注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装<a href="https://github.com/easzlab/kubeasz/blob/master/docs/guide/chrony.md">chrony</a></li>
-<li>注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境</li>
-<li>注意3：建议操作系统升级到新的稳定内核，请结合阅读<a href="https://github.com/easzlab/kubeasz/blob/master/docs/guide/kernel_upgrade.md">内核升级文档</a></li>
-<li>注意4：在公有云上创建多主集群，请结合阅读<a href="https://github.com/easzlab/kubeasz/blob/master/docs/setup/kubeasz_on_public_cloud.md">在公有云上部署 kubeasz</a></li>
-</ul>
+<pre><code>github项目地址：https://github.com/easzlab/kubeasz
+
+- 注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装[chrony](https://github.com/easzlab/kubeasz/blob/master/docs/guide/chrony.md)
+- 注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境
+- 注意3：建议操作系统升级到新的稳定内核，请结合阅读[内核升级文档](https://github.com/easzlab/kubeasz/blob/master/docs/guide/kernel_upgrade.md)
+- 注意4：在公有云上创建多主集群，请结合阅读[在公有云上部署 kubeasz](https://github.com/easzlab/kubeasz/blob/master/docs/setup/kubeasz_on_public_cloud.md)
+</code></pre>
 <h3 id="31-环境准备">3.1 环境准备</h3>
 <ol>
 <li>安装ansible, k8s-master01同时作为部署服务器 (IP地址:10.1.13.186)</li>
@@ -635,15 +645,15 @@ MASTER_CERT_HOSTS:
 注释 &quot;- ex_lb&quot; # 不对负载均衡器进行初始化，因为已经手动部署了keepalived+haproxy做负载均衡。
 
 ##一键安装
-ezctl setup k8s-cluster01 all
+~# ezctl setup k8s-cluster01 all
 
-# 或者分步安装，具体使用 ezctl help setup 查看分步安装帮助信息
-# ezctl setup k8s-cluster01 01   ##初始化
-# ezctl setup k8s-cluster01 02   ##部署etcd集群
-# ezctl setup k8s-cluster01 03   ##部署docker,机器已经部署过的不会再次部署
-# ezctl setup k8s-cluster01 04   ##部署master节点
-# ezctl setup k8s-cluster01 05   ##部署node节点
-# ezctl setup k8s-cluster01 06   ##部署网络组件
+或者分步安装，具体使用 ezctl help setup 查看分步安装帮助信息
+~# ezctl setup k8s-cluster01 01   ## 环境初始化
+~# ezctl setup k8s-cluster01 02   ## 部署etcd集群
+~# ezctl setup k8s-cluster01 03   ## 部署docker,机器已经部署过的不会再次部署
+~# ezctl setup k8s-cluster01 04   ## 部署master节点
+~# ezctl setup k8s-cluster01 05   ## 部署node节点
+~# ezctl setup k8s-cluster01 06   ## 部署网络组件
 </code></pre>
 <h4 id="324-检测环境运行状态">3.2.4 检测环境运行状态</h4>
 <pre><code class="language-shell">~# kubectl get node
