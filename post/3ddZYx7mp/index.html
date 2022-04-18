@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1648977171207">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650248133925">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1648977171207" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650248133925" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -40,6 +40,7 @@
 <ul>
 <li><a href="#%E8%84%9A%E6%9C%AC%E7%A4%BA%E4%BE%8B">脚本示例</a></li>
 <li><a href="#%E8%84%9A%E6%9C%AC%E8%A7%A3%E9%87%8A">脚本解释：</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BApipeline%E7%A4%BA%E6%84%8F">创建pipeline示意：</a></li>
 <li><a href="#blue-ocean">Blue Ocean:</a></li>
 </ul>
 </li>
@@ -134,7 +135,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Jenkins流水线 Pipeline</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-03-09 / 20 min read
+          2022-03-09 / 21 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/3ddZYx7mp.png" alt="">
@@ -167,38 +168,38 @@
 <p><em>为与BlueOcean脚本编辑器兼容，通常建议使用Declarative Pipeline的方式进行编写,从jenkins社区的动向来看，很明显这种语法结构也会是未来的趋势。</em></p>
 <h3 id="脚本示例">脚本示例</h3>
 <pre><code class="language-json">pipeline { 
-    agent {label '172.21.51.68'}
-    environment { 
+    agent {label '172.21.51.68'}   ##指定项目运行在带有'172.21.51.68'标签的节点上
+    environment {   ##环境变量，给流水线运行的时候指定环境变量。作用域是流水线的运行阶段
         PROJECT = 'myblog'
     }
-    stages {
-        stage('Checkout') { 
+    stages {          ##流水线环节的集合
+        stage('Checkout') {   ##检查代码环节
             steps { 
                 checkout scm 
             }
         }
-        stage('Build') { 
+        stage('Build') {     ##代码编译环节
             steps { 
                 sh 'make' 
             }
         }
-        stage('Test'){
+        stage('Test'){      ##代码测试环节
             steps {
                 sh 'make check'
                 junit 'reports/**/*.xml' 
             }
         }
-        stage('Deploy') {
+        stage('Deploy') {      ##代码部署环节
             steps {
                 sh 'make publish'
             }
         }
     }
-	post {
-        success { 
+	post {       ##构建后操作，根据流水线执行结果，进行消息通知
+        success {       ### 如果执行成功，进入success执行片段
             echo 'Congratulations!'
         }
-		failure { 
+		failure {         ### 如果执行失败，进入failure执行片段
             echo 'Oh no!'
         }
         always { 
@@ -281,24 +282,24 @@
 </ul>
 </li>
 </ul>
-<p>创建pipeline示意：</p>
-<p>新建任务 -&gt; 流水线</p>
-<p><code>jenkins/pipelines/p1.yaml</code></p>
-<pre><code class="language-powershell">pipeline {
-   agent {label '172.21.51.68'}
-   environment { 
+<h3 id="创建pipeline示意">创建pipeline示意：</h3>
+<p>新建任务 -&gt; 流水线<br>
+<code>jenkins/pipelines/p1.yaml</code></p>
+<pre><code class="language-shell">pipeline {
+   agent {label '172.21.51.68'}    ## 指定执行流水线的节点
+   environment {      ## 添加环境变量
       PROJECT = 'myblog'
    }
    stages {
       stage('printenv') {
          steps {
             echo 'Hello World'
-            sh 'printenv'
+            sh 'printenv'   ##打印当前终端环境变量
          }
       }
       stage('check') {
          steps {
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitlab-user', url: 'http://gitlab.luffy.com/root/myblog.git']]])
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitlab-user', url: 'http://gitlab.luffy.com/luffy/myblog.git']]])
          }
       }
       stage('build-image') {
@@ -306,7 +307,7 @@
             sh 'docker build . -t myblog:latest -f Dockerfile'
          }
       }
-      stage('send-msg') {
+      stage('send-msg') {     ##发送消息
          steps {
             sh &quot;&quot;&quot;
             curl 'https://oapi.dingtalk.com/robot/send?access_token=4778abd23dbdbaf66fc6f413e6ab9c0103a039b0054201344a22a5692cdcc54e' \
@@ -323,7 +324,7 @@
 }
 
 </code></pre>
-<p>点击“立即构建”，同样的，我们可以配置触发器，使用webhook的方式接收项目的push事件，</p>
+<p>点击“立即构建”，同样的，我们可以配置触发器，使用webhook的方式接收项目的push事件。</p>
 <ul>
 <li>构建触发器选择 Build when a change is pushed to GitLab.</li>
 <li>生成 Secret token</li>
@@ -347,12 +348,12 @@
 <h3 id="演示1使用jenkinsfile管理-pipeline">演示1：使用Jenkinsfile管理 pipeline</h3>
 <ul>
 <li>在项目中新建Jenkinsfile文件，拷贝已有script内容</li>
-<li>配置pipeline任务，流水线定义为Pipeline Script from SCM</li>
+<li>配置pipeline任务，流水线定义为Pipeline Script from SCM (版本管理)</li>
 <li>执行push 代码测试</li>
 </ul>
 <p>Jenkinsfile:</p>
 <p><code>jenkins/pipelines/p2.yaml</code></p>
-<pre><code class="language-powershell">pipeline {
+<pre><code class="language-shell">pipeline {
    agent {label '172.21.51.68'}
    environment { 
       PROJECT = 'myblog'
