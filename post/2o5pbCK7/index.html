@@ -1,0 +1,799 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650249205597">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650249205597" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">一、环境准备</a>
+<ul>
+<li><a href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A1%AC%E4%BB%B6%E5%87%86%E5%A4%87">1. 服务器硬件准备</a></li>
+<li><a href="#2-k8s%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92%E4%BF%A1%E6%81%AF">2. K8S⾼可⽤集群环境规划信息</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">二、基础环境准备</a>
+<ul>
+<li><a href="#21-%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96">2.1 系统初始化</a></li>
+<li><a href="#22-%E9%AB%98%E5%8F%AF%E7%94%A8%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">2.2 高可用负载均衡</a>
+<ul>
+<li><a href="#221-%E5%AE%89%E8%A3%85haproxy">2.2.1 安装Haproxy</a></li>
+<li><a href="#222-%E5%AE%89%E8%A3%85keepalived">2.2.2 安装keepalived</a></li>
+</ul>
+</li>
+<li><a href="#23-%E9%83%A8%E7%BD%B2harbor">2.3 部署harbor</a>
+<ul>
+<li><a href="#231-%E6%B7%BB%E5%8A%A0docker-ce%E8%BD%AF%E4%BB%B6%E6%BA%90">2.3.1 添加Docker-ce软件源</a></li>
+<li><a href="#232-%E5%AE%89%E8%A3%85docker-compose">2.3.2 安装docker-compose</a></li>
+<li><a href="#233-%E5%AE%89%E8%A3%85harbor">2.3.3 安装harbor</a></li>
+<li><a href="#234-%E9%85%8D%E7%BD%AEharbor-https%E4%B8%8A%E4%BC%A0%E9%95%9C%E5%83%8F">2.3.4 配置harbor https上传镜像</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-kubeasz%E5%AE%89%E8%A3%85k8s">三、kubeasz安装k8s</a>
+<ul>
+<li><a href="#31-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">3.1 环境准备</a></li>
+<li><a href="#32-%E5%9C%A8%E9%83%A8%E7%BD%B2%E8%8A%82%E7%82%B9%E7%BC%96%E6%8E%92k8s%E5%AE%89%E8%A3%85">3.2 在部署节点编排k8s安装</a>
+<ul>
+<li><a href="#321-%E4%B8%8B%E8%BD%BDkubeasz%E9%A1%B9%E7%9B%AE%E6%BA%90%E7%A0%81-%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8F%8A%E7%A6%BB%E7%BA%BF%E9%95%9C%E5%83%8F">3.2.1 下载kubeasz项目源码、二进制及离线镜像</a></li>
+<li><a href="#322-%E5%88%9B%E5%BB%BA%E9%9B%86%E7%BE%A4">3.2.2 创建集群</a></li>
+<li><a href="#323-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85k8s">3.2.3 一键安装k8s</a></li>
+<li><a href="#324-%E6%A3%80%E6%B5%8B%E7%8E%AF%E5%A2%83%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81">3.2.4 检测环境运行状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">kubeasz 二进制部署K8S</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 15 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/2o5pbCK7.png" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="一-环境准备">一、环境准备</h2>
+<h3 id="1-服务器硬件准备">1. 服务器硬件准备</h3>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>服务器数量</th>
+<th>规格</th>
+<th>系统版本</th>
+<th>容器引擎</th>
+<th>K8S版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master节点</td>
+<td>2台</td>
+<td>4C8G100G</td>
+<td>Ubuntu20.14</td>
+<td>Docker CE 19.03</td>
+<td>V1.23.1</td>
+</tr>
+<tr>
+<td>node节点</td>
+<td>3台</td>
+<td>4C8G100G</td>
+<td>Ubuntu20.14</td>
+<td>Docker CE 19.03</td>
+<td>V1.23.1</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>IP地址</th>
+<th>主机名</th>
+<th>组件</th>
+<th>VIP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master-01</td>
+<td>10.1.13.186</td>
+<td>k8s-master01</td>
+<td>ansible、harbor、keepalived、haproxy、kube-apiserver、kube-controller-manager、kube-scheduler、kubelet、kube-proxy、docker</td>
+<td>10.1.13.199</td>
+</tr>
+<tr>
+<td>master-02</td>
+<td>10.1.13.187</td>
+<td>k8s-master02</td>
+<td>harbor、keepalived、haproxy、kube-apiserver、kube-controller-manager、kube-scheduler、kubelet、kube-proxy、docker</td>
+<td>10.1.13.199</td>
+</tr>
+<tr>
+<td>node-01</td>
+<td>10.1.13.188</td>
+<td>k8s-node01</td>
+<td>kubelet、kube-proxy、docker、etcd、nginx</td>
+<td></td>
+</tr>
+<tr>
+<td>node-02</td>
+<td>10.1.13.189</td>
+<td>k8s-node02</td>
+<td>kubelet、kube-proxy、docker、etcd、nginx</td>
+<td></td>
+</tr>
+<tr>
+<td>node-03</td>
+<td>10.1.13.190</td>
+<td>k8s-node03</td>
+<td>kubelet、kube-proxy、docker、etcd、nginx</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-k8s高可用集群环境规划信息">2. K8S⾼可⽤集群环境规划信息</h3>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650248128574.jpg" alt="" loading="lazy"></figure>
+<h2 id="二-基础环境准备">二、基础环境准备</h2>
+<h3 id="21-系统初始化">2.1 系统初始化</h3>
+<pre><code class="language-shell">1. sshd服务允许root用户远程登陆
+vim /etc/ssh/sshd_config
+PasswordAuthentication yes
+PermitRootLogin yes
+
+2. 更新系统软件包
+apt update -y
+
+3. 关闭防火墙
+~# ufw status    ##查看防火墙状态
+Status: inactive
+
+~# ufw disable  ##关闭防火墙
+Firewall stopped and disabled on system startup
+
+4.关闭swap 
+swapoff -a  # 临时关闭
+sed -ri 's/.*swap.*/#&amp;/' /etc/fstab    # 永久关闭
+
+5. 设置主机名
+hostnamectl set-hostname &lt;hostname&gt;  #设置主机名
+
+6.在各个节点添加hosts 
+cat &gt;&gt; /etc/hosts &lt;&lt; EOF 
+10.1.13.186   k8s-master01
+10.1.13.187   k8s-master02
+10.1.13.188   k8s-node01
+10.1.13.189   k8s-node02
+10.1.13.190   k8s-node03
+EOF
+
+7.确认时间校准
+apt install ntpdate -y
+ntpdate time.ubuntu.com  ##同步时间
+timedatectl set-timezone Asia/Shanghai  ##更改时区
+echo &quot;LC_TIME=en_DK.UTF-8&quot; &gt;&gt; /etc/default/locale ##设置24小时格式
+
+时间同步任务计划
+echo &quot;*/5 * * * *  ntpdate time1.aliyun.com &amp;&gt; /dev/null &amp;&amp; hwclock -w&quot; &gt;&gt; /var/spool/cron/crontabs/root
+</code></pre>
+<p>k8s相关系统内核参数调优详解</p>
+<pre><code class="language-shell">cat /etc/sysctl.d/95-k8s-sysctl.conf 
+
+## 将宿主机当成路由器使用，可以实现地址转换等功能。必须打开!!!
+net.ipv4.ip_forward = 1
+
+## 使内核允许容器网桥的报文通过宿主机监听检查
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-arptables = 1
+
+net.ipv4.tcp_tw_reuse = 0
+net.core.somaxconn = 32768
+net.netfilter.nf_conntrack_max=1000000
+vm.swappiness = 0
+vm.max_map_count=655360
+fs.file-max=6553600
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 10
+</code></pre>
+<h3 id="22-高可用负载均衡">2.2 高可用负载均衡</h3>
+<p>部署节点：<br>
+k8s-master01: 10.1.13.186<br>
+k8s-master02: 10.1.13.187</p>
+<h4 id="221-安装haproxy">2.2.1 安装Haproxy</h4>
+<pre><code class="language-shell">1. 安装haproxy
+~# apt install haproxy -y
+
+2. 修改配置文件
+~# vim /etc/haproxy/haproxy.cfg
+...  ##最后添加listen
+listen k8s-api-6443
+  bind 10.1.13.199:6443  #绑定VIP地址的6443
+  mode tcp
+  server master1 10.1.13.186 check inter 3s fall 3 rise 1
+  server master2 10.1.13.187 check inter 3s fall 3 rise 1
+...
+
+3.重启服务并设置为开启自启
+~# systemctl restart haproxy.service &amp;&amp; systemctl enable haproxy.service
+
+4.检测服务时候监听6443端口
+~# ss -ntlp
+State         Recv-Q         Send-Q                 Local Address:Port                 Peer Address:Port        Process                                           
+LISTEN        0              489                      10.1.13.199:6443                      0.0.0.0:*            users:((&quot;haproxy&quot;,pid=15601,fd=7)) 
+
+5.拷贝文件到另一台服务器，并重启服务
+~# scp /etc/haproxy/haproxy.cfg 10.1.13.187:/etc/haproxy/
+~# systemctl restart haproxy
+
+重启发现haproxy服务启动失败，原因是：
+haproxy监听VIP的6443端口，但是VIP现在飘在master01节点上，所以master02节点的haproxy起不来
+可以通过`journalctl -u haproxy`查看详细日志。
+
+因此需要我们优化系统内核参数 (两个负载均衡节点都做变更)
+~# sysctl -a |grep local #过滤系统参数
+net.ipv4.ip_nonlocal_bind = 0  表示不允许应用程序监听在本机没有的IP地址上，需要改为1.
+
+~# vim /etc/sysctl.conf
+net.ipv4.ip_nonlocal_bind = 1
+
+~# sysctl -p ##生效配置文件
+~# systemctl restart haproxy  ##重启haproxy服务,即可
+~# systemctl enable haproxy
+</code></pre>
+<h4 id="222-安装keepalived">2.2.2 安装keepalived</h4>
+<pre><code class="language-shell">1. 安装keepalived
+~# apt install keepalived -y
+
+2.拷贝模板文件
+~# cp /usr/share/doc/keepalived/samples/keepalived.conf.vrrp /etc/keepalived/keepalived.conf
+
+3. 修改配置文件
+~# vim /etc/keepalived/keepalived.conf
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens160       ##更改网卡名称，与实际相符
+    garp_master_delay 10
+    smtp_alert
+    virtual_router_id 51
+    priority 100           ##优先级
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        10.1.13.199 dev ens160 lable eth160:0   ##添加多个VIP，方便后面使用
+        10.1.13.200 dev ens160 lable eth160:1
+        10.1.13.201 dev ens160 lable eth160:2
+    }
+}
+
+#重启服务
+systemctl restart keepalived  
+
+#测试VIP是否可用
+ping 10.1.13.199
+
+4. 拷贝keepalived.conf到另一台服务器，修改配置
+~# scp /etc/keepalived/keepalived.conf 10.1.13.187:/etc/keepalived/keepalived.conf
+~# vim /etc/keepalived/keepalived.conf
+vrrp_instance VI_1 {
+    state BACKUP   ##更改角色
+    interface ens160
+    garp_master_delay 10
+    smtp_alert
+    virtual_router_id 51
+    priority 80   ##修改优先级
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        10.1.13.199 dev ens160 lable eth160:0
+        10.1.13.200 dev ens160 lable eth160:1
+        10.1.13.201 dev ens160 lable eth160:2
+    }
+}
+
+5.启动服务，并设置为开机自启
+~# systemctl start keepalived &amp;&amp; systemctl enable keepalived
+</code></pre>
+<h3 id="23-部署harbor">2.3 部署harbor</h3>
+<p>部署节点：</p>
+<p>master01: 10.1.13.186</p>
+<p>master02: 10.1.13.187</p>
+<h4 id="231-添加docker-ce软件源">2.3.1 添加Docker-ce软件源</h4>
+<pre><code class="language-shell">sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+
+# step 2: 安装GPG证书
+curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+
+# Step 3: 写入软件源信息
+sudo add-apt-repository &quot;deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
+
+# Step 4: 更新并安装Docker-CE
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+
+# 安装指定版本的Docker-CE:
+# Step 1: 查找Docker-CE的版本:
+  apt-cache madison docker-ce
+
+# Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)
+  sudo apt-get -y install docker-ce=[VERSION]
+
+本次使用docker 19.03.15版本
+~# apt-get -y install docker-ce=5:19.03.15~3-0~ubuntu-focal docker-ce-cli=5:19.03.15~3-0~ubuntu-focal
+</code></pre>
+<h4 id="232-安装docker-compose">2.3.2 安装docker-compose</h4>
+<pre><code>从github下载docker-compose二进制文件安装即可
+https://github.com/docker/compose/releases/download/v2.4.1/docker-compose-linux-x86_64
+</code></pre>
+<h4 id="233-安装harbor">2.3.3 安装harbor</h4>
+<pre><code class="language-shell">1. 解压harbor二进制文件到/opt目录
+~# tar -zxvf harbor-offline-installer-v2.4.2.tgz -C /opt
+
+2.修改配置文件
+~# cd /opt/harbor/
+~# cp harbor.yml.tmpl harbor.yml
+
+3.自签发https证书
+~# mkdir certs
+~# openssl genrsa -out /opt/harbor/certs/harbor-ca.key  ##生成私有key
+~# openssl req -x509 -new -nodes -key /opt/harbor/certs/harbor-ca.key -subj &quot;/CN=harbor.weixd.com&quot; -days 7120 -out /opt/harbor/certs/harbor-ca.crt  ##签证
+
+~# vim harbor.yml
+hostname: harbor.weixd.com   ##修改域名或IP地址
+https:
+  # https port for harbor, default is 443
+  port: 443
+  # The path of cert and key files for nginx
+  certificate: /opt/harbor/certs/harbor-ca.crt ##修改公钥存放路径
+  private_key: /opt/harbor/certs/harbor-ca.key ##修改私钥存放路径
+  
+harbor_admin_password: Harbor12345  ##harbor的登录密码
+
+data_volume: /data  ##数据存储目录
+
+4.安装harbor
+./install.sh --help ##查看安装参数
+
+Please set --with-trivy if needs enable Trivy in Harbor  ##镜像安全扫描
+Please set --with-chartmuseum if needs enable Chartmuseum in Harbor ##支持helm的使用
+
+## 安装
+./install.sh --with-trivy --with-chartmuseum
+
+5.在电脑本地hosts配置文件中添加IP地址解析
+10.1.13.187 harbor.weixd.com
+
+6.页面访问测试
+harbor.weixd.com
+</code></pre>
+<h4 id="234-配置harbor-https上传镜像">2.3.4 配置harbor https上传镜像</h4>
+<pre><code class="language-shell">在需要上传镜像的服务器上创建目录
+~# mkdir -p /etc/docker/certs.d/harbor.weixd.com  &lt;- 必须以harbor的域名为目录名称
+
+然后将harbor服务器中的公钥拷贝到客户端的目录中
+~# scp harbor-ca.crt 10.1.13.186:/etc/docker/certs.d/harbor.weixd.com
+
+因为客户端k8s-master01(10.1.13.186)没有域名解析，所以在hosts中配置一下。
+vim /etc/hosts
+10.1.13.187  harbor.weixd.com
+
+然后可以docker login 登录测试。
+# docker login harbor.weixd.com
+Username: admin
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+</code></pre>
+<h2 id="三-kubeasz安装k8s">三、kubeasz安装k8s</h2>
+<p>github项目地址：https://github.com/easzlab/kubeasz</p>
+<ul>
+<li>注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装<a href="https://github.com/easzlab/kubeasz/blob/master/docs/guide/chrony.md">chrony</a></li>
+<li>注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境</li>
+<li>注意3：建议操作系统升级到新的稳定内核，请结合阅读<a href="https://github.com/easzlab/kubeasz/blob/master/docs/guide/kernel_upgrade.md">内核升级文档</a></li>
+<li>注意4：在公有云上创建多主集群，请结合阅读<a href="https://github.com/easzlab/kubeasz/blob/master/docs/setup/kubeasz_on_public_cloud.md">在公有云上部署 kubeasz</a></li>
+</ul>
+<h3 id="31-环境准备">3.1 环境准备</h3>
+<ol>
+<li>安装ansible, k8s-master01同时作为部署服务器 (IP地址:10.1.13.186)</li>
+</ol>
+<pre><code class="language-shell">~# apt install ansible -y
+</code></pre>
+<ol start="2">
+<li>配置免密认证</li>
+</ol>
+<pre><code class="language-shell">~# ssh-keygen
+~# ssh-copy-id 10.1.13.186  ##k8s-master01 (本机)
+~# ssh-copy-id 10.1.13.187  ##k8s-master02
+~# ssh-copy-id 10.1.13.188  ##k8s-node01、etcd
+~# ssh-copy-id 10.1.13.189  ##k8s-node02、etcd
+~# ssh-copy-id 10.1.13.190  ##k8s-node03、etcd
+
+#验证是否免密成功
+ssh 10.1.13.188
+</code></pre>
+<ol start="3">
+<li>为每个节点设置python软链接（需要通过ansible部署的机器）</li>
+</ol>
+<pre><code class="language-shell">~# ln -s /usr/bin/python3.8 /usr/bin/python
+</code></pre>
+<h3 id="32-在部署节点编排k8s安装">3.2 在部署节点编排k8s安装</h3>
+<h4 id="321-下载kubeasz项目源码-二进制及离线镜像">3.2.1 下载kubeasz项目源码、二进制及离线镜像</h4>
+<pre><code class="language-shell"># 下载工具脚本ezdown，举例使用kubeasz版本3.2.0
+export release=3.2.0  ##release版本决定安装的k8s版本
+wget https://github.com/easzlab/kubeasz/releases/download/${release}/ezdown
+
+# 为脚本添加可执行权限
+chmod +x ./ezdown
+
+## 可更改此脚本下载docker、k8s组件版本
+# 使用工具脚本下载
+./ezdown -D  ##下载所有包到/etc/kubeasz
+</code></pre>
+<h4 id="322-创建集群">3.2.2 创建集群</h4>
+<pre><code class="language-shell">#ezctl命令在/etc/kubeasz/目录下
+~# cd /etc/kubeasz/
+~# ./ezctl --help ##查看命令参数详情
+
+~# ./ezctl new k8s-cluster01  ##创建一个新的k8s集群,名为k8s-cluster01
+## 第一：创建目录 /etc/kubeasz/clusters/k8s-cluster01  
+~# ls /etc/kubeasz/clusters/k8s-cluster01  ##目录下包含当前k8s集群主配置文件
+   config.yml  
+   hosts
+
+两个文件都需要修改.
+</code></pre>
+<ol>
+<li>修改hosts文件,这个是k8s部署文件，ansible会通过这个文件去部署各个服务到指定服务器。</li>
+</ol>
+<pre><code class="language-shell">cd /etc/kubeasz/clusters/k8s-cluster01
+vim hosts
+...
+# 'etcd' cluster should have odd member(s) (1,3,5,...)
+[etcd]  ##etcd部署节点
+10.1.13.188
+10.1.13.189
+10.1.13.190
+
+# master node(s)
+[kube_master]  ##master部署节点
+10.1.13.186
+10.1.13.187
+
+# work node(s)  ##node部署节点
+[kube_node]
+10.1.13.188
+10.1.13.189
+
+# [optional] loadbalance for accessing k8s from outside
+[ex_lb]  ##外部负载均衡器，更改VIP和端口
+10.1.13.6 LB_ROLE=backup EX_APISERVER_VIP=10.1.13.199 EX_APISERVER_PORT=6443
+10.1.13.7 LB_ROLE=master EX_APISERVER_VIP=10.1.13.199 EX_APISERVER_PORT=6443
+
+# Cluster container-runtime supported: docker, containerd
+CONTAINER_RUNTIME=&quot;docker&quot;  ##运行时，这里我们使用docker
+
+# K8S Service CIDR, not overlap with node(host) networking
+SERVICE_CIDR=&quot;10.100.0.0/16&quot;  ##service网络
+
+# Cluster CIDR (Pod CIDR), not overlap with node(host) networking
+CLUSTER_CIDR=&quot;10.200.0.0/16&quot;  ##pod网络
+
+# Binaries Directory
+bin_dir=&quot;/usr/local/bin&quot;  ##二进制文件路径，会将kube-apiserver、docker的二进制文件考到指定路径
+...
+</code></pre>
+<ol start="2">
+<li>修改config.yml,此文件是针对k8s集群的配置</li>
+</ol>
+<pre><code class="language-shell">~# cd /etc/kubeasz/clusters/k8s-cluster01
+
+~# vim config.yml 
+...
+# default: certs issued by the ca will expire in 50 years
+## CA证书有效时间
+CA_EXPIRY: &quot;876000h&quot;
+CERT_EXPIRY: &quot;438000h&quot;
+
+# node节点最大pod 数
+MAX_PODS: 300
+
+# kubeconfig 配置参数
+## cluster集群名称
+CLUSTER_NAME: &quot;cluster1&quot;
+CONTEXT_NAME: &quot;context-{{ CLUSTER_NAME }}&quot;  ##上下文，用来切换集群的
+
+# [docker]信任的HTTP仓库
+## 如果自己搭建http的harbor仓库，需要添加进来，https的用ca认证就行，不用添加	
+INSECURE_REG: '[&quot;127.0.0.1/8&quot;]'
+
+############################
+# role:kube-master
+############################
+# k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
+## 给apiserver使用
+MASTER_CERT_HOSTS:
+  - &quot;10.1.1.1&quot;
+  - &quot;k8s.test.io&quot;
+...
+</code></pre>
+<h4 id="323-一键安装k8s">3.2.3 一键安装k8s</h4>
+<pre><code class="language-shell">~# cd /etc/kubeasz/playbooks
+~# vim 01.prepare.yml  #执行初始化
+注释 &quot;- ex_lb&quot; # 不对负载均衡器进行初始化，因为已经手动部署了keepalived+haproxy做负载均衡。
+
+##一键安装
+ezctl setup k8s-cluster01 all
+
+# 或者分步安装，具体使用 ezctl help setup 查看分步安装帮助信息
+# ezctl setup k8s-cluster01 01   ##初始化
+# ezctl setup k8s-cluster01 02   ##部署etcd集群
+# ezctl setup k8s-cluster01 03   ##部署docker,机器已经部署过的不会再次部署
+# ezctl setup k8s-cluster01 04   ##部署master节点
+# ezctl setup k8s-cluster01 05   ##部署node节点
+# ezctl setup k8s-cluster01 06   ##部署网络组件
+</code></pre>
+<h4 id="324-检测环境运行状态">3.2.4 检测环境运行状态</h4>
+<pre><code class="language-shell">~# kubectl get node
+NAME          STATUS                     ROLES    AGE   VERSION
+10.1.13.186   Ready,SchedulingDisabled   master   67m   v1.23.1
+10.1.13.187   Ready,SchedulingDisabled   master   67m   v1.23.1
+10.1.13.188   Ready                      node     65m   v1.23.1
+10.1.13.189   Ready                      node     65m   v1.23.1
+
+## 创建测试容器
+~# kubectl run net-test01 --image=centos:7.9.2009 sleep 3600000
+~# kubectl run net-test02 --image=centos:7.9.2009 sleep 3600000
+
+##进入其中一个容器测试网络
+~# kubectl exec -it net-test01 bash
+### 在容器中安装网络工具
+/]#  yum install net-tools
+/]#  ping 223.6.6.6   ##ping公网地址可以通
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V700peGCu/">
+            <span class="flex-auto">K8S二进宫</span>
+          </a>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/T-kfr_98s/">
+                <h3 class="post-title">
+                  基于sharedLibrary进行CI/CD流程的优化
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
