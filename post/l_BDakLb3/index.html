@@ -1,0 +1,607 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#hystrix-dashboard">Hystrix Dashboard</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Hystrix 断路器</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 9 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/l_BDakLb3.jpg" alt="">
+        
+        <div class="post-content yue">
+          <p>为什么需要断路器？</p>
+<figure data-type="image" tabindex="1"><img src="images%5Chystrix.jpg" alt="" loading="lazy"></figure>
+<p>A作为服务提供者，B为A的服务消费者，C和D是B的服务消费者。A不可用引起了B的不可用，并将不可用像滚雪球一样放大到C和D时，雪崩效应就形成了。</p>
+<p>因此，需要实现一种机制，可以做到自动监控服务状态并根据调用情况进行自动处理。</p>
+<ul>
+<li>记录时间周期内服务调用失败次数</li>
+<li>维护断路器的打开、关闭、半开三种状态</li>
+<li>提供fallback机制</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="images%5Cnetflix-hystrix.jpg" alt="" loading="lazy"></figure>
+<p>修改bill-service项目：</p>
+<p>pom.xml</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-hystrix&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p>application.xml</p>
+<pre><code class="language-xml">feign:
+  hystrix:
+    enabled: true
+</code></pre>
+<p>启动类添加注解<code>@EnableCircuitBreaker</code></p>
+<pre><code class="language-java">package com.luffy.billservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+@EnableCircuitBreaker
+public class BillServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BillServiceApplication.class, args);
+    }
+
+}
+</code></pre>
+<p><code>UserServiceCli.java</code></p>
+<pre><code class="language-java">package com.luffy.bill.interfaces;
+
+import com.luffy.bill.entity.User;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@FeignClient(name=&quot;user-service&quot;, fallback = UserServiceFallbackImpl.class)
+public interface UserServiceCli {
+
+    @GetMapping(&quot;/user&quot;)
+    public String getUserService();
+
+    @GetMapping(&quot;/user/{id}&quot;)
+    public User getUserInfo(@PathVariable(&quot;id&quot;) int id);
+}
+</code></pre>
+<p><code>UserServiceFallbackImpl.java</code></p>
+<pre><code class="language-java">package com.luffy.billservice.interfaces;
+
+import com.luffy.billservice.entity.User;
+import org.springframework.stereotype.Component;
+
+@Component(&quot;fallback&quot;)
+public class UserServiceFallbackImpl implements UserServiceCli{
+
+    @Override
+    public String getUserService() {
+        return &quot;fallback user service&quot;;
+    }
+
+    @Override
+    public User getUserInfo(int id) {
+        User user = new User();
+        user.setId(1);
+        user.setName(&quot;feign-fallback&quot;);
+        return user;
+    }
+}
+</code></pre>
+<p>停止user-service测试熔断及fallback。</p>
+<p>当注册中心后面维护的服务实例出现故障后，注册中心会存在时间差来感知到服务故障，这个时间差主要通过如下方面来调节：</p>
+<ul>
+<li>
+<p>eureka server检测实例是否过期的周期时间</p>
+<ul>
+<li>
+<p>eureka server端</p>
+<pre><code class="language-yaml">server:
+  port: ${EUREKA_PORT:8761}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+    prefer-ip-address: true
+  server:
+    # 间隔5秒执行一次检测任务
+    eviction-interval-timer-in-ms: 5000
+spring:
+  security:
+    user:
+      name: ${EUREKA_USER:admin}
+      password: ${EUREKA_PASS:admin}
+  application:
+    name: eureka-cluster
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>eureka client注册端设置的心跳超时后剔除该实例的时间</p>
+<ul>
+<li>
+<p>针对user-service</p>
+<pre><code class="language-powershell">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:user-service}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 2
+spring:
+  application:
+    name: user-service
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>eureka client 调用端的同步eureka注册表的时间周期</p>
+<p>比如针对bill-service</p>
+<pre><code class="language-yaml">server:
+  port: 7001
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+    registry-fetch-interval-seconds: 3
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:bill-service}
+spring:
+  application:
+    name: bill-service
+user-service:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+feign:
+  hystrix:
+    enabled: true
+</code></pre>
+</li>
+</ul>
+<p>可以通过设置eureka-client的配置来调整：</p>
+<p>比如调整user-service的配置：</p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:user-service}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 4
+spring:
+  application:
+    name: user-service
+</code></pre>
+<h6 id="hystrix-dashboard">Hystrix Dashboard</h6>
+<p>前面一章，我们讲解了如何整合<code>Hystrix</code>。而在实际情况下，使用了<code>Hystrix</code>的同时,还会对其进行实时的数据监控，反馈各类指标数据。今天我们就将讲解下<code>Hystrix Dashboard</code>和<code>Turbine</code>.其中<code>Hystrix Dashboard</code>是一款针对<code>Hystrix</code>进行实时监控的工具，通过<code>Hystrix Dashboard</code>我们可以在直观地看到各<code>Hystrix Command</code>的<strong>请求响应时间</strong>, <strong>请求成功率</strong>等数据,监控单个实例内的指标情况。后者<code>Turbine</code>，能够将多个实例指标数据进行聚合的工具。</p>
+<p>在eureka注册中心处访问<code>bill-service</code>的服务<code>actuator</code>地址: <code>http://192.168.136.1:7001/actuator/info</code></p>
+<p>若访问不了,需要添加如下内容:</p>
+<ul>
+<li>
+<p>为服务消费者bill-service的pom.xml添加依赖:</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>修改application.yml配置:</p>
+<pre><code class="language-yaml">management:
+  endpoints:
+    web:
+      exposure:
+        include: &quot;*&quot;
+</code></pre>
+</li>
+</ul>
+<p>访问<code>http://localhost:9000/actuator/hystrix.stream</code> 即可访问到断路器的执行状态，但是显示不太友好，因此需要dashboard。</p>
+<p>新建项目，hystrix-dashboard</p>
+<blockquote>
+<p><code>Hystrix-dashboard(仪表盘)</code>是一款针对Hystrix进行实时监控的工具，通过<code>Hystrix Dashboard</code>我们可以在直观地看到各<code>Hystrix Command</code>的请求响应时间, 请求成功率等数据。</p>
+</blockquote>
+<p><code>pom.xml</code>引入依赖包：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.3.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.luffy&lt;/groupId&gt;
+    &lt;artifactId&gt;hystrix-dashboard&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;hystrix-dashboard&lt;/name&gt;
+    &lt;description&gt;hystrxi dashboard&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;spring.cloud-version&gt;Hoxton.SR9&lt;/spring.cloud-version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-hystrix-dashboard&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;${spring.cloud-version}&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+
+</code></pre>
+<p>启动类加上<code>@EnableHystrixDashboard</code>注解：</p>
+<pre><code class="language-java">package com.luffy.hystrixdashboard;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
+
+@SpringBootApplication
+@EnableHystrixDashboard
+public class HystrixDashboardApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(HystrixDashboardApplication.class, args);
+    }
+
+}
+</code></pre>
+<p>application.yml</p>
+<pre><code class="language-yaml">#应用名称
+server:
+  port: 9696
+
+spring:
+  application:
+    name: hystrix-dashboard
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: &quot;*&quot;
+</code></pre>
+<p>访问<code>localhost:9696/hystrix</code></p>
+<ul>
+<li>
+<p>实心圆：它有颜色和大小之分，分别代表实例的监控程度和流量大小。如上图所示，它的健康度从绿色、黄色、橙色、红色递减。通过该实心圆的展示，我们就可以在大量的实例中快速的发现故障实例和高压力实例。</p>
+</li>
+<li>
+<p>曲线：用来记录 2 分钟内流量的相对变化，我们可以通过它来观察到流量的上升和下降趋势。</p>
+</li>
+<li>
+<p>其他一些数量指标如下图所示</p>
+<figure data-type="image" tabindex="3"><img src="images%5Chystric-dashboard.jpg" alt="" loading="lazy"></figure>
+</li>
+</ul>
+<blockquote>
+<p>提交代码到gitlab仓库</p>
+</blockquote>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/cnkwz7WlR/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  微服务网关
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/">
+                <h3 class="post-title">
+                  微服务间调用之服务消费者
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

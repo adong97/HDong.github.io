@@ -1,0 +1,1231 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B%E4%BB%8B%E7%BB%8D">实例介绍</a></li>
+<li><a href="#%E6%B3%A8%E5%85%A5sidecar%E5%AE%B9%E5%99%A8">注入sidecar容器</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E6%B3%A8%E5%85%A5sidecar%E5%AE%B9%E5%99%A8">如何注入sidecar容器</a></li>
+<li><a href="#%E6%B3%A8%E5%85%A5bookinfo">注入bookinfo</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%81%E9%87%8F%E8%B7%AF%E7%94%B1">流量路由</a>
+<ul>
+<li><a href="#ingress-gateway%E8%AE%BF%E9%97%AEproductpage">ingress-gateway访问productpage</a></li>
+<li><a href="#%E6%9D%83%E9%87%8D%E8%B7%AF%E7%94%B1">权重路由</a></li>
+<li><a href="#%E8%AE%BF%E9%97%AE%E8%B7%AF%E5%BE%84%E8%B7%AF%E7%94%B1">访问路径路由</a></li>
+<li><a href="#%E8%B7%AF%E5%BE%84%E9%87%8D%E5%86%99">路径重写</a></li>
+<li><a href="#%E5%8C%B9%E9%85%8D%E4%BC%98%E5%85%88%E7%BA%A7">匹配优先级</a></li>
+<li><a href="#destinationrule-%E8%BD%AC%E5%8F%91%E7%AD%96%E7%95%A5">DestinationRule 转发策略</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8https">使用https</a></li>
+<li><a href="#header%E5%A4%B4%E8%B7%AF%E7%94%B1">header头路由</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B5%81%E9%87%8F%E9%95%9C%E5%83%8F">流量镜像</a>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践</a></li>
+</ul>
+</li>
+<li><a href="#%E9%87%8D%E8%AF%95">重试</a>
+<ul>
+<li><a href="#%E5%AE%9E%E8%B7%B5-2">实践</a></li>
+</ul>
+</li>
+<li><a href="#%E7%86%94%E6%96%AD">熔断</a>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D-2">介绍</a></li>
+<li><a href="#%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83">准备环境</a></li>
+<li><a href="#%E9%AA%8C%E8%AF%81">验证</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5%E4%B8%8E%E8%B6%85%E6%97%B6%E6%9C%BA%E5%88%B6">故障注入与超时机制</a>
+<ul>
+<li><a href="#%E5%BB%B6%E8%BF%9F%E4%B8%8E%E8%B6%85%E6%97%B6">延迟与超时</a></li>
+<li><a href="#%E7%8A%B6%E6%80%81%E7%A0%81">状态码</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%AF%E8%A7%82%E5%AF%9F%E6%80%A7">可观察性</a><br>
+*
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E9%9B%86%E6%88%90%E7%BB%84%E4%BB%B6">安装集成组件</a></li>
+<li><a href="#prometheus">prometheus</a></li>
+<li><a href="#jaeger">jaeger</a></li>
+<li><a href="#kiali">kiali</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">实例演示</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 24 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/V-rgl2QeO.webp" alt="">
+        
+        <div class="post-content yue">
+          <h5 id="实例介绍">实例介绍</h5>
+<p>创建bookinfo实例：</p>
+<pre><code class="language-powershell">$ kubectl create namespace bookinfo
+$ kubectl -n bookinfo create -f samples/bookinfo/platform/kube/bookinfo.yaml 
+$ kubectl -n bookinfo get po 
+NAME                                  READY   STATUS    RESTARTS   AGE
+details-v1-5974b67c8-wclnd            1/1     Running   0          34s
+productpage-v1-64794f5db4-jsdbg       1/1     Running   0          33s
+ratings-v1-c6cdf8d98-jrfrn            1/1     Running   0          33s
+reviews-v1-7f6558b974-kq6kj           1/1     Running   0          33s
+reviews-v2-6cb6ccd848-qdg2k           1/1     Running   0          34s
+reviews-v3-cc56b578-kppcx             1/1     Running   0          34s
+</code></pre>
+<p>该应用由四个单独的微服务构成。 这个应用模仿在线书店的一个分类，显示一本书的信息。 页面上会显示一本书的描述，书籍的细节（ISBN、页数等），以及关于这本书的一些评论。</p>
+<p>Bookinfo 应用分为四个单独的微服务：</p>
+<ul>
+<li><code>productpage</code>. 这个微服务会调用 <code>details</code> 和 <code>reviews</code> 两个微服务，用来生成页面。</li>
+<li><code>details</code>. 这个微服务中包含了书籍的信息。</li>
+<li><code>reviews</code>. 这个微服务中包含了书籍相关的评论。它还会调用 <code>ratings</code> 微服务。</li>
+<li><code>ratings</code>. 这个微服务中包含了由书籍评价组成的评级信息。</li>
+</ul>
+<p><code>reviews</code> 微服务有 3 个版本：</p>
+<ul>
+<li>v1 版本不会调用 <code>ratings</code> 服务。</li>
+<li>v2 版本会调用 <code>ratings</code> 服务，并使用 1 到 5 个黑色星形图标来显示评分信息。</li>
+<li>v3 版本会调用 <code>ratings</code> 服务，并使用 1 到 5 个红色星形图标来显示评分信息。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="images%5Cnoistio.svg" alt="" loading="lazy"></figure>
+<p>Bookinfo 是一个异构应用，几个微服务是由不同的语言编写的。这些服务对 Istio 并无依赖，但是构成了一个有代表性的服务网格的例子：它由多个服务、多个语言构成，并且 <code>reviews</code> 服务具有多个版本。</p>
+<p>使用ingress访问productpage服务：</p>
+<p><code>ingress-productpage.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: productpage
+  namespace: bookinfo
+spec:
+  rules:
+  - host: productpage.bookinfo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: productpage
+            port:
+              number: 9080
+</code></pre>
+<p>如何实现更细粒度的流量管控？</p>
+<h5 id="注入sidecar容器">注入sidecar容器</h5>
+<h6 id="如何注入sidecar容器">如何注入sidecar容器</h6>
+<ol>
+<li>
+<p>使用<code>istioctl kube-inject</code></p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo apply -f &lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml)
+</code></pre>
+</li>
+<li>
+<p>为命名空间打label</p>
+<pre><code class="language-powershell"># 给命名空间打标签，这样部署在该命名空间的服务会自动注入sidecar容器
+$ kubectl label namespace dafault istio-injection=enabled
+</code></pre>
+</li>
+</ol>
+<h6 id="注入bookinfo">注入bookinfo</h6>
+<pre><code class="language-powershell">$ kubectl -n bookinfo apply -f &lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml) 
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="images%5Cwithistio.svg" alt="" loading="lazy"></figure>
+<h5 id="流量路由">流量路由</h5>
+<p>实现ingress解决不了的按照比例分配流量</p>
+<h6 id="ingress-gateway访问productpage">ingress-gateway访问productpage</h6>
+<p><code>productpage-gateway.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: productpage-gateway
+  namespace: bookinfo
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - productpage.bookinfo.com
+</code></pre>
+<p><code>productpage-virtualservice.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gateway-front-tomcat
+  namespace: bookinfo
+spec:
+  gateways:
+  - productpage-gateway
+  hosts:
+  - productpage.bookinfo.com
+  http:
+  - route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080
+</code></pre>
+<p>配置nginx，使用域名80端口访问。</p>
+<pre><code class="language-powershell">  bookinfo-productpage.conf: |
+    upstream bookinfo-productpage {
+      server 10.102.104.156:80;
+    }
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  productpage.bookinfo.com;
+
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_http_version 1.1;
+            proxy_pass http://bookinfo-productpage;
+        }
+    }
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="images%5Cwithistio.svg" alt="" loading="lazy"></figure>
+<h6 id="权重路由">权重路由</h6>
+<p>只想访问<code>reviews-v3</code></p>
+<pre><code class="language-powershell">$ cat virtual-service-reviews-v3.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: reviews
+  namespace: bookinfo
+spec:
+  hosts:
+    - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v3
+
+$ cat destination-rule-reviews.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: reviews
+  namespace: bookinfo
+spec:
+  host: reviews
+  trafficPolicy:
+    loadBalancer:
+      simple: RANDOM
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+  - name: v3
+    labels:
+      version: v3
+
+$ kubectl apply -f virtual-service-reviews-v3.yaml
+
+# 访问productpage测试
+</code></pre>
+<p>实现如下流量分配：</p>
+<pre><code class="language-powershell">0% -&gt; reivews-v1
+10% -&gt; reviews-v2
+90%  -&gt; reviews-v3
+</code></pre>
+<pre><code class="language-powershell">$ cat virtual-service-reviews-90-10.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: reviews
+  namespace: bookinfo
+spec:
+  hosts:
+    - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v2
+      weight: 10
+    - destination:
+        host: reviews
+        subset: v3
+      weight: 90
+
+$ kubectl apply -f virtual-service-reviews-90-10.yaml
+
+# 假如v2版本的副本数扩容为3，v2版本的流量会如何分配？  会不会变成30%？
+$ kubectl -n bookinfo scale deploy reviews-v2 --replicas=3
+#  istioctl pc route productpage-v1-667f4495b5-kb5qv.bookinfo --name 9080 -ojson
+</code></pre>
+<h6 id="访问路径路由">访问路径路由</h6>
+<p>实现效果如下：</p>
+<figure data-type="image" tabindex="4"><img src="images%5Cll-4.jpg" alt="" loading="lazy"></figure>
+<pre><code class="language-powershell"># 定义允许外部流量进入网格,直接编辑已有gateway
+$ kubectl -n bookinfo edit gw productpage-gateway
+
+$ cat bookinfo-routing-with-uri-path.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo
+  namespace: bookinfo
+spec:
+  gateways:
+  - productpage-gateway
+  hosts:
+    - www.bookinfo.com
+  http:
+  - name: productpage-route
+    match:
+    - uri:
+        prefix: /productpage
+    route:
+    - destination:
+        host: productpage
+  - name: reviews-route
+    match:
+    - uri:
+        prefix: /reviews
+    route:
+    - destination:
+        host: reviews
+  - name: ratings-route
+    match:
+    - uri:
+        prefix: /ratings
+    route:
+    - destination:
+        host: ratings
+</code></pre>
+<p>nginx中新增配置：</p>
+<pre><code class="language-powershell">  bookinfo-productpage.conf: |
+    upstream bookinfo-productpage {
+      server 10.102.104.156:80;
+    }
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  www.bookinfo.com;
+
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_http_version 1.1;
+            proxy_pass http://bookinfo-productpage;
+        }
+    }
+</code></pre>
+<p>访问：</p>
+<p><code>http://bookinfo.com/productpage</code></p>
+<p><code>http://bookinfo.com/ratings/1</code></p>
+<p>实际的访问对应为：</p>
+<pre><code class="language-powershell">www.bookinfo.com/abc  -&gt; productpage:8090/abc
+www.bookinfo.com/ratings  -&gt;  ratings:9080/ratings
+www.bookinfo.com/reviews  -&gt;  reviews:9080/reviews
+</code></pre>
+<p>实际访问productpage页面，由于需要引用css、js等静态资源，因此需要补充对<code>/static</code>路径的转发：</p>
+<pre><code class="language-yaml">...
+  http:
+  - name: productpage-route
+    match:
+    - uri:
+        prefix: /productpage
+    - uri:
+        prefix: /static
+    route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080
+...
+</code></pre>
+<p><code>virtualservice</code>的配置中并未指定service的port端口，转发同样可以生效？</p>
+<blockquote>
+<p>注意，若service中只有一个端口，则不用显式指定端口号，会自动转发到该端口中</p>
+</blockquote>
+<h6 id="路径重写">路径重写</h6>
+<p>如果想实现rewrite的功能，</p>
+<pre><code class="language-powershell">www.bookinfo.com/rate  -&gt; ratings:8090/ratings
+</code></pre>
+<pre><code class="language-yaml">...
+  - name: ratings-route
+    match:
+    - uri:
+        prefix: /rate
+    rewrite:
+      uri: &quot;/ratings&quot;
+    route:
+    - destination:
+        host: ratings
+...
+</code></pre>
+<h6 id="匹配优先级">匹配优先级</h6>
+<p>登录发现<code>/login</code>的匹配也没有添加，后续有可能有别的，因此可以在规则列表最后添加一个规则，作为默认的转发规则。</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo edit vs bookinfo
+...
+  - name: default-route
+    route:
+    - destination:
+        host: productpage
+</code></pre>
+<h6 id="destinationrule-转发策略">DestinationRule 转发策略</h6>
+<p>默认会使用轮询策略，此外也支持如下负载均衡模型，可以在 <code>DestinationRule</code> 中使用这些模型，将请求分发到特定的服务或服务子集。</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ROUND_ROBIN</code></td>
+<td>Round Robin policy. Default</td>
+</tr>
+<tr>
+<td><code>LEAST_CONN</code></td>
+<td>The least request load balancer uses an O(1) algorithm which selects two random healthy hosts and picks the host which has fewer active requests.</td>
+</tr>
+<tr>
+<td><code>RANDOM</code></td>
+<td>The random load balancer selects a random healthy host. The random load balancer generally performs better than round robin if no health checking policy is configured.</td>
+</tr>
+<tr>
+<td><code>PASSTHROUGH</code></td>
+<td>This option will forward the connection to the original IP address requested by the caller without doing any form of load balancing. This option must be used with care. It is meant for advanced use cases. Refer to Original Destination load balancer in Envoy for further details.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: my-destination-rule
+spec:
+  host: my-svc
+  trafficPolicy:     #默认的负载均衡策略模型为随机
+    loadBalancer:
+      simple: RANDOM
+  subsets:
+  - name: v1  #subset1，将流量转发到具有标签 version:v1 的 deployment 对应的服务上
+    labels:
+      version: v1
+  - name: v2  #subset2，将流量转发到具有标签 version:v2 的 deployment 对应的服务上,指定负载均衡为轮询
+    labels:
+      version: v2
+    trafficPolicy:
+      loadBalancer:
+        simple: ROUND_ROBIN
+  - name: v3   #subset3，将流量转发到具有标签 version:v3 的 deployment 对应的服务上
+    labels:
+      version: v3
+</code></pre>
+<blockquote>
+<p>https://preliminary.istio.io/latest/zh/docs/reference/config/networking/destination-rule/#DestinationRule</p>
+</blockquote>
+<h6 id="使用https">使用https</h6>
+<p>方式一：把证书绑定在外部的nginx中， nginx 443端口监听外网域名并转发请求到Istio Ingress网关IP+http端口 ，如果使用公有云lb的话（如slb，clb），可以在lb层绑定证书</p>
+<p>方式二：在istio侧使用证书</p>
+<p>https://istio.io/latest/docs/tasks/traffic-management/ingress/secure-ingress/</p>
+<h6 id="header头路由">header头路由</h6>
+<pre><code class="language-powershell">$ cat virtual-service-reviews-header.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: reviews
+  namespace: bookinfo
+spec:
+  hosts:
+  - reviews
+  http:
+  - match:
+    - headers:
+        end-user:
+          exact: luffy
+    route:
+    - destination:
+        host: reviews
+        subset: v3
+  - route:
+    - destination:
+        host: reviews
+        subset: v2
+</code></pre>
+<pre><code class="language-powershell">$ kubectl apply -f virtual-service-reviews-header.yaml
+
+# 刷新观察http://bookinfo.com/productpage
+</code></pre>
+<p>更多支持的匹配类型可以在此处查看。</p>
+<p>https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPMatchRequest</p>
+<h5 id="流量镜像">流量镜像</h5>
+<h6 id="介绍">介绍</h6>
+<p>很多情况下，当我们对服务做了重构，或者我们对项目做了重大优化时，怎么样保证服务是健壮的呢？在传统的服务里，我们只能通过大量的测试，模拟在各种情况下服务的响应情况。虽然也有手工测试、自动化测试、压力测试等一系列手段去检测它，但是测试本身就是一个样本化的行为，即使测试人员再完善它的测试样例，无法全面的表现出线上服务的一个真实流量形态 。</p>
+<p>流量镜像的设计，让这类问题得到了最大限度的解决。流量镜像讲究的不再是使用少量样本去评估一个服务的健壮性，而是在不影响线上坏境的前提下将线上流量持续的镜像到我们的预发布坏境中去，让重构后的服务在上线之前就结结实实地接受一波真实流量的冲击与考验，让所有的风险全部暴露在上线前夕，通过不断的暴露问题，解决问题让服务在上线前夕就拥有跟线上服务一样的健壮性。由于测试坏境使用的是真实流量，所以不管从流量的多样性，真实性，还是复杂性上都将能够得以展现，同时预发布服务也将表现出其最真实的处理能力和对异常的处理能力。</p>
+<h6 id="实践">实践</h6>
+<figure data-type="image" tabindex="5"><img src="images%5Cshadow-in-one-mesh.png" alt="" loading="lazy"></figure>
+<pre><code class="language-powershell"># 准备httpbin v1
+$ cat httpbin-v1.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin-v1
+  namespace: bookinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v1
+    spec:
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: httpbin
+        command: [&quot;gunicorn&quot;, &quot;--access-logfile&quot;, &quot;-&quot;, &quot;-b&quot;, &quot;0.0.0.0:80&quot;, &quot;httpbin:app&quot;]
+        
+$ istioctl kube-inject -f httpbin-v1.yaml | kubectl create -f -
+$ curl $(kubectl -n bookinfo get po  -l version=v1,app=httpbin -ojsonpath='{.items[0].status.podIP}')/headers
+{
+  &quot;headers&quot;: {
+    &quot;Accept&quot;: &quot;*/*&quot;,
+    &quot;Content-Length&quot;: &quot;0&quot;,
+    &quot;Host&quot;: &quot;10.244.0.88&quot;,
+    &quot;User-Agent&quot;: &quot;curl/7.29.0&quot;,
+    &quot;X-B3-Sampled&quot;: &quot;1&quot;,
+    &quot;X-B3-Spanid&quot;: &quot;777c7af4458c5b81&quot;,
+    &quot;X-B3-Traceid&quot;: &quot;6b98ea81618deb4f777c7af4458c5b81&quot;
+  }
+}
+
+# 准备httpbin v2
+$ cat httpbin-v2.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin-v2
+  namespace: bookinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: httpbin
+        version: v2
+    spec:
+      containers:
+      - image: docker.io/kennethreitz/httpbin
+        imagePullPolicy: IfNotPresent
+        name: httpbin
+        command: [&quot;gunicorn&quot;, &quot;--access-logfile&quot;, &quot;-&quot;, &quot;-b&quot;, &quot;0.0.0.0:80&quot;, &quot;httpbin:app&quot;]
+        
+$ istioctl kube-inject -f httpbin-v2.yaml | kubectl create -f -
+
+# Service文件
+$ cat httpbin-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpbin
+  namespace: bookinfo
+  labels:
+    app: httpbin
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 80
+  selector:
+    app: httpbin
+
+$ kubectl apply -f httpbin-svc.yaml
+
+# 使用www.bookinfo.com/httpbin访问,因此直接修改bookinfo这个virtualservice即可
+$ kubectl -n bookinfo get vs
+NAME                   GATEWAYS                HOSTS               
+bookinfo               [bookinfo-gateway]      [bookinfo.com]       
+gateway-front-tomcat   [productpage-gateway]   [productpage.bookinfo.com]
+reviews                                        [reviews]     
+$ kubectl -n bookinfo edit vs bookinfo
+#添加httpbin的规则
+...
+  - match:
+    - uri:
+        prefix: /httpbin
+    name: httpbin-route
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: httpbin
+        subset: v1
+...
+# 创建gateway和virtualservice,由于都是使用http请求，因此，直接
+$ cat httpbin-destinationRule.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: httpbin
+  namespace: bookinfo
+spec:
+  host: httpbin
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+$ kubectl apply -f httpbin-destinationRule.yaml
+
+# 访问http://www.bookinfo.com/httpbin/headers，查看日志
+
+# 为httpbin-v1添加mirror设置，mirror点为httpbin-v2
+$ kubectl -n bookinfo edit vs bookinfo
+...
+  - match:
+    - uri:
+        prefix: /httpbin
+    name: httpbin-route
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: httpbin
+        subset: v1
+    mirror:
+      host: httpbin
+      subset: v2
+    mirror_percent: 100
+...
+</code></pre>
+<h5 id="重试">重试</h5>
+<p>在网络环境不稳定的情况下，会出现暂时的网络不可达现象，这时需要重试机制，通过多次尝试来获取正确的返回信息。 istio 可以通过简单的配置来实现重试功能，让开发人员无需关注重试部分的代码实现，专心实现业务代码。</p>
+<h6 id="实践-2">实践</h6>
+<p>浏览器访问<code>http://www.bookinfo.com/httpbin/status/502</code></p>
+<pre><code class="language-powershell"># 此时查看httpbin-v1的日志，显示一条状态码为502的日志
+$ kubectl -n bookinfo logs -f httpbin-v1-5967569c54-sp874 -c istio-proxy
+[2020-11-09T10:26:48.907Z] &quot;GET /httpbin/status/502 HTTP/1.1&quot; 502 - &quot;-&quot; &quot;-&quot; 0 0 5 4 &quot;172.21.50.140,10.244.0.1&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36&quot; &quot;767cf33b-b8cf-9804-8c48-df131393c8a5&quot; &quot;bookinfo.com&quot; &quot;127.0.0.1:80&quot; inbound|8000|http|httpbin.bookinfo.svc.cluster.local 127.0.0.1:48376 10.244.0.90:80 10.244.0.1:0 outbound_.8000_.v1_.httpbin.bookinfo.svc.cluster.local default
+</code></pre>
+<p>我们为<code>httpbin</code>服务设置重试机制，这里设置如果服务在 2 秒内没有返回正确的返回值，就进行重试，重试的条件为返回码为<code>5xx</code>，重试 3 次。</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo edit vs bookinfo
+...
+  - match:
+    - uri:
+        prefix: /httpbin
+    mirror:
+      host: httpbin
+      subset: v2
+    mirror_percent: 100
+    name: httpbin-route
+    retries:
+      attempts: 3
+      perTryTimeout: 2s
+      retryOn: 5xx
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: httpbin
+        subset: v1
+...
+
+# 再次查看httpbin-v1的日志，显示四条状态码为502的日志
+</code></pre>
+<h5 id="熔断">熔断</h5>
+<h6 id="介绍-2">介绍</h6>
+<p>熔断（Circuit Breaker），原是指当电流超过规定值时断开电路，进行短路保护或严重过载保护的机制 。对于微服务系统而言，熔断尤为重要，它可以使系统在遭遇某些模块故障时，通过服务降级等方式来提高系统核心功能的可用性，得以应对来自故障、潜在峰值或其他未知网络因素的影响。</p>
+<h6 id="准备环境">准备环境</h6>
+<p>Istio 是通过 Envoy Proxy 来实现熔断机制的，Envoy 强制在网络层面配置熔断策略，这样就不必为每个应用程序单独配置或重新编程。下面就通过一个示例来演示如何为 Istio 网格中的服务配置熔断的连接数、请求数和异常检测。</p>
+<figure data-type="image" tabindex="6"><img src="images%5Chttpbin-java-client.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>创建httpbin服务</p>
+</li>
+<li>
+<p>创建测试客户端</p>
+<p>我们已经为 <code>httpbin</code> 服务设置了熔断策略，接下来创建一个 Java 客户端，用来向后端服务发送请求，观察是否会触发熔断策略。这个客户端可以控制连接数量、并发数、待处理请求队列，使用这一客户端，能够有效的触发前面在目标规则中设置的熔断策略。该客户端的 deployment yaml 内容如下：</p>
+<pre><code class="language-yaml"># httpbin-client-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpbin-client-v1
+  namespace: bookinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpbin-client-v1
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: httpbin-client-v1
+        version: v1
+    spec:
+      containers:
+      - image: ceposta/http-envoy-client-standalone:latest
+        imagePullPolicy: IfNotPresent
+        name: httpbin-client
+        command: [&quot;/bin/sleep&quot;,&quot;infinity&quot;]
+</code></pre>
+<p>这里我们会把给客户端也进行 Sidecar 的注入，以此保证 Istio 对网络交互的控制：</p>
+<pre><code class="language-powershell">$ kubectl apply -f &lt;(istioctl kube-inject -f httpbin-client-deploy.yaml)
+</code></pre>
+</li>
+</ul>
+<h6 id="验证">验证</h6>
+<p>先尝试通过单线程（<code>NUM_THREADS=1</code>）创建一个连接，并进行 5 次调用（默认值：<code>NUM_CALLS_PER_CLIENT=5</code>）：</p>
+<pre><code class="language-powershell">$ CLIENT_POD=$(kubectl get pod -n bookinfo | grep httpbin-client | awk '{ print $1 }')
+$ kubectl -n bookinfo exec -it $CLIENT_POD -c httpbin-client -- sh -c 'export URL_UNDER_TEST=http://httpbin:8000/get export NUM_THREADS=1 &amp;&amp; java -jar http-client.jar'
+</code></pre>
+<p>下面尝试把线程数提高到 2：</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo exec -it $CLIENT_POD -c httpbin-client -- sh -c 'export URL_UNDER_TEST=http://httpbin:8000/get export NUM_THREADS=2 &amp;&amp; java -jar http-client.jar'
+</code></pre>
+<p>创建DestinationRule， 针对 <code>httpbin</code> 服务设置熔断策略：</p>
+<pre><code class="language-powershell">$ kubectl apply -f - &lt;&lt;EOF
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: httpbin
+  namespace: bookinfo
+spec:
+  host: httpbin
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+EOF
+</code></pre>
+<ul>
+<li><strong>maxConnections</strong> : 限制对后端服务发起的 <code>HTTP/1.1</code> 连接数，如果超过了这个限制，就会开启熔断。</li>
+<li><strong>maxPendingRequests</strong> : 限制待处理请求列表的长度， 如果超过了这个限制，就会开启熔断。</li>
+<li><strong>maxRequestsPerConnection</strong> : 在任何给定时间内限制对后端服务发起的 <code>HTTP/2</code> 请求数，如果超过了这个限制，就会开启熔断。</li>
+</ul>
+<p>可以查看设置的熔断策略在envoy的配置片段：</p>
+<pre><code class="language-powershell">$ istioctl pc cluster httpbin-client-v1-56b86fb85c-vg5pp.bookinfo --fqdn httpbin.bookinfo.svc.cluster.local -ojson
+...
+        &quot;connectTimeout&quot;: &quot;10s&quot;,
+        &quot;maxRequestsPerConnection&quot;: 1,
+        &quot;circuitBreakers&quot;: {
+            &quot;thresholds&quot;: [
+                {
+                    &quot;maxConnections&quot;: 1,
+                    &quot;maxPendingRequests&quot;: 1,
+                    &quot;maxRequests&quot;: 4294967295,
+                    &quot;maxRetries&quot;: 4294967295
+                }
+            ]
+        },
+...
+</code></pre>
+<p>再次验证熔断。</p>
+<h5 id="故障注入与超时机制">故障注入与超时机制</h5>
+<p>在一个微服务架构的系统中，为了让系统达到较高的健壮性要求，通常需要对系统做定向错误测试。比如电商中的订单系统、支付系统等若出现故障那将是非常严重的生产事故，因此必须在系统设计前期就需要考虑多样性的异常故障并对每一种异常设计完善的恢复策略或优雅的回退策略，尽全力规避类似事故的发生，使得当系统发生故障时依然可以正常运作。而在这个过程中，服务故障模拟一直以来是一个非常繁杂的工作。</p>
+<p>istio提供了无侵入式的故障注入机制，让开发测试人员在不用调整服务程序的前提下，通过配置即可完成对服务的异常模拟。目前，包含两类：</p>
+<ul>
+<li><strong>abort</strong>：非必配项，配置一个 Abort 类型的对象。用来注入请求异常类故障。简单的说，就是用来模拟上游服务对请求返回指定异常码时，当前的服务是否具备处理能力。</li>
+<li><strong>delay</strong>：非必配项，配置一个 Delay 类型的对象。用来注入延时类故障。通俗一点讲，就是人为模拟上游服务的响应时间，测试在高延迟的情况下，当前的服务是否具备容错容灾的能力。</li>
+</ul>
+<h6 id="延迟与超时">延迟与超时</h6>
+<p>目前针对luffy登录用户，访问服务的示意为：</p>
+<pre><code class="language-powershell">productpage --&gt; reviews v2 --&gt; ratings
+               \
+                -&gt; details
+</code></pre>
+<p>可以通过如下方式，为<code>ratings</code>服务注入2秒的延迟：</p>
+<pre><code class="language-powershell">$ cat virtualservice-ratings-2s-delay.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ratings
+  namespace: bookinfo
+spec:
+  hosts:
+  - ratings
+  http:
+  - fault:
+      delay:
+        percentage:
+          value: 100
+        fixedDelay: 2s
+    route:
+    - destination:
+        host: ratings
+
+$ kubectl apply -f virtualservice-ratings-2s-delay.yaml
+# 再次访问http://www.bookinfo.com/productpage，可以明显感觉2s的延迟
+</code></pre>
+<p>可以查看对应的envoy的配置：</p>
+<pre><code class="language-powershell">$ istioctl pc r ratings-v1-556cfbd589-89ml4.bookinfo --name 9080 -ojson
+</code></pre>
+<p>此时的调用为:</p>
+<pre><code class="language-powershell">productpage --&gt; reviews v2 -（延迟2秒）-&gt; ratings
+               \
+                -&gt; details
+</code></pre>
+<p>此时，为reviews服务添加请求超时时间：</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo edit vs reviews
+...
+  http:
+  - match:
+    - headers:
+        end-user:
+          exact: luffy
+    route:
+    - destination:
+        host: reviews
+        subset: v2
+    timeout: 1s
+  - route:
+    - destination:
+        host: reviews
+        subset: v3
+...
+
+</code></pre>
+<p>此使的调用关系为：</p>
+<pre><code class="language-powershell">productpage -（1秒超时）-&gt; reviews v2 -（延迟2秒）-&gt; ratings
+               \
+                -&gt; details
+</code></pre>
+<p>此时，如果使用非luffy用户，则会出现只延迟，不会失败的情况。</p>
+<p>删除延迟：</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo delete vs ratings
+</code></pre>
+<h6 id="状态码">状态码</h6>
+<pre><code class="language-powershell">$ cat virtualservice-details-aborted.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: details
+  namespace: bookinfo
+spec:
+  hosts:
+  - details
+  http:
+  - fault:
+      abort:
+        percentage:
+          value: 50
+        httpStatus: 500
+    route:
+    - destination:
+        host: details
+
+$ kubectl apply -f virtualservice-details-aborted.yaml
+
+# 再次刷新查看details的状态，查看productpage的日志
+$ kubectl -n bookinfo logs -f $(kubectl -n bookinfo get po -l app=productpage -ojsonpath='{.items[0].metadata.name}') -c istio-proxy
+[2020-11-09T09:00:16.020Z] &quot;GET /details/0 HTTP/1.1&quot; 500 FI &quot;-&quot; &quot;-&quot; 0 18 0 - &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36&quot; &quot;f0387bb6-a445-922c-89ab-689dfbf548f8&quot; &quot;details:9080&quot; &quot;-&quot; - - 10.111.67.169:9080 10.244.0.52:56552 - -
+
+</code></pre>
+<h4 id="可观察性">可观察性</h4>
+<h6 id="安装集成组件">安装集成组件</h6>
+<p>https://istio.io/latest/docs/ops/integrations</p>
+<ol>
+<li>
+<p>Grafana</p>
+<pre><code class="language-powershell">$ kubectl apply -f samples/addons/grafana.yaml
+</code></pre>
+</li>
+<li>
+<p>Jaeger</p>
+<pre><code class="language-powershell">$ kubectl apply -f samples/addons/jaeger.yaml
+</code></pre>
+</li>
+<li>
+<p>Kiali</p>
+<pre><code class="language-powershell"># 完善扩展组件地址：
+grafana url: &quot;http://grafana.istio.com&quot;
+tracing url: &quot;http://jaeger.istio.com&quot;
+$ kubectl apply -f samples/addons/kiali.yaml
+</code></pre>
+</li>
+<li>
+<p>Prometheus</p>
+<pre><code class="language-powershell">$ kubectl apply -f samples/addons/prometheus.yaml
+</code></pre>
+</li>
+</ol>
+<h5 id="prometheus">prometheus</h5>
+<p>Prometheus：</p>
+<pre><code class="language-powershell">$ cat prometheus-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: istio-system
+spec:
+  rules:
+  - host: prometheus.istio.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: prometheus
+            port:
+              number: 9090
+
+$ kubectl apply -f prometheus-ingress.yaml
+</code></pre>
+<p>查看默认添加的targets列表：</p>
+<figure data-type="image" tabindex="7"><img src="images%5Cprometheus-targets.jpg" alt="" loading="lazy"></figure>
+<p>其中最核心的是<code>kubernetes-pods</code> 的监控，服务网格内的每个服务都作为一个target被监控，而且服务流量指标直接由sidecar容器来提供指标。</p>
+<pre><code class="language-powershell">$ kubectl -n bookinfo get po -owide
+$ curl 10.244.0.53:15020/stats/prometheus
+</code></pre>
+<p>对于这些监控指标采集的数据，可以在grafana中查看到。</p>
+<pre><code class="language-powershell">$ cat grafana-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: istio-system
+spec:
+  rules:
+  - host: grafana.istio.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: grafana
+            port:
+              number: 3000
+
+
+$ for i in $(seq 1 10000); do curl -s -o /dev/null &quot;http://www.bookinfo.com/productpage&quot;; done
+</code></pre>
+<p>访问界面后，可以查看到Istio Mesh Dashboard等相关的dashboard，因为在grafana的资源文件中， 中以 ConfigMap 的形式挂载了 Istio各个组件的仪表盘 JSON 配置文件：</p>
+<pre><code class="language-powershell">$ kubectl -n istio-system get cm istio-services-grafana-dashboards
+NAME                                DATA   AGE
+istio-services-grafana-dashboards   3      7d1h
+</code></pre>
+<h5 id="jaeger">jaeger</h5>
+<pre><code class="language-powershell">$ cat jaeger-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jaeger
+  namespace: istio-system
+spec:
+  rules:
+  - host: jaeger.istio.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: tracing
+            port:
+              number: 80
+  
+$ kubectl apply -f jaeger-ingress.yaml
+</code></pre>
+<h5 id="kiali">kiali</h5>
+<p>kiali 是一个 可观测性分析服务</p>
+<pre><code class="language-powershell">$ cat kiali-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kiali
+  namespace: istio-system
+spec:
+  rules:
+  - host: kiali.istio.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: kiali
+            port:
+              number: 20001
+
+$ kubectl apply -f kiali-ingress.yaml
+</code></pre>
+<p>集成了Prometheus、grafana、tracing、log、</p>
+<blockquote>
+<p>https://istio.io/latest/docs/tasks/observability/kiali/</p>
+<p>https://kiali.io/documentation/latest/configuration/authentication/</p>
+</blockquote>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi/">
+            <span class="flex-auto">istio</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  istio总结
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/pwnFEY3H_/">
+                <h3 class="post-title">
+                  istio流量分发控制
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

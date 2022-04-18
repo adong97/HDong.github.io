@@ -1,0 +1,559 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%B1%95%E6%9C%9B%E6%9C%AA%E6%9D%A5">展望未来</a><br>
+*<br>
+*<br>
+* <a href="#%E5%B0%8F%E7%BB%93">小结</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">istio总结</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 13 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/9uMxGYG8T.webp" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="展望未来">展望未来</h1>
+<p>Kubernets已经成为了容器调度编排的事实标准，而容器正好可以作为微服务的最小工作单元，从而发挥微服务架构的最大优势。所以未来微服务架构会围绕Kubernetes展开。而Istio和Conduit这类Service Mesh天生就是为了Kubernetes设计，它们的出现补足了Kubernetes在微服务间服务通讯上的短板。虽然Dubbo、Spring Cloud等都是成熟的微服务框架，但是它们或多或少都会和具体语言或应用场景绑定，并只解决了微服务Dev层面的问题。若想解决Ops问题，它们还需和诸如Cloud Foundry、Mesos、Docker Swarm或Kubernetes这类资源调度框架做结合：</p>
+<figure data-type="image" tabindex="1"><img src="images%5Ckubernetes%E4%B8%8Espringcloud.jpg" alt="" loading="lazy"></figure>
+<p>但是这种结合又由于初始设计和生态，有很多适用性问题需要解决。</p>
+<p>Kubernetes则不同，它本身就是一个和开发语言无关的、通用的容器管理平台，它可以支持运行云原生和传统的容器化应用。并且它覆盖了微服务的Dev和Ops阶段，结合Service Mesh，它可以为用户提供完整端到端的微服务体验。</p>
+<p>所以我认为，未来的微服务架构和技术栈可能是如下形式：</p>
+<figure data-type="image" tabindex="2"><img src="images%5Cmicroservice-future.jpg" alt="" loading="lazy"></figure>
+<p>多云平台为微服务提供了资源能力（计算、存储和网络等），容器作为最小工作单元被Kubernetes调度和编排，Service Mesh管理微服务的服务通信，最后通过API Gateway向外暴露微服务的业务接口。</p>
+<p>未来随着以Kubernetes和Service Mesh为标准的微服务框架的盛行，将大大降低微服务实施的成本，最终为微服务落地以及大规模使用提供坚实的基础和保障。</p>
+<h4 id="小结">小结</h4>
+<ul>
+<li>
+<p>第一代为Spring Cloud为代表的服务治理能力，是和业务代码紧耦合的，没法跨编程语言去使用</p>
+</li>
+<li>
+<p>为了可以实现通用的服务治理能力，istio会为每个业务pod注入一个sidecar代理容器</p>
+<figure data-type="image" tabindex="3"><img src="images%5C20200503110532.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>为了能够做到服务治理，需要接管pod内的出入流量，因此通过注入的时候引入初始化容器istio-init实现pod内防火墙规则的初始化，分别将出入站流量拦截到pod内的15001和15006端口</p>
+</li>
+<li>
+<p>同时，注入了istio-proxy容器，利用envoy代理，监听了15001和15006端口，对流量进行处理</p>
+<figure data-type="image" tabindex="4"><img src="images%5Cenvoy-config-init.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>istio在istio-system命名空间启动了istiod服务，用于监听用户写入etcd中的流量规则，转换成envoy可度的配置片段，通过envoy支持的xDS协议，同步到网格内的各envoy中</p>
+</li>
+<li>
+<p>envoy获取规则后，做reload，直接应用到了用户期望的转发行为</p>
+</li>
+<li>
+<p>envoy提供了强大的流量处理规则，包含了流量路由、镜像、重试、熔断、故障注入等，同时，也内置了分布式追踪、Prometheus监控的实现，业务应用对于这一切都是感知不到的</p>
+</li>
+</ul>
+<p>最后，通过分析bookinfo中，从 Productpage服务调用Reviews服务的 请求流程 来回顾istio重点：</p>
+<figure data-type="image" tabindex="5"><img src="images%5Cenvoy-traffic-route.png" alt="" loading="lazy"></figure>
+<ol>
+<li>
+<p>Productpage发起对Reviews服务的调用：<code>http://reviews:9080/reviews/0</code></p>
+</li>
+<li>
+<p>请求被Productpage Pod的iptable规则拦截，重定向到本地的15001端口</p>
+</li>
+</ol>
+<pre><code class="language-powershell"># OUTPUT 链：将所有出站数据包跳转到 ISTIO_OUTPUT 链上。
+Chain OUTPUT (policy ACCEPT 46 packets, 3926 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+    8   480 ISTIO_OUTPUT  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# ISTIO_OUTPUT 链：选择需要重定向到 Envoy（即本地） 的出站流量，所有非 localhost 的流量全部转发到 ISTIO_REDIRECT。为了避免流量在该 Pod 中无限循环，所有到 istio-proxy 用户空间的流量都返回到它的调用点中的下一条规则，本例中即 OUTPUT 链，因为跳出 ISTIO_OUTPUT 规则之后就进入下一条链 POSTROUTING。如果目的地非 localhost 就跳转到 ISTIO_REDIRECT；如果流量是来自 istio-proxy 用户空间的，那么就跳出该链，返回它的调用链继续执行下一条规则（OUTPUT 的下一条规则，无需对流量进行处理）；所有的非 istio-proxy 用户空间的目的地是 localhost 的流量就跳转到 ISTIO_REDIRECT。
+Chain ISTIO_OUTPUT (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 RETURN     all  --  *      lo      127.0.0.6            0.0.0.0/0
+    0     0 ISTIO_IN_REDIRECT  all  --  *      lo      0.0.0.0/0           !127.0.0.1            owner UID match 1337
+    0     0 RETURN     all  --  *      lo      0.0.0.0/0            0.0.0.0/0            ! owner UID match 1337
+    8   480 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            owner UID match 1337
+    0     0 ISTIO_IN_REDIRECT  all  --  *      lo      0.0.0.0/0           !127.0.0.1            owner GID match 1337
+    0     0 RETURN     all  --  *      lo      0.0.0.0/0            0.0.0.0/0            ! owner GID match 1337
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            owner GID match 1337
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            127.0.0.1
+    0     0 ISTIO_REDIRECT  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# ISTIO_REDIRECT 链：将所有流量重定向到 Sidecar（即本地） 的 15001 端口。
+Chain ISTIO_REDIRECT (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 REDIRECT   tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            redir ports 15001
+</code></pre>
+<ol start="3">
+<li>15001端口上监听的Envoy Virtual Outbound Listener收到了该请求</li>
+</ol>
+<pre><code class="language-powershell">$ istioctl pc listener productpage-v1-785b4dbc96-2cw5v.bookinfo --port 15001 -ojson|more
+[
+    {
+        &quot;name&quot;: &quot;virtualOutbound&quot;,
+        &quot;address&quot;: {
+            &quot;socketAddress&quot;: {
+                &quot;address&quot;: &quot;0.0.0.0&quot;,
+                &quot;portValue&quot;: 15001
+            }
+        },
+...
+</code></pre>
+<ol start="4">
+<li>请求被Virtual Outbound Listener根据原目标IP（通配）和端口（9080）转发到0.0.0.0_9080这个 outbound listener</li>
+</ol>
+<pre><code class="language-powershell">$ istioctl pc listener productpage-v1-785b4dbc96-2cw5v.bookinfo --port 9080 -ojson
+[
+    {
+        &quot;name&quot;: &quot;0.0.0.0_9080&quot;,
+        &quot;address&quot;: {
+            &quot;socketAddress&quot;: {
+                &quot;address&quot;: &quot;0.0.0.0&quot;,
+                &quot;portValue&quot;: 9080
+            }
+        },
+        &quot;filterChains&quot;: [
+            {
+                &quot;filterChainMatch&quot;: {
+                    &quot;applicationProtocols&quot;: [
+                        &quot;http/1.0&quot;,
+                        &quot;http/1.1&quot;,
+                        &quot;h2c&quot;
+                    ]
+                },
+                &quot;filters&quot;: [
+                    {
+                        &quot;name&quot;: &quot;envoy.filters.network.http_connection_manager&quot;,
+                        &quot;typedConfig&quot;: {
+                            &quot;statPrefix&quot;: &quot;outbound_0.0.0.0_9080&quot;,
+                            &quot;rds&quot;: {
+                                &quot;configSource&quot;: {
+                                    &quot;ads&quot;: {},
+                                    &quot;resourceApiVersion&quot;: &quot;V3&quot;
+                                },
+                                &quot;routeConfigName&quot;: &quot;9080&quot;
+                            },
+</code></pre>
+<ol start="5">
+<li>
+<p>根据0.0.0.0_9080 listener的http_connection_manager filter配置,该请求采用“9080” route进行分发</p>
+</li>
+<li>
+<p>9080的route中，根据domains进行匹配，将请求交给 <code>outbound|9080|v2|reviews.bookinfo.svc.cluster.local</code>这个cluster处理</p>
+<pre><code class="language-powershell">$ istioctl pc route productpage-v1-785b4dbc96-2cw5v.bookinfo --name 9080 -ojson
+...
+            {
+                &quot;name&quot;: &quot;reviews.bookinfo.svc.cluster.local:9080&quot;,
+                &quot;domains&quot;: [
+                    &quot;reviews.bookinfo.svc.cluster.local&quot;,
+                    &quot;reviews.bookinfo.svc.cluster.local:9080&quot;,
+                    &quot;reviews&quot;,
+                    &quot;reviews:9080&quot;,
+                    &quot;reviews.bookinfo.svc.cluster&quot;,
+                    &quot;reviews.bookinfo.svc.cluster:9080&quot;,
+                    &quot;reviews.bookinfo.svc&quot;,
+                    &quot;reviews.bookinfo.svc:9080&quot;,
+                    &quot;reviews.bookinfo&quot;,
+                    &quot;reviews.bookinfo:9080&quot;,
+                    &quot;10.109.133.236&quot;,
+                    &quot;10.109.133.236:9080&quot;
+                ],
+                &quot;routes&quot;: [
+                    {
+                        &quot;match&quot;: {
+                            &quot;prefix&quot;: &quot;/&quot;,
+                            &quot;caseSensitive&quot;: true,
+                            &quot;headers&quot;: [
+                                {
+                                    &quot;name&quot;: &quot;end-user&quot;,
+                                    &quot;exactMatch&quot;: &quot;luffy&quot;
+                                }
+                            ]
+                        },
+                        &quot;route&quot;: {
+                            &quot;cluster&quot;: &quot;outbound|9080|v2|reviews.bookinfo.svc.cluster.local&quot;,
+                            &quot;timeout&quot;: &quot;1s&quot;,
+</code></pre>
+</li>
+<li>
+<p>该cluster为EDS</p>
+<pre><code class="language-powershell">$ istioctl pc cluster productpage-v1-785b4dbc96-2cw5v.bookinfo --fqdn reviews.bookinfo.svc.cluster.local --direction outbound -ojson
+...
+        &quot;name&quot;: &quot;outbound|9080|v3|reviews.bookinfo.svc.cluster.local&quot;,
+        &quot;type&quot;: &quot;EDS&quot;,
+        &quot;edsClusterConfig&quot;: {
+            &quot;edsConfig&quot;: {
+                &quot;ads&quot;: {},
+                &quot;resourceApiVersion&quot;: &quot;V3&quot;
+            },
+            &quot;serviceName&quot;: &quot;outbound|9080|v3|reviews.bookinfo.svc.cluster.local&quot;
+        },
+        &quot;connectTimeout&quot;: &quot;10s&quot;,
+        &quot;lbPolicy&quot;: &quot;RANDOM&quot;,
+        &quot;circuitBreakers&quot;: {
+            &quot;thresholds&quot;: [
+                {
+                    &quot;maxConnections&quot;: 4294967295,
+                    &quot;maxPendingRequests&quot;: 4294967295,
+                    &quot;maxRequests&quot;: 4294967295,
+                    &quot;maxRetries&quot;: 4294967295
+                }
+            ]
+        },
+</code></pre>
+</li>
+<li>
+<p>查寻EDS对应的endpoint列表</p>
+<pre><code class="language-powershell">$ istioctl pc endpoint productpage-v1-785b4dbc96-2cw5v.bookinfo --cluster &quot;outbound|9080|v3|reviews.bookinfo.svc.cluster.local&quot; -ojson
+[
+    {
+        &quot;name&quot;: &quot;outbound|9080|v3|reviews.bookinfo.svc.cluster.local&quot;,
+        &quot;addedViaApi&quot;: true,
+        &quot;hostStatuses&quot;: [
+            {
+                &quot;address&quot;: {
+                    &quot;socketAddress&quot;: {
+                        &quot;address&quot;: &quot;10.244.0.37&quot;,
+                        &quot;portValue&quot;: 9080
+                    }
+                },
+...
+</code></pre>
+</li>
+<li>
+<p>envoy进程得到了最终需要访问的地址（reviews-v3的podip：port），由envoy做proxy转发出去</p>
+</li>
+<li>
+<p>此时，虽然还是会走一遍envoy的防火墙规则，但是由于是1337用户发起的请求，因此不会被再次拦截，直接走kubernetes的集群网络发出去</p>
+</li>
+<li>
+<p>请求到达reviews-v3， 被iptable规则拦截，重定向到本地的15006端口</p>
+<pre><code class="language-powershell"># PREROUTING 链：用于目标地址转换（DNAT），将所有入站 TCP 流量跳转到 ISTIO_INBOUND 链上。
+Chain PREROUTING (policy ACCEPT 148 packets, 8880 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+  148  8880 ISTIO_INBOUND  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# INPUT 链：处理输入数据包，非 TCP 流量将继续 OUTPUT 链。
+Chain INPUT (policy ACCEPT 148 packets, 8880 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+
+# ISTIO_INBOUND 链：将所有入站流量重定向到 ISTIO_IN_REDIRECT 链上，目的地为 15090，15020，15021端口的流量除外，发送到以上两个端口的流量将返回 iptables 规则链的调用点，即 PREROUTING 链的后继 POSTROUTING。
+Chain ISTIO_INBOUND (1 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 RETURN     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:15008
+    0     0 RETURN     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+    0     0 RETURN     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:15090
+  143  8580 RETURN     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:15021
+    5   300 RETURN     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:15020
+    0     0 ISTIO_IN_REDIRECT  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+# ISTIO_IN_REDIRECT 链：将所有入站流量跳转到本地的 15006 端口，至此成功的拦截了流量到sidecar中。
+Chain ISTIO_IN_REDIRECT (3 references)
+ pkts bytes target     prot opt in     out     source               destination
+    0     0 REDIRECT   tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            redir ports 15006
+</code></pre>
+</li>
+<li>
+<p>被监听在15006端口的envoy进程处理</p>
+<pre><code class="language-powershell">$ istioctl pc listener reviews-v3-6c7d64cd96-75f4x.bookinfo --port 15006 -ojson|more
+[
+    {
+        &quot;name&quot;: &quot;virtualInbound&quot;,
+        &quot;address&quot;: {
+            &quot;socketAddress&quot;: {
+                &quot;address&quot;: &quot;0.0.0.0&quot;,
+                &quot;portValue&quot;: 15006
+            }
+        },
+...
+</code></pre>
+</li>
+<li>
+<p>VirtualInbound不再转给别的监听器，根据自身过滤器链的匹配条件，请求被Virtual Inbound Listener内部配置的Http connection manager filter处理 ， 该filter设置的路由配置为将其发送给 <code>inbound|9080|http|reviews.bookinfo.svc.cluster.local</code>这个inbound的cluster</p>
+<pre><code class="language-powershell">            {
+                &quot;filterChainMatch&quot;: {
+                    &quot;destinationPort&quot;: 9080
+                },
+                &quot;filters&quot;: [
+                    {
+                        &quot;name&quot;: &quot;istio.metadata_exchange&quot;,
+                        &quot;typedConfig&quot;: {
+                            &quot;@type&quot;: &quot;type.googleapis.com/udpa.type.v1.TypedStruct&quot;,
+                            &quot;value&quot;: {
+                                &quot;protocol&quot;: &quot;istio-peer-exchange&quot;
+                            }
+                        }
+                    },
+                    {
+                        &quot;name&quot;: &quot;envoy.filters.network.http_connection_manager&quot;,
+                        &quot;typedConfig&quot;: {
+                            &quot;statPrefix&quot;: &quot;inbound_0.0.0.0_9080&quot;,
+                            &quot;routeConfig&quot;: {
+                                &quot;name&quot;: &quot;inbound|9080|http|reviews.bookinfo.svc.cluster.local&quot;,
+                                &quot;virtualHosts&quot;: [
+                                    {
+                                        &quot;name&quot;: &quot;inbound|http|9080&quot;,
+                                        &quot;domains&quot;: [
+                                            &quot;*&quot;
+                                        ],
+                                        &quot;routes&quot;: [
+                                            {
+                                                &quot;name&quot;: &quot;default&quot;,
+                                                &quot;match&quot;: {
+                                                    &quot;prefix&quot;: &quot;/&quot;
+                                                },
+                                                &quot;route&quot;: {
+                                                    &quot;cluster&quot;: &quot;inbound|9080|http|reviews.bookinfo.svc.cluster.local&quot;,
+                                                    &quot;timeout&quot;: &quot;0s&quot;,
+                                                    &quot;maxGrpcTimeout&quot;: &quot;0s&quot;
+                                                }
+</code></pre>
+</li>
+<li>
+<p><code>inbound|9080|http|reviews.bookinfo.svc.cluster.local</code>配置的endpoint为本机的<code>127.0.0.1:9080</code>,因此转发到Pod内部的Reviews服务的9080端口进行处理。</p>
+<pre><code class="language-powershell">$ istioctl pc endpoint reviews-v3-6c7d64cd96-75f4x.bookinfo --cluster &quot;inbound|9080|http|reviews.bookinfo.svc.cluster.local&quot; -ojson
+[
+    {
+        &quot;name&quot;: &quot;inbound|9080|http|reviews.bookinfo.svc.cluster.local&quot;,
+        &quot;addedViaApi&quot;: true,
+        &quot;hostStatuses&quot;: [
+            {
+                &quot;address&quot;: {
+                    &quot;socketAddress&quot;: {
+                        &quot;address&quot;: &quot;127.0.0.1&quot;,
+                        &quot;portValue&quot;: 9080
+                    }
+                },
+</code></pre>
+</li>
+</ol>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi/">
+            <span class="flex-auto">istio</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/V-rgl2QeO/">
+                <h3 class="post-title">
+                  实例演示
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

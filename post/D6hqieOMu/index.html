@@ -1,0 +1,575 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85">服务提供者</a>
+<ul>
+<li><a href="#cicd%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85">CICD持续交付服务提供者</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">微服务间调用之服务提供者</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 5 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/D6hqieOMu.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h5 id="服务提供者">服务提供者</h5>
+<p>前面已经将用户服务注册到了eureka注册中心，但是还没有暴漏任何API给服务消费者调用。</p>
+<p>新建controller类：</p>
+<pre><code class="language-java">package com.luffy.userservice.controller;
+
+
+import com.luffy.userservice.entity.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Random;
+
+@RestController
+public class UserController {
+
+    @GetMapping(&quot;/user&quot;)
+    public String getUserService(){
+        return &quot;this is user-service&quot;;
+    }
+
+    @GetMapping(&quot;/user-nums&quot;)
+    public Integer getUserNums(){
+        return new Random().nextInt(100);
+    }
+
+    //{&quot;id&quot;: 123, &quot;name&quot;: &quot;张三&quot;, &quot;age&quot;: 20, &quot;sex&quot;: &quot;male&quot;}
+    @GetMapping(&quot;/user/{id}&quot;)
+    public User getUserInfo(@PathVariable(&quot;id&quot;) int id){
+        User user = new User();
+        user.setId(id);
+        user.setAge(20);
+        user.setName(&quot;zhangsan&quot;);
+        user.setSex(&quot;male&quot;);
+        return user;
+    }
+}
+</code></pre>
+<p>实体类User.java</p>
+<pre><code class="language-java">package com.luffy.userservice.entity;
+
+public class User {
+    private int id;
+    private String name;
+    private int age;
+    private String sex;
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+}
+</code></pre>
+<p><code>application.yml</code></p>
+<p>增加从环境变量中读取<code>EUREKA_SERVER</code>和<code>EUREKA_INSTANCE_HOSTNAME</code>配置</p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:user-service}
+spring:
+  application:
+    name: user-service
+</code></pre>
+<h6 id="cicd持续交付服务提供者">CICD持续交付服务提供者</h6>
+<p><code>deployment.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: {{NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: {{IMAGE_URL}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 7000
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 50m
+            limits:
+              memory: 2Gi
+              cpu: 2000m
+          env:
+            - name: EUREKA_SERVER
+              value: &quot;http://admin:admin@eureka-cluster-0.eureka:8761/eureka/,http://admin:admin@eureka-cluster-1.eureka:8761/eureka/,http://admin:admin@eureka-cluster-2.eureka:8761/eureka/&quot;
+            - name: INSTANCE_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+</code></pre>
+<p><code>service.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: {{NAMESPACE}}
+spec:
+  ports:
+    - port: 7000
+      protocol: TCP
+      targetPort: 7000
+  selector:
+    app: user-service
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+</code></pre>
+<p><code>ingress.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: user-service
+  namespace: {{NAMESPACE}}
+spec:
+  rules:
+    - host: {{INGRESS_USER_SERVICE}}
+      http:
+        paths:
+          - backend:
+              serviceName: user-service
+              servicePort: 7000
+            path: /
+status:
+  loadBalancer: {}
+</code></pre>
+<p>ingress配置：</p>
+<pre><code class="language-powershell">$ kubectl -n dev edit configmap devops-config
+...
+data:
+  INGRESS_MYBLOG: blog-dev.luffy.com
+  INGRESS_SPRINGBOOTDEMO: springboot-dev.luffy.com
+  INGRESS_USER_SERVICE: user-service-dev.luffy.com
+  NAMESPACE: dev
+...
+</code></pre>
+<p><code>Jenkinsfile</code></p>
+<pre><code class="language-groovy">@Library('luffy-devops') _
+
+pipeline {
+    agent { label 'jnlp-slave'}
+    options {
+		timeout(time: 20, unit: 'MINUTES')
+		gitLabConnection('gitlab')
+	}
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/spring-cloud/user-service&quot;
+        IMAGE_CREDENTIAL = &quot;credential-registry&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+        PROJECT = &quot;user-service&quot;
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                container('tools') {
+                    checkout scm
+                }
+            }
+        }
+        stage('mvn-package') {
+            steps {
+                container('tools') {
+                    script{
+                        sh 'mvn clean package'
+                    }
+                }
+            }
+        }
+        stage('CI'){
+            failFast true
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        echo &quot;Unit Test Stage Skip...&quot;
+                    }
+                }
+                stage('Code Scan') {
+                    steps {
+                        container('tools') {
+                            script {
+                               devops.scan().start()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('docker-image') {
+            steps {
+                container('tools') {
+                    script{
+                        devops.docker(
+                            &quot;${IMAGE_REPO}&quot;,
+                            &quot;${GIT_COMMIT}&quot;,
+                            IMAGE_CREDENTIAL
+                        ).build().push()
+                    }
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                container('tools') {
+                    script{
+                    	devops.deploy(&quot;manifests&quot;,true,&quot;manifests/deployment.yaml&quot;).start()
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script{
+                devops.notificationSuccess(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+        failure {
+            script{
+                devops.notificationFailure(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+    }
+}
+</code></pre>
+<p><code>pom.xml</code></p>
+<pre><code class="language-xml">&lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;
+</code></pre>
+<p><code>Dockerfile</code></p>
+<pre><code class="language-dockerfile">FROM openjdk:8-jdk-alpine
+COPY target/user-service.jar app.jar
+ENV JAVA_OPTS=&quot;&quot;
+CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;java $JAVA_OPTS -jar /app.jar&quot; ]
+</code></pre>
+<p><code>sonar-project.properties</code></p>
+<pre><code class="language-properties">sonar.projectKey=user-service
+sonar.projectName=user-service
+# if you want disabled the DTD verification for a proxy problem for example, true by default
+# JUnit like test report, default value is test.xml
+sonar.sources=src/main/java
+sonar.language=java
+sonar.tests=src/test/java
+sonar.java.binaries=target/classes
+</code></pre>
+<p>创建user-service项目，提交代码：</p>
+<pre><code class="language-powershell">git init
+git remote add origin http://gitlab.luffy.com/luffy-spring-cloud/user-service.git
+git add .
+git commit -m &quot;Initial commit&quot;
+git push -u origin master
+
+# 提交到develop分支
+git checkout -b develop
+git push -u origin develop
+</code></pre>
+<p>创建Jenkins任务，测试自动部署</p>
+<p>访问<code>http://user-service-dev.luffy.com/</code> 验证</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  微服务间调用之服务消费者
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/P-T7ADjK7/">
+                <h3 class="post-title">
+                  Spring Cloud开发、交付实践
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

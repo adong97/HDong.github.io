@@ -1,0 +1,419 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%89%AB%E7%9B%B2%E7%AF%87">微服务扫盲篇</a>
+<ul>
+<li><a href="#%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84">单体应用架构</a></li>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84">微服务应用架构</a></li>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E9%97%AE%E9%A2%98%E5%8F%8A%E6%8C%91%E6%88%98">微服务架构问题及挑战</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6">微服务框架</a></li>
+<li><a href="#%E4%BA%86%E8%A7%A3spring-cloud">了解Spring Cloud</a>
+<ul>
+<li><a href="#%E6%A0%B8%E5%BF%83%E9%A1%B9%E7%9B%AE%E5%8F%8A%E7%BB%84%E4%BB%B6">核心项目及组件</a></li>
+<li><a href="#%E4%B8%8Edubbo%E5%AF%B9%E6%AF%94">与Dubbo对比</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Spring Cloud微服务扫盲篇</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ydSDdgsEP.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="微服务扫盲篇">微服务扫盲篇</h2>
+<p>微服务并没有一个官方的定义，想要直接描述微服务比较困难，我们可以通过对比传统WEB应用，来理解什么是微服务。</p>
+<h3 id="单体应用架构">单体应用架构</h3>
+<p>如下是传统打车软件架构图：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650271843955.jpg" alt="" loading="lazy"></p>
+<p>这种单体应用比较适合于小项目，优点是：</p>
+<ul>
+<li>开发简单直接，集中式管理</li>
+<li>基本不会重复开发</li>
+<li>功能都在本地，没有分布式的管理开销和调用开销</li>
+</ul>
+<p>当然它的缺点也十分明显，特别对于互联网公司来说：</p>
+<ul>
+<li>开发效率低：所有的开发在一个项目改代码，递交代码相互等待，代码冲突不断</li>
+<li>代码维护难：代码功能耦合在一起，新人不知道何从下手</li>
+<li>部署不灵活：构建时间长，任何小修改必须重新构建整个项目，这个过程往往很长</li>
+<li>稳定性不高：一个微不足道的小问题，可以导致整个应用挂掉</li>
+<li>扩展性不够：无法满足高并发情况下的业务需求</li>
+</ul>
+<h3 id="微服务应用架构">微服务应用架构</h3>
+<p>微服务架构的设计思路不是开发一个巨大的单体式应用，而是将应用分解为小的、互相连接的微服务。一个微服务完成某个特定功能，比如乘客管理和下单管理等。每个微服务都有自己的业务逻辑和适配器。一些微服务还会提供API接口给其他微服务和应用客户端使用。</p>
+<p>比如，前面描述的系统可被分解为：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650271883541.jpg" alt="" loading="lazy"></p>
+<p>每个业务逻辑都被分解为一个微服务，微服务之间通过REST API通信。一些微服务也会向终端用户或客户端开发API接口。但通常情况下，这些客户端并不能直接访问后台微服务，而是通过API Gateway来传递请求。API Gateway一般负责服务路由、负载均衡、缓存、访问控制和鉴权等任务。</p>
+<p>微服务架构优点：</p>
+<ul>
+<li>解决了复杂性问题。它将单体应用分解为一组服务。虽然功能总量不变，但应用程序已被分解为可管理的模块或服务</li>
+<li>体系结构使得每个服务都可以由专注于此服务的团队独立开发。只要符合服务API契约，开发人员可以自由选择开发技术。这就意味着开发人员可以采用新技术编写或重构服务，由于服务相对较小，所以这并不会对整体应用造成太大影响</li>
+<li>微服务架构可以使每个微服务独立部署。这些更改可以在测试通过后立即部署。所以微服务架构也使得CI／CD成为可能</li>
+</ul>
+<h3 id="微服务架构问题及挑战">微服务架构问题及挑战</h3>
+<p>微服务的一个主要缺点是微服务的分布式特点带来的复杂性。开发人员需要基于RPC或者消息实现微服务之间的调用和通信，而这就使得服务之间的发现、服务调用链的跟踪和质量问题变得的相当棘手。</p>
+<ol>
+<li>
+<p>微服务的一大挑战是跨多个服务的更改</p>
+<ul>
+<li>比如在传统单体应用中，若有A、B、C三个服务需要更改，A依赖B，B依赖C。我们只需更改相应的模块，然后一次性部署即可。</li>
+<li>在微服务架构中，我们需要仔细规划和协调每个服务的变更部署。我们需要先更新C，然后更新B，最后更新A。</li>
+</ul>
+</li>
+<li>
+<p>部署基于微服务的应用也要复杂得多</p>
+<ul>
+<li>单体应用可以简单的部署在一组相同的服务器上，然后前端使用负载均衡即可。</li>
+<li>微服务由不同的大量服务构成。每种服务可能拥有自己的配置、应用实例数量以及基础服务地址。这里就需要不同的配置、部署、扩展和监控组件。此外，我们还需要服务发现机制，以便服务可以发现与其通信的其他服务的地址</li>
+</ul>
+</li>
+</ol>
+<p>以上问题和挑战可大体概括为：</p>
+<ul>
+<li>API Gateway</li>
+<li>服务间调用</li>
+<li>服务发现</li>
+<li>服务容错</li>
+<li>服务部署</li>
+<li>数据调用</li>
+</ul>
+<p>https://www.kancloud.cn/owenwangwen/open-capacity-platform/1480155<br>
+自助餐吃吃喝喝，竟然秒懂微服务</p>
+<h2 id="微服务框架">微服务框架</h2>
+<p>如何应对上述挑战，出现了如下微服务领域的框架：</p>
+<ul>
+<li>Spring Cloud（各个微服务基于Spring Boot实现）</li>
+<li>Dubbo</li>
+<li>Service Mesh
+<ul>
+<li>Linkerd</li>
+<li>Envoy</li>
+<li>Conduit</li>
+<li>Istio<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650271936118.jpg" alt="" loading="lazy"></li>
+</ul>
+</li>
+</ul>
+<h2 id="了解spring-cloud">了解Spring Cloud</h2>
+<p><a href="https://spring.io/">https://spring.io</a></p>
+<h3 id="核心项目及组件">核心项目及组件</h3>
+<p>https://spring.io/projects</p>
+<h3 id="与dubbo对比">与Dubbo对比</h3>
+<p>做一个简单的功能对比：</p>
+<table>
+<thead>
+<tr>
+<th>核心要素</th>
+<th>Dubbo</th>
+<th>Spring Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服务注册中心</td>
+<td>Zookeeper</td>
+<td>Spring Cloud Netflix Eureka</td>
+</tr>
+<tr>
+<td>服务调用方式</td>
+<td>RPC</td>
+<td>REST API</td>
+</tr>
+<tr>
+<td>服务监控</td>
+<td>Dubbo-monitor</td>
+<td>Spring Boot Admin</td>
+</tr>
+<tr>
+<td>断路器</td>
+<td>不完善</td>
+<td>Spring Cloud Netflix Hystrix</td>
+</tr>
+<tr>
+<td>服务网关</td>
+<td>无</td>
+<td>Spring Cloud Netflix Zuul</td>
+</tr>
+<tr>
+<td>分布式配置</td>
+<td>无</td>
+<td>Spring Cloud Config</td>
+</tr>
+<tr>
+<td>服务跟踪</td>
+<td>无</td>
+<td>Spring Cloud Sleuth</td>
+</tr>
+<tr>
+<td>消息总线</td>
+<td>无</td>
+<td>Spring Cloud Bus</td>
+</tr>
+<tr>
+<td>数据流</td>
+<td>无</td>
+<td>Spring Cloud Stream</td>
+</tr>
+<tr>
+<td>批量任务</td>
+<td>无</td>
+<td>Spring Cloud Task</td>
+</tr>
+<tr>
+<td>……</td>
+<td>……</td>
+<td>……</td>
+</tr>
+</tbody>
+</table>
+<p><strong>从上图可以看出其实Dubbo的功能只是Spring Cloud体系的一部分。</strong></p>
+<p>这样对比是不够公平的，首先<code>Dubbo</code>是<code>SOA</code>时代的产物，它的关注点主要在于服务的调用，流量分发、流量监控和熔断。而<code>Spring Cloud</code>诞生于微服务架构时代，考虑的是微服务治理的方方面面，另外由于依托了<code>Spirng</code>、<code>Spirng Boot</code>的优势之上，两个框架在开始目标就不一致，<code>Dubbo</code>定位服务治理、<code>Spirng Cloud</code>是一个生态。</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/OK-6t3Msr/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Spring Boot交付实践
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/2o5pbCK7/">
+                <h3 class="post-title">
+                  kubeasz 二进制部署K8S
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

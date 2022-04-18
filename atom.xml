@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-04-18T08:37:48.647Z</updated>
+    <updated>2022-04-18T09:33:17.451Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -11,73 +11,73 @@
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[kubeasz 二进制部署K8S]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/2o5pbCK7/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/2o5pbCK7/">
+        <title type="html"><![CDATA[istio总结]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/">
         </link>
-        <updated>2022-04-18T02:14:02.000Z</updated>
+        <updated>2022-04-18T09:31:52.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[基于sharedLibrary进行CI/CD流程的优化]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/T-kfr_98s/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/T-kfr_98s/">
+        <title type="html"><![CDATA[实例演示]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/V-rgl2QeO/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/V-rgl2QeO/">
         </link>
-        <updated>2022-03-09T16:15:34.000Z</updated>
+        <updated>2022-04-18T09:30:13.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[工具集成与Jenkinsfile实践]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/z2HnIoXOA/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/z2HnIoXOA/">
+        <title type="html"><![CDATA[istio流量分发控制]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/pwnFEY3H_/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/pwnFEY3H_/">
         </link>
-        <updated>2022-03-09T16:14:51.000Z</updated>
+        <updated>2022-04-18T09:27:24.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Jenkins流水线 Pipeline]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/3ddZYx7mp/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/3ddZYx7mp/">
+        <title type="html"><![CDATA[服务网格细节剖析]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/">
         </link>
-        <updated>2022-03-09T15:21:13.000Z</updated>
+        <updated>2022-04-18T09:25:01.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[基于Kubernetes的DevOps平台实践]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/yIGgSal46/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/yIGgSal46/">
+        <title type="html"><![CDATA[基于Istio实现微服务治理]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/iDScWi09A/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/iDScWi09A/">
         </link>
-        <updated>2022-03-08T15:59:15.000Z</updated>
+        <updated>2022-04-18T09:17:30.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[自定义指标实现业务伸缩]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/NetHMaIIz/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/NetHMaIIz/">
+        <title type="html"><![CDATA[SpringBoot Admin监控]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/gJnj_xiUS/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/gJnj_xiUS/">
         </link>
-        <updated>2022-02-26T08:34:52.000Z</updated>
+        <updated>2022-04-18T09:16:56.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Alertmanager安装与配置]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/C5N0LMfvT/">
+        <title type="html"><![CDATA[调用链路追踪]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/">
         </link>
-        <updated>2022-02-26T08:32:33.000Z</updated>
+        <updated>2022-04-18T09:15:50.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Grafana安装与配置]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/">
+        <title type="html"><![CDATA[微服务网关]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/cnkwz7WlR/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/cnkwz7WlR/">
         </link>
-        <updated>2022-02-26T08:28:58.000Z</updated>
+        <updated>2022-04-18T09:14:43.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[常用监控对象的指标采集]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/2--X3r9eT/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/2--X3r9eT/">
+        <title type="html"><![CDATA[Hystrix 断路器]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/l_BDakLb3/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/l_BDakLb3/">
         </link>
-        <updated>2022-02-26T01:13:05.000Z</updated>
+        <updated>2022-04-18T09:13:54.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Prometheus实现k8s集群的服务监控]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/hR_asgw8g/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/hR_asgw8g/">
+        <title type="html"><![CDATA[微服务间调用之服务消费者]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/">
         </link>
-        <updated>2022-02-26T00:51:07.000Z</updated>
+        <updated>2022-04-18T09:12:04.000Z</updated>
     </entry>
 </feed>

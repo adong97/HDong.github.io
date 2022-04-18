@@ -1,0 +1,554 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%9C%BA%E6%99%AF%E4%B8%89">场景三</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E5%9B%BE">模型图</a></li>
+<li><a href="#%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95">资源清单</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8ingress%E6%9D%A5%E8%AE%BF%E9%97%AE%E7%BD%91%E6%A0%BC%E6%9C%8D%E5%8A%A1">使用ingress来访问网格服务</a></li>
+<li><a href="#ingressgateway%E8%AE%BF%E9%97%AE%E7%BD%91%E6%A0%BC%E6%9C%8D%E5%8A%A1">ingressgateway访问网格服务</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">istio流量分发控制</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 7 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/pwnFEY3H_.webp" alt="">
+        
+        <div class="post-content yue">
+          <h5 id="场景三">场景三</h5>
+<h6 id="模型图">模型图</h6>
+<figure data-type="image" tabindex="1"><img src="images%5Ccj-3.jpg" alt="" loading="lazy"></figure>
+<h6 id="资源清单">资源清单</h6>
+<p><code>front-tomcat-service.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: front-tomcat
+  name: front-tomcat
+  namespace: istio-demo
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: front-tomcat
+  type: ClusterIP
+</code></pre>
+<p><code>front-tomcat-v2-dpl.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: front-tomcat
+    version: v2
+  name: front-tomcat-v2
+  namespace: istio-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-tomcat
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: front-tomcat
+        version: v2
+    spec:
+      containers:
+      - image: consol/tomcat-7.0:latest
+        name: front-tomcat
+        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'hello tomcat version2'&gt;/opt/tomcat/webapps/ROOT/index.html;/opt/tomcat/bin/deploy-and-run.sh;&quot;]
+</code></pre>
+<p><code>front-tomcat-virtualservice.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: front-tomcat
+  namespace: istio-demo
+spec:
+  hosts:
+  - front-tomcat
+  http:
+  - name: front-tomcat-route
+    route:
+    - destination:
+        host: front-tomcat
+        subset: v1
+      weight: 90
+    - destination:
+        host: front-tomcat
+        subset: v2
+      weight: 10
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: front-tomcat
+  namespace: istio-demo
+spec:
+  host: front-tomcat
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+</code></pre>
+<pre><code class="language-powershell">$ kubectl apply -f front-tomcat-service.yaml
+$ kubectl apply -f &lt;(istioctl kube-inject -f front-tomcat-v2-dpl.yaml)
+$ kubectl apply -f front-tomcat-virtualservice.yaml
+</code></pre>
+<h5 id="使用ingress来访问网格服务">使用ingress来访问网格服务</h5>
+<p><code>front-tomcat-ingress.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: front-tomcat
+  namespace: istio-demo
+spec:
+  rules:
+  - host: tomcat.istio-demo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: front-tomcat
+            port:
+              number: 8080
+</code></pre>
+<p>使用浏览器访问查看效果。</p>
+<p>只有网格内部访问会遵从<code>virtualservice</code>的规则，在宿主机中直接访问Service的ClusterIP还是按照默认的规则转发。</p>
+<p>Ingress：对接ingress controller，实现外部流量进入集群内部，只适用于 HTTP 流量，使用方式也很简单，只能对 service、port、HTTP 路径等有限字段匹配来路由流量，这导致它无法路由如 MySQL、Redis 和各种私有 RPC 等 TCP 流量。要想直接路由南北向的流量，只能使用 Service 的 LoadBalancer 或 NodePort，前者需要云厂商支持，后者需要进行额外的端口管理。有些 Ingress controller 支持暴露 TCP 和 UDP 服务，但是只能使用 Service 来暴露，Ingress 本身是不支持的，例如 nginx ingress controller，服务暴露的端口是通过创建 ConfigMap 的方式来配置的。</p>
+<h5 id="ingressgateway访问网格服务">ingressgateway访问网格服务</h5>
+<figure data-type="image" tabindex="2"><img src="images%5Cgateways.svg" alt="" loading="lazy"></figure>
+<p>对于入口流量管理，您可能会问： 为什么不直接使用 Kubernetes Ingress API ？ 原因是 Ingress API 无法表达 Istio 的路由需求。 Ingress 试图在不同的 HTTP 代理之间取一个公共的交集，因此只能支持最基本的 HTTP 路由，最终导致需要将代理的其他高级功能放入到注解（annotation）中，而注解的方式在多个代理之间是不兼容的，无法移植。</p>
+<p>Istio <code>Gateway</code> 通过将 L4-L6 配置与 L7 配置分离的方式克服了 <code>Ingress</code> 的这些缺点。 <code>Gateway</code> 只用于配置 L4-L6 功能（例如，对外公开的端口，TLS 配置），所有主流的L7代理均以统一的方式实现了这些功能。 然后，通过在 <code>Gateway</code> 上绑定 <code>VirtualService</code> 的方式，可以使用标准的 Istio 规则来控制进入 <code>Gateway</code> 的 HTTP 和 TCP 流量。</p>
+<p><code>front-tomcat-gateway.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: front-tomcat-gateway
+  namespace: istio-demo
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - tomcat.istio-demo.com
+</code></pre>
+<p>效果是在Istio的ingress网关上加了一条规则，允许``tomcat.istio-demo.com` 的外部http流量进入到网格中，但是只是接受访问和流量输入，当流量到达这个网关时，它还不知道发送到哪里去。</p>
+<p>网关已准备好接收流量，我们必须告知它将收到的流量发往何处，这就用到了前面使用过的<code>VirtualService</code>。</p>
+<p>要为进入上面的 Gateway 的流量配置相应的路由，必须为同一个 host 定义一个 <code>VirtualService</code>，并使用配置中的 <code>gateways</code> 字段绑定到前面定义的 <code>Gateway</code> 上</p>
+<p><code>front-tomcat-gateway-virtualservice.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: gateway-front-tomcat
+  namespace: istio-demo
+spec:
+  gateways:
+  - front-tomcat-gateway
+  hosts:
+  - tomcat.istio-demo.com
+  http:
+  - name: front-tomcat-route
+    route:
+    - destination:
+        host: front-tomcat
+        subset: v1
+      weight: 90
+    - destination:
+        host: front-tomcat
+        subset: v2
+      weight: 10
+</code></pre>
+<p>该网关列表指定，只有通过我们指定的网关 <code>front-tomcat-gateway</code> 的流量是允许的。所有其他外部请求将被拒绝，并返回 404 响应。</p>
+<blockquote>
+<p>请注意，在此配置中，来自网格中其他服务的内部请求不受这些规则约束</p>
+</blockquote>
+<pre><code class="language-powershell">$ kubectl apply -f front-tomcat-gateway-virtualservice.yaml
+$ kubectl apply -f front-tomcat-gateway.yaml
+</code></pre>
+<p>模拟访问：</p>
+<pre><code class="language-powershell">$ kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name==&quot;http2&quot;)].nodePort}'
+30779
+$ curl  -HHost:tomcat.istio-demo.com 172.21.51.143:30779/
+</code></pre>
+<p><code>172.21.51.143:30779</code>地址从何而来？</p>
+<figure data-type="image" tabindex="3"><img src="images%5Cgateway.png" alt="" loading="lazy"></figure>
+<p>浏览器访问: <code>http://tomcat.istio-demo.com:30779/</code></p>
+<p>如何实现不加端口访问网格内服务？</p>
+<pre><code class="language-powershell"># 在一台80端口未被占用的机器中，如k8s-slave1,ip为172.21.51.67
+$ cat nginx-istio-dpl.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: nginx-istio
+  name: nginx-istio
+  namespace: istio-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-istio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: nginx-istio
+    spec:
+      containers:
+      - image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: nginx-istio
+      hostNetwork: true
+      nodeSelector:
+        istio-nginx: &quot;true&quot;
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: nginx-istio
+        name: nginx-istio
+$ cat nginx-istio-configmap.yaml
+apiVersion: v1
+data:
+  default.conf: |
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
+
+        #charset koi8-r;
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+  tomcat.conf: |
+    upstream tomcat-istiodemo {
+      server 10.102.104.156:80;
+    }
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  tomcat.istio-demo.com;
+
+        location / {
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_http_version 1.1;
+            proxy_pass http://tomcat-istiodemo;
+        }
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-istio
+  namespace: istio-system
+# 在容器的/etc/nginx/conf.d/目录中，新增配置文件
+$ cat front-tomcat.conf
+upstream front-tomcat {
+  server 172.21.51.143:30779;
+}
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  tomcat.istio-demo.com;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_pass http://front-tomcat;
+    }
+}
+
+$ nginx -s reload
+</code></pre>
+<p>本地配置hosts</p>
+<pre><code class="language-powershell">172.21.51.67 tomcat.istio-demo.com
+</code></pre>
+<p>直接访问<code>http://tomcat.istio-demo.com</code> 即可实现外部域名访问到网格内部服务</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi/">
+            <span class="flex-auto">istio</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/V-rgl2QeO/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  实例演示
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/">
+                <h3 class="post-title">
+                  服务网格细节剖析
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

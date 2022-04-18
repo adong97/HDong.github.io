@@ -1,0 +1,980 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%88%9B%E5%BB%BAspring-boot%E9%A1%B9%E7%9B%AE">从零开始创建Spring Boot项目</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%BC%96%E5%86%99%E5%8A%9F%E8%83%BD%E4%BB%A3%E7%A0%81">编写功能代码</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%9C%A8java%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8maven">如何在java项目中使用maven</a>
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81maven">为什么需要maven</a></li>
+<li><a href="#maven%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C">maven如何工作</a></li>
+<li><a href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%8F%8Amvn%E5%91%BD%E4%BB%A4%E5%AE%9E%E8%B7%B5">生命周期及mvn命令实践</a></li>
+</ul>
+</li>
+<li><a href="#springboot%E6%9C%8D%E5%8A%A1%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">Springboot服务镜像制作</a></li>
+<li><a href="#%E6%8E%A5%E5%85%A5cicd%E6%B5%81%E7%A8%8B">接入CICD流程</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E8%A6%86%E7%9B%96%E7%8E%87">添加单元测试覆盖率</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Spring Boot交付实践</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 21 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/OK-6t3Msr.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h5 id="从零开始创建spring-boot项目">从零开始创建Spring Boot项目</h5>
+<p>通过File &gt; New &gt; Project，新建工程，选择Spring Initializr<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650272398785.jpg" alt="" loading="lazy"></p>
+<p>配置Project Metadata：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650272412878.jpg" alt="" loading="lazy"></p>
+<p>配置Dependencies依赖包：<br>
+选择：Web分类中的Spring web和Template Engines中的Thymeleaf<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650272423426.jpg" alt="" loading="lazy"></p>
+<p>配置maven settings.xml：<br>
+默认使用IDE自带的maven，换成自己下载的，下载地址：<br>
+链接: https://pan.baidu.com/s/1z9dRGv_4bS1uxBtk5jsZ2Q 提取码: 3gva</p>
+<p>解压后放到<code>D:\software\apache-maven-3.6.3</code>,修改<code>D:\software\apache-maven-3.6.3\conf\settings.xml</code> 文件：</p>
+<pre><code class="language-shell">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;
+  &lt;localRepository&gt;D:\opt\maven-repo&lt;/localRepository&gt;
+  
+  &lt;pluginGroups&gt;
+  &lt;/pluginGroups&gt;
+
+  &lt;proxies&gt;
+  &lt;/proxies&gt;
+
+  &lt;servers&gt;
+  &lt;/servers&gt;
+
+  &lt;mirrors&gt;
+	    &lt;mirror&gt;
+            &lt;id&gt;alimaven&lt;/id&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+            &lt;name&gt;aliyun maven&lt;/name&gt;
+            &lt;url&gt;http://maven.aliyun.com/nexus/content/repositories/central/&lt;/url&gt;
+        &lt;/mirror&gt;
+        &lt;mirror&gt;
+            &lt;id&gt;nexus-aliyun&lt;/id&gt;
+            &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+            &lt;name&gt;Nexus aliyun&lt;/name&gt;
+            &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+        &lt;/mirror&gt;
+  &lt;/mirrors&gt;
+
+&lt;/settings&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650272440130.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650272446592.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>springboot版本为2.3.6.RELEASE</p>
+</blockquote>
+<p>默认生成的SpringBoot版本为2.5.2，换成2.3.6.RELEASE版本</p>
+<pre><code class="language-xml">...
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.3.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+...
+</code></pre>
+<p>直接启动项目并访问本地服务：<code>localhost:8080</code></p>
+<h2 id="编写功能代码">编写功能代码</h2>
+<p>创建controller包及<code>HelloController.java</code>文件</p>
+<pre><code class="language-java">package com.luffy.springbootdemo.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)
+    public String hello(String name) {
+        return &quot;Hello, &quot; + name;
+    }
+}
+</code></pre>
+<p>保存并在浏览器中访问<code>localhost:8080/hello?name=luffy</code></p>
+<p>如果页面复杂，如何实现？</p>
+<p>在<code>resources/templates/</code>目录下新建<code>index.html</code></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Devops&lt;/title&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+    &lt;h3 th:text=&quot;${requestname}&quot;&gt;&lt;/h3&gt;
+    &lt;a id=&quot;rightaway&quot; href=&quot;#&quot; th:href=&quot;@{/rightaway}&quot; &gt;立即返回&lt;/a&gt;
+    &lt;a id=&quot;sleep&quot; href=&quot;#&quot; th:href=&quot;@{/sleep}&quot;&gt;延时返回&lt;/a&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>完善<code>HelloController.java</code>的内容：</p>
+<pre><code class="language-java">package com.luffy.springbootdemo.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+@RestController
+public class HelloController {
+
+    @RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)
+    public String hello(String name) {
+        return &quot;Hello, &quot; + name;
+    }
+
+    @RequestMapping(&quot;/&quot;)
+    public ModelAndView index(ModelAndView mv) {
+        mv.setViewName(&quot;index&quot;);
+        mv.addObject(&quot;requestname&quot;, &quot;This is index&quot;);
+        return mv;
+    }
+
+    @RequestMapping(&quot;/rightaway&quot;)
+    public ModelAndView returnRightAway(ModelAndView mv) {
+        mv.setViewName(&quot;index&quot;);
+        mv.addObject(&quot;requestname&quot;,&quot;This request is RightawayApi&quot;);
+        return mv;
+    }
+
+    @RequestMapping(&quot;/sleep&quot;)
+    public ModelAndView returnSleep(ModelAndView mv) throws InterruptedException {
+        Thread.sleep(2*1000);
+        mv.setViewName(&quot;index&quot;);
+        mv.addObject(&quot;requestname&quot;,&quot;This request is SleepApi&quot;+&quot;,it will sleep 2s !&quot;);
+        return mv;
+    }
+}
+</code></pre>
+<h2 id="如何在java项目中使用maven">如何在java项目中使用maven</h2>
+<h3 id="为什么需要maven">为什么需要maven</h3>
+<p>考虑一个常见的场景：以项目A为例，开发过程中，需要依赖B-2.0.jar的包，如果没有maven，那么正常做法是把B-2.0.jar拷贝到项目A中，但是如果B-2.0.jar还依赖C.jar，我们还需要去找到C.jar的包，因此，在开发阶段需要花费在项目依赖方面的精力会很大。</p>
+<p>因此，开发人员需要找到一种方式，可以管理java包的依赖关系，并可以方便的引入到项目中。</p>
+<h3 id="maven如何工作">maven如何工作</h3>
+<p>查看<code>pom.xml</code></p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p>可以直接在项目中添加上<code>dependency</code> ，这样来指定项目的依赖包。</p>
+<p>思考：如果<code>spring-boot-starter-thymeleaf</code>包依赖别的包，怎么办？</p>
+<p><code>spring-boot-starter-thymeleaf</code>同时也是一个maven项目，也有自己的pom.xml</p>
+<p>查看一下：</p>
+<pre><code class="language-xml">  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.3.3.RELEASE&lt;/version&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.thymeleaf&lt;/groupId&gt;
+      &lt;artifactId&gt;thymeleaf-spring5&lt;/artifactId&gt;
+      &lt;version&gt;3.0.11.RELEASE&lt;/version&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.thymeleaf.extras&lt;/groupId&gt;
+      &lt;artifactId&gt;thymeleaf-extras-java8time&lt;/artifactId&gt;
+      &lt;version&gt;3.0.4.RELEASE&lt;/version&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+</code></pre>
+<p>这样的话，使用maven的项目，只需要在自己的pom.xml中把所需的最直接的依赖包定义上，而不用关心这些被依赖的jar包自身是否还有别的依赖。剩下的都交给maven去搞定。</p>
+<p>如何搞定？maven可以根据pom.xml中定义的依赖实现包的查找</p>
+<p>去哪查找？maven仓库，存储jar包的地方。</p>
+<p>当我们执行 Maven 构建命令时，Maven 开始按照以下顺序查找依赖的库：</p>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650272505805.jpg" alt="" loading="lazy"></figure>
+<p>本地仓库：</p>
+<ul>
+<li>
+<p>Maven 的本地仓库，在安装 Maven 后并不会创建，它是在第一次执行 maven 命令的时候才被创建。</p>
+</li>
+<li>
+<p>运行 Maven 的时候，Maven 所需要的任何包都是直接从本地仓库获取的。如果本地仓库没有，它会首先尝试从远程仓库下载构件至本地仓库，然后再使用本地仓库的包。</p>
+</li>
+<li>
+<p>默认情况下，不管Linux还是 Windows，每个用户在自己的用户目录下都有一个路径名为 .m2/respository/ 的仓库目录。</p>
+</li>
+<li>
+<p>Maven 本地仓库默认被创建在 %USER_HOME% 目录下。要修改默认位置，在 %M2_HOME%\conf 目录中的 Maven 的 settings.xml 文件中定义另一个路径。</p>
+<pre><code class="language-xml">&lt;settings xmlns=&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;&gt;
+  &lt;localRepository&gt;D:\opt\maven-repo&lt;/localRepository&gt;
+&lt;/settings&gt;
+</code></pre>
+</li>
+</ul>
+<p>中央仓库：</p>
+<p>Maven 中央仓库是由 Maven 社区提供的仓库，中央仓库包含了绝大多数流行的开源Java构件，以及源码、作者信息、SCM、信息、许可证信息等。一般来说，简单的Java项目依赖的构件都可以在这里下载到。</p>
+<p>中央仓库的关键概念：</p>
+<ul>
+<li>这个仓库由 Maven 社区管理。</li>
+<li>不需要配置，maven中集成了地址 http://repo1.maven.org/maven2</li>
+<li>需要通过网络才能访问。</li>
+</ul>
+<p>私服仓库：</p>
+<p>通常使用 sonatype Nexus来搭建私服仓库。搭建完成后，需要在 setting.xml中进行配置，比如：</p>
+<pre><code class="language-xml">&lt;profile&gt;
+    &lt;id&gt;localRepository&lt;/id&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;myRepository&lt;/id&gt;
+            &lt;name&gt;myRepository&lt;/name&gt;
+            &lt;url&gt;http://127.0.0.1:8081/nexus/content/repositories/myRepository/&lt;/url&gt;
+            &lt;releases&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/releases&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+&lt;/profile&gt;
+</code></pre>
+<p>方便起见，我们直接使用国内ali提供的仓库，修改 maven 根目录下的 conf 文件夹中的 setting.xml 文件，在 mirrors 节点上，添加内容如下：</p>
+<pre><code class="language-xml">&lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;alimaven&lt;/id&gt;
+      &lt;name&gt;aliyun maven&lt;/name&gt;
+      &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;        
+    &lt;/mirror&gt;
+&lt;/mirrors&gt;
+</code></pre>
+<p>在执行构建的时候，maven会自动将所需的包下载到本地仓库中，所以第一次构建速度通常会慢一些，后面速度则很快。</p>
+<p>那么maven是如何找到对应的jar包的？</p>
+<p>我们可以访问 https://mvnrepository.com/ 查看在仓库中的jar包的样子。</p>
+<pre><code class="language-xml">&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;commons-collections&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-collections&lt;/artifactId&gt;
+    &lt;version&gt;3.2.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>刚才看到<code>spring-boot-starter-thymeleaf</code>的依赖同样有上述属性，因此maven就可以根据这三项属性，到对应的仓库中去查找到所需要的依赖包，并下载到本地。</p>
+<p>其中<code>groupId、artifactId、version</code>共同保证了包在仓库中的唯一性，这也就是为什么maven项目的pom.xml中都先配置这几项的原因，因为项目最终发布到远程仓库中，供别人调用。</p>
+<p>思考：我们项目的<code>dependency</code>中为什么没有写<code>version</code> ?</p>
+<p>是因为sprintboot项目的<code>上面有人</code>，来看一下项目<code>parent</code>的写法：</p>
+<pre><code class="language-xml">    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.3.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+</code></pre>
+<p>parent模块中定义过的<code>dependencies</code>，在子项目中引用的话，不需要指定版本，这样可以保证所有的子项目都使用相同版本的依赖包。</p>
+<h3 id="生命周期及mvn命令实践">生命周期及mvn命令实践</h3>
+<p>Maven有三套相互独立的生命周期，分别是clean、default和site。每个生命周期包含一些阶段（phase），阶段是有顺序的，后面的阶段依赖于前面的阶段。</p>
+<ul>
+<li>clean生命周期，清理项目
+<ul>
+<li>清理：mvn clean　　　 --删除target目录，也就是将class文件等删除</li>
+</ul>
+</li>
+<li>default生命周期，项目的构建等核心阶段
+<ul>
+<li>编译：mvn compile　　--src/main/java目录java源码编译生成class （target目录下）</li>
+<li>测试：mvn test　　　　--src/test/java 执行目录下的测试用例</li>
+<li>打包：mvn package　　--生成压缩文件：java项目#jar包；web项目#war包，也是放在target目录下</li>
+<li>安装：mvn install　　　--将压缩文件(jar或者war)上传到本地仓库</li>
+<li>部署|发布：mvn deploy　　--将压缩文件上传私服</li>
+</ul>
+</li>
+<li>site生命周期，建立和发布项目站点
+<ul>
+<li>站点 : mvn site      --生成项目站点文档</li>
+</ul>
+</li>
+</ul>
+<p>各个生命周期相互独立，一个生命周期的阶段前后依赖。 生命周期阶段需要绑定到某个插件的目标才能完成真正的工作，比如test阶段正是与maven-surefire-plugin的test目标相绑定了 。</p>
+<p>举例如下：</p>
+<ul>
+<li>
+<p>mvn clean</p>
+<p>调用clean生命周期的clean阶段</p>
+</li>
+<li>
+<p>mvn test</p>
+<p>调用default生命周期的test阶段，实际执行test以及之前所有阶段</p>
+</li>
+<li>
+<p>mvn clean install</p>
+<p>调用clean生命周期的clean阶段和default的install阶段，实际执行clean，install以及之前所有阶段</p>
+</li>
+</ul>
+<p>在linux环境中演示：</p>
+<p>创建gitlab组，<code>luffy-spring-cloud</code>,在该组下创建项目<code>springboot-demo</code></p>
+<ul>
+<li>
+<p>提交代码到git仓库</p>
+<pre><code class="language-powershell">$ git init
+$ git remote add origin http://gitlab.luffy.com/luffy-spring-cloud/springboot-demo.git
+$ git add .
+$ git commit -m &quot;Initial commit&quot;
+$ git push -u origin master
+</code></pre>
+</li>
+<li>
+<p>使用tools容器来运行</p>
+<pre><code class="language-powershell">$ docker run --rm -ti 172.21.51.143:5000/devops/tools:v3 bash
+bash-5.0# mvn -v
+bash: mvn: command not found
+# 由于idea工具自带了maven，所以可以直接在ide中执行mvn命令。在tools容器中，需要安装mvn命令
+</code></pre>
+<p>为tools镜像集成mvn：</p>
+<p>将本地的<code>apache-maven-3.6.3</code>放到<code>tools</code>项目中，修改<code>settings.xml</code>配置</p>
+<pre><code class="language-xml">...
+&lt;localRepository&gt;/opt/maven-repo&lt;/localRepository&gt;
+...
+</code></pre>
+<p>修改mirrors：</p>
+<pre><code class="language-powershell">&lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;alimaven&lt;/id&gt;
+      &lt;name&gt;aliyun maven&lt;/name&gt;
+      &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;        
+    &lt;/mirror&gt;
+&lt;/mirrors&gt;
+</code></pre>
+<p>然后修改Dockerfile，添加如下部分:</p>
+<pre><code class="language-dockerfile">#-----------------安装 maven--------------------#
+COPY apache-maven-3.6.3 /usr/lib/apache-maven-3.6.3
+RUN ln -s /usr/lib/apache-maven-3.6.3/bin/mvn /usr/local/bin/mvn &amp;&amp; chmod +x /usr/local/bin/mvn
+ENV MAVEN_HOME=/usr/lib/apache-maven-3.6.3
+#------------------------------------------------#
+</code></pre>
+</li>
+</ul>
+<p>去master节点拉取最新代码，构建最新的tools镜像：</p>
+<pre><code class="language-powershell">  # k8s-master节点
+  $ git pull
+  $ docker build . -t 172.21.51.143:5000/devops/tools:v4 -f Dockerfile
+  $ docker push 172.21.51.143:5000/devops/tools:v4
+</code></pre>
+<p>再次尝试mvn命令：</p>
+<pre><code class="language-powershell">$ docker run -v /var/run/docker.sock:/var/run/docker.sock --rm -ti 172.21.51.143:5000/devops/tools:v4 bash
+bash-5.0# mvn -v
+bash-5.0# git clone http://gitlab.luffy.com/luffy-spring-cloud/springboot-demo.git
+bash-5.0# cd springboot-demo
+bash-5.0# mvn clean
+# 观察/opt/maven目录
+bash-5.0# mvn package
+# 多阶段组合
+bash-5.0# mvn clean package
+</code></pre>
+<p>想系统学习maven，可以参考： https://www.runoob.com/maven/maven-pom.html</p>
+<h2 id="springboot服务镜像制作">Springboot服务镜像制作</h2>
+<p>通过<code>mvn package</code>命令拿到服务的jar包后，我们可以使用如下命令启动服务：</p>
+<pre><code class="language-powershell">$ java -jar springboot-demo-0.0.1-SNAPSHOT.jar
+</code></pre>
+<p>因此，需要准备Dockerfile来构建镜像：</p>
+<pre><code class="language-dockerfile">FROM openjdk:8-jdk-alpine
+COPY target/springboot-demo-0.0.1-SNAPSHOT.jar app.jar
+CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;java -jar /app.jar&quot; ]
+</code></pre>
+<p>我们可以为构建出的镜像指定名称：</p>
+<pre><code class="language-xml">    &lt;build&gt;
+        &lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;&lt;!--打jar包去掉版本号--&gt;
+    ...
+</code></pre>
+<p><code>Dockerfile</code>对应修改：</p>
+<pre><code class="language-dockerfile">FROM openjdk:8-jdk-alpine
+COPY target/springboot-demo.jar app.jar
+CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;java -jar /app.jar&quot; ]
+</code></pre>
+<p>执行镜像构建，验证服务启动是否正常：</p>
+<pre><code class="language-powershell">$ docker build . -t springboot-demo:v1 -f Dockerfile
+
+$ docker run -d --name springboot-demo -p 8080:8080 springboot-demo:v1
+
+$ curl localhost:8080
+</code></pre>
+<h2 id="接入cicd流程">接入CICD流程</h2>
+<p>之前已经实现了shared-library，并且把python项目接入到了CICD 流程中。因此，可以直接使用已有的流程，把spring boot项目接入进去。</p>
+<ul>
+<li><code>Jenkinsfile</code></li>
+<li><code>sonar-project.properties</code></li>
+<li><code>manifests/deployment.yaml</code></li>
+<li><code>manifests/service.yaml</code></li>
+<li><code>manifests/ingress.yaml</code></li>
+<li><code>configmap/devops-config</code></li>
+</ul>
+<p><code>Jenkinsfile</code></p>
+<pre><code class="language-groovy">@Library('luffy-devops') _
+
+pipeline {
+    agent { label 'jnlp-slave'}
+    options {
+		timeout(time: 20, unit: 'MINUTES')
+		gitLabConnection('gitlab')
+	}
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/spring-cloud/springboot-demo&quot;
+        IMAGE_CREDENTIAL = &quot;credential-registry&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+        PROJECT = &quot;springboot-demo&quot;
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                container('tools') {
+                    checkout scm
+                }
+            }
+        }
+        stage('mvn-package') {
+            steps {
+                container('tools') {
+                    script{
+                        sh 'mvn clean package'
+                    }
+                }
+            }
+        }
+        stage('CI'){
+            failFast true
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        echo &quot;Unit Test Stage Skip...&quot;
+                    }
+                }
+                stage('Code Scan') {
+                    steps {
+                        container('tools') {
+                            script {
+                               devops.scan().start()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('docker-image') {
+            steps {
+                container('tools') {
+                    script{
+                        devops.docker(
+                            &quot;${IMAGE_REPO}&quot;,
+                            &quot;${GIT_COMMIT}&quot;,
+                            IMAGE_CREDENTIAL
+                        ).build().push()
+                    }
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                container('tools') {
+                    script{
+                    	devops.deploy(&quot;manifests&quot;,true,&quot;manifests/deployment.yaml&quot;).start()
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script{
+                devops.notificationSuccess(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+        failure {
+            script{
+                devops.notificationFailure(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+    }
+}
+</code></pre>
+<p><code>sonar-project.properties</code></p>
+<pre><code class="language-java">sonar.projectKey=springboot-demo
+sonar.projectName=springboot-demo
+# if you want disabled the DTD verification for a proxy problem for example, true by default
+# JUnit like test report, default value is test.xml
+sonar.sources=src/main/java
+sonar.language=java
+sonar.tests=src/test/java
+sonar.java.binaries=target/classes
+</code></pre>
+<p><code>manifests/deployment.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-demo
+  namespace: {{NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-demo
+  template:
+    metadata:
+      labels:
+        app: springboot-demo
+    spec:
+      containers:
+        - name: springboot-demo
+          image: {{IMAGE_URL}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              memory: 500Mi
+              cpu: 100m
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 15
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 15
+</code></pre>
+<p><code>manifests/service.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-demo
+  namespace: {{NAMESPACE}}
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: springboot-demo
+  sessionAffinity: None
+  type: ClusterIP
+</code></pre>
+<p><code>manifests/ingress.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: springboot-demo
+  namespace: {{NAMESPACE}}
+spec:
+  rules:
+    - host: {{INGRESS_SPRINGBOOTDEMO}}
+      http:
+        paths:
+          - backend:
+              serviceName: springboot-demo
+              servicePort: 8080
+            path: /
+status:
+  loadBalancer: {}
+</code></pre>
+<p>维护<code>devops-config</code>的<code>configmap</code>，添加<code>INGRESS_SPRINGBOOTDEMO</code>配置项：</p>
+<pre><code class="language-powershell">$ kubectl -n dev edit cm devops-config
+...
+data:
+  INGRESS_MYBLOG: blog-dev.luffy.com
+  INGRESS_SPRINGBOOTDEMO: springboot-dev.luffy.com
+  NAMESPACE: dev
+...
+</code></pre>
+<p>更新Jenkins中的jnlp-slave-pod模板镜像：</p>
+<pre><code class="language-powershell">172.21.51.143:5000/devops/tools:v4
+</code></pre>
+<p>由于镜像中maven的目录是<code>/opt/maven-repo</code>，而slave-pod是执行完任务后会销毁，因此需要将maven的数据目录挂载出来，不然每次构建都会重新拉取所有依赖的jar包：</p>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1650272623386.jpg" alt="" loading="lazy"></figure>
+<p>配置Jenkins流水线：</p>
+<h2 id="添加单元测试覆盖率">添加单元测试覆盖率</h2>
+<p>单元测试这块内容一直没有把覆盖率统计到<code>sonarqube</code>端，本节看下怎么样将单元测试的结果及覆盖率展示到Jenkins及<code>sonarqube</code>平台中。</p>
+<p>为了展示效果，我们先添加一个单元测试文件<code>HelloControllerTests</code>：</p>
+<pre><code class="language-java">package com.luffy.springbootdemo;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+@SpringBootTest
+@WebAppConfiguration
+public class HelloControllerTests {
+
+    private static final Logger logger = LoggerFactory.getLogger(HelloControllerTests.class);
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    public void setMockMvc() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    @Test
+    public void index(){
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post(&quot;/&quot;)
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andDo(MockMvcResultHandlers.print());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void rightaway(){
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post(&quot;/rightaway&quot;)
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andDo(MockMvcResultHandlers.print());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void sleep(){
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post(&quot;/sleep&quot;)
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andDo(MockMvcResultHandlers.print());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+}
+</code></pre>
+<p><code>jacoco</code>：监控JVM中的调用，生成监控结果（默认保存在<code>jacoco.exec</code>文件中），然后分析此结果，配合源代码生成覆盖率报告。</p>
+<p>如何引入<code>jacoco</code>测试：</p>
+<pre><code class="language-yaml">            &lt;plugin&gt;
+                &lt;groupId&gt;org.jacoco&lt;/groupId&gt;
+                &lt;artifactId&gt;jacoco-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;0.7.8&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;prepare-agent&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;destFile&gt;${project.build.directory}/coverage-reports/jacoco.exec&lt;/destFile&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;default-report&lt;/id&gt;
+                        &lt;phase&gt;test&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;report&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;dataFile&gt;${project.build.directory}/coverage-reports/jacoco.exec&lt;/dataFile&gt;
+                            &lt;outputDirectory&gt;${project.reporting.outputDirectory}/jacoco&lt;/outputDirectory&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>prepare-agent</code>，会把agent准备好，这样在执行用例的时候，就会使用agent检测到代码执行的过程，通常将结果保存在<code>jacoco.exec</code>中</li>
+<li><code>report</code>，分析保存的<code>jacoco.exec</code>文件，生成报告</li>
+</ul>
+<p>在IDE中添加，观察插件的goal，执行<code>mvn test</code>，观察执行过程。</p>
+<p>有了上述内容后，如何将结果发布到<code>sonarqube</code>中？</p>
+<p>提交最新代码，查看<code>sonarqube</code>的分析结果。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650272576597.jpg" alt="" loading="lazy"></p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/P-T7ADjK7/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  Spring Cloud开发、交付实践
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ydSDdgsEP/">
+                <h3 class="post-title">
+                  Spring Cloud微服务扫盲篇
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

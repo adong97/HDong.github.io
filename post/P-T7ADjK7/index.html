@@ -1,0 +1,852 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9C%BA%E6%99%AF">微服务场景</a></li>
+<li><a href="#eureka%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83">Eureka服务注册中心</a>
+<ul>
+<li><a href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">新建项目</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8eureka%E6%9C%8D%E5%8A%A1">启动eureka服务</a></li>
+<li><a href="#eureka%E8%AE%A4%E8%AF%81">eureka认证</a></li>
+<li><a href="#%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1%E5%88%B0eureka">注册服务到eureka</a></li>
+<li><a href="#%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a></li>
+<li><a href="#k8s%E4%BA%A4%E4%BB%98">k8s交付</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8statefulset%E7%AE%A1%E7%90%86%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1">使用StatefulSet管理有状态服务</a></li>
+<li><a href="#%E6%8E%A5%E5%85%A5cicd%E6%B5%81%E7%A8%8B">接入CICD流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Spring Cloud开发、交付实践</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 15 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/P-T7ADjK7.jpg" alt="">
+        
+        <div class="post-content yue">
+          <p>https://spring.io/projects/spring-cloud#overview</p>
+<p>1、Netflix是一家做视频的网站，可以这么说该网站上的美剧应该是最火的。</p>
+<p>2、Netflix是一家没有CTO的公司，正是这样的组织架构能使产品与技术无缝的沟通，从而能快速迭代出更优秀的产品。在当时软件敏捷开发中，Netflix的更新速度不亚于当年的微信后台变更，虽然微信比Netflix迟发展，但是当年微信的灰度发布和敏捷开发应该算是业界最猛的。</p>
+<p>3、Netflix由于做视频的原因，访问量非常的大，从而促使其技术快速的发展在背后支撑着，也正是如此，Netflix开始把整体的系统往微服务上迁移。</p>
+<p>4、Netflix的微服务做的不是最早的，但是确是最大规模的在生产级别微服务的尝试。也正是这种大规模的生产级别尝试，在服务器运维上依托AWS云。当然AWS云同样受益于Netflix的大规模业务不断的壮大。</p>
+<p>5、Netflix的微服务大规模的应用，在技术上毫无保留的把一整套微服务架构核心技术栈开源了出来，叫做Netflix OSS，也正是如此，在技术上依靠开源社区的力量不断的壮大。</p>
+<p>6、Spring Cloud是构建微服务的核心，而Spring Cloud是基于Spring Boot来开发的。</p>
+<p>7、Pivotal在Netflix开源的一整套核心技术产品线的同时，做了一系列的封装，就变成了Spring Cloud；虽然Spring Cloud到现在为止不只有Netflix提供的方案可以集成，还有很多方案，但Netflix是最成熟的。</p>
+<blockquote>
+<p>本课程基于SpringBoot 2.3.6.RELEASE 和Spring Cloud  Hoxton.SR9 版本</p>
+</blockquote>
+<h4 id="微服务场景">微服务场景</h4>
+<p>开发APP，提供个人的花呗账单管理。</p>
+<ul>
+<li>注册、登录、账单查询</li>
+<li>用户服务，账单管理服务</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="images%5Cdemo-project.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="images%5Carch.png" alt="" loading="lazy"></figure>
+<h4 id="eureka服务注册中心">Eureka服务注册中心</h4>
+<p>在<code>SpringCloud</code>体系中，我们知道服务之间的调用是通过<code>http</code>协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。</p>
+<p>https://docs.spring.io/spring-cloud-netflix/docs/3.0.3/reference/html/</p>
+<h5 id="新建项目">新建项目</h5>
+<figure data-type="image" tabindex="3"><img src="images%5Cnew-eureka.jpg" alt="" loading="lazy"></figure>
+<p>pom中引入spring-cloud的依赖：</p>
+<p>https://spring.io/projects/spring-cloud#overview</p>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;spring.cloud-version&gt;Hoxton.SR9&lt;/spring.cloud-version&gt;
+&lt;/properties&gt;
+&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+            &lt;version&gt;${spring.cloud-version}&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+</code></pre>
+<p>引入eureka-server的依赖：</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<h5 id="启动eureka服务">启动eureka服务</h5>
+<p>https://docs.spring.io/spring-cloud-netflix/docs/2.2.5.RELEASE/reference/html/#spring-cloud-eureka-server-standalone-mode</p>
+<p>application.yml</p>
+<pre><code class="language-yaml">server:
+  port: 8761
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    hostname: localhost
+</code></pre>
+<p>启动类：</p>
+<pre><code class="language-java">package com.luffy.eureka;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+</code></pre>
+<p>启动访问localhost:8761测试</p>
+<p>创建spring cloud项目三部曲：</p>
+<ul>
+<li>引入依赖包</li>
+<li>修改application.yml配置文件</li>
+<li>启动类添加注解</li>
+</ul>
+<h5 id="eureka认证">eureka认证</h5>
+<p>没有认证，不安全，添加认证：</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p>application.yml</p>
+<pre><code class="language-yaml">server:
+  port: 8761
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    hostname: localhost
+spring:
+  security:
+    user:
+      name: ${EUREKA_USER:admin}
+      password: ${EUREKA_PASS:admin}
+  application:
+    name: eureka
+</code></pre>
+<h5 id="注册服务到eureka">注册服务到eureka</h5>
+<p>新建项目，user-service（选择Spring Cloud依赖和SpringBoot Web依赖），用来提供用户查询功能。</p>
+<p>三部曲：</p>
+<ul>
+<li>pom.xml，并添加依赖</li>
+<li>创建application.yml配置文件</li>
+<li>创建Springboot启动类，并配置注解</li>
+</ul>
+<p><code>pom.xml</code>添加：</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p><code>application.yml</code></p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@localhost:8761/eureka/
+</code></pre>
+<p>启动类：</p>
+<pre><code class="language-java">package com.luffy.user;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+//注意这里也可使用@EnableEurekaClient
+//但由于springcloud是灵活的，注册中心支持eureka、consul、zookeeper等
+//若写了具体的注册中心注解，则当替换成其他注册中心时，又需要替换成对应的注解了。
+//所以 直接使用@EnableDiscoveryClient 启动发现。
+//这样在替换注册中心时，只需要替换相关依赖即可。
+@EnableDiscoveryClient
+@SpringBootApplication
+public class UserServiceApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(UserServiceApplication.class, args);
+    }
+}
+</code></pre>
+<p>报错：</p>
+<pre><code class="language-yaml">c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: com.fasterxml.jackson.databind.exc.MismatchedInputException: Root name 'timestamp' does not match expected ('instance') for type [simple type, class com.netflix.appinfo.InstanceInfo]
+
+</code></pre>
+<p>新版本的security默认开启csrf了，关掉，在注册中心新建一个类，继承WebSecurityConfigurerAdapter来关闭 ,&gt; 注意，是在eureka server端关闭。</p>
+<pre><code class="language-java">package com.luffy.eureka;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+@EnableWebSecurity
+@Configuration
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable(); //关闭csrf
+        http.authorizeRequests().anyRequest().authenticated().and().httpBasic(); //开启认证
+    }
+}
+</code></pre>
+<p>再次启动发现可以注册，但是地址是</p>
+<figure data-type="image" tabindex="4"><img src="images%5Cimage-20200915211607173.png" alt="image-20200915211607173" loading="lazy"></figure>
+<p>application.yaml</p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@localhost:8761/eureka/
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: user-service
+spring:
+  application:
+    name: user-service
+</code></pre>
+<p>Eurake有一个配置参数eureka.server.renewalPercentThreshold，定义了renews 和renews threshold的比值，默认值为0.85。当server在15分钟内，比值低于percent，即少了15%的微服务心跳，server会进入自我保护状态</p>
+<p>默认情况下，如果<code>Eureka Server</code>在一定时间内没有接收到某个微服务实例的心跳，<code>Eureka Server</code>将会注销该实例（默认90秒）。但是当网络分区故障发生时，微服务与Eureka Server之间无法正常通信，这就可能变得非常危险了，因为微服务本身是健康的，此时本不应该注销这个微服务。</p>
+<p><code>Eureka Server</code>通过“自我保护模式”来解决这个问题，当<code>Eureka Server</code>节点在短时间内丢失过多客户端时（可能发生了网络分区故障），那么这个节点就会进入自我保护模式。一旦进入该模式，<code>Eureka Server</code>就会保护服务注册表中的信息，不再删除服务注册表中的数据（也就是不会注销任何微服务）。当网络故障恢复后，该<code>Eureka Server</code>节点会自动退出自我保护模式。</p>
+<p><strong>自我保护模式是一种对网络异常的安全保护措施。使用自我保护模式，而让Eureka集群更加的健壮、稳定。</strong></p>
+<p>开发阶段可以通过配置：<code>eureka.server.enable-self-preservation=false</code>关闭自我保护模式。</p>
+<p><strong>生产阶段，理应以默认值进行配置。</strong></p>
+<p>至于具体具体的配置参数，可至官网查看：http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_appendix_compendium_of_configuration_properties</p>
+<h5 id="高可用">高可用</h5>
+<p>高可用：</p>
+<ul>
+<li>优先保证可用性</li>
+<li>各个节点都是平等的，1个节点挂掉不会影响正常节点的工作，剩余的节点依然可以提供注册和查询服务</li>
+<li>在向某个Eureka注册时如果发现连接失败，则会自动切换至其它节点，只要有一台Eureka还在，就能保证注册服务可用(保证可用性)</li>
+</ul>
+<p>注意点：</p>
+<ul>
+<li>多实例的话eureka.instance.instance-id需要保持不一样，否则会当成同一个</li>
+<li>eureka.instance.hostname要与defaultZone里的地址保持一致</li>
+<li>各个eureka的spring.application.name相同</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="images%5Ceureka-cluster.jpg" alt="" loading="lazy"></figure>
+<p>拷贝<code>eureka</code>服务，分别命名<code>eureka-ha-peer1</code>和<code>eureka-ha-peer2</code></p>
+<p>修改模块的<code>pom.xml</code></p>
+<pre><code class="language-xml">&lt;artifactId&gt;eureka-ha-peer1&lt;/artifactId&gt;
+</code></pre>
+<p>修改配置文件<code>application.yml</code>，注意集群服务，需要各个eureka的spring.application.name相同</p>
+<pre><code class="language-yaml">server:
+  port: ${EUREKA_PORT:8762}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://${spring.security.user.name}:${spring.security.user.password}@peer1:8762/eureka/,http://${spring.security.user.name}:${spring.security.user.password}@peer2:8763/eureka/}
+    fetch-registry: true
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    hostname: peer1
+spring:
+  security:
+    user:
+      name: ${EUREKA_USER:admin}
+      password: ${EUREKA_PASS:admin}
+  application:
+    name: eureka-cluster
+</code></pre>
+<p>设置hosts文件</p>
+<pre><code class="language-powershell">127.0.0.1 peer1 peer2
+</code></pre>
+<p>服务提供者若想连接高可用的eureka，需要修改：</p>
+<pre><code class="language-powershell">      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer1:8762/eureka/,http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer2:8763/eureka/
+
+</code></pre>
+<h5 id="k8s交付">k8s交付</h5>
+<p>分析：</p>
+<p>高可用互相注册，但是需要知道对方节点的地址。k8s中pod ip是不固定的，如何将高可用的eureka服务使用k8s交付？</p>
+<ul>
+<li>
+<p>方案一：创建三个Deployment+三个Service</p>
+<figure data-type="image" tabindex="6"><img src="images%5Ceureka-ha-deploy.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>方案二：使用statefulset管理</p>
+<figure data-type="image" tabindex="7"><img src="images%5Ceureka-sts.jpg" alt="" loading="lazy"></figure>
+</li>
+</ul>
+<p><code>eureka-statefulset.yaml</code></p>
+<pre><code class="language-yaml"># eureka-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka-cluster
+  namespace: dev
+spec:
+  serviceName: &quot;eureka&quot;
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eureka-cluster
+  template:
+    metadata:
+      labels:
+        app: eureka-cluster
+    spec:
+      containers:
+        - name: eureka
+          image: 172.21.51.143:5000/spring-cloud/eureka-cluster:v1
+          ports:
+            - containerPort: 8761
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 50m
+            limits:
+              memory: 2Gi
+              cpu: 2000m
+          env:
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JAVA_OPTS
+              value: -XX:+UnlockExperimentalVMOptions
+                -XX:+UseCGroupMemoryLimitForHeap
+                -XX:MaxRAMFraction=2
+                -XX:CICompilerCount=8
+                -XX:ActiveProcessorCount=8
+                -XX:+UseG1GC
+                -XX:+AggressiveOpts
+                -XX:+UseFastAccessorMethods
+                -XX:+UseStringDeduplication
+                -XX:+UseCompressedOops
+                -XX:+OptimizeStringConcat
+            - name: EUREKA_SERVER
+              value: &quot;http://admin:admin@eureka-cluster-0.eureka:8761/eureka/,http://admin:admin@eureka-cluster-1.eureka:8761/eureka/,http://admin:admin@eureka-cluster-2.eureka:8761/eureka/&quot;
+            - name: EUREKA_INSTANCE_HOSTNAME
+              value: ${MY_POD_NAME}.eureka
+            - name: EUREKA_PORT
+              value: &quot;8761&quot;
+</code></pre>
+<p><code>eureka-headless-service.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: eureka
+  namespace: dev
+  labels:
+    app: eureka
+spec:
+  ports:
+    - port: 8761
+      name: eureka
+  clusterIP: None
+  selector:
+    app: eureka-cluster
+</code></pre>
+<p>想通过ingress访问eureka，需要使用有头服务</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-ingress
+  namespace: dev
+  labels:
+    app: eureka-cluster
+spec:
+  ports:
+    - port: 8761
+      name: eureka-cluster
+  selector:
+    app: eureka-cluster
+</code></pre>
+<p>ingress提供访问入口：</p>
+<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eureka-cluster
+  namespace: dev
+spec:
+  rules:
+  - host: eureka-cluster.luffy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: eureka-ingress
+            port:
+              number: 8761
+</code></pre>
+<h5 id="使用statefulset管理有状态服务">使用StatefulSet管理有状态服务</h5>
+<p>使用StatefulSet创建多副本pod的情况：</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+  labels:
+    app: nginx-sts
+spec:
+  replicas: 3
+  serviceName: &quot;nginx&quot;
+  selector:
+    matchLabels:
+      app: nginx-sts
+  template:
+    metadata:
+      labels:
+        app: nginx-sts
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+</code></pre>
+<p>无头服务Headless Service</p>
+<pre><code class="language-yaml">kind: Service
+apiVersion: v1
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx-sts
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  clusterIP: None
+</code></pre>
+<pre><code class="language-powershell">$ kubectl -n spring exec  -ti nginx-statefulset-0 sh
+/ # curl nginx-statefulset-2.nginx
+</code></pre>
+<h5 id="接入cicd流程">接入CICD流程</h5>
+<p>所需的文件:</p>
+<ul>
+<li>Jenkinsfile</li>
+<li>Dockerfile</li>
+<li>manifests/statefulset.yaml,service.yaml</li>
+<li>sonar-project.properties</li>
+</ul>
+<p>在pom.xml中重写jar包名称：</p>
+<pre><code class="language-xml">&lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;
+</code></pre>
+<p><code>Dockerfile</code></p>
+<pre><code class="language-dockerfile">FROM openjdk:8-jdk-alpine
+ADD target/eureka.jar app.jar
+ENV JAVA_OPTS=&quot;&quot;
+CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;java $JAVA_OPTS -jar /app.jar&quot; ]
+</code></pre>
+<p><code>Jenkinsfile</code></p>
+<pre><code class="language-groovy">@Library('luffy-devops') _
+
+pipeline {
+    agent { label 'jnlp-slave'}
+    options {
+		timeout(time: 20, unit: 'MINUTES')
+		gitLabConnection('gitlab')
+	}
+    environment {
+        IMAGE_REPO = &quot;172.21.51.143:5000/spring-cloud/eureka-cluster&quot;
+        IMAGE_CREDENTIAL = &quot;credential-registry&quot;
+        DINGTALK_CREDS = credentials('dingTalk')
+        PROJECT = &quot;eureka-cluster&quot;
+    }
+    stages {
+        stage('checkout') {
+            steps {
+                container('tools') {
+                    checkout scm
+                }
+            }
+        }
+        stage('mvn-package') {
+            steps {
+                container('tools') {
+                    script{
+                        sh 'mvn clean package'
+                    }
+                }
+            }
+        }
+        stage('CI'){
+            failFast true
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        echo &quot;Unit Test Stage Skip...&quot;
+                    }
+                }
+                stage('Code Scan') {
+                    steps {
+                        container('tools') {
+                            script {
+                               devops.scan().start()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('docker-image') {
+            steps {
+                container('tools') {
+                    script{
+                        devops.docker(
+                            &quot;${IMAGE_REPO}&quot;,
+                            &quot;${GIT_COMMIT}&quot;,
+                            IMAGE_CREDENTIAL
+                        ).build().push()
+                    }
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                container('tools') {
+                    script{
+                    	devops.deploy(&quot;manifests&quot;,false,&quot;manifests/statefulset.yaml&quot;).start()
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script{
+                devops.notificationSuccess(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+        failure {
+            script{
+                devops.notificationFailure(PROJECT,&quot;dingTalk&quot;)
+            }
+        }
+    }
+}
+</code></pre>
+<p><code>sonar-project.properties</code></p>
+<pre><code class="language-properties">sonar.projectKey=eureka-cluster
+sonar.projectName=eureka-cluster
+# if you want disabled the DTD verification for a proxy problem for example, true by default
+# JUnit like test report, default value is test.xml
+sonar.sources=src/main/java
+sonar.language=java
+sonar.tests=src/test/java
+sonar.java.binaries=target/classes
+</code></pre>
+<p>模板化k8s资源清单：</p>
+<pre><code class="language-powershell"># eureka-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka-cluster
+  namespace: {{NAMESPACE}}
+spec:
+  serviceName: &quot;eureka&quot;
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eureka-cluster
+  template:
+    metadata:
+      labels:
+        app: eureka-cluster
+    spec:
+      containers:
+        - name: eureka
+          image: {{IMAGE_URL}}
+...
+</code></pre>
+<p>维护新组件的ingress:</p>
+<pre><code class="language-powershell">$ kubectl -n dev edit configmap devops-config
+...
+  INGRESS_EUREKA: eureka.luffy.com
+...
+</code></pre>
+<p>部署k8s集群时，将eureka的集群地址通过参数的形式传递到pod内部，因此本地开发时，直接按照单点模式进行：</p>
+<pre><code class="language-yaml">server:
+  port: ${EUREKA_PORT:8761}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://${spring.security.user.name}:${spring.security.user.password}@localhost:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+    prefer-ip-address: true
+spring:
+  security:
+    user:
+      name: ${EUREKA_USER:admin}
+      password: ${EUREKA_PASS:admin}
+  application:
+    name: eureka-cluster
+</code></pre>
+<p>提交项目：</p>
+<p>创建develop分支，CICD部署开发环境</p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/D6hqieOMu/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  微服务间调用之服务提供者
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/OK-6t3Msr/">
+                <h3 class="post-title">
+                  Spring Boot交付实践
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

@@ -1,0 +1,554 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#service-mesh-%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC">Service Mesh 服务网格</a>
+<ul>
+<li><a href="#%E6%9E%B6%E6%9E%84%E5%92%8C%E6%A6%82%E5%BF%B5">架构和概念</a></li>
+<li><a href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0">开源实现</a>
+<ul>
+<li><a href="#%E7%AC%AC%E4%B8%80%E4%BB%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC-linkerd%E5%92%8Cenvoy">第一代服务网格 Linkerd和Envoy</a></li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E4%BB%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC-istio">第二代服务网格  Istio</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85istio">安装Istio</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD-istio">下载 Istio</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85istio%E7%BB%84%E4%BB%B6">安装istio组件</a></li>
+<li><a href="#%E5%8D%B8%E8%BD%BD">卸载</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#%E5%9C%BA%E6%99%AF%E4%B8%80">场景一</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E5%9B%BE">模型图</a></li>
+<li><a href="#%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95">资源清单</a></li>
+<li><a href="#%E6%93%8D%E4%BD%9C">操作</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%BA%E6%99%AF%E4%BA%8C">场景二</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E5%9B%BE-2">模型图</a></li>
+<li><a href="#%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95-2">资源清单</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8istio">使用Istio</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">基于Istio实现微服务治理</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 11 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/iDScWi09A.webp" alt="">
+        
+        <div class="post-content yue">
+          <p>微服务架构可谓是当前软件开发领域的技术热点，它在各种博客、社交媒体和会议演讲上的出镜率非常之高，无论是做基础架构还是做业务系统的工程师，对微服务都相当关注，而这个现象与热度到目前为止，已经持续了近 5 年之久。</p>
+<p>尤其是近些年来，微服务架构逐渐发展成熟，从最初的星星之火到现在的大规模的落地与实践，几乎已经成为分布式环境下的首选架构。微服务成为时下技术热点，大量互联网公司都在做微服务架构的落地和推广。同时，也有很多传统企业基于微服务和容器，在做互联网技术转型。</p>
+<p>而在这个技术转型中，国内有一个趋势，以 Spring Cloud 与 Dubbo 为代表的微服务开发框架非常普及和受欢迎。然而软件开发没有银弹，基于这些传统微服务框架构建的应用系统在享受其优势的同时，痛点也越加明显。这些痛点包括但不限于以下几点：</p>
+<ul>
+<li><strong>侵入性强</strong>。想要集成 SDK 的能力，除了需要添加相关依赖，往往还需要在业务代码中增加一部分的代码、或注解、或配置；业务代码与治理层代码界限不清晰。</li>
+<li><strong>升级成本高</strong>。每次升级都需要业务应用修改 SDK 版本，重新进行功能回归测试，并且对每一台机器进行部署上线，而这对于业务方来说，与业务的快速迭代开发是有冲突的，大多不愿意停下来做这些与业务目标不太相关的事情。</li>
+<li><strong>版本碎片化严重</strong>。由于升级成本高，而中间件却不会停止向前发展的步伐，久而久之，就会导致线上不同服务引用的 SDK 版本不统一、能力参差不齐，造成很难统一治理。</li>
+<li><strong>中间件演变困难</strong>。由于版本碎片化严重，导致中间件向前演进的过程中就需要在代码中兼容各种各样的老版本逻辑，带着 “枷锁” 前行，无法实现快速迭代。</li>
+<li><strong>内容多、门槛高</strong>。Spring Cloud 被称为微服务治理的全家桶，包含大大小小几十个组件，内容相当之多，往往需要几年时间去熟悉其中的关键组件。而要想使用 Spring Cloud 作为完整的治理框架，则需要深入了解其中原理与实现，否则遇到问题还是很难定位。</li>
+<li><strong>治理功能不全</strong>。不同于 RPC 框架，Spring Cloud 作为治理全家桶的典型，也不是万能的，诸如协议转换支持、多重授权机制、动态请求路由、故障注入、灰度发布等高级功能并没有覆盖到。而这些功能往往是企业大规模落地不可获缺的功能，因此公司往往还需要投入其它人力进行相关功能的自研或者调研其它组件作为补充。</li>
+</ul>
+<h1 id="service-mesh-服务网格">Service Mesh 服务网格</h1>
+<h2 id="架构和概念">架构和概念</h2>
+<p>目的是解决系统架构微服务化后的服务间通信和治理问题。设计初衷是提供一种通用的服务治理方案。</p>
+<figure data-type="image" tabindex="1"><img src="images%5Csidecar-pattern.jpg" alt="" loading="lazy"></figure>
+<p>Sidecar 在软件系统架构中特指边车模式。这个模式的灵感来源于我们生活中的边三轮：即在两轮摩托车的旁边添加一个边车的方式扩展现有的服务和功能。</p>
+<p>这个模式的精髓在于实现了数据面（业务逻辑）和控制面的解耦：原来两轮摩托车的驾驶者集中注意力跑赛道，边车上的领航员专注周围信息和地图，专注导航。</p>
+<figure data-type="image" tabindex="2"><img src="images%5Cservice-mesh.png" alt="" loading="lazy"></figure>
+<p>Service Mesh 这个服务网络专注于处理服务和服务间的通讯。其主要负责构造一个稳定可靠的服务通讯的基础设施，并让整个架构更为的先进和 Cloud Native。在工程中，Service Mesh 基本来说是一组轻量级的与应用逻辑服务部署在一起的服务代理，并且对于应用服务是透明的。</p>
+<h2 id="开源实现">开源实现</h2>
+<h3 id="第一代服务网格-linkerd和envoy">第一代服务网格 Linkerd和Envoy</h3>
+<p>Linkerd 使用Scala编写，是业界第一个开源的service mesh方案。作者 William Morgan 是 service mesh 的布道师和践行者。Envoy 基于C++ 11编写，无论是理论上还是实际上，后者性能都比 Linkderd 更好。这两个开源实现都是以 sidecar 为核心，绝大部分关注点都是如何做好proxy，并完成一些通用控制面的功能。 但是，当你在容器中大量部署 sidecar 以后，如何管理和控制这些 sidecar 本身就是一个不小的挑战。于是，第二代 Service Mesh 应运而生。</p>
+<h3 id="第二代服务网格-istio">第二代服务网格  Istio</h3>
+<p>Istio 是 Google 和 IBM 两位巨人联合 Lyft 的合作开源项目。是当前最主流的service mesh方案，也是事实上的第二代 service mesh 标准。</p>
+<figure data-type="image" tabindex="3"><img src="images%5Cistio-mesh-arch.png" alt="" loading="lazy"></figure>
+<h4 id="安装istio">安装Istio</h4>
+<p>https://istio.io/latest/docs/setup/getting-started/</p>
+<h6 id="下载-istio">下载 Istio</h6>
+<p>下载内容将包含：安装文件、示例和 <a href="https://istio.io/latest/zh/docs/reference/commands/istioctl/">istioctl</a> 命令行工具。</p>
+<ol>
+<li>
+<p>访问 <a href="https://github.com/istio/istio/releases/tag/1.10.3">Istio release</a> 页面下载与您操作系统对应的安装文件。在 macOS 或 Linux 系统中，也可以通过以下命令下载最新版本的 Istio：</p>
+<pre><code class="language-powershell">$ wget https://github.com/istio/istio/releases/download/1.10.3/istio-1.10.3-linux-amd64.tar.gz
+</code></pre>
+</li>
+<li>
+<p>解压并切换到 Istio 包所在目录下。例如：Istio 包名为 <code>istio-1.10.3</code>，则：</p>
+<pre><code class="language-powershell">$ tar zxf istio-1.10.3-linux-amd64.tar.gz
+$ ll istio-1.10.3
+drwxr-x---  2 root root    22 Jul 15 13:32 bin
+-rw-r--r--  1 root root 11348 Jul 15 13:32 LICENSE
+drwxr-xr-x  5 root root    52 Jul 15 13:32 manifests
+-rw-r-----  1 root root   854 Jul 15 13:32 manifest.yaml
+-rw-r--r--  1 root root  5866 Jul 15 13:32 README.md
+drwxr-xr-x 20 root root   332 Jul 15 13:32 samples
+drwxr-xr-x  3 root root    57 Jul 15 13:32 tools
+</code></pre>
+</li>
+<li>
+<p>将 <code>istioctl</code> 客户端拷贝到 path 环境变量中</p>
+<pre><code class="language-powershell">$ cp bin/istioctl /bin/
+</code></pre>
+</li>
+<li>
+<p>配置命令自动补全</p>
+<p><code>istioctl</code> 自动补全的文件位于 <code>tools</code> 目录。通过复制 <code>istioctl.bash</code> 文件到您的 home 目录，然后添加下行内容到您的 <code>.bashrc</code> 文件执行 <code>istioctl</code> tab 补全文件：</p>
+<pre><code class="language-powershell">$ cp tools/istioctl.bash ~
+$ source ~/istioctl.bash
+</code></pre>
+</li>
+</ol>
+<h6 id="安装istio组件">安装istio组件</h6>
+<p>https://istio.io/latest/zh/docs/setup/install/istioctl/#display-the-configuration-of-a-profile</p>
+<p>使用istioctl直接安装：</p>
+<pre><code class="language-powershell">$ istioctl install --set profile=demo
+✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete
+
+$ kubectl -n istio-system get po
+NAME                                    READY   STATUS    RESTARTS   AGE
+istio-egressgateway-7bf76dd59-n9t5l     1/1     Running   0          77s
+istio-ingressgateway-586dbbc45d-xphjb   1/1     Running   0          77s
+istiod-6cc5758d8c-pz28m                 1/1     Running   0          84s
+</code></pre>
+<p>istio针对不同的环境，提供了几种不同的初始化部署的<a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">profile</a></p>
+<pre><code class="language-powershell"># 查看提供的profile类型
+$ istioctl profile list
+
+# 获取kubernetes的yaml：
+$ istioctl manifest generate --set profile=demo &gt; istio-kubernetes-manifest.yaml
+</code></pre>
+<h6 id="卸载">卸载</h6>
+<pre><code class="language-powershell">$ istioctl manifest generate --set profile=demo | kubectl delete -f -
+</code></pre>
+<h4 id="快速入门">快速入门</h4>
+<h5 id="场景一">场景一</h5>
+<h6 id="模型图">模型图</h6>
+<figure data-type="image" tabindex="4"><img src="images%5Ccj-1.jpg" alt="" loading="lazy"></figure>
+<h6 id="资源清单">资源清单</h6>
+<p><code>front-tomcat-dpl-v1.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: front-tomcat
+    version: v1
+  name: front-tomcat-v1
+  namespace: istio-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-tomcat
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: front-tomcat
+        version: v1
+    spec:
+      containers:
+      - image: consol/tomcat-7.0:latest
+        name: front-tomcat
+</code></pre>
+<p><code>bill-service-dpl-v1.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: bill-service
+    version: v1
+  name: bill-service-v1
+  namespace: istio-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: bill-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        service: bill-service
+        version: v1
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: bill-service
+        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'this is bill-service-v1'&gt;/usr/share/nginx/html/index.html;nginx -g 'daemon off;'&quot;]
+
+</code></pre>
+<p><code>bill-service-svc.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: bill-service
+  name: bill-service
+  namespace: istio-demo
+spec:
+  ports:
+  - name: http
+    port: 9999
+    protocol: TCP
+    targetPort: 80
+  selector:
+    service: bill-service
+  type: ClusterIP
+</code></pre>
+<h6 id="操作">操作</h6>
+<pre><code class="language-powershell">$ kubectl create namespace istio-demo
+$ kubectl apply -f front-tomcat-dpl-v1.yaml
+$ kubectl apply -f bill-service-dpl-v1.yaml
+$ kubectl apply -f bill-service-svc.yaml
+
+$ kubectl -n istio-demo exec front-tomcat-v1-548b46d488-r7wv8 -- curl -s bill-service:9999
+this is bill-service-v1
+</code></pre>
+<h5 id="场景二">场景二</h5>
+<p>后台账单服务更新v2版本，前期规划90%的流量访问v1版本，导入10%的流量到v2版本</p>
+<h6 id="模型图-2">模型图</h6>
+<figure data-type="image" tabindex="5"><img src="images%5Ccj-2.jpg" alt="" loading="lazy"></figure>
+<h6 id="资源清单-2">资源清单</h6>
+<p>新增<code>bill-service-dpl-v2.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: bill-service
+    version: v2
+  name: bill-service-v2
+  namespace: istio-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: bill-service
+      version: v2
+  template:
+    metadata:
+      labels:
+        service: bill-service
+        version: v2
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: bill-service
+        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'hello, this is bill-service-v2'&gt;/usr/share/nginx/html/index.html;nginx -g 'daemon off;'&quot;]
+</code></pre>
+<p>此时，访问规则会按照v1和v2的pod各50%的流量分配。</p>
+<pre><code class="language-powershell">$ kubectl apply -f bill-service-dpl-v2.yaml
+$ kubectl -n istio-demo exec front-tomcat-v1-548b46d488-r7wv8 --  curl -s bill-service:9999
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="images%5Ccj-2-1.jpg" alt="" loading="lazy"></figure>
+<h6 id="使用istio">使用Istio</h6>
+<p>注入：</p>
+<pre><code class="language-powershell">$ istioctl kube-inject -f bill-service-dpl-v1.yaml|kubectl apply -f -
+$ istioctl kube-inject -f bill-service-dpl-v2.yaml|kubectl apply -f -
+$ istioctl kube-inject -f front-tomcat-dpl-v1.yaml|kubectl apply -f -
+</code></pre>
+<p>若想实现上述需求，需要解决如下两个问题：</p>
+<ul>
+<li>让访问账单服务的流量按照我们期望的比例，其实是一条路由规则，如何定义这个规则</li>
+<li>如何区分两个版本的服务</li>
+</ul>
+<p>两个新的资源类型：<code>VirtualService</code>和<code>DestinationRule</code></p>
+<p><code>bill-service-destnation-rule.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: dest-bill-service
+  namespace: istio-demo
+spec:
+  host: bill-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+</code></pre>
+<p><code>bill-service-virtualservice.yaml</code></p>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vs-bill-service
+  namespace: istio-demo
+spec:
+  hosts:
+  - bill-service
+  http:
+  - name: bill-service-route
+    route:
+    - destination:
+        host: bill-service
+        subset: v1
+      weight: 90
+    - destination:
+        host: bill-service
+        subset: v2
+      weight: 10
+</code></pre>
+<p>使用client验证流量分配是否生效。</p>
+<pre><code class="language-powershell">$ kubectl apply -f bill-service-virtualservice.yaml
+$ kubectl apply -f bill-service-destnation-rule.yaml
+$ kubectl -n istio-demo exec front-tomcat-v1-78cf497978-ltxpf -c front-tomcat -- curl -s bill-service
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi/">
+            <span class="flex-auto">istio</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  服务网格细节剖析
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/gJnj_xiUS/">
+                <h3 class="post-title">
+                  SpringBoot Admin监控
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

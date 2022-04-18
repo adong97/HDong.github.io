@@ -1,0 +1,819 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650274382048">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650274382048" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%BD%91%E5%85%B3">为什么需要网关</a></li>
+<li><a href="#%E7%BD%91%E5%85%B3%E7%9A%84%E5%8A%9F%E8%83%BD">网关的功能</a></li>
+<li><a href="#zuul%E5%AE%9E%E8%B7%B5">Zuul实践</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9B%86%E4%B8%AD%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83">集中配置中心</a>
+<ul>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践</a></li>
+<li><a href="#%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a></li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%88%B7%E6%96%B0">客户端配置刷新</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 0.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 1.2000000000000002s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 1.4000000000000001s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">微服务网关</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-04-18 / 15 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/cnkwz7WlR.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h6 id="为什么需要网关">为什么需要网关</h6>
+<p>在微服务框架中，每个对外服务都是独立部署的，对外的api或者服务地址都不是不尽相同的。对于内部而言，很简单，通过注册中心自动感知即可。但我们大部分情况下，服务都是提供给外部系统进行调用的，不可能同享一个注册中心。同时一般上内部的微服务都是在内网的，和外界是不连通的。而且，就算我们每个微服务对外开放，对于调用者而言，调用不同的服务的地址或者参数也是不尽相同的，这样就会造成消费者客户端的复杂性，同时想想，可能微服务可能是不同的技术栈实现的，有的是<code>http</code>、<code>rpc</code>或者<code>websocket</code>等等，也会进一步加大客户端的调用难度。所以，<strong>一般上都有会有个api网关，根据请求的url不同，路由到不同的服务上去，同时入口统一了，还能进行统一的身份鉴权、日志记录、分流等操作</strong>。</p>
+<figure data-type="image" tabindex="1"><img src="images%5Cbefore-gateway.png" alt="" loading="lazy"></figure>
+<h6 id="网关的功能">网关的功能</h6>
+<ul>
+<li>减少api请求次数</li>
+<li>限流</li>
+<li>缓存</li>
+<li>统一认证</li>
+<li>降低微服务的复杂度</li>
+<li>支持混合通信协议(前端只和api通信，其他的由网关调用)</li>
+<li>...</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="images%5Cgateway-zuul.png" alt="" loading="lazy"></figure>
+<h6 id="zuul实践">Zuul实践</h6>
+<p>新建模块，gateway-zuul,(spring cloud)</p>
+<p>pom.xml中需要引入zuul和eureka服务发现的依赖</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.3.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.luffy&lt;/groupId&gt;
+    &lt;artifactId&gt;gateway-zuul&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;gateway-zuul&lt;/name&gt;
+    &lt;description&gt;gateway-zuul&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;spring-cloud.version&gt;Hoxton.SR9&lt;/spring-cloud.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-zuul&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;${spring-cloud.version}&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+    &lt;build&gt;
+        &lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;&lt;!--打jar包去掉版本号--&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+
+</code></pre>
+<p>启动类添加注解</p>
+<pre><code class="language-java">package com.luffy.gatewayzuul;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+
+@SpringBootApplication
+@EnableZuulProxy
+@EnableDiscoveryClient
+public class GatewayZuulApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayZuulApplication.class, args);
+    }
+
+}
+
+</code></pre>
+<p>配置文件：</p>
+<pre><code class="language-yaml">
+server:
+  port: 10000
+
+spring:
+  application:
+    name: gateway-zuul
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:gateway-zuul}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 2
+</code></pre>
+<p>启动后，访问：</p>
+<p>http://localhost:10000/bill-service/bill/user/1</p>
+<p>http://localhost:10000/user-service/user</p>
+<p>filter 过滤器</p>
+<p><strong>BILL-SERVICE</strong> =》  <a href="http://192.168.136.1:7001/actuator/info">bill-service:7001</a></p>
+<p>通过如下方式，配置短路径：</p>
+<pre><code class="language-yaml">zuul:
+  routes:
+    user-service: /users/**
+    bill-service:
+      path: /bill/**
+      service-id: bill-service
+</code></pre>
+<pre><code class="language-powershell">http://localhost:10000/users/user/1
+                                                 ---&gt;  http://localhost:7000/user/1
+http://localhost:10000/user-service/user/1
+
+
+
+http://localhost:10000/bill/service/user/2 
+                                                 ---&gt;http://localhost:7001/service/user/2
+http://localhost:10000/bill-service/service/user/2
+</code></pre>
+<p>zuul如何指定对外暴漏api的path，如：</p>
+<p>所有的api都是这样：<code>http://zuul-host:zuul-port/apis/</code>，可以添加<code>zuul.prefix：/apis</code></p>
+<p>配置一下配置文件</p>
+<pre><code class="language-yaml">management:
+  endpoints:
+    web:
+      exposure:
+        include: &quot;*&quot;
+</code></pre>
+<p>可以访问到zuul的route列表， http://localhost:10000/actuator/routes/ ，添加details可以访问到详细信息</p>
+<pre><code class="language-json">{
+&quot;/apis/users/**&quot;: &quot;user-service&quot;,
+&quot;/apis/bill/**&quot;: &quot;bill-service&quot;,
+&quot;/apis/bill-service/**&quot;: &quot;bill-service&quot;,
+&quot;/apis/user-service/**&quot;: &quot;user-service&quot;
+}
+</code></pre>
+<blockquote>
+<p>提交代码到代码仓库</p>
+</blockquote>
+<h5 id="集中配置中心">集中配置中心</h5>
+<p>Spring Cloud Config 配置中心提供了一个中心化的外部配置，默认使用git存储配置信息，这样就可以对配置信息进行版本管理。</p>
+<figure data-type="image" tabindex="3"><img src="images%5Cconfig-server.png" alt="" loading="lazy"></figure>
+<h6 id="实践">实践</h6>
+<ul>
+<li>创建代码仓库<code>configure-repo</code>，用于集中存储配置文件</li>
+<li>创建项目<code>config-server</code>，用于接受各项目的连接，提供配置文件读取服务</li>
+<li>修改<code>user-service</code>服务，验证通过<code>config-server</code>读取集中配置库中的配置文件</li>
+</ul>
+<p>代码仓库：</p>
+<ul>
+<li>
+<p>新建gitlab项目，<code>http://gitlab.luffy.com/luffy-spring-cloud/configure-repo.git</code></p>
+</li>
+<li>
+<p>准备配置文件</p>
+<p><code>configs/common-dev.yml</code></p>
+<pre><code class="language-yaml">datasource:
+  url: jdbc:mysql://mysql-dev:3306/
+  driverClassName: com.mysql.jdbc.Driver
+  username: xxx
+  password: xxxxxx
+luffy: city
+</code></pre>
+<p><code>configs/user-service-dev.yml</code></p>
+<pre><code class="language-yaml">logging:
+  level:
+    org.springframework.cloud: debug
+env: dev
+</code></pre>
+<p><code>configs/common-test.yml</code></p>
+<pre><code class="language-yaml">env: test
+</code></pre>
+</li>
+<li>
+<p>提交代码到master分支</p>
+</li>
+</ul>
+<p>新建项目，<code>config-server</code></p>
+<p>修改<code>pom.xml</code></p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.3.6.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.luffy&lt;/groupId&gt;
+    &lt;artifactId&gt;config-server&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;config-server&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;spring-cloud.version&gt;Hoxton.SR9&lt;/spring-cloud.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-config-server&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.junit.vintage&lt;/groupId&gt;
+                    &lt;artifactId&gt;junit-vintage-engine&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;${spring-cloud.version}&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+    &lt;build&gt;
+        &lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;&lt;!--打jar包去掉版本号--&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+
+</code></pre>
+<p>修改<code>application.yml</code></p>
+<pre><code class="language-yaml">server:
+  port: 8088
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: http://gitlab.luffy.com/luffy-spring-cloud/configure-repo.git
+          username: ${GIT_USER:root}
+          password: ${GIT_PSW:1qaz2wsx}
+          default-label: master
+          search-paths: configs
+        #native:
+        #  searchLocations: classpath:/configs/{profile}
+</code></pre>
+<p>修改启动类，添加注解</p>
+<pre><code class="language-java">package com.luffy.configserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.config.server.EnableConfigServer;
+
+@SpringBootApplication
+@EnableConfigServer
+public class ConfigServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigServerApplication.class, args);
+    }
+
+}
+</code></pre>
+<p>启动config-server,访问:</p>
+<pre><code class="language-powershell">http://localhost:8088/common/dev
+http://localhost:8088/user-service/dev
+http://localhost:8088/user-service,common/dev
+</code></pre>
+<p>{profile} =&gt; dev,test</p>
+<p>修改<code>user-service</code>服务，从<code>config-server</code>读取配置</p>
+<ul>
+<li>
+<p>添加使用统一配置中心的依赖：</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>新建<code>bootstrap.yml</code>，不能放在application.yml中，因为bootstrap的加载早于应用程序bean启动的加载</p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:user-service}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 2
+spring:
+  application:
+    name: user-service
+  cloud:
+    config:
+      uri: http://localhost:8088
+      profile: dev  #当前读取dev环境的配置
+      name: user-service, common  # 从user-service-dev.yml,common-dev.yml中读取
+
+</code></pre>
+</li>
+<li>
+<p>新建<code>ValueController.java</code></p>
+<pre><code class="language-java">package com.luffy.userservice.controller;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ValueController {
+
+    @Value(&quot;${env}&quot;)
+    private String env;
+
+    @Value(&quot;${datasource.url}&quot;)
+    private String datasource;
+
+    @Value(&quot;${spring.application.name}&quot;)
+    private String applicationName;
+
+    @GetMapping(&quot;/value/env&quot;)
+    public String getValueEnv(){
+        return &quot;current env is &quot; + env;
+    }
+
+    @GetMapping(&quot;/value/application&quot;)
+    public String getValueApplication(){
+        return &quot;current env is &quot; + applicationName;
+    }
+
+    @GetMapping(&quot;/value/datasource&quot;)
+    public Object getDatasource(){
+        return datasource;
+    }
+
+}
+</code></pre>
+</li>
+<li>
+<p>访问如下页面进行验证</p>
+<pre><code class="language-powershell">$ localhost:7000/value/env
+$ localhost:7000/value/application
+$ localhost:7000/value/datasource
+</code></pre>
+</li>
+</ul>
+<h6 id="高可用">高可用</h6>
+<p><code>config-server</code>多个实例，如何配置客户端？</p>
+<ul>
+<li><code>config-server</code> 作为服务提供者，注册到eureka服务注册中心</li>
+<li><code>user-service</code>配置从注册中心获取config-server的服务</li>
+</ul>
+<p><code>config-server</code>注册到服务注册中心</p>
+<ul>
+<li>
+<p>pom.xml添加eureka依赖包</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-client&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>application.yml中连接服务注册中心</p>
+<pre><code class="language-yaml">eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:config-server}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 2
+</code></pre>
+</li>
+<li>
+<p>启动类添加注解</p>
+<pre><code class="language-java">@EnableDiscoveryClient
+</code></pre>
+</li>
+</ul>
+<p>修改<code>user-service</code>，从注册中心发现服务</p>
+<ul>
+<li>
+<p>修改bootstrap.yml</p>
+<pre><code class="language-yaml">server:
+  port: 7000
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://admin:admin@localhost:8761/eureka/}
+  instance:
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    prefer-ip-address: true
+    hostname: ${INSTANCE_HOSTNAME:user-service}
+    #eureka客户端需要多长时间发送心跳给eureka服务器，表明他仍然或者，默认30秒
+    lease-renewal-interval-in-seconds: 2
+    #eureka服务器在接受到实力的最后一次发出的心跳后，需要等待多久才可以将此实力删除
+    lease-expiration-duration-in-seconds: 2
+spring:
+  cloud:
+    config:
+      profile: dev
+      discovery:
+        enabled: true
+        service-id: config-server
+    name: user-service,common
+  application:
+    name: user-service
+</code></pre>
+</li>
+</ul>
+<h6 id="客户端配置刷新">客户端配置刷新</h6>
+<p>配置中心的配置变动后，客户端如何获取最新的配置。</p>
+<ul>
+<li>
+<p>修改<code>ValueController.java</code>，添加注解</p>
+<pre><code class="language-java">@RestController
+@RefreshScope
+public class ValueController 
+</code></pre>
+</li>
+<li>
+<p>添加actuator包</p>
+<pre><code class="language-xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>开放显示所有管理接口</p>
+<pre><code class="language-yaml">management:
+  endpoints:
+    web:
+      exposure:
+        include: &quot;*&quot;
+</code></pre>
+</li>
+<li>
+<p>重启<code>user-service</code></p>
+</li>
+<li>
+<p>修改<code>configure-repo中的配置并提交</code>，访问<code>http://localhost:7000/value/env</code></p>
+</li>
+<li>
+<p>执行刷新</p>
+<pre><code class="language-powershell">$ curl -XPOST http://localhost:7000/actuator/refresh
+</code></pre>
+</li>
+<li>
+<p>再次访问<code>http://localhost:7000/value/env</code></p>
+</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp/">
+            <span class="flex-auto">Spring Cloud微服务</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  调用链路追踪
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/l_BDakLb3/">
+                <h3 class="post-title">
+                  Hystrix 断路器
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
