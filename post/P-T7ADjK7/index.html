@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,12 +34,6 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
 <li><a href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%9C%BA%E6%99%AF">微服务场景</a></li>
 <li><a href="#eureka%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83">Eureka服务注册中心</a>
 <ul>
@@ -51,12 +45,6 @@
 <li><a href="#k8s%E4%BA%A4%E4%BB%98">k8s交付</a></li>
 <li><a href="#%E4%BD%BF%E7%94%A8statefulset%E7%AE%A1%E7%90%86%E6%9C%89%E7%8A%B6%E6%80%81%E6%9C%8D%E5%8A%A1">使用StatefulSet管理有状态服务</a></li>
 <li><a href="#%E6%8E%A5%E5%85%A5cicd%E6%B5%81%E7%A8%8B">接入CICD流程</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -172,19 +160,19 @@
 <blockquote>
 <p>本课程基于SpringBoot 2.3.6.RELEASE 和Spring Cloud  Hoxton.SR9 版本</p>
 </blockquote>
-<h4 id="微服务场景">微服务场景</h4>
+<h1 id="微服务场景">微服务场景</h1>
 <p>开发APP，提供个人的花呗账单管理。</p>
 <ul>
 <li>注册、登录、账单查询</li>
 <li>用户服务，账单管理服务</li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="images%5Cdemo-project.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="images%5Carch.png" alt="" loading="lazy"></figure>
-<h4 id="eureka服务注册中心">Eureka服务注册中心</h4>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365540422.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365553522.png" alt="" loading="lazy"></figure>
+<h1 id="eureka服务注册中心">Eureka服务注册中心</h1>
 <p>在<code>SpringCloud</code>体系中，我们知道服务之间的调用是通过<code>http</code>协议进行调用的。而注册中心的主要目的就是维护这些服务的服务列表。</p>
 <p>https://docs.spring.io/spring-cloud-netflix/docs/3.0.3/reference/html/</p>
-<h5 id="新建项目">新建项目</h5>
-<figure data-type="image" tabindex="3"><img src="images%5Cnew-eureka.jpg" alt="" loading="lazy"></figure>
+<h2 id="新建项目">新建项目</h2>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365570067.jpg" alt="" loading="lazy"></figure>
 <p>pom中引入spring-cloud的依赖：</p>
 <p>https://spring.io/projects/spring-cloud#overview</p>
 <pre><code class="language-xml">&lt;properties&gt;
@@ -208,7 +196,7 @@
             &lt;artifactId&gt;spring-cloud-starter-netflix-eureka-server&lt;/artifactId&gt;
         &lt;/dependency&gt;
 </code></pre>
-<h5 id="启动eureka服务">启动eureka服务</h5>
+<h2 id="启动eureka服务">启动eureka服务</h2>
 <p>https://docs.spring.io/spring-cloud-netflix/docs/2.2.5.RELEASE/reference/html/#spring-cloud-eureka-server-standalone-mode</p>
 <p>application.yml</p>
 <pre><code class="language-yaml">server:
@@ -245,7 +233,7 @@ public class EurekaServerApplication {
 <li>修改application.yml配置文件</li>
 <li>启动类添加注解</li>
 </ul>
-<h5 id="eureka认证">eureka认证</h5>
+<h2 id="eureka认证">eureka认证</h2>
 <p>没有认证，不安全，添加认证：</p>
 <pre><code class="language-xml">        &lt;dependency&gt;
             &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
@@ -271,7 +259,7 @@ spring:
   application:
     name: eureka
 </code></pre>
-<h5 id="注册服务到eureka">注册服务到eureka</h5>
+<h2 id="注册服务到eureka">注册服务到eureka</h2>
 <p>新建项目，user-service（选择Spring Cloud依赖和SpringBoot Web依赖），用来提供用户查询功能。</p>
 <p>三部曲：</p>
 <ul>
@@ -340,8 +328,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 </code></pre>
-<p>再次启动发现可以注册，但是地址是</p>
-<figure data-type="image" tabindex="4"><img src="images%5Cimage-20200915211607173.png" alt="image-20200915211607173" loading="lazy"></figure>
+<p>再次启动发现可以注册，但是地址是<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650365613768.png" alt="" loading="lazy"></p>
 <p>application.yaml</p>
 <pre><code class="language-yaml">server:
   port: 7000
@@ -364,7 +352,7 @@ spring:
 <p>开发阶段可以通过配置：<code>eureka.server.enable-self-preservation=false</code>关闭自我保护模式。</p>
 <p><strong>生产阶段，理应以默认值进行配置。</strong></p>
 <p>至于具体具体的配置参数，可至官网查看：http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_appendix_compendium_of_configuration_properties</p>
-<h5 id="高可用">高可用</h5>
+<h2 id="高可用">高可用</h2>
 <p>高可用：</p>
 <ul>
 <li>优先保证可用性</li>
@@ -377,7 +365,7 @@ spring:
 <li>eureka.instance.hostname要与defaultZone里的地址保持一致</li>
 <li>各个eureka的spring.application.name相同</li>
 </ul>
-<figure data-type="image" tabindex="5"><img src="images%5Ceureka-cluster.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365636886.jpg" alt="" loading="lazy"></figure>
 <p>拷贝<code>eureka</code>服务，分别命名<code>eureka-ha-peer1</code>和<code>eureka-ha-peer2</code></p>
 <p>修改模块的<code>pom.xml</code></p>
 <pre><code class="language-xml">&lt;artifactId&gt;eureka-ha-peer1&lt;/artifactId&gt;
@@ -405,22 +393,20 @@ spring:
 <pre><code class="language-powershell">127.0.0.1 peer1 peer2
 </code></pre>
 <p>服务提供者若想连接高可用的eureka，需要修改：</p>
-<pre><code class="language-powershell">      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer1:8762/eureka/,http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer2:8763/eureka/
+<pre><code class="language-shell">      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer1:8762/eureka/,http://${EUREKA_USER:admin}:${EUREKA_PASS:admin}@peer2:8763/eureka/
 
 </code></pre>
-<h5 id="k8s交付">k8s交付</h5>
+<h2 id="k8s交付">k8s交付</h2>
 <p>分析：</p>
 <p>高可用互相注册，但是需要知道对方节点的地址。k8s中pod ip是不固定的，如何将高可用的eureka服务使用k8s交付？</p>
 <ul>
-<li>
-<p>方案一：创建三个Deployment+三个Service</p>
-<figure data-type="image" tabindex="6"><img src="images%5Ceureka-ha-deploy.jpg" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>方案二：使用statefulset管理</p>
-<figure data-type="image" tabindex="7"><img src="images%5Ceureka-sts.jpg" alt="" loading="lazy"></figure>
-</li>
+<li>方案一：创建三个Deployment+三个Service</li>
 </ul>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365662764.jpg" alt="" loading="lazy"></figure>
+<ul>
+<li>方案二：使用statefulset管理</li>
+</ul>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1650365670061.jpg" alt="" loading="lazy"></figure>
 <p><code>eureka-statefulset.yaml</code></p>
 <pre><code class="language-yaml"># eureka-statefulset.yaml
 apiVersion: apps/v1
@@ -525,7 +511,7 @@ spec:
             port:
               number: 8761
 </code></pre>
-<h5 id="使用statefulset管理有状态服务">使用StatefulSet管理有状态服务</h5>
+<h2 id="使用statefulset管理有状态服务">使用StatefulSet管理有状态服务</h2>
 <p>使用StatefulSet创建多副本pod的情况：</p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: StatefulSet
@@ -567,7 +553,7 @@ spec:
 <pre><code class="language-powershell">$ kubectl -n spring exec  -ti nginx-statefulset-0 sh
 / # curl nginx-statefulset-2.nginx
 </code></pre>
-<h5 id="接入cicd流程">接入CICD流程</h5>
+<h2 id="接入cicd流程">接入CICD流程</h2>
 <p>所需的文件:</p>
 <ul>
 <li>Jenkinsfile</li>
@@ -684,7 +670,7 @@ sonar.tests=src/test/java
 sonar.java.binaries=target/classes
 </code></pre>
 <p>模板化k8s资源清单：</p>
-<pre><code class="language-powershell"># eureka-statefulset.yaml
+<pre><code class="language-shell"># eureka-statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -707,7 +693,7 @@ spec:
 ...
 </code></pre>
 <p>维护新组件的ingress:</p>
-<pre><code class="language-powershell">$ kubectl -n dev edit configmap devops-config
+<pre><code class="language-shell">$ kubectl -n dev edit configmap devops-config
 ...
   INGRESS_EUREKA: eureka.luffy.com
 ...
@@ -733,8 +719,8 @@ spring:
   application:
     name: eureka-cluster
 </code></pre>
-<p>提交项目：</p>
-<p>创建develop分支，CICD部署开发环境</p>
+<p>提交项目：<br>
+创建develop分支，CICD部署开发环境</p>
 
         </div>
 

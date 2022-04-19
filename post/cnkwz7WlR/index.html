@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,14 +36,6 @@
             <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
 <li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%BD%91%E5%85%B3">为什么需要网关</a></li>
 <li><a href="#%E7%BD%91%E5%85%B3%E7%9A%84%E5%8A%9F%E8%83%BD">网关的功能</a></li>
 <li><a href="#zuul%E5%AE%9E%E8%B7%B5">Zuul实践</a></li>
@@ -54,14 +46,6 @@
 <li><a href="#%E5%AE%9E%E8%B7%B5">实践</a></li>
 <li><a href="#%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a></li>
 <li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%88%B7%E6%96%B0">客户端配置刷新</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -166,10 +150,10 @@
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/cnkwz7WlR.jpeg" alt="">
         
         <div class="post-content yue">
-          <h6 id="为什么需要网关">为什么需要网关</h6>
+          <h2 id="为什么需要网关">为什么需要网关</h2>
 <p>在微服务框架中，每个对外服务都是独立部署的，对外的api或者服务地址都不是不尽相同的。对于内部而言，很简单，通过注册中心自动感知即可。但我们大部分情况下，服务都是提供给外部系统进行调用的，不可能同享一个注册中心。同时一般上内部的微服务都是在内网的，和外界是不连通的。而且，就算我们每个微服务对外开放，对于调用者而言，调用不同的服务的地址或者参数也是不尽相同的，这样就会造成消费者客户端的复杂性，同时想想，可能微服务可能是不同的技术栈实现的，有的是<code>http</code>、<code>rpc</code>或者<code>websocket</code>等等，也会进一步加大客户端的调用难度。所以，<strong>一般上都有会有个api网关，根据请求的url不同，路由到不同的服务上去，同时入口统一了，还能进行统一的身份鉴权、日志记录、分流等操作</strong>。</p>
-<figure data-type="image" tabindex="1"><img src="images%5Cbefore-gateway.png" alt="" loading="lazy"></figure>
-<h6 id="网关的功能">网关的功能</h6>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366397597.png" alt="" loading="lazy"></figure>
+<h2 id="网关的功能">网关的功能</h2>
 <ul>
 <li>减少api请求次数</li>
 <li>限流</li>
@@ -179,8 +163,8 @@
 <li>支持混合通信协议(前端只和api通信，其他的由网关调用)</li>
 <li>...</li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="images%5Cgateway-zuul.png" alt="" loading="lazy"></figure>
-<h6 id="zuul实践">Zuul实践</h6>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366423049.png" alt="" loading="lazy"></figure>
+<h2 id="zuul实践">Zuul实践</h2>
 <p>新建模块，gateway-zuul,(spring cloud)</p>
 <p>pom.xml中需要引入zuul和eureka服务发现的依赖</p>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -348,10 +332,10 @@ http://localhost:10000/bill-service/service/user/2
 <blockquote>
 <p>提交代码到代码仓库</p>
 </blockquote>
-<h5 id="集中配置中心">集中配置中心</h5>
+<h1 id="集中配置中心">集中配置中心</h1>
 <p>Spring Cloud Config 配置中心提供了一个中心化的外部配置，默认使用git存储配置信息，这样就可以对配置信息进行版本管理。</p>
-<figure data-type="image" tabindex="3"><img src="images%5Cconfig-server.png" alt="" loading="lazy"></figure>
-<h6 id="实践">实践</h6>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366478686.png" alt="" loading="lazy"></figure>
+<h2 id="实践">实践</h2>
 <ul>
 <li>创建代码仓库<code>configure-repo</code>，用于集中存储配置文件</li>
 <li>创建项目<code>config-server</code>，用于接受各项目的连接，提供配置文件读取服务</li>
@@ -591,7 +575,7 @@ $ localhost:7000/value/datasource
 </code></pre>
 </li>
 </ul>
-<h6 id="高可用">高可用</h6>
+<h2 id="高可用">高可用</h2>
 <p><code>config-server</code>多个实例，如何配置客户端？</p>
 <ul>
 <li><code>config-server</code> 作为服务提供者，注册到eureka服务注册中心</li>
@@ -660,7 +644,7 @@ spring:
 </code></pre>
 </li>
 </ul>
-<h6 id="客户端配置刷新">客户端配置刷新</h6>
+<h2 id="客户端配置刷新">客户端配置刷新</h2>
 <p>配置中心的配置变动后，客户端如何获取最新的配置。</p>
 <ul>
 <li>
@@ -695,7 +679,7 @@ public class ValueController
 </li>
 <li>
 <p>执行刷新</p>
-<pre><code class="language-powershell">$ curl -XPOST http://localhost:7000/actuator/refresh
+<pre><code class="language-shell">$ curl -XPOST http://localhost:7000/actuator/refresh
 </code></pre>
 </li>
 <li>

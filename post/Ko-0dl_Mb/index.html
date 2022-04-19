@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,28 +36,12 @@
             <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
 <li><a href="#resttemplate">RestTemplate</a></li>
 <li><a href="#%E5%88%9B%E5%BB%BAbill-service%E9%A1%B9%E7%9B%AE">创建bill-service项目</a></li>
 <li><a href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8">使用注册中心实现服务调用</a></li>
 <li><a href="#ribbon-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">Ribbon 负载均衡</a></li>
 <li><a href="#%E5%A3%B0%E6%98%8E%E5%BC%8F%E6%9C%8D%E5%8A%A1feign">声明式服务Feign</a></li>
 <li><a href="#cicd%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9%E8%80%85">CICD持续交付服务消费者</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -162,9 +146,9 @@
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/Ko-0dl_Mb.jpeg" alt="">
         
         <div class="post-content yue">
-          <h6 id="resttemplate">RestTemplate</h6>
+          <h2 id="resttemplate">RestTemplate</h2>
 <p>在<code>Spring</code>中，提供了<code>RestTemplate</code>。<code>RestTemplate</code>是<code>Spring</code>提供的用于访问Rest服务的客户端。而在<code>SpringCloud</code>中也是使用此服务进行服务调用的。</p>
-<h6 id="创建bill-service项目">创建bill-service项目</h6>
+<h2 id="创建bill-service项目">创建bill-service项目</h2>
 <p>新的模块初始化三部曲：</p>
 <ul>
 <li>pom.xml</li>
@@ -314,7 +298,7 @@ public class BillController {
 <li>服务调用采用指定IP+Port方式，注册中心未使用</li>
 <li>多个服务负载均衡</li>
 </ul>
-<h6 id="使用注册中心实现服务调用">使用注册中心实现服务调用</h6>
+<h2 id="使用注册中心实现服务调用">使用注册中心实现服务调用</h2>
 <p>修改BillController</p>
 <pre><code class="language-java">package com.luffy.billservice.controller;
 
@@ -391,7 +375,7 @@ public class BillController {
     }
 }
 </code></pre>
-<h6 id="ribbon-负载均衡">Ribbon 负载均衡</h6>
+<h2 id="ribbon-负载均衡">Ribbon 负载均衡</h2>
 <p>再启动一个user-service-instance2，复制user-service项目</p>
 <p>修改user-service-instance2的application.yml的server.port</p>
 <pre><code class="language-yaml">server:
@@ -449,9 +433,9 @@ public class UserController {
 <blockquote>
 <p>eureka-client中包含了ribbon的包，所以不需要单独引入</p>
 </blockquote>
-<figure data-type="image" tabindex="1"><img src="images%5Cribbon-lb.jpg" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="images%5Clb-cli.jpg" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="3"><img src="images%5Clb-server.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366108244.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366126200.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366133523.jpg" alt="" loading="lazy"></figure>
 <p>如何修改调用策略？</p>
 <ul>
 <li>代码中指定rule的规则</li>
@@ -491,7 +475,7 @@ public class BillServiceApplication {
     }
 }
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="images%5Cribbon-rules.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366182774.jpg" alt="" loading="lazy"></figure>
 <p>配置文件方式： https://docs.spring.io/spring-cloud-netflix/docs/2.2.5.RELEASE/reference/html/#customizing-the-ribbon-client-by-setting-properties</p>
 <p>注释掉代码：</p>
 <pre><code class="language-java">package com.luffy.ticket;
@@ -530,7 +514,7 @@ user-service:
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
 </code></pre>
-<h6 id="声明式服务feign">声明式服务Feign</h6>
+<h2 id="声明式服务feign">声明式服务Feign</h2>
 <p>从上一章节，我们知道，当我们要调用一个服务时，需要知道服务名和api地址，这样才能进行服务调用，服务少时，这样写觉得没有什么问题，但当服务一多，接口参数很多时，上面的写法就显得不够优雅了。所以，接下来，来说说一种更好更优雅的调用服务的方式：<strong>Feign</strong>。</p>
 <blockquote>
 <p><code>Feign</code>是<code>Netflix</code>开发的声明式、模块化的HTTP客户端。<code>Feign</code>可帮助我们更好更快的便捷、优雅地调用<code>HTTP API</code>。</p>
@@ -651,7 +635,7 @@ public class BillController {
     }
 }
 </code></pre>
-<h6 id="cicd持续交付服务消费者">CICD持续交付服务消费者</h6>
+<h2 id="cicd持续交付服务消费者">CICD持续交付服务消费者</h2>
 <p>拷贝user-service的交付文件，替换如下：</p>
 <ul>
 <li>user-service  -&gt; bill-service</li>

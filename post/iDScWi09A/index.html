@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -40,14 +40,19 @@
 <li><a href="#%E5%BC%80%E6%BA%90%E5%AE%9E%E7%8E%B0">开源实现</a>
 <ul>
 <li><a href="#%E7%AC%AC%E4%B8%80%E4%BB%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC-linkerd%E5%92%8Cenvoy">第一代服务网格 Linkerd和Envoy</a></li>
-<li><a href="#%E7%AC%AC%E4%BA%8C%E4%BB%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC-istio">第二代服务网格  Istio</a>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E4%BB%A3%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC-istio">第二代服务网格  Istio</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%89%E8%A3%85istio">安装Istio</a>
 <ul>
-<li><a href="#%E5%AE%89%E8%A3%85istio">安装Istio</a><br>
-*
+<li><a href="#%E4%B8%8B%E8%BD%BD-istio">下载 Istio</a>
 <ul>
-<li><a href="#%E4%B8%8B%E8%BD%BD-istio">下载 Istio</a></li>
 <li><a href="#%E5%AE%89%E8%A3%85istio%E7%BB%84%E4%BB%B6">安装istio组件</a></li>
 <li><a href="#%E5%8D%B8%E8%BD%BD">卸载</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
@@ -64,12 +69,6 @@
 <li><a href="#%E6%A8%A1%E5%9E%8B%E5%9B%BE-2">模型图</a></li>
 <li><a href="#%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95-2">资源清单</a></li>
 <li><a href="#%E4%BD%BF%E7%94%A8istio">使用Istio</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -189,31 +188,31 @@
 </ul>
 <h1 id="service-mesh-服务网格">Service Mesh 服务网格</h1>
 <h2 id="架构和概念">架构和概念</h2>
-<p>目的是解决系统架构微服务化后的服务间通信和治理问题。设计初衷是提供一种通用的服务治理方案。</p>
-<figure data-type="image" tabindex="1"><img src="images%5Csidecar-pattern.jpg" alt="" loading="lazy"></figure>
+<p>目的是解决系统架构微服务化后的服务间通信和治理问题。设计初衷是提供一种通用的服务治理方案。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1650366972641.jpg" alt="" loading="lazy"></p>
 <p>Sidecar 在软件系统架构中特指边车模式。这个模式的灵感来源于我们生活中的边三轮：即在两轮摩托车的旁边添加一个边车的方式扩展现有的服务和功能。</p>
 <p>这个模式的精髓在于实现了数据面（业务逻辑）和控制面的解耦：原来两轮摩托车的驾驶者集中注意力跑赛道，边车上的领航员专注周围信息和地图，专注导航。</p>
-<figure data-type="image" tabindex="2"><img src="images%5Cservice-mesh.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366992058.png" alt="" loading="lazy"></figure>
 <p>Service Mesh 这个服务网络专注于处理服务和服务间的通讯。其主要负责构造一个稳定可靠的服务通讯的基础设施，并让整个架构更为的先进和 Cloud Native。在工程中，Service Mesh 基本来说是一组轻量级的与应用逻辑服务部署在一起的服务代理，并且对于应用服务是透明的。</p>
 <h2 id="开源实现">开源实现</h2>
 <h3 id="第一代服务网格-linkerd和envoy">第一代服务网格 Linkerd和Envoy</h3>
 <p>Linkerd 使用Scala编写，是业界第一个开源的service mesh方案。作者 William Morgan 是 service mesh 的布道师和践行者。Envoy 基于C++ 11编写，无论是理论上还是实际上，后者性能都比 Linkderd 更好。这两个开源实现都是以 sidecar 为核心，绝大部分关注点都是如何做好proxy，并完成一些通用控制面的功能。 但是，当你在容器中大量部署 sidecar 以后，如何管理和控制这些 sidecar 本身就是一个不小的挑战。于是，第二代 Service Mesh 应运而生。</p>
 <h3 id="第二代服务网格-istio">第二代服务网格  Istio</h3>
 <p>Istio 是 Google 和 IBM 两位巨人联合 Lyft 的合作开源项目。是当前最主流的service mesh方案，也是事实上的第二代 service mesh 标准。</p>
-<figure data-type="image" tabindex="3"><img src="images%5Cistio-mesh-arch.png" alt="" loading="lazy"></figure>
-<h4 id="安装istio">安装Istio</h4>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650367028935.png" alt="" loading="lazy"></figure>
+<h1 id="安装istio">安装Istio</h1>
 <p>https://istio.io/latest/docs/setup/getting-started/</p>
-<h6 id="下载-istio">下载 Istio</h6>
+<h2 id="下载-istio">下载 Istio</h2>
 <p>下载内容将包含：安装文件、示例和 <a href="https://istio.io/latest/zh/docs/reference/commands/istioctl/">istioctl</a> 命令行工具。</p>
 <ol>
 <li>
 <p>访问 <a href="https://github.com/istio/istio/releases/tag/1.10.3">Istio release</a> 页面下载与您操作系统对应的安装文件。在 macOS 或 Linux 系统中，也可以通过以下命令下载最新版本的 Istio：</p>
-<pre><code class="language-powershell">$ wget https://github.com/istio/istio/releases/download/1.10.3/istio-1.10.3-linux-amd64.tar.gz
+<pre><code class="language-shell">$ wget https://github.com/istio/istio/releases/download/1.10.3/istio-1.10.3-linux-amd64.tar.gz
 </code></pre>
 </li>
 <li>
 <p>解压并切换到 Istio 包所在目录下。例如：Istio 包名为 <code>istio-1.10.3</code>，则：</p>
-<pre><code class="language-powershell">$ tar zxf istio-1.10.3-linux-amd64.tar.gz
+<pre><code class="language-shell">$ tar zxf istio-1.10.3-linux-amd64.tar.gz
 $ ll istio-1.10.3
 drwxr-x---  2 root root    22 Jul 15 13:32 bin
 -rw-r--r--  1 root root 11348 Jul 15 13:32 LICENSE
@@ -226,21 +225,21 @@ drwxr-xr-x  3 root root    57 Jul 15 13:32 tools
 </li>
 <li>
 <p>将 <code>istioctl</code> 客户端拷贝到 path 环境变量中</p>
-<pre><code class="language-powershell">$ cp bin/istioctl /bin/
+<pre><code class="language-shell">$ cp bin/istioctl /bin/
 </code></pre>
 </li>
 <li>
 <p>配置命令自动补全</p>
 <p><code>istioctl</code> 自动补全的文件位于 <code>tools</code> 目录。通过复制 <code>istioctl.bash</code> 文件到您的 home 目录，然后添加下行内容到您的 <code>.bashrc</code> 文件执行 <code>istioctl</code> tab 补全文件：</p>
-<pre><code class="language-powershell">$ cp tools/istioctl.bash ~
+<pre><code class="language-shell">$ cp tools/istioctl.bash ~
 $ source ~/istioctl.bash
 </code></pre>
 </li>
 </ol>
-<h6 id="安装istio组件">安装istio组件</h6>
+<h3 id="安装istio组件">安装istio组件</h3>
 <p>https://istio.io/latest/zh/docs/setup/install/istioctl/#display-the-configuration-of-a-profile</p>
 <p>使用istioctl直接安装：</p>
-<pre><code class="language-powershell">$ istioctl install --set profile=demo
+<pre><code class="language-shell">$ istioctl install --set profile=demo
 ✔ Istio core installed
 ✔ Istiod installed
 ✔ Egress gateways installed
@@ -254,20 +253,20 @@ istio-ingressgateway-586dbbc45d-xphjb   1/1     Running   0          77s
 istiod-6cc5758d8c-pz28m                 1/1     Running   0          84s
 </code></pre>
 <p>istio针对不同的环境，提供了几种不同的初始化部署的<a href="https://istio.io/latest/docs/setup/additional-setup/config-profiles/">profile</a></p>
-<pre><code class="language-powershell"># 查看提供的profile类型
+<pre><code class="language-shell"># 查看提供的profile类型
 $ istioctl profile list
 
 # 获取kubernetes的yaml：
 $ istioctl manifest generate --set profile=demo &gt; istio-kubernetes-manifest.yaml
 </code></pre>
-<h6 id="卸载">卸载</h6>
-<pre><code class="language-powershell">$ istioctl manifest generate --set profile=demo | kubectl delete -f -
+<h3 id="卸载">卸载</h3>
+<pre><code class="language-shell">$ istioctl manifest generate --set profile=demo | kubectl delete -f -
 </code></pre>
-<h4 id="快速入门">快速入门</h4>
-<h5 id="场景一">场景一</h5>
-<h6 id="模型图">模型图</h6>
-<figure data-type="image" tabindex="4"><img src="images%5Ccj-1.jpg" alt="" loading="lazy"></figure>
-<h6 id="资源清单">资源清单</h6>
+<h1 id="快速入门">快速入门</h1>
+<h2 id="场景一">场景一</h2>
+<h3 id="模型图">模型图</h3>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650367186887.jpg" alt="" loading="lazy"></figure>
+<h3 id="资源清单">资源清单</h3>
 <p><code>front-tomcat-dpl-v1.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment
@@ -338,8 +337,8 @@ spec:
     service: bill-service
   type: ClusterIP
 </code></pre>
-<h6 id="操作">操作</h6>
-<pre><code class="language-powershell">$ kubectl create namespace istio-demo
+<h3 id="操作">操作</h3>
+<pre><code class="language-shell">$ kubectl create namespace istio-demo
 $ kubectl apply -f front-tomcat-dpl-v1.yaml
 $ kubectl apply -f bill-service-dpl-v1.yaml
 $ kubectl apply -f bill-service-svc.yaml
@@ -347,11 +346,11 @@ $ kubectl apply -f bill-service-svc.yaml
 $ kubectl -n istio-demo exec front-tomcat-v1-548b46d488-r7wv8 -- curl -s bill-service:9999
 this is bill-service-v1
 </code></pre>
-<h5 id="场景二">场景二</h5>
+<h2 id="场景二">场景二</h2>
 <p>后台账单服务更新v2版本，前期规划90%的流量访问v1版本，导入10%的流量到v2版本</p>
-<h6 id="模型图-2">模型图</h6>
-<figure data-type="image" tabindex="5"><img src="images%5Ccj-2.jpg" alt="" loading="lazy"></figure>
-<h6 id="资源清单-2">资源清单</h6>
+<h3 id="模型图-2">模型图</h3>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1650367230163.jpg" alt="" loading="lazy"></figure>
+<h3 id="资源清单-2">资源清单</h3>
 <p>新增<code>bill-service-dpl-v2.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment
@@ -379,13 +378,13 @@ spec:
         command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'hello, this is bill-service-v2'&gt;/usr/share/nginx/html/index.html;nginx -g 'daemon off;'&quot;]
 </code></pre>
 <p>此时，访问规则会按照v1和v2的pod各50%的流量分配。</p>
-<pre><code class="language-powershell">$ kubectl apply -f bill-service-dpl-v2.yaml
+<pre><code class="language-shell">$ kubectl apply -f bill-service-dpl-v2.yaml
 $ kubectl -n istio-demo exec front-tomcat-v1-548b46d488-r7wv8 --  curl -s bill-service:9999
 </code></pre>
-<figure data-type="image" tabindex="6"><img src="images%5Ccj-2-1.jpg" alt="" loading="lazy"></figure>
-<h6 id="使用istio">使用Istio</h6>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1650367246005.jpg" alt="" loading="lazy"></figure>
+<h3 id="使用istio">使用Istio</h3>
 <p>注入：</p>
-<pre><code class="language-powershell">$ istioctl kube-inject -f bill-service-dpl-v1.yaml|kubectl apply -f -
+<pre><code class="language-shell">$ istioctl kube-inject -f bill-service-dpl-v1.yaml|kubectl apply -f -
 $ istioctl kube-inject -f bill-service-dpl-v2.yaml|kubectl apply -f -
 $ istioctl kube-inject -f front-tomcat-dpl-v1.yaml|kubectl apply -f -
 </code></pre>
@@ -433,7 +432,7 @@ spec:
       weight: 10
 </code></pre>
 <p>使用client验证流量分配是否生效。</p>
-<pre><code class="language-powershell">$ kubectl apply -f bill-service-virtualservice.yaml
+<pre><code class="language-shell">$ kubectl apply -f bill-service-virtualservice.yaml
 $ kubectl apply -f bill-service-destnation-rule.yaml
 $ kubectl -n istio-demo exec front-tomcat-v1-78cf497978-ltxpf -c front-tomcat -- curl -s bill-service
 </code></pre>
@@ -461,9 +460,9 @@ $ kubectl -n istio-demo exec front-tomcat-v1-78cf497978-ltxpf -c front-tomcat --
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/gJnj_xiUS/">
+              <a href="https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/">
                 <h3 class="post-title">
-                  SpringBoot Admin监控
+                  调用链路追踪
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,23 +36,7 @@
             <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
 <li><a href="#hystrix-dashboard">Hystrix Dashboard</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -158,7 +142,7 @@
         
         <div class="post-content yue">
           <p>为什么需要断路器？</p>
-<figure data-type="image" tabindex="1"><img src="images%5Chystrix.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366257275.jpg" alt="" loading="lazy"></figure>
 <p>A作为服务提供者，B为A的服务消费者，C和D是B的服务消费者。A不可用引起了B的不可用，并将不可用像滚雪球一样放大到C和D时，雪崩效应就形成了。</p>
 <p>因此，需要实现一种机制，可以做到自动监控服务状态并根据调用情况进行自动处理。</p>
 <ul>
@@ -166,7 +150,7 @@
 <li>维护断路器的打开、关闭、半开三种状态</li>
 <li>提供fallback机制</li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="images%5Cnetflix-hystrix.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366297349.jpg" alt="" loading="lazy"></figure>
 <p>修改bill-service项目：</p>
 <p>pom.xml</p>
 <pre><code class="language-xml">        &lt;dependency&gt;
@@ -347,7 +331,7 @@ spring:
   application:
     name: user-service
 </code></pre>
-<h6 id="hystrix-dashboard">Hystrix Dashboard</h6>
+<h2 id="hystrix-dashboard">Hystrix Dashboard</h2>
 <p>前面一章，我们讲解了如何整合<code>Hystrix</code>。而在实际情况下，使用了<code>Hystrix</code>的同时,还会对其进行实时的数据监控，反馈各类指标数据。今天我们就将讲解下<code>Hystrix Dashboard</code>和<code>Turbine</code>.其中<code>Hystrix Dashboard</code>是一款针对<code>Hystrix</code>进行实时监控的工具，通过<code>Hystrix Dashboard</code>我们可以在直观地看到各<code>Hystrix Command</code>的<strong>请求响应时间</strong>, <strong>请求成功率</strong>等数据,监控单个实例内的指标情况。后者<code>Turbine</code>，能够将多个实例指标数据进行聚合的工具。</p>
 <p>在eureka注册中心处访问<code>bill-service</code>的服务<code>actuator</code>地址: <code>http://192.168.136.1:7001/actuator/info</code></p>
 <p>若访问不了,需要添加如下内容:</p>
@@ -484,9 +468,9 @@ hystrix:
 </li>
 <li>
 <p>其他一些数量指标如下图所示</p>
-<figure data-type="image" tabindex="3"><img src="images%5Chystric-dashboard.jpg" alt="" loading="lazy"></figure>
 </li>
 </ul>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1650366351116.jpg" alt="" loading="lazy"></figure>
 <blockquote>
 <p>提交代码到gitlab仓库</p>
 </blockquote>

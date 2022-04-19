@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650278693964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650367406607">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650278693964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650367406607" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,21 +36,9 @@
             <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
 <li><a href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85">服务提供者</a>
 <ul>
 <li><a href="#cicd%E6%8C%81%E7%BB%AD%E4%BA%A4%E4%BB%98%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85">CICD持续交付服务提供者</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -157,7 +145,7 @@
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/D6hqieOMu.jpeg" alt="">
         
         <div class="post-content yue">
-          <h5 id="服务提供者">服务提供者</h5>
+          <h2 id="服务提供者">服务提供者</h2>
 <p>前面已经将用户服务注册到了eureka注册中心，但是还没有暴漏任何API给服务消费者调用。</p>
 <p>新建controller类：</p>
 <pre><code class="language-java">package com.luffy.userservice.controller;
@@ -253,7 +241,7 @@ spring:
   application:
     name: user-service
 </code></pre>
-<h6 id="cicd持续交付服务提供者">CICD持续交付服务提供者</h6>
+<h3 id="cicd持续交付服务提供者">CICD持续交付服务提供者</h3>
 <p><code>deployment.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment
@@ -328,7 +316,7 @@ status:
   loadBalancer: {}
 </code></pre>
 <p>ingress配置：</p>
-<pre><code class="language-powershell">$ kubectl -n dev edit configmap devops-config
+<pre><code class="language-shell">$ kubectl -n dev edit configmap devops-config
 ...
 data:
   INGRESS_MYBLOG: blog-dev.luffy.com
@@ -446,7 +434,7 @@ sonar.tests=src/test/java
 sonar.java.binaries=target/classes
 </code></pre>
 <p>创建user-service项目，提交代码：</p>
-<pre><code class="language-powershell">git init
+<pre><code class="language-shell">git init
 git remote add origin http://gitlab.luffy.com/luffy-spring-cloud/user-service.git
 git add .
 git commit -m &quot;Initial commit&quot;
