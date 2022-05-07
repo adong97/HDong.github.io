@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651928255879">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651939701012">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651928255879" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651939701012" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -40,12 +40,17 @@
 <li><a href="#etcd%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96">etcd参数优化</a></li>
 <li><a href="#etcd%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95">etcd数据目录</a></li>
 <li><a href="#%E6%9F%A5%E7%9C%8Betcd%E9%9B%86%E7%BE%A4%E4%BF%A1%E6%81%AF">查看etcd集群信息</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8Betcd%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E7%8A%B6%E6%80%81">查看etcd集群节点状态：</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Betcd%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E7%8A%B6%E6%80%81">查看etcd集群节点状态</a></li>
 <li><a href="#%E6%9F%A5%E7%9C%8Betcd%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF">查看etcd数据信息:</a></li>
 <li><a href="#etcd%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%95%B0%E6%8D%AE">etcd增删改查数据</a></li>
 <li><a href="#etcd%E6%95%B0%E6%8D%AEwatch%E6%9C%BA%E5%88%B6">etcd数据watch机制</a></li>
-<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%81%9A%E6%95%B0%E6%8D%AE%E5%BF%AB%E7%85%A7%E9%87%8D%E8%A6%81">添加定时任务做数据快照（重要！）</a></li>
-<li><a href="#%E6%81%A2%E5%A4%8D%E5%BF%AB%E7%85%A7">恢复快照</a></li>
+<li><a href="#etcd-v3-api%E7%89%88%E6%9C%AC%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D">etcd V3 API版本数据备份与恢复</a>
+<ul>
+<li><a href="#%E7%A4%BA%E4%BE%8Betcd-2%E5%8D%95%E8%8A%82%E7%82%B9%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D">示例：etcd 2单节点数据备份与恢复</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B-etcd%E9%9B%86%E7%BE%A4%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D">示例 etcd集群数据备份与恢复</a></li>
+</ul>
+</li>
+<li><a href="#etcd%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E6%B5%81%E7%A8%8B">ETCD数据恢复流程</a></li>
 <li><a href="#namespace%E5%88%A0%E9%99%A4%E9%97%AE%E9%A2%98">namespace删除问题</a></li>
 </ul>
 </li>
@@ -145,7 +150,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">ETCD 详解</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-15 / 9 min read
+          2022-02-15 / 13 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/TcpMtOSFQ.png" alt="">
@@ -229,6 +234,25 @@ drwx------ 2 root root 4096 May  7 11:43 wal/     ##存放预写式日志
 <h2 id="查看etcd集群信息">查看etcd集群信息</h2>
 <p>etcd有多个不同的API访问版本，v1版本已经废弃，etcd v2 和 v3 本质上是共享同一套 raft 协议代码的两个独立的应用，接口不一样，存储不一样， 数据互相隔离。也就是说如果从 Etcd v2 升级到 Etcd v3，原来v2 的数据还是只能用 v2 的接口访问，v3 的接口创建的数据也只能访问通过 v3 的接<br>
 口访问。</p>
+<pre><code class="language-shell">#声明通过ETCDCTL_API=3这个版本拿取数据
+$ export ETCDCTL_API=3
+$ etcdctl --endpoints=https://[127.0.0.1]:2379 \
+              --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+              --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
+              --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
+
+## --endpoints指定要访问哪个ETCD的server
+## 2379为客户端连接端口，2380为service端通信端口
+## --cacert指定根证书
+## --cert根据根证书签发的证书	
+## --key签发证书的私钥
+
+#设置别名，方便操作
+$ alias etcdctl='etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
+
+#查看ETCD集群成员节点
+$ etcdctl member list -w table
+</code></pre>
 <pre><code class="language-shell">WARNING: 
     Environment variable ETCDCTL_API is not set; defaults to etcdctl v2. #默认使用V2版本 
     Set environment variable ETCDCTL_API=3 to use v3 API or ETCDCTL_API=2 to use v2 API. #设置API版本
@@ -253,58 +277,50 @@ OPTIONS:
 
 root@k8s-etcd1:~#  ETCDCTL_API=3 etcdctl member list
 </code></pre>
-<pre><code class="language-shell">#声明通过ETCDCTL_API=3这个版本拿取数据
-$ export ETCDCTL_API=3
-$ etcdctl --endpoints=https://[127.0.0.1]:2379 \
-              --cacert=/etc/kubernetes/pki/etcd/ca.crt \
-              --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
-              --key=/etc/kubernetes/pki/etcd/healthcheck-client.key member list -w table
+<h2 id="查看etcd集群节点状态">查看etcd集群节点状态</h2>
+<p>验证当前etcd所有成员状态</p>
+<pre><code>root@k8s-etcd1:~# export ETCDCTL_API=3 
+root@k8s-etcd1:~# export NODE_IPS=&quot;10.1.13.188 10.1.13.189 10.1.13.190&quot;
 
-## --endpoints指定要访问哪个ETCD的server
-## 2379为客户端连接端口，2380为service端通信端口
-## --cacert指定根证书
-## --cert根据根证书签发的证书	
-## --key签发证书的私钥
+root@k8s-etcd1:~# for ip in ${NODE_IPS}; do  etcdctl --endpoints=https://${ip}:2379 --cacert=/etc/kubernetes/ssl/ca.pem --cert=/etc/kubernetes/ssl/etcd.pem --key=/etc/kubernetes/ssl/etcd-key.pem endpoint health; done
 
-#设置别名，方便操作
-$ alias etcdctl='etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key'
-
-#查看ETCD集群成员节点
-$ etcdctl member list -w table
+https://10.1.13.188:2379 is healthy: successfully committed proposal: took = 42.405041ms
+https://10.1.13.189:2379 is healthy: successfully committed proposal: took = 20.529237ms
+https://10.1.13.190:2379 is healthy: successfully committed proposal: took = 14.36329ms
 </code></pre>
-<h2 id="查看etcd集群节点状态">查看etcd集群节点状态：</h2>
-<pre><code class="language-shell">$ etcdctl endpoint status -w table
-$ etcdctl endpoint health -w table
+<p>以表格的形式显示节点详细状态</p>
+<pre><code class="language-shell">$ export NODE_IPS=&quot;10.1.13.188 10.1.13.189 10.1.13.190&quot;
+$ for ip in ${NODE_IPS}; do  etcdctl --endpoints=https://${ip}:2379 --cacert=/etc/kubernetes/ssl/ca.pem --cert=/etc/kubernetes/ssl/etcd.pem --key=/etc/kubernetes/ssl/etcd-key.pem endpoint  status -w table ; done
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+| https://10.1.13.188:2379 | d8d390924ae7c14e |   3.5.1 |  2.8 MB |     false |      false |        14 |    3715823 |            3715823 |        |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+| https://10.1.13.189:2379 | 2c531769c5cb08c0 |   3.5.1 |  2.8 MB |      true |      false |        14 |    3715823 |            3715823 |        |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|         ENDPOINT         |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+| https://10.1.13.190:2379 | 418b7186e912d751 |   3.5.1 |  2.8 MB |     false |      false |        14 |    3715823 |            3715823 |        |
++--------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
 
-#设置key值
-$ etcdctl put luffy 1
-
-#查询值
-$ etcdctl get luffy
-
-#我们可以按照目录结构的方式存储数据，这样的好处就是，组件存储数据可以按照目录区分，不会重复
-$ etcdctl  put /luffy/key1 val1
-
-查看所有key值：
-$  etcdctl get / --prefix --keys-only
-## --prefix 前缀，把所有使用/前缀的key读出来
-## --keys-only 只取key值
-
-### 取值含义
-示例：
-/registry/services/specs/kube-system/kubelet
-&gt; /registry 第一层，固定的
-&gt; /services 第二层，资源类型
-
-查看具体的key对应的数据：
-$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
+##参数解析：
+ENDPOINT   #集群地址和端口
+DB SIZE       # 数据大小
+IS LEADER   # 是否是主节点，一个集群只有一个leader.
+##leader负责写数据，写完以后复制到另外两个节点，
+##leader宕机以后，剩下两个节点会进行选举，重新选举出一个新的leader,继续负责ETCD对外的写入。
+IS LEARNER  #是否正在同步数据
 </code></pre>
-<p>list-watch:</p>
-<pre><code class="language-shell">$ etcdctl watch /luffy/ --prefix
-$ etcdctl put /luffy/key1 val1
+<p>以表格的形式显示节点健康状态</p>
+<pre><code>$ etcdctl endpoint health -w table
 </code></pre>
 <h2 id="查看etcd数据信息">查看etcd数据信息:</h2>
-<pre><code class="language-shell">~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only #以路径的方式获取所有key信息 
+<pre><code class="language-shell"># 以路径的方式获取所有key信息 
+~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only 
 
 pod信息： 
 ~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep pod 
@@ -324,56 +340,124 @@ calico组件信息：
 ~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep calico
 /calico/ipam/v2/assignment/ipv4/block/10.100.142.128-26
 </code></pre>
+<p>示例：获取pod元数据信息</p>
+<pre><code class="language-shell"># 过滤pod的路径
+~# etcdctl get / --prefix --keys-only |grep net-test01
+/registry/pods/default/net-test01
+
+# 获取这个pod的元数据信息
+~# etcdctl get /registry/pods/default/net-test01
+
+# 删除pod,etcd删除数据绕过了APIserver，不需要APIserver鉴权和准入
+~# etcdctl del /registry/pods/default/net-test01
+</code></pre>
 <h2 id="etcd增删改查数据">etcd增删改查数据</h2>
 <pre><code class="language-shell"># 添加数据 
-~# ETCDCTL_API=3 /usr/bin/etcdctl put /name &quot;tom&quot; 
+~# ETCDCTL_API=3 etcdctl put /name &quot;tom&quot; 
 OK
 
 # 查询数据 
-~# ETCDCTL_API=3 /usr/bin/etcdctl get /name 
+~# ETCDCTL_API=3 etcdctl get /name 
 /name 
 tom
 
-# 改动数据，#直接覆盖就是更新数据 
-~# ETCDCTL_API=3 /usr/bin/etcdctl put /name &quot;jack&quot; 
+# 改动数据，直接覆盖就是更新数据 
+~# ETCDCTL_API=3 etcdctl put /name &quot;jack&quot; 
 OK
 
 # 验证改动 
-~# ETCDCTL_API=3 /usr/bin/etcdctl get /name 
+~# ETCDCTL_API=3 etcdctl get /name 
 /name 
 jack
 
 # 删除数据 
-~# ETCDCTL_API=3 /usr/bin/etcdctl del /name 
+~# ETCDCTL_API=3 etcdctl del /name 
 1
 
-~# ETCDCTL_API=3 /usr/bin/etcdctl get /name
+~# ETCDCTL_API=3 etcdctl get /name
 </code></pre>
 <h2 id="etcd数据watch机制">etcd数据watch机制</h2>
 <p>基于不断监看数据，发生变化就主动触发通知客户端，Etcd v3 的watch机制支持watch某个固定的key，也支持watch一个范围。</p>
-<pre><code class="language-shell">#在etcd node1上watch一个key，没有此key也可以执行watch，后期可以再创建： root@k8s-etcd1:~# ETCDCTL_API=3 /usr/bin/etcdctl watch /data
+<pre><code class="language-shell">在etcd node1上watch一个key，没有此key也可以执行watch，后期可以再创建： root@k8s-etcd1:~# ETCDCTL_API=3  etcdctl watch /data
 
-#在etcd node2修改数据，验证etcd node1是否能够发现数据变化 
-root@k8s-etcd2:~# ETCDCTL_API=3 /usr/bin/etcdctl put /data &quot;data v1&quot; 
+在etcd node2修改数据，验证etcd node1是否能够发现数据变化 
+root@k8s-etcd2:~# ETCDCTL_API=3  etcdctl put /data &quot;data v1&quot; 
 OK 
 
-root@k8s-etcd2:~# ETCDCTL_API=3 /usr/bin/etcdctl put /data &quot;data v2&quot;
+root@k8s-etcd2:~# ETCDCTL_API=3  etcdctl put /data &quot;data v2&quot;
 OK
 </code></pre>
-<h2 id="添加定时任务做数据快照重要">添加定时任务做数据快照（重要！）</h2>
-<pre><code class="language-shell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
+<h2 id="etcd-v3-api版本数据备份与恢复">etcd V3 API版本数据备份与恢复</h2>
+<p>WAL是write ahead log的缩写，顾名思义，也就是在执行真正的写操作之前先写一个日志，预写日志。 wal: 存放预写式日志,最大的作用是记录了整个数据变化的全部历程。在etcd中，所有数据的修改在提交前，都要先写入到WAL 中。</p>
+<pre><code class="language-shell">V3版本备份数据：
+root@k8s-etcd2:~# ETCDCTL_API=3 etcdctl snapshot save snapshot.db 
+Snapshot saved at snapshot.db
+
+V3版本恢复数据： 
+root@k8s-etcd2:~# ETCDCTL_API=3 etcdctl snapshot restore snapshot.db --data-dir=/opt/etcd-testdir #将数据恢复到一个新的不存在的目录中 
+2019-07-11 18:57:46.526757 I | mvcc: restore compact to 74541 
+2019-07-11 18:57:46.536114 I | etcdserver/membership: added member 8e9e05c52164694d [http://localhost:2380] to cluster cdf818194e3a8c32
+
+#自动备份数据 
+root@k8s-etcd2:~# mkdir /data/etcd-backup-dir/ -p 
+root@k8s-etcd2:~# cat script.sh
+#!/bin/bash 
+source /etc/profile 
+DATE=`date +%Y-%m-%d_%H-%M-%S`
+ETCDCTL_API=3 /usr/bin/etcdctl snapshot save /data/etcd-backup-dir/etcd-snapshot-${DATE}.db
 </code></pre>
-<h2 id="恢复快照">恢复快照</h2>
+<h3 id="示例etcd-2单节点数据备份与恢复">示例：etcd 2单节点数据备份与恢复</h3>
 <ol>
-<li>停止etcd和apiserver</li>
-<li>移走当前数据目录<pre><code class="language-shell">$ mv /var/lib/etcd/ /tmp
+<li>etcd备份数据到指定目录下</li>
+</ol>
+<pre><code>~# mkdir /data/etcdbackup -p
+~# etcdctl  snapshot save /data/etcdbackup/etcd-backup-202205072157
+Snapshot saved at /data/etcdbackup/etcd-backup-202205072157
 </code></pre>
-</li>
-<li>恢复快照<pre><code class="language-shell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
+<ol start="2">
+<li>etcd单节点恢复数据</li>
+</ol>
+<pre><code>~#  etcdctl snapshot restore /data/etcdbackup/etcd-backup-202205072157  --data-dir=/tmp/etcddit
+--data-dir #将数据恢复到一个新的不存在的目录中
+
+### 修改etcd配置文件，重新指定数据目录
+vim /etc/systemd/system/etcd.service 
+WorkingDirectory=/tmp/etcddit   #指向新恢复的数据目录
+--data-dir=/tmp/etcddit    #指向新恢复的数据目录
+
+### 重启etcd
+~# systemctl restart etcd
 </code></pre>
-</li>
-<li>集群恢复<br>
-https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md</li>
+<h3 id="示例-etcd集群数据备份与恢复">示例 etcd集群数据备份与恢复</h3>
+<ol>
+<li>etcd数据备份</li>
+</ol>
+<pre><code class="language-shell">通过kubeasz实现etcd集群数据备份和数据恢复。
+
+~# cd /etc/kubeasz
+~# ./ezctl backup k8s-cluster01  ## 备份集群k8s-cluster01
+先对集群做检测，检查哪个etcd在线，连到其中一个做快照，再把快照，拷贝到本机。
+快照保存在clusters/k8s-cluster01/backup/目录下：
+snapshot.db
+snapshot_202205072223.db
+</code></pre>
+<ol start="2">
+<li>etcd数据还原</li>
+</ol>
+<pre><code class="language-shell">~# cd /etc/kubeasz
+~# ./ezctl restore  k8s-cluster01
+</code></pre>
+<h2 id="etcd数据恢复流程">ETCD数据恢复流程</h2>
+<p>当etcd集群宕机数量超过集群总节点数一半以上的时候(如总数为三台宕机两台)，就会导致整合集群宕机，后期需要重新恢复 数据，则恢复流程如下：</p>
+<ol>
+<li>恢复服务器系统</li>
+<li>重新部署ETCD集群</li>
+<li>停止kube-apiserver/controller-manager/scheduler/kubelet/kube-proxy</li>
+<li>停止ETCD集群</li>
+<li>各ETCD节点恢复同一份备份数据</li>
+<li>启动各节点并验证ETCD集群</li>
+<li>启动kube-apiserver/controller-manager/scheduler/kubelet/kube-proxy</li>
+<li>验证k8s master状态及pod数据</li>
 </ol>
 <h2 id="namespace删除问题">namespace删除问题</h2>
 <p>很多情况下，会出现namespace删除卡住的问题，此时可以通过操作etcd来删除数据：</p>

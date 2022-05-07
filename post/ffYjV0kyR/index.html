@@ -1,0 +1,499 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651939701012">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651939701012" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#velero%E7%AE%80%E4%BB%8B">Velero简介</a>
+<ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84">整体架构</a></li>
+<li><a href="#%E5%A4%87%E4%BB%BD%E6%B5%81%E7%A8%8B">备份流程</a></li>
+</ul>
+</li>
+<li><a href="#%E9%83%A8%E7%BD%B2minio">部署minio</a></li>
+<li><a href="#%E9%83%A8%E7%BD%B2velero">部署velero</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85velero">安装velero</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEvelero%E8%AE%A4%E8%AF%81%E7%8E%AF%E5%A2%83">配置velero认证环境：</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AF%B9default-ns%E8%BF%9B%E8%A1%8C%E5%A4%87%E4%BB%BD">对default ns进行备份</a>
+<ul>
+<li><a href="#minio%E9%AA%8C%E8%AF%81%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE">minio验证备份数据</a></li>
+<li><a href="#%E5%AF%B9myserver-ns%E8%BF%9B%E8%A1%8C%E5%A4%87%E4%BB%BD">对myserver ns进行备份</a></li>
+<li><a href="#minio%E9%AA%8C%E8%AF%81%E5%A4%87%E4%BB%BD">minio验证备份</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 0.8s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.2000000000000002s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.4000000000000001s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.6s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2s">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/post/about" class="menu" style="animation-delay: 2.2s">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">Velero结合minio实现kubernetes 业务数据备份与恢复</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-05-07 / 8 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ffYjV0kyR.png" alt="">
+        
+        <div class="post-content yue">
+          <p>Kubernetes对etcd数据的读写流程:<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1651938359404.png" alt="" loading="lazy"></p>
+<h1 id="velero简介">Velero简介</h1>
+<p>Velero 是一个云原生的灾难恢复和迁移工具，它本身也是开源的,采用Go语言编写，可以安全的备份、恢复和迁移 Kubernetes集群资源数据。<br>
+Velero 是西班牙语意思是帆船，非常符合Kubernetes社区的命名风格，Velero的开发公司Heptio，已被VMware收购。<br>
+Velero 支持标准的K8S集群，既可以是私有云平台也可以是公有云，除了灾备之外它还能做资源移转，支持把容器应用从一个集群迁移到另一个集群。</p>
+<h2 id="整体架构">整体架构</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1651938473023.png" alt="" loading="lazy"></figure>
+<h2 id="备份流程">备份流程</h2>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1651938557401.png" alt="" loading="lazy"></figure>
+<pre><code class="language-shell">~# velero backup create myserver-ns-backup-${DATE} --include-namespaces myserver -kubeconfig=./awsuser.kubeconfig --namespace velero-system
+</code></pre>
+<h1 id="部署minio">部署minio</h1>
+<p>创建数据目录</p>
+<pre><code class="language-shell"> ~# tar xf docker-19.03.15-binary-install.tar.gz 
+ ~# bash docker-install.sh 
+ ~# docker pull minio/minio:RELEASE.2022-04-12T06-55-35Z
+ ~# mkdir -p /data/minio
+</code></pre>
+<p>创建minio容器,如果不指定,则默认用户名与密码为 minioadmin/minioadmin,可以通过环境变量自定义,如下:</p>
+<pre><code class="language-shell"> docker run --name minio \ 
+ -p 9000:9000 \ 
+ -p 9999:9999 \ 
+ -d --restart=always \ 
+ -e &quot;MINIO_ROOT_USER=admin&quot; \ 
+ -e &quot;MINIO_ROOT_PASSWORD=12345678&quot; \ 
+ -v /data/minio/data:/data \
+minio/minio:RELEASE.2022-04-12T06-55-35Z server /data \
+--console-address '0.0.0.0:9999'
+</code></pre>
+<p>创建bucket</p>
+<h1 id="部署velero">部署velero</h1>
+<h2 id="安装velero">安装velero</h2>
+<pre><code class="language-shell">
+root@k8s-master1:/usr/local/src# wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
+root@k8s-master1:/usr/local/src# tar xvf velero-v1.8.1-linux-amd64.tar.gz 
+root@k8s-master1:/usr/local/src# cp velero-v1.8.1-linux-amd64/velero  /usr/local/bin/
+root@k8s-master1:/usr/local/src# velero  --help
+</code></pre>
+<h2 id="配置velero认证环境">配置velero认证环境：</h2>
+<pre><code class="language-shell">#工作目录：
+root@k8s-master1:~# mkdir  /data/velero -p
+root@k8s-master1:/data/velero# 
+
+#认证文件：
+root@k8s-master1:/data/velero# vim velero-auth.txt 
+[default]
+aws_access_key_id = admin
+aws_secret_access_key = 12345678
+
+#准备user-csr文件：
+root@k8s-master1:/data/velero# vim awsuser-csr.json
+{
+  &quot;CN&quot;: &quot;awsuser&quot;,
+  &quot;hosts&quot;: [],
+  &quot;key&quot;: {
+    &quot;algo&quot;: &quot;rsa&quot;,
+    &quot;size&quot;: 2048
+  },
+  &quot;names&quot;: [
+    {
+      &quot;C&quot;: &quot;CN&quot;,
+      &quot;ST&quot;: &quot;BeiJing&quot;,
+      &quot;L&quot;: &quot;BeiJing&quot;,
+      &quot;O&quot;: &quot;k8s&quot;,
+      &quot;OU&quot;: &quot;System&quot;
+    }
+  ]
+}
+
+#准备证书签发环境：
+root@k8s-master1:/data/velero# apt install golang-cfssl
+https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64 
+https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64 
+https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl-certinfo_1.6.1_linux_amd64
+root@k8s-master1:/data/velero# mv cfssl-certinfo_1.6.1_linux_amd64 cfssl-certinfo
+root@k8s-master1:/data/velero# mv cfssl_1.6.1_linux_amd64 cfssl
+root@k8s-master1:/data/velero# mv cfssljson_1.6.1_linux_amd64 cfssljson
+root@k8s-master1:/data/velero# cp cfssl-certinfo cfssl cfssljson /usr/local/bin/
+root@k8s-master1:/data/velero# chmod  a+x /usr/local/bin/cfssl* 
+
+#执行证书签发：
+root@k8s-master1:/data/velero# /usr/local/bin/cfssl gencert -ca=/etc/kubernetes/ssl/ca.pem -ca-key=/etc/kubernetes/ssl/ca-key.pem -config=/etc/kubeasz/clusters/k8s-cluster1/ssl/ca-config.json -profile=kubernetes ./awsuser-csr.json | cfssljson -bare awsuser
+
+#验证证书：
+root@k8s-master1:/data/velero# ll awsuser*
+-rw-r--r-- 1 root root  220 Apr 14 12:29 awsuser-csr.json
+-rw------- 1 root root 1679 Apr 14 12:30 awsuser-key.pem
+-rw-r--r-- 1 root root  997 Apr 14 12:30 awsuser.csr
+-rw-r--r-- 1 root root 1387 Apr 14 12:30 awsuser.pem
+
+#分发证书到api-server证书路径：
+root@k8s-master1:/data/velero# cp awsuser-key.pem /etc/kubernetes/ssl/
+root@k8s-master1:/data/velero# cp awsuser.pem /etc/kubernetes/ssl/
+
+#生成集群认证config文件：
+# export KUBE_APISERVER=&quot;https://172.31.7.101:6443&quot;
+# kubectl config set-cluster kubernetes \
+--certificate-authority=/etc/kubernetes/ssl/ca.pem \
+--embed-certs=true \
+--server=${KUBE_APISERVER} \
+--kubeconfig=./awsuser.kubeconfig
+
+#设置客户端证书认证:
+# kubectl config set-credentials awsuser \
+--client-certificate=/etc/kubernetes/ssl/awsuser.pem \
+--client-key=/etc/kubernetes/ssl/awsuser-key.pem \
+--embed-certs=true \
+--kubeconfig=./awsuser.kubeconfig
+
+#设置上下文参数:
+# kubectl config set-context kubernetes \
+--cluster=kubernetes \
+--user=awsuser \
+--namespace=velero-system \
+--kubeconfig=./awsuser.kubeconfig
+
+#设置默认上下文:
+#kubectl config use-context kubernetes --kubeconfig=awsuser.kubeconfig
+
+#k8s集群中创建awsuser账户：
+# kubectl create clusterrolebinding awsuser --clusterrole=cluster-admin --user=awsuser
+
+#创建namespace：
+# kubectl create ns velero-system
+
+# 执行安装：
+velero --kubeconfig  ./awsuser.kubeconfig \
+	install \
+    --provider aws \
+    --plugins velero/velero-plugin-for-aws:v1.3.1 \
+    --bucket velerodata  \
+    --secret-file ./velero-auth.txt \
+    --use-volume-snapshots=false \
+	--namespace velero-system \
+--backup-location-config region=minio,s3ForcePathStyle=&quot;true&quot;,s3Url=http://172.31.7.106:9000
+
+#验证安装：
+root@k8s-master1:/data/velero# kubectl  describe pod velero-6755cb8697-phfsr -n velero-system  
+
+velero backup create magedu-n66-20220417  --include-namespaces myserver
+
+
+DATE=`date +%Y%m%d%H%M%S`
+velero backup create myserver-ns-backup-${DATE} \
+--include-namespaces myserver \
+--kubeconfig=./awsuser.kubeconfig \
+--namespace velero-system
+
+oot@k8s-master1:/data/velero# kubectl  get pod -n velero-system 
+NAME                  READY   STATUS    RESTARTS   AGE
+velero-6755cb8697-phfsr   1/1     Running     0          5m45s
+
+velero backup create myserver-ns-backup-2022041621 \
+--include-namespaces myserver \
+--kubeconfig=./awsuser.kubeconfig \
+--namespace velero-system
+
+
+velero restore create --from-backup default-backup-20220416205931 --wait --kubeconfig=./awsuser.kubeconfig --namespace velero-system
+
+velero restore create --from-backup myserver-ns-backup-20220417155913 --wait \
+--kubeconfig=./awsuser.kubeconfig \
+--namespace velero-system
+</code></pre>
+<h1 id="对default-ns进行备份">对default ns进行备份</h1>
+<pre><code class="language-shell">root@k8s-master1:/data/velero# pwd 
+/data/velero
+
+~# DATE=`date +%Y%m%d%H%M%S`
+~# velero backup create default-backup-${DATE} \ 
+--include-namespaces default \ 
+--kubeconfig=./awsuser.kubeconfig \ 
+--namespace velero-system
+
+验证备份： 
+~# velero backup describe default-backup-20220414130002 --kubeconfig=./awsuser.kubeconfig --namespace velero-system
+</code></pre>
+<h2 id="minio验证备份数据">minio验证备份数据</h2>
+<p>删除pod并执行恢复</p>
+<pre><code class="language-shell">root@k8s-master1:/data/velero# kubectl delete pod net-test3 -n default 
+pod &quot;net-test3&quot; deleted
+
+恢复default ns的pod： 
+root@k8s-master1:/data/velero# velero restore create --from-backup default-backup-20220414130002 --wait -kubeconfig=./awsuser.kubeconfig --namespace velero-system
+
+验证恢复后的pod是否存在： 
+root@k8s-master1:/data/velero# kubectl get pod -n default 
+</code></pre>
+<h2 id="对myserver-ns进行备份">对myserver ns进行备份</h2>
+<pre><code>root@k8s-master1:/data/velero# pwd 
+/data/velero 
+root@k8s-master1:/data/velero# DATE=`date +%Y%m%d%H%M%S`
+
+root@k8s-master1:/data/velero# velero backup create myserver-ns-backup-${DATE} \ 
+--include-namespaces myserver \ 
+--kubeconfig=./awsuser.kubeconfig \
+--namespace velero-system
+</code></pre>
+<h2 id="minio验证备份">minio验证备份</h2>
+<p>删除数据并恢复</p>
+<pre><code class="language-shell">root@k8s-master1:/data/velero# kubectl delete deployment myserver-tomcat-app1-deployment -n myserver 
+deployment.apps &quot;myserver-tomcat-app1-deployment&quot; deleted 
+
+root@k8s-master1:/data/velero# kubectl delete service myserver-tomcat-app1-service -n myserver 
+service &quot;myserver-tomcat-app1-service&quot; deleted
+
+root@k8s-master1:/data/velero# velero restore create --from-backup myserver-ns-backup-20220414135659 -wait \
+--kubeconfig=./awsuser.kubeconfig \
+--namespace velero-system
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/">
+                <h3 class="post-title">
+                  istio总结
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
