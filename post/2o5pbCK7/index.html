@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650423205266">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651928255879">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650423205266" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651928255879" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -72,6 +72,12 @@
 <li><a href="#324-%E6%A3%80%E6%B5%8B%E7%8E%AF%E5%A2%83%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81">3.2.4 检测环境运行状态</a></li>
 </ul>
 </li>
+<li><a href="#33-%E9%83%A8%E7%BD%B2coredns">3.3 部署CoreDNS</a>
+<ul>
+<li><a href="#331-coredns%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3">3.3.1 Coredns配置详解</a></li>
+</ul>
+</li>
+<li><a href="#34-%E9%83%A8%E7%BD%B2dashboard">3.4 部署Dashboard</a></li>
 </ul>
 </li>
 </ul>
@@ -172,7 +178,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Ubuntu系统 kubeasz 二进制部署K8S</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-04-18 / 16 min read
+          2022-04-18 / 23 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/2o5pbCK7.png" alt="">
@@ -696,6 +702,224 @@ NAME          STATUS                     ROLES    AGE   VERSION
 ### 在容器中安装网络工具
 /]#  yum install net-tools
 /]#  ping 223.6.6.6   ##ping公网地址可以通
+</code></pre>
+<h3 id="33-部署coredns">3.3 部署CoreDNS</h3>
+<p>在Github上找到k8s的官方地址:https://github.com/kubernetes/kubernetes</p>
+<p>下载kubernetes官方版本二进制包。</p>
+<pre><code class="language-shell">## 本次安装使用v1.23.5版本
+
+cd /opt/k8s-package
+wget https://dl.k8s.io/v1.23.5/kubernetes.tar.gz  #二进制
+wget https://dl.k8s.io/v1.23.5/kubernetes-client-linux-amd64.tar.gz  #客户端二进制
+wget https://dl.k8s.io/v1.23.5/kubernetes-server-linux-amd64.tar.gz  #server端二进制
+wget https://dl.k8s.io/v1.23.5/kubernetes-node-linux-amd64.tar.gz  #node和proxy二进制
+
+##下载完成全部解压
+tar xf kubernetes.tar.gz
+tar xf kubernetes-client-linux-amd64.tar.gz
+tar xf kubernetes-server-linux-amd64.tar.gz
+tar xf kubernetes-node-linux-amd64.tar.gz
+
+## 找到coredns yaml模板文件存放路径
+ll /opt/k8s-package/kubernetes/cluster/addons/dns/coredns/
+</code></pre>
+<pre><code class="language-shell"># 将模板文件拷贝到其他路径并修改coredns.yaml文件内容
+cp /opt/k8s-package/kubernetes/cluster/addons/dns/coredns/coredns.yaml.base /opt
+cd /opt
+mv coredns.yaml.base coredns.yaml
+
+vim coredns.yaml
+
+1. 修改kubernetes __DNS__DOMAIN__  # DNS域名后缀,第77行.与/etc/kubeasz/clusters/k8s-cluster01/hosts中的CLUSTER_DNS_DOMAIN保持一致。 
+  ##表示: 只要域名后缀是&quot;cluster.local&quot;,都会由k8s的etcd查询。
+
+2. forward # 表示解析不了的域名，往哪个地址转发.默认转发地址:/etc/resolv.conf
+           # forward . 223.6.6.6  也可以指定某个固定地址
+           # max_concurrent 1000  设置最大连接数
+           
+3. 修改资源限制  # 第146行,限制只能使用200MI CPU
+   memory: 200Mi
+   
+4. 修改clusterIP  # DNS地址,第212行
+   clusterIP: __DNS__SERVER__  # DNS地址可以在任意pod容器中,通过/etc/resolv.conf查看nameserver
+                           # 默认service网络的第一个地址分配给kubernetes的api,第二个地址分配给DNS
+                           
+5. 修改coredns镜像地址 # 第142行，改为国内的镜像地址
+   image: coredns/coredns:v1.8.7
+
+##修改完成，执行yaml文件
+~# kubectl apply -f coredns.yaml
+
+# 查看pod状态
+~# kubectl get pod -A
+kube-system   coredns-7db6b45f67-dj848             1/1     Running       0          21h
+
+# 查看svc状态
+~# kubectl get svc -A
+NAMESPACE     NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE
+default       kubernetes   ClusterIP   10.100.0.1   &lt;none&gt;        443/TCP                  19d
+kube-system   kube-dns     ClusterIP   10.100.0.2   &lt;none&gt;        53/UDP,53/TCP,9153/TCP   21h
+
+coredns的svc名称为&quot;kube-dns&quot;遗留问题，不会更改。
+# 启动完成，进入pod测试
+ kubectl exec -it net-test01  -- bash
+ ping baidu.com
+ 
+ ping kubernetes 
+ 如果不在同一个namespace,则需要添加namespace后缀：
+ ping kube-dns.kube-system (完整域名为：kube-dns.kube-system.svc.cluster.local)
+ ## 内网域名和外网域名都可以ping通，就表示coredns部署成功。
+ 
+域名固定格式：名称.namespace.svc.cluster.local(域名后缀)
+</code></pre>
+<h4 id="331-coredns配置详解">3.3.1 Coredns配置详解</h4>
+<pre><code class="language-yaml">vim coredns.yaml
+## Corefile:  为coredns的核心配置段
+
+data:
+  Corefile: |
+    .:53 {
+        errors   ## 错误信息标准输出
+        health { ## 检测服务是否存活,在CoreDNS的http://localhost:8080/health端口提供CoreDNS服务的健康报告
+            lameduck 5s
+        }
+        ready ## CoreDNS监听8181端口,当coreDNS的插件都已就绪时,访问该端口会返回200 OK
+        kubernetes cluster.local in-addr.arpa ip6.arpa {  ## 
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf {
+            max_concurrent 1000
+        }
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+        mysever.online {
+          forward . 
+        } 
+    
+######### 参数解析：
+errors  ## 错误信息标准输出
+
+health  ## 检测服务是否存活,在CoreDNS的http://localhost:8080/health端口提供CoreDNS服务的健康报告
+
+ready   ## CoreDNS监听8181端口,当coreDNS的插件都已就绪时,访问该端口会返回200 OK
+
+kubernetes  ## CoreDNS将基于kubernetes service name 进行DNS查询并返回查询记录给客户端
+
+prometheus ## CoreDNS的度量指标数据以Prometheus的key-value的格式在http://localhost:9153/metrics URL上提供
+
+forward  ## 不是Kubernetes集群内的其他任何域名查询都将转发到预定义的目的server,如(/etc/resolv.conf或IP(如8.8.8.8))
+
+cache ## 启用service解析缓存,单位为秒
+
+loop ## 检测域名解析是否有死循环,如coredns转发给内网服务器,而内网DNS服务器又转发给coredns,如果发现转发是死循环,则强制中止CoreDNS进程(kubernetes会重建)
+
+reload ## 检测corefile是否更改,在重新编辑configmap配置后,默认2分钟会优雅的自动加载
+
+loadbalance ## 轮询DNS域名解析,如果一个域名存在多个记录则轮询解析
+
+自定义添加域名解析示例：
+  mysever.online {  ## 域名为mysever.online
+          forward . 172.16.16.16:53 ##将域名转发到172.16.16.16:53解析
+  } ## 写在Corefile段外
+</code></pre>
+<h3 id="34-部署dashboard">3.4 部署Dashboard</h3>
+<pre><code class="language-shell"># 下载yaml文件
+~# wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+# 重命名dashboard yaml文件，方便识别
+~# mv recommended.yaml  dashboard-v2.5.1.yaml
+
+# 将dashboard镜像上传到Harbor仓库，方便Node节点获取镜像
+## 1.配置Node节点harbor域名解析(每个Node节点都要添加)
+vim /etc/hosts
+10.1.13.187   k8s-master02 harbor.weixd.com
+
+## 2.在需要上传镜像的服务器上创建目录
+~# mkdir -p /etc/docker/certs.d/harbor.weixd.com  &lt;- 必须以harbor的域名为目录名称
+
+## 3.然后将harbor服务器(10.1.13.187)中的公钥拷贝到客户端的目录中
+~# scp /opt/harbor/certs/harbor-ca.crt 10.1.13.188:/etc/docker/certs.d/harbor.weixd.com
+~# scp /opt/harbor/certs/harbor-ca.crt 10.1.13.189:/etc/docker/certs.d/harbor.weixd.com
+
+## 4.登录测试
+~# docker login harbor.weixd.com
+Username: admin
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+# 5.在master节点下载镜像，并上传到Harbor仓库中
+~# docker pull kubernetesui/dashboard:v2.5.1
+~# docker tag  kubernetesui/dashboard:v2.5.1 harbor.weixd.com/baseimage/dashboard:v2.5.1
+~# docker push harbor.weixd.com/baseimage/dashboard:v2.5.1
+
+~# docker pull kubernetesui/metrics-scraper:v1.0.7
+~# docker tag kubernetesui/metrics-scraper:v1.0.7 harbor.weixd.com/baseimage/metrics-scraper:v1.0.7
+~# docker push harbor.weixd.com/baseimage/metrics-scraper:v1.0.7
+
+# 6.修改dashboard yaml文件中的镜像地址为本地,并暴漏端口用于访问页面
+vim dashboard-v2.5.1.yaml
+...
+containers:
+  - name: dashboard-metrics-scraper
+    image: harbor.weixd.com/baseimage/metrics-scraper:v1.0.7
+...
+...
+containers:
+  - name: kubernetes-dashboard
+    image: harbor.weixd.com/baseimage/dashboard:v2.5.1
+...
+...
+## 修改dashboard service段
+spec:
+  type: NodePort  #添加NodePort类型
+  ports:
+    - port: 443
+      targetPort: 8443
+      nodePort: 30005  # z
+...
+
+# 7.创建dashboard
+~# kubectl apply -f dashboard-v2.5.1.yaml 
+
+# 8.创建登录用户admin-user,并绑定ClusterRole集群管理员角色
+vim admin-user.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+
+~# kubectl apply -f admin-user.yaml 
+## 查看token
+~# kubectl get secrets -n kubernetes-dashboard 
+~# kubectl -n kubernetes-dashboard describe secrets admin-user-token-d49tf
+
+拿到token,即可在页面访问登录
+https://10.1.13.186:30005
 </code></pre>
 
         </div>

@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1650423205266">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651928255879">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1650423205266" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651928255879" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,8 +36,17 @@
             <ul class="markdownIt-TOC">
 <li><a href="#etcd%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C">ETCD常用操作</a>
 <ul>
-<li><a href="#k8s%E9%9B%86%E7%BE%A4%E7%81%BE%E9%9A%BE%E6%81%A2%E5%A4%8D">k8s集群灾难恢复</a></li>
-<li><a href="#%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83">集群环境</a></li>
+<li><a href="#etcdservice%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3">etcd.service文件详解</a></li>
+<li><a href="#etcd%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96">etcd参数优化</a></li>
+<li><a href="#etcd%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95">etcd数据目录</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Betcd%E9%9B%86%E7%BE%A4%E4%BF%A1%E6%81%AF">查看etcd集群信息</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Betcd%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E7%8A%B6%E6%80%81">查看etcd集群节点状态：</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Betcd%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF">查看etcd数据信息:</a></li>
+<li><a href="#etcd%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5%E6%95%B0%E6%8D%AE">etcd增删改查数据</a></li>
+<li><a href="#etcd%E6%95%B0%E6%8D%AEwatch%E6%9C%BA%E5%88%B6">etcd数据watch机制</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%81%9A%E6%95%B0%E6%8D%AE%E5%BF%AB%E7%85%A7%E9%87%8D%E8%A6%81">添加定时任务做数据快照（重要！）</a></li>
+<li><a href="#%E6%81%A2%E5%A4%8D%E5%BF%AB%E7%85%A7">恢复快照</a></li>
+<li><a href="#namespace%E5%88%A0%E9%99%A4%E9%97%AE%E9%A2%98">namespace删除问题</a></li>
 </ul>
 </li>
 </ul>
@@ -134,26 +143,118 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">ETCD数据的访问</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">ETCD 详解</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-15 / 3 min read
+          2022-02-15 / 9 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/TcpMtOSFQ.png" alt="">
         
         <div class="post-content yue">
           <h1 id="etcd常用操作">ETCD常用操作</h1>
-<p>拷贝etcdctl命令行工具：</p>
+<p>如果本地没有则拷贝etcdctl命令行工具：</p>
 <pre><code class="language-shell">#将Etcd容器中的etcdctl命令拷贝到本机/usr/bin/etcdctl
 $ docker cp etcd_container:/usr/local/bin/etcdctl /usr/bin/etcdctl
 
 #如果etcd没有使用Docker容器，则将Etcd安装目录下的etcdctl拷贝到/usr/bin/etcdctl目录下
 $ cp /opt/etcd/bin/etcdctl /usr/bin/etcdctl
 </code></pre>
-<p>查看etcd集群的成员节点：</p>
+<h2 id="etcdservice文件详解">etcd.service文件详解</h2>
+<pre><code>root@k8s-etcd1:~# cat /etc/systemd/system/etcd.service 
+[Unit] 
+Description=Etcd Server 
+After=network.target 
+After=network-online.target 
+Wants=network-online.target 
+Documentation=https://github.com/coreos
+
+[Service] 
+Type=notify 
+WorkingDirectory=/var/lib/etcd/ #数据保存目录 
+ExecStart=/usr/bin/etcd \ #二进制文件路径 
+  --name=etcd1 \ #当前node 名称 
+  --cert-file=/etc/etcd/ssl/etcd.pem \ 
+  --key-file=/etc/etcd/ssl/etcd-key.pem \ 
+  --peer-cert-file=/etc/etcd/ssl/etcd.pem \ 
+  --peer-key-file=/etc/etcd/ssl/etcd-key.pem \ 
+  --trusted-ca-file=/etc/kubernetes/ssl/ca.pem \ 
+  --peer-trusted-ca-file=/etc/kubernetes/ssl/ca.pem \ 
+  --initial-advertise-peer-urls=https://192.168.7.105:2380 \ #通告自己的集群端口
+  --listen-peer-urls=https://192.168.7.105:2380 \ #集群之间通讯端口
+  --listen-client-urls=https://192.168.7.105:2379,http://127.0.0.1:2379 \ #客户端访问地址 
+  --advertise-client-urls=https://192.168.7.105:2379 \ #通告自己的客户端端口 
+  --initial-cluster-token=etcd-cluster-0 \ #创建集群使用的token，一个集群内的节点保持一致 
+  --initial-cluster=etcd1=https://192.168.7.105:2380,etcd2=https://192.168.7.106:2380,etcd3=https://192.168.7.107:2380 \ #集群所有的节点信息 
+  --initial-cluster-state=new \ #新建集群的时候的值为new,如果是已经存在的集群为existing。 
+  --data-dir=/var/lib/etcd #数据目录路径
+Restart=on-failure 
+RestartSec=5 
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<h2 id="etcd参数优化">etcd参数优化</h2>
+<pre><code class="language-shell">--max-request-bytes=10485760 #request size limit(请求的最大字节数，默认一个key最大1.5Mib,官方推荐最大10Mib)
+--quota-backend-bytes=8589934592 #storage size limit(磁盘存储空间大小限制，默认为2G,此值超过8G启动会有告警信息)
+
+数据压缩：
+--auto-compaction-mode=periodic #周期性压缩
+--auto-compaction-retention=10h  #第一次压缩等待10小时，以后每次10小时*10%=1小时压缩一次。
+0hr (rev = 1)
+1hr (rev = 10)
+...
+8hr (rev = 80)9hr (rev = 90)
+10hr(rev = 100,Compact(1))
+11hr(rev = 110,Compact(10))
+
+集群碎片整理:  将数据按照顺序存储
+~#  ETCDCTL_API=3 /usr/local/bin/etcdctl  defrag --cluster--endpoints=https://172.31.7.106:2379 --cacert=/etc/kubernetes/ssI/ca.pem --cert=/etc/kubernetes/ssl/etcd.pem --key=/etclkubernetessl/etcd-key.pem
+
+Finished defragmenting etcd member[https://172.31.7.106:2379]
+Finished defragmenting etcd member[https://172.31.7.107:2379]
+Finished defragmenting etcd member[https://172.31.7.108:2379]
+</code></pre>
+<h2 id="etcd数据目录">etcd数据目录</h2>
+<pre><code class="language-shell">/etc/systemd/system/etcd.service 配置文件中指定了ETCD数据存放路径。
+--data-dir=/var/lib/etcd #数据目录
+
+~# ll /var/lib/etcd/member/
+drwx------ 2 root root 4096 May  7 12:27 snap/   ## 用来存放数据
+drwx------ 2 root root 4096 May  7 11:43 wal/     ##存放预写式日志
+
+## wal - 预写式日志，类似于mysql的binlog。
+## 在插入数据的时候先写完日志，再保存数据。如果日志没有写入成功，就相当于数据未写入完成。
+</code></pre>
+<h2 id="查看etcd集群信息">查看etcd集群信息</h2>
+<p>etcd有多个不同的API访问版本，v1版本已经废弃，etcd v2 和 v3 本质上是共享同一套 raft 协议代码的两个独立的应用，接口不一样，存储不一样， 数据互相隔离。也就是说如果从 Etcd v2 升级到 Etcd v3，原来v2 的数据还是只能用 v2 的接口访问，v3 的接口创建的数据也只能访问通过 v3 的接<br>
+口访问。</p>
+<pre><code class="language-shell">WARNING: 
+    Environment variable ETCDCTL_API is not set; defaults to etcdctl v2. #默认使用V2版本 
+    Set environment variable ETCDCTL_API=3 to use v3 API or ETCDCTL_API=2 to use v2 API. #设置API版本
+
+root@k8s-etcd1:~#  ETCDCTL_API=3 etcdctl --help 
+root@k8s-etcd1:~# ETCDCTL_API=3 etcdctl member --help 
+
+NAME: 
+    etcdctl member - member add, remove and list subcommands
+
+USAGE:
+   etcdctl member command [command options] [arguments...]
+
+COMMANDS: 
+    list     enumerate existing cluster members 
+    add   add a new member to the etcd cluster 
+    remove remove an existing member from the etcd cluster 
+    update update an existing member in the etcd cluster
+
+OPTIONS: 
+    --help, -h show help
+
+root@k8s-etcd1:~#  ETCDCTL_API=3 etcdctl member list
+</code></pre>
 <pre><code class="language-shell">#声明通过ETCDCTL_API=3这个版本拿取数据
 $ export ETCDCTL_API=3
-
 $ etcdctl --endpoints=https://[127.0.0.1]:2379 \
               --cacert=/etc/kubernetes/pki/etcd/ca.crt \
               --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt \
@@ -171,104 +272,117 @@ $ alias etcdctl='etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubern
 #查看ETCD集群成员节点
 $ etcdctl member list -w table
 </code></pre>
-<p>查看etcd集群节点状态：</p>
+<h2 id="查看etcd集群节点状态">查看etcd集群节点状态：</h2>
 <pre><code class="language-shell">$ etcdctl endpoint status -w table
-
 $ etcdctl endpoint health -w table
-</code></pre>
-<p>设置key值:</p>
-<pre><code class="language-shell">#设置值
+
+#设置key值
 $ etcdctl put luffy 1
 
 #查询值
 $ etcdctl get luffy
 
 #我们可以按照目录结构的方式存储数据，这样的好处就是，组件存储数据可以按照目录区分，不会重复
-$ etcdctl put /luffy/key1 val1
-</code></pre>
-<p>查看所有key值：</p>
-<pre><code class="language-shell">$  etcdctl get / --prefix --keys-only
+$ etcdctl  put /luffy/key1 val1
+
+查看所有key值：
+$  etcdctl get / --prefix --keys-only
 ## --prefix 前缀，把所有使用/前缀的key读出来
 ## --keys-only 只取key值
 
-###取值含义
+### 取值含义
 示例：
 /registry/services/specs/kube-system/kubelet
 &gt; /registry 第一层，固定的
 &gt; /services 第二层，资源类型
-</code></pre>
-<p>查看具体的key对应的数据：</p>
-<pre><code class="language-shell">$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
+
+查看具体的key对应的数据：
+$ etcdctl get /registry/pods/jenkins/sonar-postgres-7fc5d748b6-gtmsb
 </code></pre>
 <p>list-watch:</p>
 <pre><code class="language-shell">$ etcdctl watch /luffy/ --prefix
 $ etcdctl put /luffy/key1 val1
 </code></pre>
-<p>添加定时任务做数据快照（重要！）</p>
+<h2 id="查看etcd数据信息">查看etcd数据信息:</h2>
+<pre><code class="language-shell">~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only #以路径的方式获取所有key信息 
+
+pod信息： 
+~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep pod 
+/registry/pods/default/busybox 
+/registry/pods/default/net-test1
+
+namespace信息： 
+~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep namespaces 
+/registry/namespaces/default 
+/registry/namespaces/kube-node-lease
+
+控制器信息： 
+~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep deployment 
+/registry/deployments/cattle-system/cattle-cluster-agent
+
+calico组件信息： 
+~# ETCDCTL_API=3 etcdctl get / --prefix --keys-only | grep calico
+/calico/ipam/v2/assignment/ipv4/block/10.100.142.128-26
+</code></pre>
+<h2 id="etcd增删改查数据">etcd增删改查数据</h2>
+<pre><code class="language-shell"># 添加数据 
+~# ETCDCTL_API=3 /usr/bin/etcdctl put /name &quot;tom&quot; 
+OK
+
+# 查询数据 
+~# ETCDCTL_API=3 /usr/bin/etcdctl get /name 
+/name 
+tom
+
+# 改动数据，#直接覆盖就是更新数据 
+~# ETCDCTL_API=3 /usr/bin/etcdctl put /name &quot;jack&quot; 
+OK
+
+# 验证改动 
+~# ETCDCTL_API=3 /usr/bin/etcdctl get /name 
+/name 
+jack
+
+# 删除数据 
+~# ETCDCTL_API=3 /usr/bin/etcdctl del /name 
+1
+
+~# ETCDCTL_API=3 /usr/bin/etcdctl get /name
+</code></pre>
+<h2 id="etcd数据watch机制">etcd数据watch机制</h2>
+<p>基于不断监看数据，发生变化就主动触发通知客户端，Etcd v3 的watch机制支持watch某个固定的key，也支持watch一个范围。</p>
+<pre><code class="language-shell">#在etcd node1上watch一个key，没有此key也可以执行watch，后期可以再创建： root@k8s-etcd1:~# ETCDCTL_API=3 /usr/bin/etcdctl watch /data
+
+#在etcd node2修改数据，验证etcd node1是否能够发现数据变化 
+root@k8s-etcd2:~# ETCDCTL_API=3 /usr/bin/etcdctl put /data &quot;data v1&quot; 
+OK 
+
+root@k8s-etcd2:~# ETCDCTL_API=3 /usr/bin/etcdctl put /data &quot;data v2&quot;
+OK
+</code></pre>
+<h2 id="添加定时任务做数据快照重要">添加定时任务做数据快照（重要！）</h2>
 <pre><code class="language-shell">$ etcdctl snapshot save `hostname`-etcd_`date +%Y%m%d%H%M`.db
 </code></pre>
-<p>恢复快照：</p>
+<h2 id="恢复快照">恢复快照</h2>
 <ol>
-<li>
-<p>停止etcd和apiserver</p>
-</li>
-<li>
-<p>移走当前数据目录</p>
-<pre><code class="language-powershell">$ mv /var/lib/etcd/ /tmp
+<li>停止etcd和apiserver</li>
+<li>移走当前数据目录<pre><code class="language-shell">$ mv /var/lib/etcd/ /tmp
 </code></pre>
 </li>
-<li>
-<p>恢复快照</p>
-<pre><code class="language-shell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
+<li>恢复快照<pre><code class="language-shell">$ etcdctl snapshot restore `hostname`-etcd_`date +%Y%m%d%H%M`.db --data-dir=/var/lib/etcd/
 </code></pre>
 </li>
-<li>
-<p>集群恢复</p>
-<p>https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md</p>
-</li>
+<li>集群恢复<br>
+https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md</li>
 </ol>
-<ul>
-<li>
-<p>namespace删除问题</p>
+<h2 id="namespace删除问题">namespace删除问题</h2>
 <p>很多情况下，会出现namespace删除卡住的问题，此时可以通过操作etcd来删除数据：</p>
 <pre><code class="language-shell">#查询数据
 $ etcdctl get /registry/namespace --prefix	--keys-only
-
+  
 #删除数据，确保namespace下没有pod等数据
 $ etcdctl del /registry/namespace/luffy
 </code></pre>
-<h2 id="k8s集群灾难恢复">k8s集群灾难恢复</h2>
-</li>
-</ul>
-<h2 id="集群环境">集群环境</h2>
-<table>
-<thead>
-<tr>
-<th>IP地址</th>
-<th>Host</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10.1.13.156</td>
-<td>K8s-Master1</td>
-</tr>
-<tr>
-<td>10.1.13.157</td>
-<td>K8s-Master2</td>
-</tr>
-<tr>
-<td>10.1.13.158</td>
-<td>K8s-Node1</td>
-</tr>
-<tr>
-<td>10.1.13.159</td>
-<td>K8s-Node2</td>
-</tr>
-</tbody>
-</table>
-<p>执行命令<code>kubectl describe svc kubernetes</code>发现后端<code>Endpoints</code>只有一个master节点。<br>
-查看</p>
 
         </div>
 
