@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652008206650">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652022991511">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652008206650" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652022991511" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -78,6 +78,8 @@
 </ul>
 </li>
 <li><a href="#34-%E9%83%A8%E7%BD%B2dashboard">3.4 部署Dashboard</a></li>
+</ul>
+</li>
 <li><a href="#%E5%9B%9B-kubernetes%E9%9B%86%E7%BE%A4%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7">四、kubernetes集群版本升级</a>
 <ul>
 <li><a href="#41-%E5%8D%87%E7%BA%A7master%E8%8A%82%E7%82%B9">4.1 升级master节点</a>
@@ -89,8 +91,6 @@
 <li><a href="#42-%E5%8D%87%E7%BA%A7node%E8%8A%82%E7%82%B9">4.2 升级node节点</a>
 <ul>
 <li><a href="#421-node01%E8%8A%82%E7%82%B9%E5%8D%87%E7%BA%A7">4.2.1 node01节点升级</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -939,16 +939,16 @@ subjects:
 https://10.1.13.186:30005
 </code></pre>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1652006333350.png" alt="" loading="lazy"></figure>
-<h3 id="四-kubernetes集群版本升级">四、kubernetes集群版本升级</h3>
+<h2 id="四-kubernetes集群版本升级">四、kubernetes集群版本升级</h2>
 <p>升级规划：</p>
 <pre><code>master节点升级：kube-apiserver、kube-scheduler、kube-controller-manager、kube-proxy、kubelet
 
 node节点升级：kube-proxy、kubelet
 </code></pre>
-<h4 id="41-升级master节点">4.1 升级master节点</h4>
+<h3 id="41-升级master节点">4.1 升级master节点</h3>
 <p>将master01从LB中摘除，升级k8s版本。升级完成再添加到LB中，将master02、master03从LB中摘除升级。</p>
 <figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1652006204679.png" alt="" loading="lazy"></figure>
-<h5 id="411-master01节点升级">4.1.1 master01节点升级</h5>
+<h4 id="411-master01节点升级">4.1.1 master01节点升级</h4>
 <ol>
 <li>下载升级版本(v1.23.5)的K8S二进制文件</li>
 </ol>
@@ -1017,7 +1017,7 @@ NAME          STATUS                     ROLES    AGE   VERSION
 10.1.13.188   Ready                      node     21d   v1.23.1
 10.1.13.189   Ready                      node     21d   v1.23.1
 </code></pre>
-<h5 id="412-master02节点升级">4.1.2 master02节点升级</h5>
+<h4 id="412-master02节点升级">4.1.2 master02节点升级</h4>
 <pre><code class="language-shell"># 停止服务
 root@k8s-master02:~# systemctl  stop kube-apiserver.service kube-controller-manager.service  kube-scheduler.service  kube-proxy.service kubelet.service
 
@@ -1041,8 +1041,8 @@ root@k8s-node01:~# systemctl reload kube-lb.service
 
 node02节点同上。
 </code></pre>
-<h4 id="42-升级node节点">4.2 升级node节点</h4>
-<h5 id="421-node01节点升级">4.2.1 node01节点升级</h5>
+<h3 id="42-升级node节点">4.2 升级node节点</h3>
+<h4 id="421-node01节点升级">4.2.1 node01节点升级</h4>
 <pre><code class="language-shell"># 升级版本之前，驱逐pod
 root@k8s-master01:~# kubectl drain 10.1.13.188 --force --ignore-daemonsets  --delete-emptydir-data
 

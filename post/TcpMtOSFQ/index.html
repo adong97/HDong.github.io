@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652008206650">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652022991511">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652008206650" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652022991511" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -221,7 +221,7 @@ Finished defragmenting etcd member[https://172.31.7.107:2379]
 Finished defragmenting etcd member[https://172.31.7.108:2379]
 </code></pre>
 <h2 id="etcd数据目录">etcd数据目录</h2>
-<pre><code class="language-shell">/etc/systemd/system/etcd.service 配置文件中指定了ETCD数据存放路径。
+<pre><code class="language-shell">/etc/systemd/system/etcd.service 配置文件中指定了ETCD数据存放路径：
 --data-dir=/var/lib/etcd #数据目录
 
 ~# ll /var/lib/etcd/member/
@@ -232,8 +232,7 @@ drwx------ 2 root root 4096 May  7 11:43 wal/     ##存放预写式日志
 ## 在插入数据的时候先写完日志，再保存数据。如果日志没有写入成功，就相当于数据未写入完成。
 </code></pre>
 <h2 id="查看etcd集群信息">查看etcd集群信息</h2>
-<p>etcd有多个不同的API访问版本，v1版本已经废弃，etcd v2 和 v3 本质上是共享同一套 raft 协议代码的两个独立的应用，接口不一样，存储不一样， 数据互相隔离。也就是说如果从 Etcd v2 升级到 Etcd v3，原来v2 的数据还是只能用 v2 的接口访问，v3 的接口创建的数据也只能访问通过 v3 的接<br>
-口访问。</p>
+<p>etcd有多个不同的API访问版本，v1版本已经废弃，etcd v2 和 v3 本质上是共享同一套 raft 协议代码的两个独立的应用，接口不一样，存储不一样， 数据互相隔离。也就是说如果从 Etcd v2 升级到 Etcd v3，原来v2 的数据还是只能用 v2 的接口访问，v3 的接口创建的数据也只能访问通过 v3 的接口访问。</p>
 <pre><code class="language-shell">#声明通过ETCDCTL_API=3这个版本拿取数据
 $ export ETCDCTL_API=3
 $ etcdctl --endpoints=https://[127.0.0.1]:2379 \
@@ -311,8 +310,8 @@ $ for ip in ${NODE_IPS}; do  etcdctl --endpoints=https://${ip}:2379 --cacert=/et
 ENDPOINT   #集群地址和端口
 DB SIZE       # 数据大小
 IS LEADER   # 是否是主节点，一个集群只有一个leader.
-##leader负责写数据，写完以后复制到另外两个节点，
-##leader宕机以后，剩下两个节点会进行选举，重新选举出一个新的leader,继续负责ETCD对外的写入。
+    ##leader负责写数据，写完以后复制到另外两个节点，
+    ##leader宕机以后，剩下两个节点会进行选举，重新选举出一个新的leader,继续负责ETCD对外的写入。
 IS LEARNER  #是否正在同步数据
 </code></pre>
 <p>以表格的形式显示节点健康状态</p>
