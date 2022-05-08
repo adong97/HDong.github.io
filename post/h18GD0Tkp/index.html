@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652029718330">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652031166390">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652029718330" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652031166390" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -53,7 +53,7 @@
 <li><a href="#15-master%E8%8A%82%E7%82%B9%E7%BB%84%E4%BB%B6%E8%AF%B4%E6%98%8E">1.5 Master节点组件说明</a>
 <ul>
 <li><a href="#151-api-server">1.5.1 Api server</a></li>
-<li><a href="#152-scheduler%E7%BB%84%E4%BB%B6">1.5.2  scheduler组件</a></li>
+<li><a href="#152-kube-scheduler">1.5.2  kube-scheduler</a></li>
 <li><a href="#153-crontroller-manager%E6%8E%A7%E5%88%B6%E5%99%A8">1.5.3 Crontroller Manager（控制器）</a></li>
 <li><a href="#154-etcd%E6%95%B0%E6%8D%AE%E5%BA%93">1.5.4 Etcd数据库</a></li>
 </ul>
@@ -326,9 +326,9 @@ curl 127.0.0.1:6443/healthz/etcd   #与etcd的心跳监测
 curl 127.0.0.1:6443/apis/autoscaling/v1   #API的详细信息
 curl 127.0.0.1:6443/metrics   #指标数据
 </code></pre>
-<h3 id="152-scheduler组件">1.5.2  scheduler组件</h3>
-<p>负责接收任务，选择合适的节点进行分配任务，所谓的合适呢就是保障这个节点有足够的资源，可以供给给我的pod 去运行，就是我们想这个节点有那些带宽有哪些 CPU 的使用资源都是由我们的scheduler去调度完成的。<br>
-<strong>kube-scheduler官方文档：</strong><br>
+<h3 id="152-kube-scheduler">1.5.2  kube-scheduler</h3>
+<p>负责接收任务，选择合适的节点进行分配任务，所谓的合适就是保证这个节点有足够的资源，可以供给给pod 运行，这个节点有哪些带宽有哪些 CPU 的使用资源都是由scheduler去调度完成的。</p>
+<p><strong>kube-scheduler官方文档：</strong><br>
 https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-scheduler/</p>
 <ul>
 <li>Kubernetes 调度器是一个控制面进程，负责将 Pods 指派到节点上。</li>
@@ -360,7 +360,7 @@ https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-schedu
 https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-controller-manager/</p>
 <ul>
 <li>controller-manager 控制器每间隔5秒检查一次节点的状态。</li>
-<li>如果 controller-manager 控制器没有收到自节点的心跳，则将该node节点被标记为不可达。</li>
+<li>如果 controller-manager 控制器没有收到来自节点的心跳，则将该node节点被标记为不可达。</li>
 <li>controller-manager将在标记为无法访问之前等待40秒。</li>
 <li>如果该 node节点被标记为无法访问后5分钟还没有恢复，controller-manager会删除当前node节点的所有pod并在其它可用节点重建这些pod。</li>
 </ul>
@@ -373,10 +373,10 @@ https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-contro
 <h3 id="154-etcd数据库">1.5.4 Etcd数据库</h3>
 <p><strong>官方文档：</strong><br>
 https://kubernetes.io/zh/docs/tasks/administer-cluster/configure-upgrade-etcd/</p>
-<p>ETCD 是CoreOS公司开发目前是Kubernetes默认使用的key-value数据存储系统，用于保存 kubernetes 的所有集群数据，etcd 支持分布式集群功能，生产环境使用时需要为 etcd 数据提供定期备份机制。</p>
+<p>ETCD 是CoreOS公司开发目前是Kubernetes默认使用的key-value数据存储系统，用于保存 kubernetes 的所有集群数据，etcd 支持分布式集群功能，生产环境使用时需要为 etcd 数据提供定期备份机制。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652031038663.png" alt="" loading="lazy"></p>
 <p>https://etcd.io/ #官网<br>
 https://github.com/etcd-io/etcd #github</p>
-<p>存储 K8S 集群的所有重要信息**（持久化）**因为有些数据虽然很重要但是并不需要持久化，也就是说需要持久化的数据都需要写入到我们的 ETCD 中，也就意味者我们有一天想要恢复我们的 K8S 集群的话，只需要对我们的 etcd 进行还原即可。</p>
 <p><strong>K8S集群中ETCD内部架构图</strong><br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1645160218357.png" alt="" loading="lazy"><br>
 Etcd 的架构中会发现它采用的是 http server 的形式，也就意味着这里依然是采用 http 协议进行 C/S 的构建服务，除此以为 K8S 也是采用我们的 http 协议进行我们的 C/S 结构的开发，因为我们的 http 协议天生支持很多种操作方式。</p>
@@ -401,7 +401,7 @@ https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kubelet/</p
 <li>在 node 节点执行容器健康检查</li>
 </ul>
 <h3 id="162-kube-proxy">1.6.2 Kube proxy</h3>
-<p>**官方文档： **<br>
+<p><strong>官方文档:</strong><br>
 https://kubernetes.io/zh/docs/reference/command-line-tools-reference/kube-proxy/</p>
 <p>Kubernetes 网络代理，运行在 node 上。它反映了 node 上 Kubernetes API 中定义的服务，并可以通过一组后端进行简单的 TCP、UDP 和 SCTP 流转发或者在一组后端进行循环 TCP、UDP 和 SCTP 转发，用户必须使用 apiserver API 创建一个服务来配置 代理，其实就是kube-proxy通过在主机上维护网络规则并执行连接转发来实现Kubernetes服务访问。</p>
 <p>Kube proxy 运行在每个节点上，监听 API Server 中服务对象的变化，再通过管理 IPtables 或者IPVS 规则 来实现网络的转发。负责写入我们的规则至 iptables 或者 ipvs 实现服务映射访问。</p>
@@ -428,8 +428,10 @@ sky-dns
 <h3 id="172-dashboard">1.7.2 Dashboard</h3>
 <p>Kubernetes集群的全部功能都要基于Web的UI，来管理集群中的应用甚至是集群自身。<br>
 Dashboard是基于网页的Kubernetes用户界面，可以使用Dashboard获取运行在集群中的应用的概览信息，也可以创建或者修改Kubernetes资源（如 Deployment，Job， DaemonSet 等等),也可以对Deployment实现弹性伸缩、发起滚动升级、重启 Pod 或者使用向导创建新的应用。<br>
-官方文档：https://kubernetes.io/zh/docs/tasks/access-application-cluster/web-ui-dashboard/<br>
-Github地址：https://github.com/kubernetes/dashboard</p>
+<strong>官方文档:</strong><br>
+https://kubernetes.io/zh/docs/tasks/access-application-cluster/web-ui-dashboard/<br>
+<strong>Github地址:</strong><br>
+https://github.com/kubernetes/dashboard</p>
 <h2 id="18-工作流程">1.8 工作流程</h2>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840400591.png" alt="" loading="lazy"></figure>
 <ol>
