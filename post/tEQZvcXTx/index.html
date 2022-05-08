@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652022991511">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652028791097">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652022991511" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652028791097" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -40,6 +40,7 @@
 <ul>
 <li><a href="#311-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%95%E5%85%A5pod">3.1.1 为什么引入Pod</a></li>
 <li><a href="#312-%E4%BD%BF%E7%94%A8yaml%E6%A0%BC%E5%BC%8F%E5%AE%9A%E4%B9%89pod">3.1.2 使用yaml格式定义Pod</a></li>
+<li><a href="#yaml%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3">yaml文件参数详解</a></li>
 <li><a href="#313-%E5%88%9B%E5%BB%BA%E5%92%8C%E8%AE%BF%E9%97%AEpod">3.1.3 创建和访问Pod</a></li>
 <li><a href="#314-infra%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.1.4 Infra容器(基础设施容器)</a></li>
 <li><a href="#315-%E6%9F%A5%E7%9C%8Bpod%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">3.1.5 查看pod详细信息</a></li>
@@ -154,9 +155,9 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用 --Pod常用设置</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用 --Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 30 min read
+          2022-02-10 / 33 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
@@ -350,11 +351,82 @@ spec:
 </tbody>
 </table>
 <p>快速获得资源和版本</p>
-<pre><code class="language-powershell">$ kubectl explain pod
+<pre><code class="language-shell">$ kubectl explain pod
 $ kubectl explain Pod.apiVersion
 </code></pre>
+<h3 id="yaml文件参数详解">yaml文件参数详解</h3>
+<p>cat nginx.yaml</p>
+<pre><code class="language-yaml">kind: Deployment  #类型，是deployment控制器，kubectl explain  Deployment
+apiVersion: extensions/v1beta1  #API版本，# kubectl explain  Deployment.apiVersion
+metadata: #pod的元数据信息，kubectl explain  Deployment.metadata
+  labels: #自定义pod的标签，# kubectl explain  Deployment.metadata.labels
+    app: linux36-nginx-deployment-label #标签名称为app值为linux36-nginx-deployment-label，后面会用到此标签 
+  name: linux36-nginx-deployment #pod的名称
+  namespace: linux36 #pod的namespace，默认是defaule
+spec: #定义deployment中容器的详细信息，kubectl explain  Deployment.spec
+  replicas: 1 #创建出的pod的副本数，即多少个pod，默认值为1
+  selector: #定义标签选择器
+    matchLabels: #定义匹配的标签，必须要设置
+      app: linux36-nginx-selector #匹配的目标标签，
+  template: #定义模板，必须定义，模板是起到描述要创建的pod的作用
+    metadata: #定义模板元数据
+      labels: #定义模板label，通过这个template创建的pod，会继承这个标签。Deployment.spec.template.metadata.labels
+        app: linux36-nginx-selector #定义标签，等于Deployment.spec.selector.matchLabels
+    spec: #定义pod信息
+      containers:#定义pod中容器列表，可以多个至少一个，pod不能动态增减容器
+      - name: linux36-nginx-container #容器名称
+        image: harbor.magedu.net/linux36/nginx-web1:v1 #镜像地址
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;] #容器启动执行的命令或脚本
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always #拉取镜像策略
+        ports: #定义容器端口列表
+        - containerPort: 80 #定义一个端口
+          protocol: TCP #端口协议
+          name: http #端口名称
+        - containerPort: 443 #定义一个端口
+          protocol: TCP #端口协议
+          name: https #端口名称
+        env: #配置环境变量
+        - name: &quot;password&quot; #变量名称。必须要用引号引起来
+          value: &quot;123456&quot; #当前变量的值
+        - name: &quot;age&quot; #另一个变量名称
+          value: &quot;18&quot; #另一个变量的值
+        resources: #对资源的请求设置和限制设置
+          limits: #资源限制设置，上限
+            cpu: 800m  #cpu的限制，单位为core数，2表示是整数的核心CPU=200%，1.5浮点，表示是1.5核心CPU=150%，800m表示是0.8核心=80%，1核CPU=1000m(毫核)
+            memory: 2Gi #内存限制，单位可以为Mib/Gib，将用于docker run --memory参数
+          requests: #资源请求的设置
+            cpu: 200m #cpu请求数，容器启动的初始可用数量,可以写0.5或者500m等CPU压缩值
+            memory: 512Mi #内存请求大小，容器启动的初始可用数量，用于调度pod时候使用
+    
+          
+---
+kind: Service #类型为service
+apiVersion: v1 #service API版本， service.apiVersion
+metadata: #定义service元数据，service.metadata
+  labels: #自定义标签，service.metadata.labels
+    app: linux36-nginx #定义service标签的内容
+  name: linux36-nginx-spec #定义service的名称，此名称会被DNS解析
+  namespace: linux36 #该service隶属于的namespaces名称，即把service创建到哪个namespace里面
+spec: #定义service的详细信息，service.spec
+  type: NodePort #service的类型，定义服务的访问方式，默认为ClusterIP， service.spec.type
+  ports: #定义访问端口， service.spec.ports
+  - name: http #定义一个端口名称
+    port: 80 #service 80端口
+    protocol: TCP #协议类型
+    targetPort: 80 #目标pod的端口
+    nodePort: 30001 #node节点暴露的端口，如果不指定，则自动分配。
+  - name: https #SSL 端口
+    port: 443 #service 443端口
+    protocol: TCP #端口协议
+    targetPort: 443 #目标pod端口
+    nodePort: 30043 #node节点暴露的SSL端口
+  selector: #service的标签选择器，定义要访问的目标pod
+    app: linux36-nginx #将流量路到选择的pod上，须等于Deployment.spec.selector.matchLabels
+</code></pre>
+<p>nodeport -&gt; port(service端口) -&gt; targetPort(目的容器端口)</p>
 <h3 id="313-创建和访问pod">3.1.3 创建和访问Pod</h3>
-<pre><code class="language-powershell">## 创建namespace, namespace是逻辑上的资源池
+<pre><code class="language-shell">## 创建namespace, namespace是逻辑上的资源池
 $ kubectl create namespace luffy
 
 ## 使用指定文件创建Pod
@@ -385,7 +457,7 @@ $ curl 10.244.1.146:8002/blog/index/
 </code></pre>
 <h3 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h3>
 <p>登录<code>k8s-slave1</code>节点</p>
-<pre><code class="language-powershell">$ docker ps -a |grep myblog  ## 发现有三个容器
+<pre><code class="language-shell">$ docker ps -a |grep myblog  ## 发现有三个容器
 ## 其中包含mysql和myblog程序以及Infra容器
 ## 为了实现Pod内部的容器可以通过localhost通信，每个Pod都会启动Infra容器，然后Pod内部的其他容器的网络空间会共享该Infra容器的网络空间(Docker网络的container模式)，Infra容器只需要hang住网络空间，不需要额外的功能，因此资源消耗极低。
 
@@ -398,7 +470,7 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 </code></pre>
 <p>pod容器命名: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
 <h3 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h3>
-<pre><code class="language-powershell">## 查看pod调度节点及pod_ip
+<pre><code class="language-shell">## 查看pod调度节点及pod_ip
 $ kubectl -n luffy get pods -o wide
 
 ## 查看完整的yaml
@@ -411,17 +483,17 @@ $ kubectl -n luffy describe pod myblog
 $ kubectl -n luffy get pod --show-lables
 </code></pre>
 <h3 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h3>
-<pre><code class="language-powershell">#进入Pod内的容器
+<pre><code class="language-shell">#进入Pod内的容器
 $ kubectl -n &lt;namespace&gt; exec &lt;pod_name&gt; -c &lt;container_name&gt; -ti /bin/sh
 
 #查看Pod内容器日志,显示标准或者错误输出日志
 $ kubectl -n &lt;namespace&gt; logs -f --tail=100 &lt;pod_name&gt; -c &lt;container_name&gt;
 </code></pre>
 <h3 id="317-更新服务版本">3.1.7 更新服务版本</h3>
-<pre><code class="language-powershell">$ kubectl apply -f demo-pod.yaml
+<pre><code class="language-shell">$ kubectl apply -f demo-pod.yaml
 </code></pre>
 <h3 id="318-删除pod服务">3.1.8 删除Pod服务</h3>
-<pre><code class="language-powershell">#根据文件删除
+<pre><code class="language-shell">#根据文件删除
 $ kubectl delete -f demo-pod.yaml
 
 #根据pod_name删除
@@ -474,7 +546,7 @@ spec:
       mountPath: /var/lib/mysql  #容器内部路径
 </code></pre>
 <p>保存文件为<code>pod-with-volume.yaml</code>，执行创建</p>
-<pre><code class="language-powershell">## 若存在旧的同名服务，先删除掉，后创建
+<pre><code class="language-shell">## 若存在旧的同名服务，先删除掉，后创建
 $ kubectl -n luffy delete pod myblog
 
 ## 创建
@@ -1128,7 +1200,7 @@ spec:
 <ol>
 <li>
 <p>拿来主义，从机器中已有的资源中拿</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system get po,deployment,ds
+<pre><code class="language-shell">$ kubectl -n kube-system get po,deployment,ds
 </code></pre>
 </li>
 <li>
