@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651939701012">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651997960734">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651939701012" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651997960734" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,6 +36,7 @@
             <ul class="markdownIt-TOC">
 <li><a href="#velero%E7%AE%80%E4%BB%8B">Velero简介</a>
 <ul>
+<li><a href="#velero%E7%BB%84%E4%BB%B6">Velero组件</a></li>
 <li><a href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84">整体架构</a></li>
 <li><a href="#%E5%A4%87%E4%BB%BD%E6%B5%81%E7%A8%8B">备份流程</a></li>
 </ul>
@@ -43,7 +44,7 @@
 <li><a href="#%E9%83%A8%E7%BD%B2minio">部署minio</a></li>
 <li><a href="#%E9%83%A8%E7%BD%B2velero">部署velero</a>
 <ul>
-<li><a href="#%E5%AE%89%E8%A3%85velero">安装velero</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85velero%E5%AE%A2%E6%88%B7%E7%AB%AF">安装velero客户端</a></li>
 <li><a href="#%E9%85%8D%E7%BD%AEvelero%E8%AE%A4%E8%AF%81%E7%8E%AF%E5%A2%83">配置velero认证环境：</a></li>
 </ul>
 </li>
@@ -150,7 +151,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Velero结合minio实现kubernetes 业务数据备份与恢复</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-05-07 / 8 min read
+          2022-05-07 / 9 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ffYjV0kyR.png" alt="">
@@ -162,51 +163,82 @@
 <p>Velero 是一个云原生的灾难恢复和迁移工具，它本身也是开源的,采用Go语言编写，可以安全的备份、恢复和迁移 Kubernetes集群资源数据。<br>
 Velero 是西班牙语意思是帆船，非常符合Kubernetes社区的命名风格，Velero的开发公司Heptio，已被VMware收购。<br>
 Velero 支持标准的K8S集群，既可以是私有云平台也可以是公有云，除了灾备之外它还能做资源移转，支持把容器应用从一个集群迁移到另一个集群。</p>
+<h2 id="velero组件">Velero组件</h2>
+<p>Velero组件一共分两部分，分别是服务端和客户端<br>
+服务端：运行在kubernetes的集群中<br>
+客户端：是一些运行在本地的命令行工具，需要已配置好kubectl及集群 kubeconfig的机器上</p>
 <h2 id="整体架构">整体架构</h2>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1651938473023.png" alt="" loading="lazy"></figure>
+<pre><code>velero数据备份通过APIserver发送指令，velero服务端通过APIserver端查到namespace所有数据，然后velero会进行备份，上传到对象存储服务器上。
+</code></pre>
 <h2 id="备份流程">备份流程</h2>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1651938557401.png" alt="" loading="lazy"></figure>
+<p><img src="https://adong97.github.io/HDong.github.io/post-images/1651938557401.png" alt="" loading="lazy"><br>
+velero客户端创建备份请求，请求会发送给APIserver,APIserver会进行认证，没有问题的话就会由velero server端再次通过apiserver查询etcd中的数据，发送给backupController(备份控制器)，最后由velero server端进行备份数据，然后上传到对象存储中。<br>
+velero 不支持数据本地存储。</p>
 <pre><code class="language-shell">~# velero backup create myserver-ns-backup-${DATE} --include-namespaces myserver -kubeconfig=./awsuser.kubeconfig --namespace velero-system
+
+参数解析：
+velero backup create  ##创建备份
+myserver-ns-backup-${DATE}  ##备份数据文件名称
+--include-namespaces  myserver  ##指定备份的namespace名称
+-kubeconfig=./awsuser.kubeconfig  ##指定认证文件
+--namespace velero-system  ## 指定server端所在的namespace
 </code></pre>
 <h1 id="部署minio">部署minio</h1>
-<p>创建数据目录</p>
-<pre><code class="language-shell"> ~# tar xf docker-19.03.15-binary-install.tar.gz 
+<p>minio是一个轻量级的对象存储服务器,可以轻易的实现对象存储的功能。</p>
+<ul>
+<li>创建数据目录</li>
+</ul>
+<pre><code class="language-shell">本次示例在etcd 01(10.1.13.188)节点操作验证。
+## 安装docker
+ ~# tar xf docker-19.03.15-binary-install.tar.gz 
  ~# bash docker-install.sh 
- ~# docker pull minio/minio:RELEASE.2022-04-12T06-55-35Z
+
+ ## 下载minio镜像
+ ~# docker pull minio/minio:RELEASE.2022-04-16T04-26-02Z
+ # 准备数据目录，用来保存minio中的数据
  ~# mkdir -p /data/minio
 </code></pre>
-<p>创建minio容器,如果不指定,则默认用户名与密码为 minioadmin/minioadmin,可以通过环境变量自定义,如下:</p>
-<pre><code class="language-shell"> docker run --name minio \ 
- -p 9000:9000 \ 
- -p 9999:9999 \ 
- -d --restart=always \ 
- -e &quot;MINIO_ROOT_USER=admin&quot; \ 
- -e &quot;MINIO_ROOT_PASSWORD=12345678&quot; \ 
- -v /data/minio/data:/data \
-minio/minio:RELEASE.2022-04-12T06-55-35Z server /data \
+<ul>
+<li>创建minio容器,如果不指定,则默认用户名与密码为 minioadmin/minioadmin,可以通过环境变量自定义,如下:</li>
+</ul>
+<pre><code class="language-shell">docker run --name minio \
+-p 9000:9000 \
+-p 9999:9999 \
+-d --restart=always \
+-e &quot;MINIO_ROOT_USER=admin&quot; \
+-e &quot;MINIO_ROOT_PASSWORD=12345678&quot; \
+-v /data/minio/data:/data \
+minio/minio:RELEASE.2022-04-16T04-26-02Z server /data \
 --console-address '0.0.0.0:9999'
 </code></pre>
-<p>创建bucket</p>
+<p>访问测试：<br>
+minio页面访问地址：10.1.13.188:9999<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1651977645926.png" alt="" loading="lazy"></p>
+<p>创建bucket(存储桶)，用来存储数据<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1651977986247.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1651977996014.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1651978002754.png" alt="" loading="lazy"></p>
 <h1 id="部署velero">部署velero</h1>
-<h2 id="安装velero">安装velero</h2>
-<pre><code class="language-shell">
+<h2 id="安装velero客户端">安装velero客户端</h2>
+<pre><code class="language-shell">root@k8s-master1:cd /usr/local/src
 root@k8s-master1:/usr/local/src# wget https://github.com/vmware-tanzu/velero/releases/download/v1.8.1/velero-v1.8.1-linux-amd64.tar.gz
 root@k8s-master1:/usr/local/src# tar xvf velero-v1.8.1-linux-amd64.tar.gz 
 root@k8s-master1:/usr/local/src# cp velero-v1.8.1-linux-amd64/velero  /usr/local/bin/
 root@k8s-master1:/usr/local/src# velero  --help
 </code></pre>
 <h2 id="配置velero认证环境">配置velero认证环境：</h2>
-<pre><code class="language-shell">#工作目录：
+<pre><code class="language-shell">#创建工作目录：
 root@k8s-master1:~# mkdir  /data/velero -p
-root@k8s-master1:/data/velero# 
+root@k8s-master1:~# cd /data/velero
 
-#认证文件：
+#创建认证文件：用来和对象存储(minio)做认证
 root@k8s-master1:/data/velero# vim velero-auth.txt 
 [default]
 aws_access_key_id = admin
 aws_secret_access_key = 12345678
 
-#准备user-csr文件：
+#准备user-csr文件：用来签发证书
 root@k8s-master1:/data/velero# vim awsuser-csr.json
 {
   &quot;CN&quot;: &quot;awsuser&quot;,
@@ -228,9 +260,15 @@ root@k8s-master1:/data/velero# vim awsuser-csr.json
 
 #准备证书签发环境：
 root@k8s-master1:/data/velero# apt install golang-cfssl
+
+或者自行github下载
+# 证书签发文件
 https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl_1.6.1_linux_amd64 
+#识别json格式二进制文件
 https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssljson_1.6.1_linux_amd64 
+#查看证书信息的二进制文件
 https://github.com/cloudflare/cfssl/releases/download/v1.6.1/cfssl-certinfo_1.6.1_linux_amd64
+
 root@k8s-master1:/data/velero# mv cfssl-certinfo_1.6.1_linux_amd64 cfssl-certinfo
 root@k8s-master1:/data/velero# mv cfssl_1.6.1_linux_amd64 cfssl
 root@k8s-master1:/data/velero# mv cfssljson_1.6.1_linux_amd64 cfssljson
@@ -238,49 +276,58 @@ root@k8s-master1:/data/velero# cp cfssl-certinfo cfssl cfssljson /usr/local/bin/
 root@k8s-master1:/data/velero# chmod  a+x /usr/local/bin/cfssl* 
 
 #执行证书签发：
-root@k8s-master1:/data/velero# /usr/local/bin/cfssl gencert -ca=/etc/kubernetes/ssl/ca.pem -ca-key=/etc/kubernetes/ssl/ca-key.pem -config=/etc/kubeasz/clusters/k8s-cluster1/ssl/ca-config.json -profile=kubernetes ./awsuser-csr.json | cfssljson -bare awsuser
+root@k8s-master1:/data/velero# /usr/bin/cfssl gencert -ca=/etc/kubernetes/ssl/ca.pem -ca-key=/etc/kubernetes/ssl/ca-key.pem -config=/etc/kubeasz/clusters/k8s-cluster01/ssl/ca-config.json -profile=kubernetes ./awsuser-csr.json | cfssljson -bare awsuser
 
 #验证证书：
 root@k8s-master1:/data/velero# ll awsuser*
 -rw-r--r-- 1 root root  220 Apr 14 12:29 awsuser-csr.json
--rw------- 1 root root 1679 Apr 14 12:30 awsuser-key.pem
+-rw------- 1 root root 1679 Apr 14 12:30 awsuser-key.pem  # 私钥
 -rw-r--r-- 1 root root  997 Apr 14 12:30 awsuser.csr
--rw-r--r-- 1 root root 1387 Apr 14 12:30 awsuser.pem
+-rw-r--r-- 1 root root 1387 Apr 14 12:30 awsuser.pem  # 公钥
 
 #分发证书到api-server证书路径：
 root@k8s-master1:/data/velero# cp awsuser-key.pem /etc/kubernetes/ssl/
 root@k8s-master1:/data/velero# cp awsuser.pem /etc/kubernetes/ssl/
 
 #生成集群认证config文件：
-# export KUBE_APISERVER=&quot;https://172.31.7.101:6443&quot;
-# kubectl config set-cluster kubernetes \
+~# export KUBE_APISERVER=&quot;https://10.1.13.186:6443&quot; 
+~# kubectl config set-cluster kubernetes \
 --certificate-authority=/etc/kubernetes/ssl/ca.pem \
 --embed-certs=true \
 --server=${KUBE_APISERVER} \
 --kubeconfig=./awsuser.kubeconfig
 
-#设置客户端证书认证:
-# kubectl config set-credentials awsuser \
+####参数解析：
+export KUBE_APISERVER=&quot;https://10.1.13.186:6443&quot;  #声明APIserver地址
+set-cluster kubernetes  #设置集群名称
+--certificate-authority=/etc/kubernetes/ssl/ca.pem  ##证书认证，使用CA的公钥
+--embed-certs=true  # 对证书进行伪装 
+--server=${KUBE_APISERVER}  #指定APIserver地址
+--kubeconfig=./awsuser.kubeconfig  #文件存放位置，及名称
+
+
+# 设置客户端证书认证:   将awsuser用户的公钥和私钥写到awsuser.kubeconfig文件中。
+~# kubectl config set-credentials awsuser \
 --client-certificate=/etc/kubernetes/ssl/awsuser.pem \
 --client-key=/etc/kubernetes/ssl/awsuser-key.pem \
 --embed-certs=true \
 --kubeconfig=./awsuser.kubeconfig
 
 #设置上下文参数:
-# kubectl config set-context kubernetes \
+~# kubectl config set-context kubernetes \
 --cluster=kubernetes \
 --user=awsuser \
 --namespace=velero-system \
 --kubeconfig=./awsuser.kubeconfig
 
 #设置默认上下文:
-#kubectl config use-context kubernetes --kubeconfig=awsuser.kubeconfig
+~# kubectl config use-context kubernetes --kubeconfig=awsuser.kubeconfig
 
-#k8s集群中创建awsuser账户：
-# kubectl create clusterrolebinding awsuser --clusterrole=cluster-admin --user=awsuser
+#k8s集群中创建awsuser账户：授权cluster-admin 角色
+~# kubectl create clusterrolebinding awsuser --clusterrole=cluster-admin --user=awsuser
 
 #创建namespace：
-# kubectl create ns velero-system
+~# kubectl create ns velero-system
 
 # 执行安装：
 velero --kubeconfig  ./awsuser.kubeconfig \
@@ -291,51 +338,38 @@ velero --kubeconfig  ./awsuser.kubeconfig \
     --secret-file ./velero-auth.txt \
     --use-volume-snapshots=false \
 	--namespace velero-system \
---backup-location-config region=minio,s3ForcePathStyle=&quot;true&quot;,s3Url=http://172.31.7.106:9000
+--backup-location-config region=minio,s3ForcePathStyle=&quot;true&quot;,s3Url=http://10.1.13.188:9000
+
+#### 参数解析：
+--kubeconfig  ./awsuser.kubeconfig  # 指定认证文件
+--provider  # 提供者，对象存储
+--plugins velero/velero-plugin-for-aws:v1.3.1 #指定插件，可以识别对象储存
+--bucket velerodata  #指定存储桶名称
+--secret-file ./velero-auth.txt   #指定对象储存认证文件
+--use-volume-snapshots=false  # 不适用卷快照
+--namespace velero-system  # 指定namespace
+s3Url=http://10.1.13.188:9000  # URL为对象存储url
+
 
 #验证安装：
-root@k8s-master1:/data/velero# kubectl  describe pod velero-6755cb8697-phfsr -n velero-system  
-
-velero backup create magedu-n66-20220417  --include-namespaces myserver
-
-
-DATE=`date +%Y%m%d%H%M%S`
-velero backup create myserver-ns-backup-${DATE} \
---include-namespaces myserver \
---kubeconfig=./awsuser.kubeconfig \
---namespace velero-system
-
-oot@k8s-master1:/data/velero# kubectl  get pod -n velero-system 
-NAME                  READY   STATUS    RESTARTS   AGE
-velero-6755cb8697-phfsr   1/1     Running     0          5m45s
-
-velero backup create myserver-ns-backup-2022041621 \
---include-namespaces myserver \
---kubeconfig=./awsuser.kubeconfig \
---namespace velero-system
-
-
-velero restore create --from-backup default-backup-20220416205931 --wait --kubeconfig=./awsuser.kubeconfig --namespace velero-system
-
-velero restore create --from-backup myserver-ns-backup-20220417155913 --wait \
---kubeconfig=./awsuser.kubeconfig \
---namespace velero-system
+root@k8s-master1:/data/velero# kubectl get pod -A
+root@k8s-master1:/data/velero# kubectl  describe pod velero-6755cb8697-977nt -n velero-system  
 </code></pre>
 <h1 id="对default-ns进行备份">对default ns进行备份</h1>
 <pre><code class="language-shell">root@k8s-master1:/data/velero# pwd 
 /data/velero
 
 ~# DATE=`date +%Y%m%d%H%M%S`
-~# velero backup create default-backup-${DATE} \ 
---include-namespaces default \ 
---kubeconfig=./awsuser.kubeconfig \ 
+~# velero backup create default-backup-${DATE} \
+--include-namespaces default \
+--kubeconfig=./awsuser.kubeconfig \
 --namespace velero-system
 
 验证备份： 
 ~# velero backup describe default-backup-20220414130002 --kubeconfig=./awsuser.kubeconfig --namespace velero-system
 </code></pre>
 <h2 id="minio验证备份数据">minio验证备份数据</h2>
-<p>删除pod并执行恢复</p>
+<p>测试删除pod并执行恢复</p>
 <pre><code class="language-shell">root@k8s-master1:/data/velero# kubectl delete pod net-test3 -n default 
 pod &quot;net-test3&quot; deleted
 
@@ -346,10 +380,9 @@ root@k8s-master1:/data/velero# velero restore create --from-backup default-backu
 root@k8s-master1:/data/velero# kubectl get pod -n default 
 </code></pre>
 <h2 id="对myserver-ns进行备份">对myserver ns进行备份</h2>
-<pre><code>root@k8s-master1:/data/velero# pwd 
+<pre><code class="language-shell">root@k8s-master1:/data/velero# pwd 
 /data/velero 
 root@k8s-master1:/data/velero# DATE=`date +%Y%m%d%H%M%S`
-
 root@k8s-master1:/data/velero# velero backup create myserver-ns-backup-${DATE} \ 
 --include-namespaces myserver \ 
 --kubeconfig=./awsuser.kubeconfig \
