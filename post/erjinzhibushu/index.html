@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651997960734">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652007085288">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651997960734" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652007085288" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -168,6 +168,13 @@
 <li><a href="#62%E9%83%A8%E7%BD%B2coredns">6.2部署CoreDNS</a></li>
 </ul>
 </li>
+<li><a href="#%E5%AE%89%E8%A3%85krew">安装Krew</a>
+<ul>
+<li><a href="#%E6%A6%82%E5%BF%B5">概念</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#krew%E7%9A%84%E4%BD%BF%E7%94%A8">krew的使用</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -264,7 +271,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Centos系统 二进制部署kubernets 1.20</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2021-12-11 / 160 min read
+          2021-12-11 / 162 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/erjinzhibushu.png" alt="">
@@ -5891,6 +5898,41 @@ spec:
 kubectl apply -f coredns.yaml
 </code></pre>
 <p>至此部署完成。</p>
+<h1 id="安装krew">安装Krew</h1>
+<h2 id="概念">概念</h2>
+<p>Krew是kubectl插件的包管理工具。借助Krew，可以轻松地使用kubectl plugin：发现插件、安装和管理插件。使用类似apt、dnf或者brew。</p>
+<ul>
+<li>对于kubectl用户：krew能帮助用户搜索、安装和管理kubectl插件；</li>
+<li>对于插件开发者：krew可以帮助你在多种平台上打包和发布插件。</li>
+</ul>
+<p>Krew 为 1.12 版本以上的 Kubectl 插件提供了类似于 apt/yum 的包管理功能。在 Krew 的帮助下，用户可以方便的安装和使用 Kubectl 插件，能够完成很多有趣有用的功能。</p>
+<blockquote>
+<p>警告：krew仅兼容kubectl v1.12或更高版本。</p>
+</blockquote>
+<h2 id="安装">安装</h2>
+<pre><code class="language-shell"># 在 OSX 或者 Linux 系统中，首先需要安装 git，然后在 Bash/zsh 之中，用如下命令进行安装：
+(set -x; cd &quot;$(mktemp -d)&quot; &amp;&amp; curl -fsSLO &quot;https://github.com/kubernetes-sigs/krew/releases/download/v0.3.3/krew.{tar.gz,yaml}&quot; &amp;&amp; tar zxvf krew.tar.gz &amp;&amp; KREW=./krew-&quot;$(uname | tr '[:upper:]' '[:lower:]')_amd64&quot; &amp;&amp; &quot;$KREW&quot; install --manifest=krew.yaml --archive=krew.tar.gz &amp;&amp; &quot;$KREW&quot; update)
+
+# 若无法在线安装的话可以事先把需要的文件下载下来，然后修改命令行中文件路径再进行安装
+
+# 下载地址
+https://github.com/kubernetes-sigs/krew/releases
+# 需要下载krew.tar.gz和krew.yaml
+# 比如把这俩文件上传到/usr/local/src/目录下，则安装命令是
+(set -x; cd &quot;$(mktemp -d)&quot; &amp;&amp; tar zxvf /usr/local/src/krew.tar.gz &amp;&amp; KREW=./krew-&quot;$(uname | tr '[:upper:]' '[:lower:]')_amd64&quot; &amp;&amp; &quot;$KREW&quot; install --manifest=/usr/local/src/krew.yaml --archive=/usr/local/src/krew.tar.gz &amp;&amp; &quot;$KREW&quot; update)
+
+# 然后把 Krew 加入路径：
+export PATH=&quot;${KREW_ROOT:-$HOME/.krew}/bin:$PATH&quot;
+echo 'export PATH=&quot;${KREW_ROOT:-$HOME/.krew}/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+<h2 id="krew的使用">krew的使用</h2>
+<pre><code class="language-shell">kubectl krew search               # 显示所有插件
+kubectl krew install view-secret  # 安装名为view-secret的插件
+kubectl view-secret               # 使用该插件
+kubectl krew upgrade              # 升级安装的插件
+kubectl krew remove view-secret   # 卸载插件
+</code></pre>
 
         </div>
 

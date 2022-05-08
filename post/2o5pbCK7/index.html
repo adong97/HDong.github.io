@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1651997960734">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652007085288">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1651997960734" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652007085288" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -80,6 +80,23 @@
 <li><a href="#34-%E9%83%A8%E7%BD%B2dashboard">3.4 部署Dashboard</a></li>
 </ul>
 </li>
+<li><a href="#%E5%9B%9B-kubernetes%E9%9B%86%E7%BE%A4%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7">四、kubernetes集群版本升级</a><br>
+*
+<ul>
+<li><a href="#41-%E5%8D%87%E7%BA%A7master%E8%8A%82%E7%82%B9">4.1 升级master节点</a>
+<ul>
+<li><a href="#411-master01%E8%8A%82%E7%82%B9%E5%8D%87%E7%BA%A7">4.1.1 master01节点升级</a></li>
+<li><a href="#412-master02%E8%8A%82%E7%82%B9%E5%8D%87%E7%BA%A7">4.1.2 master02节点升级</a></li>
+</ul>
+</li>
+<li><a href="#42-%E5%8D%87%E7%BA%A7node%E8%8A%82%E7%82%B9">4.2 升级node节点</a>
+<ul>
+<li><a href="#421-node01%E8%8A%82%E7%82%B9%E5%8D%87%E7%BA%A7">4.2.1 node01节点升级</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-kubernetes%E9%9B%86%E7%BE%A4%E6%B7%BB%E5%8A%A0%E8%8A%82%E7%82%B9">五、kubernetes集群添加节点</a></li>
 </ul>
 </li>
 </ul>
@@ -178,7 +195,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Ubuntu系统 kubeasz 二进制部署K8S</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-04-18 / 23 min read
+          2022-04-18 / 29 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/2o5pbCK7.png" alt="">
@@ -914,12 +931,165 @@ subjects:
 
 
 ~# kubectl apply -f admin-user.yaml 
+
 ## 查看token
 ~# kubectl get secrets -n kubernetes-dashboard 
 ~# kubectl -n kubernetes-dashboard describe secrets admin-user-token-d49tf
 
 拿到token,即可在页面访问登录
 https://10.1.13.186:30005
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1652006333350.png" alt="" loading="lazy"></figure>
+<h2 id="四-kubernetes集群版本升级">四、kubernetes集群版本升级</h2>
+<p>升级规划：</p>
+<pre><code>master节点升级：kube-apiserver、kube-scheduler、kube-controller-manager、kube-proxy、kubelet
+
+node节点升级：kube-proxy、kubelet
+</code></pre>
+<h4 id="41-升级master节点">4.1 升级master节点</h4>
+<p>将master01从LB中摘除，升级k8s版本。升级完成再添加到LB中，将master02、master03从LB中摘除升级。</p>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1652006204679.png" alt="" loading="lazy"></figure>
+<h5 id="411-master01节点升级">4.1.1 master01节点升级</h5>
+<ol>
+<li>下载升级版本(v1.23.5)的K8S二进制文件</li>
+</ol>
+<pre><code class="language-shell">## 1. 下载v1.23.5二进制文件
+cd /usr/local/src/
+wget https://dl.k8s.io/v1.23.5/kubernetes.tar.gz
+wget https://dl.k8s.io/v1.23.5/kubernetes-client-linux-amd64.tar.gz
+wget https://dl.k8s.io/v1.23.5/kubernetes-server-linux-amd64.tar.gz
+wget https://dl.k8s.io/v1.23.5/kubernetes-node-linux-amd64.tar.gz
+
+## 2. 解压文件
+root@k8s-master01:/usr/local/src# tar -zxvf kubernetes.tar.gz
+root@k8s-master01:/usr/local/src# tar -zxvf kubernetes-server-linux-amd64.tar.gz
+root@k8s-master01:/usr/local/src# tar -zxvf kubernetes-client-linux-amd64.tar.gz
+root@k8s-master01:/usr/local/src# tar -zxvf kubernetes-node-linux-amd64.tar.gz
+
+## 3. 验证版本
+root@k8s-master01:/usr/local/src/# cd kubernetes/server/bin/
+root@k8s-master01:/usr/local/src/kubernetes/server/bin# ./kube-apiserver --version
+Kubernetes v1.23.5
+
+## 4. 验证kube-apiserver等服务存放路径
+root@k8s-master01:~# whereis kube-apiserver
+kube-apiserver: /opt/kube/bin/kube-apiserver
+
+## 5. 拷贝文件到/etc/kubeasz/bin目录下，防止添加集群节点版本不一致。
+root@k8s-master01:/usr/local/src/kubernetes/server/bin# cp kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubectl kubelet /etc/kubeasz/bin/
+
+</code></pre>
+<ol start="2">
+<li>将node节点的LB中master01摘除</li>
+</ol>
+<pre><code class="language-shell"># node01节点操作
+root@k8s-node01:~# vim /etc/kube-lb/conf/kube-lb.conf
+stream {
+    upstream backend {
+        #server 10.1.13.186:6443    max_fails=2 fail_timeout=3s;  #注释掉master01节点
+        server 10.1.13.187:6443    max_fails=2 fail_timeout=3s;
+    }
+
+保存退出，重新加载服务
+root@k8s-node01:~# systemctl reload kube-lb.service
+
+node02节点同上。
+</code></pre>
+<ol start="3">
+<li>master01节点停止服务</li>
+</ol>
+<pre><code class="language-shell"># 如果不停止k8s服务，则无法替换新版本二进制文件。
+root@k8s-master01:~# systemctl  stop kube-apiserver.service kube-controller-manager.service  kube-scheduler.service  kube-proxy.service kubelet.service
+
+root@k8s-master01:~# pwd
+/usr/local/src/kubernetes/server/bin
+
+# 替换文件，注意二进制文件保存路径
+root@k8s-master01:~# \cp  kube-apiserver kube-controller-manager  kube-scheduler kubelet kube-proxy kubectl /opt/kube/bin/
+
+# 替换完成，启动服务
+root@k8s-master01:~# systemctl  start kube-apiserver.service kube-controller-manager.service  kube-scheduler.service  kube-proxy.service kubelet.service
+
+# 查看node节点状态
+root@k8s-master01:~# kubectl get node
+NAME          STATUS                     ROLES    AGE   VERSION
+10.1.13.186   Ready,SchedulingDisabled   master   21d   v1.23.5   # 版本已更新
+10.1.13.187   Ready,SchedulingDisabled   master   21d   v1.23.1
+10.1.13.188   Ready                      node     21d   v1.23.1
+10.1.13.189   Ready                      node     21d   v1.23.1
+</code></pre>
+<h5 id="412-master02节点升级">4.1.2 master02节点升级</h5>
+<pre><code class="language-shell"># 停止服务
+root@k8s-master02:~# systemctl  stop kube-apiserver.service kube-controller-manager.service  kube-scheduler.service  kube-proxy.service kubelet.service
+
+# 将二进制文件拷贝到master02节点/opt/kube/bin/目录下。
+root@k8s-master01:/usr/local/src/kubernetes/server/bin# scp kube-apiserver kube-controller-manager  kube-scheduler kubelet kube-proxy kubectl 10.1.13.187:/opt/kube/bin/
+
+# 启动服务
+root@k8s-master02:~# systemctl  start kube-apiserver.service kube-controller-manager.service  kube-scheduler.service  kube-proxy.service kubelet.service
+</code></pre>
+<p>node节点取消添加master02节点LB</p>
+<pre><code class="language-shell"># node01节点操作
+root@k8s-node01:~# vim /etc/kube-lb/conf/kube-lb.conf
+stream {
+    upstream backend {
+        server 10.1.13.186:6443    max_fails=2 fail_timeout=3s;  
+        server 10.1.13.187:6443    max_fails=2 fail_timeout=3s; #取消注释掉master02节点
+    }
+
+保存退出，重新加载服务
+root@k8s-node01:~# systemctl reload kube-lb.service
+
+node02节点同上。
+</code></pre>
+<h4 id="42-升级node节点">4.2 升级node节点</h4>
+<h5 id="421-node01节点升级">4.2.1 node01节点升级</h5>
+<pre><code class="language-shell"># 升级版本之前，驱逐pod
+root@k8s-master01:~# kubectl drain 10.1.13.188 --force --ignore-daemonsets  --delete-emptydir-data
+
+# 查看node节点状态
+root@k8s-master01:~# kubectl get node
+NAME          STATUS                     ROLES    AGE   VERSION
+10.1.13.186   Ready,SchedulingDisabled   master   21d   v1.23.5
+10.1.13.187   Ready,SchedulingDisabled   master   21d   v1.23.5
+10.1.13.188   Ready,SchedulingDisabled   node     21d   v1.23.1
+10.1.13.189   Ready                      node     21d   v1.23.1
+10.1.13.188 node节点不会再被调度。
+
+# 停止服务
+root@k8s-node01:~# systemctl  stop kubelet.service  kube-proxy.service
+
+# 拷贝二进制文件到node01节点
+root@k8s-master01:/usr/local/src/kubernetes/server/bin# scp kubelet kube-proxy 10.1.13.188:/opt/kube/bin/
+kubelet                                 100%  119MB  88.6MB/s   00:01    
+kube-proxy                              100%   42MB  97.2MB/s   00:00
+
+# node01节点启动服务
+root@k8s-node01:~# systemctl  start kubelet.service  kube-proxy.service
+
+# 取消不被调取策略
+root@k8s-master01:~# kubectl uncordon 10.1.13.188
+
+# 再次查看node状态
+root@k8s-master01:~# kubectl get nodes 
+NAME          STATUS                     ROLES    AGE   VERSION
+10.1.13.186   Ready,SchedulingDisabled   master   21d   v1.23.5
+10.1.13.187   Ready,SchedulingDisabled   master   21d   v1.23.5
+10.1.13.188   Ready                      node     21d   v1.23.5
+10.1.13.189   Ready                      node     21d   v1.23.1
+</code></pre>
+<p>升级完成，node02升级同上。</p>
+<h2 id="五-kubernetes集群添加节点">五、kubernetes集群添加节点</h2>
+<p>可以通过kubeasz项目添加节点。</p>
+<pre><code class="language-shell"># 提前给需要添加的节点做绵密要认证
+ssh-copy-id 10.1.13.190
+
+# 通过kubeasz添加node节点
+root@k8s-master01:~# cd /etc/kubeasz/
+root@k8s-master01:/etc/kubeasz# ./ezctl add-node k8s-cluster01 10.1.13.190
+
+# 通过kubeasz添加master节点
+root@k8s-master01:/etc/kubeasz# ./ezctl add-master k8s-cluster01 10.1.13.191
 </code></pre>
 
         </div>
