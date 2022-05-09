@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652062918747">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652064339519">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652062918747" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652064339519" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -136,10 +136,10 @@
 <li><a href="#5%E5%90%AF%E5%8A%A8%E5%B9%B6%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-3">5.启动并设置开机启动</a></li>
 </ul>
 </li>
-<li><a href="#55%E9%83%A8%E7%BD%B2%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5部署网络组件</a>
+<li><a href="#55-%E9%83%A8%E7%BD%B2%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5 部署网络组件</a>
 <ul>
-<li><a href="#1%E9%83%A8%E7%BD%B2calico%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">1.部署calico网络组件</a></li>
-<li><a href="#2%E6%88%96%E8%80%85%E9%83%A8%E7%BD%B2flanne%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">2.或者部署Flanne网络组件</a>
+<li><a href="#551-%E9%83%A8%E7%BD%B2calico%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5.1 部署calico网络组件</a></li>
+<li><a href="#552-%E6%88%96%E8%80%85%E9%83%A8%E7%BD%B2flanne%E7%BD%91%E7%BB%9C%E7%BB%84%E4%BB%B6">5.5.2 或者部署Flanne网络组件</a>
 <ul>
 <li><a href="#1%E9%83%A8%E7%BD%B2cni%E7%BD%91%E7%BB%9C">1.部署CNI网络</a></li>
 <li><a href="#2%E8%A7%A3%E5%8E%8B%E5%B9%B6%E5%AE%89%E8%A3%85cni">2.解压并安装CNI</a></li>
@@ -268,7 +268,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Centos系统 二进制部署kubernets 1.20</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2021-12-11 / 47 min read
+          2021-12-11 / 44 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/erjinzhibushu.png" alt="">
@@ -1331,22 +1331,22 @@ EOF
 <pre><code class="language-shell">systemctl daemon-reload
 systemctl start kube-proxy  &amp;&amp; systemctl enable kube-proxy
 </code></pre>
-<h3 id="55部署网络组件">5.5部署网络组件</h3>
+<h3 id="55-部署网络组件">5.5 部署网络组件</h3>
 <p>Calico是一个纯三层的数据中心网络方案，是目前Kubernetes主流的网络方案。</p>
-<h4 id="1部署calico网络组件">1.部署calico网络组件</h4>
-<p>下载calico.yaml</p>
-<pre><code class="language-shell">$ wget https://docs.projectcalico.org/manifests/calico.yaml
-</code></pre>
-<p>启动calico网络组件</p>
-<pre><code class="language-shell">kubectl apply -f calico.yaml
+<h4 id="551-部署calico网络组件">5.5.1 部署calico网络组件</h4>
+<pre><code class="language-shell"># 下载calico.yaml
+$ wget https://docs.projectcalico.org/manifests/calico.yaml
+
+# 启动calico网络组件
+kubectl apply -f calico.yaml
 kubectl get pods -n kube-system
-</code></pre>
-<p>等Calico Pod都Running，节点也会准备就绪：</p>
-<pre><code>kubectl get node
+
+# 等Calico Pod都Running，节点也会准备就绪：
+kubectl get node
 NAME         STATUS   ROLES    AGE   VERSION
 k8s-master   Ready    &lt;none&gt;   37m   v1.20.13
 </code></pre>
-<h4 id="2或者部署flanne网络组件">2.或者部署Flanne网络组件</h4>
+<h4 id="552-或者部署flanne网络组件">5.5.2 或者部署Flanne网络组件</h4>
 <h5 id="1部署cni网络">1.部署CNI网络</h5>
 <pre><code>CNI二进制包下载地址：
 https://github.com/containernetworking/plugins/releases
@@ -1374,236 +1374,13 @@ scp -r /opt/cni/ root@10.1.13.164:/opt/
 <p>安装网络插件说明链接地址：</p>
 <pre><code>https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 </code></pre>
-<p>kube-flannel.yaml或者使用calico.yaml</p>
-<pre><code class="language-yaml">---
-apiVersion: policy/v1beta1
-kind: PodSecurityPolicy
-metadata:
-  name: psp.flannel.unprivileged
-  annotations:
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
-    seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
-    apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
-    apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
-spec:
-  privileged: false
-  volumes:
-    - configMap
-    - secret
-    - emptyDir
-    - hostPath
-  allowedHostPaths:
-    - pathPrefix: &quot;/etc/cni/net.d&quot;
-    - pathPrefix: &quot;/etc/kube-flannel&quot;
-    - pathPrefix: &quot;/run/flannel&quot;
-  readOnlyRootFilesystem: false
-  # Users and groups
-  runAsUser:
-    rule: RunAsAny
-  supplementalGroups:
-    rule: RunAsAny
-  fsGroup:
-    rule: RunAsAny
-  # Privilege Escalation
-  allowPrivilegeEscalation: false
-  defaultAllowPrivilegeEscalation: false
-  # Capabilities
-  allowedCapabilities: ['NET_ADMIN']
-  defaultAddCapabilities: []
-  requiredDropCapabilities: []
-  # Host namespaces
-  hostPID: false
-  hostIPC: false
-  hostNetwork: true
-  hostPorts:
-  - min: 0
-    max: 65535
-  # SELinux
-  seLinux:
-    # SELinux is unsed in CaaSP
-    rule: 'RunAsAny'
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: flannel
-rules:
-  - apiGroups: ['extensions']
-    resources: ['podsecuritypolicies']
-    verbs: ['use']
-    resourceNames: ['psp.flannel.unprivileged']
-  - apiGroups:
-      - &quot;&quot;
-    resources:
-      - pods
-    verbs:
-      - get
-  - apiGroups:
-      - &quot;&quot;
-    resources:
-      - nodes
-    verbs:
-      - list
-      - watch
-  - apiGroups:
-      - &quot;&quot;
-    resources:
-      - nodes/status
-    verbs:
-      - patch
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: flannel
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: flannel
-subjects:
-- kind: ServiceAccount
-  name: flannel
-  namespace: kube-system
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: flannel
-  namespace: kube-system
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: kube-flannel-cfg
-  namespace: kube-system
-  labels:
-    tier: node
-    app: flannel
-data:
-  cni-conf.json: |
-    {
-      &quot;cniVersion&quot;: &quot;0.2.0&quot;,
-      &quot;name&quot;: &quot;cbr0&quot;,
-      &quot;plugins&quot;: [
-        {
-          &quot;type&quot;: &quot;flannel&quot;,
-          &quot;delegate&quot;: {
-            &quot;hairpinMode&quot;: true,
-            &quot;isDefaultGateway&quot;: true
-          }
-        },
-        {
-          &quot;type&quot;: &quot;portmap&quot;,
-          &quot;capabilities&quot;: {
-            &quot;portMappings&quot;: true
-          }
-        }
-      ]
-    }
-  net-conf.json: |
-    {
-      &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
-      &quot;Backend&quot;: {
-        &quot;Type&quot;: &quot;vxlan&quot;
-      }
-    }
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: kube-flannel-ds-amd64
-  namespace: kube-system
-  labels:
-    tier: node
-    app: flannel
-spec:
-  selector:
-    matchLabels:
-      app: flannel
-  template:
-    metadata:
-      labels:
-        tier: node
-        app: flannel
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: beta.kubernetes.io/os
-                    operator: In
-                    values:
-                      - linux
-                  - key: beta.kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
-      hostNetwork: true
-      tolerations:
-      - operator: Exists
-        effect: NoSchedule
-      serviceAccountName: flannel
-      initContainers:
-      - name: install-cni
-        image: lizhenliang/flannel:v0.11.0-amd64 
-        command:
-        - cp
-        args:
-        - -f
-        - /etc/kube-flannel/cni-conf.json
-        - /etc/cni/net.d/10-flannel.conflist
-        volumeMounts:
-        - name: cni
-          mountPath: /etc/cni/net.d
-        - name: flannel-cfg
-          mountPath: /etc/kube-flannel/
-      containers:
-      - name: kube-flannel
-        image: lizhenliang/flannel:v0.11.0-amd64 
-        command:
-        - /opt/bin/flanneld
-        args:
-        - --ip-masq
-        - --kube-subnet-mgr
-        resources:
-          requests:
-            cpu: &quot;100m&quot;
-            memory: &quot;50Mi&quot;
-          limits:
-            cpu: &quot;100m&quot;
-            memory: &quot;50Mi&quot;
-        securityContext:
-          privileged: false
-          capabilities:
-             add: [&quot;NET_ADMIN&quot;]
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        volumeMounts:
-        - name: run
-          mountPath: /run/flannel
-        - name: flannel-cfg
-          mountPath: /etc/kube-flannel/
-      volumes:
-        - name: run
-          hostPath:
-            path: /run/flannel
-        - name: cni
-          hostPath:
-            path: /etc/cni/net.d
-        - name: flannel-cfg
-          configMap:
-            name: kube-flannel-cfg
-</code></pre>
-<p>启动flannel</p>
-<pre><code class="language-shell">kubectl apply -f kube-flannel.yml
+<p>部署flannel</p>
+<pre><code class="language-shell"># 下载kube-flannel.yaml
+$ wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+
+# 启动flannel
+kubectl apply -f kube-flannel.yml
 
 #查看pod状态
 kubectl get pods -n kube-system
@@ -1612,7 +1389,7 @@ kube-flannel-ds-amd64-hmjzj   1/1     Running   0          2m23s
 </code></pre>
 <h3 id="56授权apiserver访问kubelet">5.6授权apiserver访问kubelet</h3>
 <p>应用场景：例如kubectl logs</p>
-<pre><code>cat &gt; apiserver-to-kubelet-rbac.yaml &lt;&lt; EOF
+<pre><code class="language-shell">cat &gt; apiserver-to-kubelet-rbac.yaml &lt;&lt; EOF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
