@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652327062310">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652351134253">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652327062310" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652351134253" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -146,13 +146,15 @@
         
         <div class="post-content yue">
           <h2 id="33-kubernetes服务访问之service">3.3 Kubernetes服务访问之Service</h2>
-<p>通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：</p>
+<p>通过以前的学习，我们已经能够通过Deployment来创建一组Pod来提供具有高可用性的服务。<br>
+虽然每个Pod都会分配一个单独的Pod IP，然而却存在如下两个问题：</p>
 <ul>
 <li>Pod IP 仅仅是集群内可见的虚拟IP，外部无法访问。</li>
 <li>Pod IP会随着Pod的销毁而消失，当ReplicaSet对Pod进行动态伸缩时，Pod IP可能随时随地都会变化，这样对于我们访问这个服务带来了难度。</li>
 </ul>
 <h3 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h3>
-<p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。service会为这个LB提供一个IP，一般称为cluster IP 。使用Service对象，通过selector进行标签选择，找到对应的Pod:</p>
+<p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。<br>
+service会为这个LB提供一个IP，一般称为cluster IP 。使用Service对象，通过selector进行标签选择，找到对应的Pod:</p>
 <p><code>myblog/deployment/svc-myblog.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Service
@@ -161,15 +163,15 @@ metadata:
   namespace: luffy
 spec:
   ports:
-  - port: 80  #映射到ClusterIP上的端口
-    protocol: TCP
+  - port: 80  #映射到ClusterIP上的端口(Service)
     targetPort: 8002   #对应Pod内的端口
+    protocol: TCP
   selector:
     app: myblog   #选择标签
   type: ClusterIP  #集群内的虚拟IP
 </code></pre>
 <p>操作演示：</p>
-<pre><code class="language-powershell">## 别名
+<pre><code class="language-shell">## 别名
 $ alias kd='kubectl -n luffy'
 
 ## 创建服务
@@ -218,17 +220,17 @@ Events:            &lt;none&gt;
 
 # ClusterIP(10.99.174.93)的80端口转到了Endpoints中podIP的TargetPort(8002)端口上。
 </code></pre>
-<p>Service与Pod如何关联:</p>
-<p>service对象创建的同时，会通过选择器(app=myblog)创建同名的endpoints(端点)对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中。</p>
+<p><strong>Service与Pod如何关联?</strong><br>
+service对象创建的同时，会通过选择器(app=myblog)创建同名的endpoints(端点)对象，若服务设置了readinessProbe, 当readinessProbe检测失败时，endpoints列表中会剔除掉对应的pod_ip，这样流量就不会分发到健康检测失败的Pod中。</p>
 <p>选择器(Selector)选择出来的pod,是为了放在Endpoints里面</p>
-<pre><code class="language-powershell"># Endpoints也是一种资源类型，默认会与service绑定起来
+<pre><code class="language-shell"># Endpoints也是一种资源类型，默认会与service绑定起来
 #如果readinessporbe(可用性检测)没过，则会将pod的IP地址从Endpoints列表种剔除，不在接收流量
 $ kd get endpoints myblog
 NAME     ENDPOINTS                            AGE
 myblog   10.244.0.68:8002,10.244.1.158:8002   7m
 </code></pre>
 <p>Service Cluster-IP如何访问:</p>
-<pre><code class="language-powershell">$ kd get svc myblog
+<pre><code class="language-shell">$ kd get svc myblog
 NAME   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
 myblog   ClusterIP   10.99.174.93   &lt;none&gt;        80/TCP    13m
 
@@ -254,7 +256,7 @@ spec:
 $ kubectl -n luffy create -f svc-mysql.yaml
 </code></pre>
 <p>访问mysql：</p>
-<pre><code class="language-powershell">$ kd get svc mysql
+<pre><code class="language-shell">$ kd get svc mysql
 mysql    ClusterIP   10.108.214.84   &lt;none&gt;        3306/TCP   3s
 
 $ curl 10.108.214.84:3306
@@ -275,7 +277,7 @@ $ curl 10.108.214.84:3306
 <blockquote>
 <p>各个pod之间，通过<code>/etc/resolv.conf</code>文件进行域名解析。</p>
 </blockquote>
-<pre><code>$ kubectl -n luffy exec -it myblog-55d66f7b89-2h4kc  bash
+<pre><code class="language-shell">$ kubectl -n luffy exec -it myblog-55d66f7b89-2h4kc  bash
 
 $ cat /etc/resolv.conf
 nameserver 10.96.0.10   # 域名解析服务器
@@ -290,7 +292,7 @@ curl mysql.luffy.svc.linux.local:3306
 <p>通过命令<code>kubectl -n kube-system describe svc kube-dns</code>发现这个service关联了带有<code>k8s-app=kube-dns</code>标签的Pod。</p>
 <p>通过标签过滤<code>kubectl -n kube-system get po -owide -l k8s-app=kube-dns</code>发现,使用的是coredns。</p>
 <p>演示服务发现：</p>
-<pre><code class="language-powershell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
+<pre><code class="language-shell">## 演示思路：在myblog的容器中直接通过service名称访问服务，观察是否可以访问通
 
 # 先查看服务
 $ kd get svc
@@ -352,7 +354,7 @@ data:
 
 </code></pre>
 <p>应用修改：</p>
-<pre><code class="language-powershell">$ kubectl delete -f deployment-mysql.yaml
+<pre><code class="language-shell">$ kubectl delete -f deployment-mysql.yaml
 
 ## myblog不用动，会自动因健康检测不过而重启
 </code></pre>
@@ -391,7 +393,7 @@ endpoint controller负责把endpoints下要关联的Pod IP 添加到list中。
 <p>cluster-ip为虚拟地址，只能在k8s集群内部进行访问，集群外部如果访问内部服务，实现方式之一为使用NodePort方式。<br>
 NodePort会默认在 30000-32767 ，不指定的会随机使用其中一个。</p>
 <p><code>myblog/deployment/svc-myblog-nodeport.yaml</code></p>
-<pre><code class="language-powershell">apiVersion: v1
+<pre><code class="language-shell">apiVersion: v1
 kind: Service
 metadata:
   name: myblog-np
@@ -399,14 +401,14 @@ metadata:
 spec:
   ports:
   - port: 80
-    protocol: TCP
     targetPort: 8002
+    protocol: TCP
   selector:
     app: myblog
   type: NodePort
 </code></pre>
 <p>查看并访问服务：</p>
-<pre><code class="language-powershell">$ kd create -f svc-myblog-nodeport.yaml
+<pre><code class="language-shell">$ kd create -f svc-myblog-nodeport.yaml
 service/myblog-np created
 $ kd get svc
 NAME        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE

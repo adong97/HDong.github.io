@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652327062310">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652351134253">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652327062310" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652351134253" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -153,13 +153,14 @@
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840632889.png" alt="" loading="lazy"></figure>
 <ul>
 <li>
-<p>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态，并且支持滚动式自动扩容和缩容功能</p>
+<p>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态。<br>
+官方文档：https://kubernetes.io/zh/docs/concepts/workloads/controllers/replicaset/</p>
 </li>
 <li>
 <p>Deployment：工作在ReplicaSet之上，用于管理无状态应用，目前来说最好的控制器。支持滚动更新和回滚功能，提供声明式配置</p>
 </li>
 <li>
-<p>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务</p>
+<p>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务等。</p>
 </li>
 <li>
 <p>Job：单次任务，只要完成就立即退出，不需要重启或重建 ，多用于环境初始化。（一次性任务）<br>
@@ -174,7 +175,10 @@
 </li>
 </ul>
 <h3 id="322-deployment">3.2.2 Deployment</h3>
-<p><code>myblog/deployment/deploy-mysql.yaml</code></p>
+<p>Deployment控制器不会直接管理Pod副本，而是通过创建ReplicaSet副本控制器间接管理Pod副本数量。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652340484765.png" alt="" loading="lazy"></p>
+<p><strong>示例:</strong><br>
+<code>myblog/deployment/deploy-mysql.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment  #资源类型
 metadata:
@@ -239,7 +243,7 @@ spec:
         - name: mysql-data
           mountPath: /var/lib/mysql
 </code></pre>
-<p>deploy-myblog.yaml:</p>
+<p><code>deploy-myblog.yaml:</code></p>
 <pre><code class="language-yaml">apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -307,10 +311,10 @@ spec:
           periodSeconds: 15
 </code></pre>
 <h3 id="323-创建deployment">3.2.3 创建Deployment</h3>
-<pre><code class="language-powershell">$ kubectl create -f deploy.yaml
+<pre><code class="language-shell">$ kubectl create -f deploy.yaml
 </code></pre>
 <h3 id="324-查看deployment">3.2.4 查看Deployment</h3>
-<pre><code class="language-powershell"># kubectl api-resources
+<pre><code class="language-shell"># kubectl api-resources
 $ kubectl -n luffy get deploy
 NAME     READY   UP-TO-DATE   AVAILABLE   AGE
 myblog   1/1     1            1           2m22s

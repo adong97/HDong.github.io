@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652327062310">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652351134253">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652327062310" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652351134253" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,18 +34,24 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#pv%E4%B8%8Epvc%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">PV与PVC快速入门</a></li>
-<li><a href="#pv%E4%B8%8Epvc%E7%AE%A1%E7%90%86nfs%E5%AD%98%E5%82%A8%E5%8D%B7%E5%AE%9E%E8%B7%B5">PV与PVC管理NFS存储卷实践</a>
+<li><a href="#%E4%B8%80-pv%E4%B8%8Epvc%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">一、PV与PVC快速入门</a>
 <ul>
-<li><a href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">环境准备</a></li>
-<li><a href="#pv%E4%B8%8Epvc%E6%BC%94%E7%A4%BA">PV与PVC演示</a></li>
-<li><a href="#storageclass%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E6%8C%82%E8%BD%BD">storageClass实现动态挂载</a></li>
+<li><a href="#11-emptydir">1.1 emptyDir</a></li>
+<li><a href="#12-hostpath">1.2  hostPath</a></li>
+<li><a href="#13-nfs%E5%AD%98%E5%82%A8">1.3 nfs存储</a></li>
 </ul>
 </li>
-<li><a href="#%E5%AF%B9%E6%8E%A5ceph%E5%AD%98%E5%82%A8%E5%AE%9E%E8%B7%B5">对接Ceph存储实践</a>
+<li><a href="#%E4%BA%8C-pv%E4%B8%8Epvc%E7%AE%A1%E7%90%86nfs%E5%AD%98%E5%82%A8%E5%8D%B7%E5%AE%9E%E8%B7%B5">二、PV与PVC管理NFS存储卷实践</a>
 <ul>
-<li><a href="#storageclass%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E6%8C%82%E8%BD%BD-2">storageClass实现动态挂载</a></li>
-<li><a href="#%E5%8A%A8%E6%80%81pvc%E9%AA%8C%E8%AF%81%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90">动态pvc验证及实现分析</a></li>
+<li><a href="#21-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87">2.1 环境准备</a></li>
+<li><a href="#22-pv%E4%B8%8Epvc%E6%BC%94%E7%A4%BA">2.2 PV与PVC演示</a></li>
+<li><a href="#24-storageclass%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E6%8C%82%E8%BD%BD">2.4 storageClass实现动态挂载</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E5%AF%B9%E6%8E%A5ceph%E5%AD%98%E5%82%A8%E5%AE%9E%E8%B7%B5">三、对接Ceph存储实践</a>
+<ul>
+<li><a href="#31-storageclass%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E6%8C%82%E8%BD%BD">3.1 storageClass实现动态挂载</a></li>
+<li><a href="#32-%E5%8A%A8%E6%80%81pvc%E9%AA%8C%E8%AF%81%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90">3.2 动态pvc验证及实现分析</a></li>
 </ul>
 </li>
 </ul>
@@ -138,18 +144,34 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">kubernetes对接分部式存储</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-18 / 19 min read
+          2022-02-18 / 21 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/qJwfGvnw1.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="pv与pvc快速入门">PV与PVC快速入门</h1>
-<p>k8s存储的目的就是保证Pod重建后，数据不丢失。简单的数据持久化的下述方式：</p>
+          <p>Volume将容器中的指定数据和容器解耦，并将数据存储到指定的位置，不同的存储卷功能不一样，如果是 基于网络存储的存储卷可以实现容器间的数据共享和持久化。</p>
+<p>静态存储卷需要在使用前手动创建PV和PVC，然后绑定至pod使用。</p>
+<p>常用的几种卷：</p>
 <ul>
-<li>
-<p>emptyDir</p>
-<pre><code class="language-yaml">apiVersion: v1
+<li>emptyDir：本地临时卷，容器删除，数据则丢失。</li>
+<li>hostPath：本地存储卷，容器删除，数据不会丢失。</li>
+<li>configmap: 配置文件，使配置文件和Pod容器解耦。</li>
+<li>Secret：是一种包含少量敏感信息，例如密码、令牌或密钥的资源对象。</li>
+<li>nfs等：网络存储卷<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652348086426.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="一-pv与pvc快速入门">一、PV与PVC快速入门</h1>
+<p>k8s存储的目的就是保证Pod重建后，数据不丢失。</p>
+<p>简单的数据持久化的下述方式：</p>
+<h2 id="11-emptydir">1.1 emptyDir</h2>
+<p>当 Pod 被分配给节点时，首先创建 emptyDir 卷，并且只要该 Pod 在该节点上运行，该卷就会存在。正如卷的名字所述，它最初是空的(目录)，Pod 中的容器可以读取和写入 emptyDir 卷中的相同文件，尽管该卷可以挂载到每个容器中的相同或不同路径上。当出于任何原因从节点中删除 Pod 时，emptyDir 中的数据将被永久删除。</p>
+<p>数据目录默认存放路径：<br>
+/var/lib/kubelet/pods/<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>I</mi><mi>D</mi><mi mathvariant="normal">/</mi><mi>v</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>m</mi><mi>e</mi><mi>s</mi><mi mathvariant="normal">/</mi><mi>k</mi><mi>u</mi><mi>b</mi><mi>e</mi><mi>r</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi>e</mi><mi>s</mi><mi mathvariant="normal">.</mi><mi>i</mi><mi>o</mi><mtext> </mtext><mi>e</mi><mi>m</mi><mi>p</mi><mi>t</mi><mi>y</mi><mo>−</mo><mi>d</mi><mi>i</mi><mi>r</mi><mi mathvariant="normal">/</mi><mi>c</mi><mi>a</mi><mi>c</mi><mi>h</mi><mi>e</mi><mo>−</mo><mi>v</mi><mi>o</mi><mi>l</mi><mi>u</mi><mi>m</mi><mi>e</mi><mi mathvariant="normal">/</mi></mrow><annotation encoding="application/x-tex">ID/volumes/kubernetes.io~empty-dir/cache-volume/</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">u</span><span class="mord mathdefault">b</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord">.</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mspace nobreak"> </span><span class="mord mathdefault">e</span><span class="mord mathdefault">m</span><span class="mord mathdefault">p</span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord">/</span><span class="mord mathdefault">c</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">h</span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord">/</span></span></span></span>FILE<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652350975071.png" alt="" loading="lazy"></p>
+<pre><code class="language-yaml">cat deploy_emptyDir.yml 
+
+apiVersion: v1
 kind: Pod
 metadata:
   name: test-pod
@@ -162,21 +184,27 @@ spec:
       name: cache-volume
   - image: k8s.gcr.io/test-redis
     name: redis
-    volumeMounts:
-    - mountPath: /data
-      name: cache-volume
-volumes:
-  - name: cache-volume
-    emptyDir: {}  #使用这种方式，如果删掉pod，数据就丢失了。
+    volumeMounts:  #挂载卷
+    - mountPath: /data  #容器内卷挂载路径
+      name: cache-volume  #找到声明卷volumes中的name值等于 cache-volume，挂载到/data目录下。
+volumes:  # 声明卷
+  - name: cache-volume  # 定义卷名称
+    emptyDir: {}  #指定卷类型，如果删掉pod，数据就丢失了。
 </code></pre>
 <ul>
 <li>Pod内的容器共享卷的数据</li>
 <li>存在于Pod的生命周期，Pod销毁，数据丢失</li>
 <li>Pod内的容器自动重建后，数据不会丢失</li>
 </ul>
-</li>
-<li>
-<p>hostPath</p>
+<pre><code class="language-shell">root@k8s-master01:~# kubectl apply -f deploy_emptyDir.yml 
+
+root@k8s-node03:~# find /var/lib/kubelet/ -name cache-volume
+/var/lib/kubelet/pods/f669ef3d-27f3-40f1-a224-c4e795e6fb5f/volumes/kubernetes.io~empty-dir/cache-volume  ## 数据存放目录
+/var/lib/kubelet/pods/f669ef3d-27f3-40f1-a224-c4e795e6fb5f/plugins/kubernetes.io~empty-dir/cache-volume
+</code></pre>
+<h2 id="12-hostpath">1.2  hostPath</h2>
+<p>hostPath 卷将主机节点的文件系统中的文件或目录挂载到集群中，pod删除的时候，卷不会被删除。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652350998331.png" alt="" loading="lazy"></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Pod
 metadata:
@@ -197,22 +225,22 @@ spec:
       type: Directory
 </code></pre>
 <p>通常配合nodeSelector使用</p>
-</li>
-<li>
-<p>nfs存储</p>
-<pre><code class="language-yaml">...
-  volumes:
-  - name: redisdata             #卷名称
-    nfs:                        #使用NFS网络存储卷
-      server: 192.168.31.241    #NFS服务器地址
-      path: /data/redis         #NFS服务器共享的目录
-      readOnly: false           #是否为只读
-...
+<h2 id="13-nfs存储">1.3 nfs存储</h2>
+<p>nfs 卷允许将现有的 NFS（网络文件系统）共享挂载到您的容器中。不像 emptyDir，当删除 Pod 时，nfs 卷的内容被保留，卷仅仅是被卸载。这意味着 NFS 卷可以预填充数据，并且可以在 pod 之间“切换”数据。<br>
+NFS 可以被多个写入者同时挂载。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652351050607.png" alt="" loading="lazy"></p>
+<pre><code class="language-yaml">  ...
+    volumes:
+    - name: redisdata             #卷名称
+      nfs:                        #使用NFS网络存储卷
+        server: 192.168.31.241    #NFS服务器地址
+        path: /data/redis         #NFS服务器共享的目录
+        readOnly: false           #是否为只读
+  ...
 </code></pre>
-</li>
-</ul>
 <p>volume支持的种类众多（参考 https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes ），每种对应不同的存储后端实现，因此为了屏蔽后端存储的细节，同时使得Pod在使用存储的时候更加简洁和规范，k8s引入了两个新的资源类型，PV和PVC。</p>
-<p>PersistentVolume（持久化卷），是对底层的存储的一种抽象，它和具体的底层的共享存储技术的实现方式有关，比如 Ceph、GlusterFS、NFS 等，都是通过插件机制完成与共享存储的对接。如使用PV对接NFS存储：</p>
+<p><strong>PersistentVolume</strong>（持久化卷），是对底层的存储的一种抽象，它和具体的底层的共享存储技术的实现方式有关，比如 Ceph、GlusterFS、NFS 等，都是通过插件机制完成与共享存储的对接。<br>
+如使用PV对接NFS存储：</p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -228,8 +256,8 @@ spec:
     server: 172.21.51.55
 </code></pre>
 <ul>
-<li>capacity，存储能力， 目前只支持存储空间的设置， 就是我们这里的 storage=1Gi，不过未来可能会加入 IOPS、吞吐量等指标的配置。</li>
-<li>accessModes，访问模式， 是用来对 PV 进行访问模式的设置，用于描述用户应用对存储资源的访问权限，访问权限包括下面几种方式：
+<li><strong>capacity</strong>，存储能力， 目前只支持存储空间的设置， 就是我们这里的 storage=1Gi，不过未来可能会加入 IOPS、吞吐量等指标的配置。</li>
+<li><strong>accessModes</strong>，访问模式， 是用来对 PV 进行访问模式的设置，用于描述用户应用对存储资源的访问权限，访问权限包括下面几种方式：
 <ul>
 <li>ReadWriteOnce（RWO）：读写权限，但是只能被单个节点挂载</li>
 <li>ReadOnlyMany（ROX）：只读权限，可以被多个节点挂载</li>
@@ -280,8 +308,8 @@ spec:
           claimName: pvc-nfs
 ...
 </code></pre>
-<h1 id="pv与pvc管理nfs存储卷实践">PV与PVC管理NFS存储卷实践</h1>
-<h2 id="环境准备">环境准备</h2>
+<h1 id="二-pv与pvc管理nfs存储卷实践">二、PV与PVC管理NFS存储卷实践</h1>
+<h2 id="21-环境准备">2.1 环境准备</h2>
 <p>服务端：172.21.51.55</p>
 <pre><code class="language-shell">$ yum -y install nfs-utils rpcbind
 ##ubuntu系统安装
@@ -302,7 +330,7 @@ $ systemctl enable nfs-kernel-server &amp;&amp; systemctl start nfs-kernel-serve
 $ mkdir /nfsdata
 $ mount -t nfs 10.1.13.156:/data/k8s /nfsdata
 </code></pre>
-<h2 id="pv与pvc演示">PV与PVC演示</h2>
+<h2 id="22-pv与pvc演示">2.2 PV与PVC演示</h2>
 <pre><code class="language-shell">$ cat pv-nfs.yaml
 
 apiVersion: v1
@@ -451,7 +479,7 @@ $ kubectl create -f deployment.yaml
 
 # 删除pvc
 </code></pre>
-<h2 id="storageclass实现动态挂载">storageClass实现动态挂载</h2>
+<h2 id="24-storageclass实现动态挂载">2.4 storageClass实现动态挂载</h2>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1645342751450.jpg" alt="" loading="lazy"><br>
 创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass(存储类)  +  provisioner(驱动器)的方式来实现通过PVC自动创建并绑定PV。<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1645154117942.png" alt="" loading="lazy"></p>
@@ -638,7 +666,7 @@ NAME                                                        CAPACITY   ACCESS MO
 persistentvolume/nfs-pv                                     1Gi        RWX            Retain           Bound    default/pvc-nfs                              3h48m
 persistentvolume/pvc-0bc7310a-358e-4f10-989d-539677115d55   200Mi      RWX            Delete           Bound    default/test-claim   nfs-storage             2s
 </code></pre>
-<h1 id="对接ceph存储实践">对接Ceph存储实践</h1>
+<h1 id="三-对接ceph存储实践">三、对接Ceph存储实践</h1>
 <p>ceph的安装及使用参考 http://docs.ceph.org.cn/start/intro/</p>
 <p>单点快速安装：  https://blog.csdn.net/h106140873/article/details/90201379</p>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1645154148566.png" alt="" loading="lazy"></figure>
@@ -659,7 +687,7 @@ client.admin
 # 挂载
 $ mount -t ceph 172.21.51.55:6789:/ /mnt/cephfs -o name=admin,secret=AQBPTstgc078NBAA78D1/KABglIZHKh7+G2X8w==
 </code></pre>
-<h2 id="storageclass实现动态挂载-2">storageClass实现动态挂载</h2>
+<h2 id="31-storageclass实现动态挂载">3.1 storageClass实现动态挂载</h2>
 <p>创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。因此，通过storageClass  +  provisioner的方式来实现通过PVC自动创建并绑定PV。</p>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1645154168771.png" alt="" loading="lazy"></figure>
 <p>比如，针对cephfs，可以创建如下类型的storageclass：</p>
@@ -810,7 +838,7 @@ parameters:
     adminSecretNamespace: &quot;kube-system&quot;
     claimRoot: /volumes/kubernetes
 </code></pre>
-<h2 id="动态pvc验证及实现分析">动态pvc验证及实现分析</h2>
+<h2 id="32-动态pvc验证及实现分析">3.2 动态pvc验证及实现分析</h2>
 <p>使用流程： 创建pvc，指定storageclass和存储大小，即可实现动态存储。</p>
 <p>创建pvc测试自动生成pv</p>
 <pre><code class="language-shell">$ cat cephfs-pvc-test.yaml
