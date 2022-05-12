@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652325616986">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652327062310">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652325616986" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652327062310" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -152,12 +152,26 @@
 <p>控制器又称工作负载。是用于实现管理pod的中间层，确保pod资源符合预期的状态，pod的资源出现故障时，会尝试进行重启，当根据重启策略无效，则会重新新建pod的资源。</p>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840632889.png" alt="" loading="lazy"></figure>
 <ul>
-<li>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态，并且支持滚动式自动扩容和缩容功能</li>
-<li>Deployment：工作在ReplicaSet之上，用于管理无状态应用，目前来说最好的控制器。支持滚动更新和回滚功能，提供声明式配置</li>
-<li>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务</li>
-<li>Job：只要完成就立即退出，不需要重启或重建 （一次性任务）</li>
-<li>Cronjob：周期性任务控制，不需要持续后台运行 （定时任务）</li>
-<li>StatefulSet：管理有状态应用</li>
+<li>
+<p>ReplicaSet: 用户创建指定数量的pod副本数量，确保pod副本数量符合预期状态，并且支持滚动式自动扩容和缩容功能</p>
+</li>
+<li>
+<p>Deployment：工作在ReplicaSet之上，用于管理无状态应用，目前来说最好的控制器。支持滚动更新和回滚功能，提供声明式配置</p>
+</li>
+<li>
+<p>DaemonSet：用于确保集群中的每一个节点只运行特定的pod副本，通常用于实现系统级后台任务。比如EFK服务</p>
+</li>
+<li>
+<p>Job：单次任务，只要完成就立即退出，不需要重启或重建 ，多用于环境初始化。（一次性任务）<br>
+官方文档：https://kubernetes.io/docs/concepts/workloads/controllers/job/</p>
+</li>
+<li>
+<p>Cronjob：周期性任务控制，不需要持续后台运行，多用于数据备份。 （定时任务）<br>
+官方文档：https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/</p>
+</li>
+<li>
+<p>StatefulSet：管理有状态应用</p>
+</li>
 </ul>
 <h3 id="322-deployment">3.2.2 Deployment</h3>
 <p><code>myblog/deployment/deploy-mysql.yaml</code></p>
