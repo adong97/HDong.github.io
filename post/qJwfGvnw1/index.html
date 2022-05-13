@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652406191949">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652406546239">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652406191949" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652406546239" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -338,14 +338,19 @@ mountOptions #附加的挂载选项列表，实现更精细的权限控制
 </ul>
 </li>
 </ul>
-<p>-<strong>persistentVolumeReclaimPolicy</strong>，pv的回收策略, 目前只有 NFS 和 HostPath 两种类型支持回收策略</p>
+<blockquote>
+<p>重要提醒！ 每个卷同一时刻只能以一种访问模式挂载，即使该卷能够支持 多种访问模式。例如，一个 GCEPersistentDisk 卷可以被某节点以 ReadWriteOnce 模式挂载，或者被多个节点以 ReadOnlyMany 模式挂载，但不可以同时以两种模式挂载。</p>
+</blockquote>
+<ul>
+<li><strong>persistentVolumeReclaimPolicy</strong>，pv的回收策略, 目前只有 NFS 和 HostPath 两种类型支持回收策略
 <ul>
 <li>Retain（保留）- 保留数据，需要管理员手工清理数据</li>
 <li>Recycle（回收）- 清除 PV 中的数据，效果相当于执行 rm -rf /thevolume/*</li>
 <li>Delete（删除）- 与 PV 相连的后端存储完成 volume 的删除操作，当然这常见于云服务商的存储服务，比如 ASW EBS。</li>
 </ul>
-<p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1645154071426.webp" alt="" loading="lazy"></p>
+</li>
+</ul>
+<p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。</p>
 <h2 id="22-persistentvolumeclaimpvc">2.2 PersistentVolumeClaim(PVC)</h2>
 <p><strong>PVC全写是PersistentVolumeClaim</strong>（持久化卷声明），是pod对存储的请求， pod挂载PVC并将数据存储在PVC， 而PVC需要绑定到PV才能使用， 另外PVC在创建的时候要指定 namespace，即pod要和PVC运行在同一个namespace，可以对PVC设置特定的空间大小和 访问模式，使用PVC的pod在删除时也可以对PVC中的数据没有影响。对于真正使用存储的用户不需要关心底层的存储实现细节，只需要直接使用 PVC 即可。</p>
 <pre><code class="language-yaml">apiVersion: v1
