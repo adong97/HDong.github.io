@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652404845933">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652406191949">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652404845933" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652406191949" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -282,10 +282,11 @@ spec:
 <ul>
 <li>PV：PersistentVolume</li>
 <li>PVC ：PersistentVolumeClaim<br>
-用于实现pod和storage的解耦，这样我们修改storage的时候不需要修改pod。<br>
+PV/PVC用于实现pod和storage的解耦，这样我们修改storage的时候不需要修改pod。<br>
 与NFS的区别，可以在PV和PVC层面实现实现对存储服务器的空间分配、存储的访问权限管理等。<br>
 kubernetes 从1.0版本开始支持PersistentVolume和PersistentVolumeClaim。</li>
 </ul>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1652406079692.png" alt="" loading="lazy"></figure>
 <h2 id="21-persistentvolumepv">2.1 PersistentVolume(PV)</h2>
 <p><strong>PersistentVolume(PV)</strong>（持久化卷），是集群中已经由kubernetes管理员配置的一个网络存储，集群中的存储资源一个集群资源，即不隶属于任何 namespace，PV的数据最终存储在硬件存储，pod不能直接挂载PV，PV需要绑定给PVC并最终由pod挂载PVC使用，PV其支持NFS、Ceph、商业存储或云提供商的 特定的存储等，可以自定义PV 的类型是块还是文件存储、存储空间大小、访问模式等，PV 的生命周期独立于Pod，即当使用PV的Pod被删除时可以对PV中的数据没有影响。</p>
 <p>如使用PV对接NFS存储：</p>
@@ -325,8 +326,11 @@ mountOptions #附加的挂载选项列表，实现更精细的权限控制
     ro #等
 </code></pre>
 <ul>
-<li><strong>capacity</strong>，存储能力， 目前只支持存储空间的设置， 就是我们这里的 storage=1Gi，不过未来可能会加入 IOPS、吞吐量等指标的配置。</li>
-<li><strong>accessModes</strong>，访问模式， 是用来对 PV 进行访问模式的设置，用于描述用户应用对存储资源的访问权限，访问权限包括下面几种方式：
+<li>
+<p><strong>capacity</strong>，存储能力， 目前只支持存储空间的设置， 就是我们这里的 storage=1Gi，不过未来可能会加入 IOPS、吞吐量等指标的配置。</p>
+</li>
+<li>
+<p><strong>accessModes</strong>，访问模式， 是用来对 PV 进行访问模式的设置，用于描述用户应用对存储资源的访问权限，访问权限包括下面几种方式：</p>
 <ul>
 <li>ReadWriteOnce（RWO）：读写权限，但是只能被单个节点挂载</li>
 <li>ReadOnlyMany（ROX）：只读权限，可以被多个节点挂载</li>
@@ -334,14 +338,14 @@ mountOptions #附加的挂载选项列表，实现更精细的权限控制
 </ul>
 </li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1645154071426.webp" alt="" loading="lazy"></figure>
 <p>-<strong>persistentVolumeReclaimPolicy</strong>，pv的回收策略, 目前只有 NFS 和 HostPath 两种类型支持回收策略</p>
 <ul>
 <li>Retain（保留）- 保留数据，需要管理员手工清理数据</li>
 <li>Recycle（回收）- 清除 PV 中的数据，效果相当于执行 rm -rf /thevolume/*</li>
 <li>Delete（删除）- 与 PV 相连的后端存储完成 volume 的删除操作，当然这常见于云服务商的存储服务，比如 ASW EBS。</li>
 </ul>
-<p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。</p>
+<p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1645154071426.webp" alt="" loading="lazy"></p>
 <h2 id="22-persistentvolumeclaimpvc">2.2 PersistentVolumeClaim(PVC)</h2>
 <p><strong>PVC全写是PersistentVolumeClaim</strong>（持久化卷声明），是pod对存储的请求， pod挂载PVC并将数据存储在PVC， 而PVC需要绑定到PV才能使用， 另外PVC在创建的时候要指定 namespace，即pod要和PVC运行在同一个namespace，可以对PVC设置特定的空间大小和 访问模式，使用PVC的pod在删除时也可以对PVC中的数据没有影响。对于真正使用存储的用户不需要关心底层的存储实现细节，只需要直接使用 PVC 即可。</p>
 <pre><code class="language-yaml">apiVersion: v1
