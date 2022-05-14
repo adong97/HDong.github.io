@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652530538189">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652531457748">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652530538189" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652531457748" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -446,11 +446,11 @@ locale
 <p>Secret 的名称必须是合法的 DNS 子域名。</p>
 <p>每个Secret的大小最多为1MiB，主要是为了避免用户创建非常大的 Secret进而导致API服务器和kubelet内存耗尽，不过创建很多小的 Secret也可能耗尽内存，可以使用资源配额来约束每个名字空间中<br>
 Secret的个数。</p>
-<p>在通过yaml文件创建secret时，可以设置data或stringData字段，data 和stringData字段都是可选的，data字段中所有键值都必须是base64 编码的字符串，如果不希望执行这种 base64字符串的转换操作，也 可以选择设置stringData字段，其中可以使用任何非加密的字符串作为其取值。<br>
-Secret和pod要保证在同一namespace下才可以使用，Secret不可以跨namespace引用。</p>
+<p>在通过yaml文件创建secret时，可以设置data或stringData字段，data 和stringData字段都是可选的，data字段中所有键值都必须是base64 编码的字符串，如果不希望执行这种 base64字符串的转换操作，也可以选择设置stringData字段，其中可以使用任何非加密的字符串作为其取值。<br>
+Secret和pod要保证在同一namespace下才可以使用，不可以跨namespace引用。</p>
 <p>Pod 可以用三种方式的任意一种来使用 Secret：</p>
 <ul>
-<li>作为挂载到一个或多个容器上的卷 中的文件(crt文件、key文件)。</li>
+<li>作为挂载到一个或多个容器上的卷中的文件(crt文件、key文件)。</li>
 <li>作为容器的环境变量。</li>
 <li>由 kubelet 在为 Pod 拉取镜像时使用(与镜像仓库的认证)。</li>
 </ul>
@@ -466,7 +466,7 @@ Secret和pod要保证在同一namespace下才可以使用，Secret不可以跨na
 <tbody>
 <tr>
 <td>Opaque</td>
-<td>用户定义的任意数据</td>
+<td>用户定义的任意数据(常用)</td>
 </tr>
 <tr>
 <td>kubernetes.io/service-account-token</td>
@@ -478,7 +478,7 @@ Secret和pod要保证在同一namespace下才可以使用，Secret不可以跨na
 </tr>
 <tr>
 <td>kubernetes.io/dockerconfigjson</td>
-<td>~/.docker/config.json 文件的序列化形式,用于认证</td>
+<td>~/.docker/config.json 文件的序列化形式,用于认证(常用)</td>
 </tr>
 <tr>
 <td>kubernetes.io/basic-auth</td>
@@ -490,7 +490,7 @@ Secret和pod要保证在同一namespace下才可以使用，Secret不可以跨na
 </tr>
 <tr>
 <td>kubernetes.io/tls</td>
-<td>用于 TLS 环境，保存crt证书和key证书</td>
+<td>用于 TLS 环境，保存crt证书和key证书(常用)</td>
 </tr>
 <tr>
 <td>bootstrap.kubernetes.io/token</td>
@@ -551,6 +551,8 @@ stringData:
 certs# openssl req -x509 -sha256 -newkey rsa:4096 -keyout ca.key -out ca.crt -days 3560 -nodes -subj '/CN=www.ca.com' 
 certs# openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes -subj '/CN=www.mysite.com' 
 certs# openssl x509 -req -sha256 -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+
+## 创建 Secret
 certs# kubectl create secret tls myserver-tls-key --cert=./server.crt --key=./server.key -n myserver
 </code></pre>
 <p>创建web服务</p>
@@ -681,18 +683,65 @@ include /etc/nginx/conf.d/myserver/*.conf;
 <p>存储docker registry的认证信息，在下载镜像的时候使用，这样每一个node节点就可以不登录也可以下载私有级别的镜像了。</p>
 <p>创建secret<br>
 方式一：通过命令创建</p>
-<pre><code class="language-shell">kubectl create secret docker-registry keyName \ --docker-server=registry.myserver.com \ 
+<pre><code class="language-shell">kubectl create secret docker-registry keyName \ 
+--docker-server=registry.myserver.com \ 
 --docker-username=USER\
 --docker-password=PASSWORD
 </code></pre>
 <p>方式二：通过docker认证文件创建</p>
 <pre><code class="language-shell">root@k8s-master1:~# docker login --username=rooroot@aliyun.com registry.cn-qingdao.aliyuncs.com 
+
 root@k8s-master1:~# kubectl create secret generic aliyun-registry-image-pull-key \
- --from-file=.dockerconfigjson=/root/.docker/config.json \ --type=kubernetes.io/dockerconfigjson \
+ --from-file=.dockerconfigjson=/root/.docker/config.json \
+ --type=kubernetes.io/dockerconfigjson \
 -n myserver
 </code></pre>
 <p>创建Pod</p>
-<pre><code class="language-shell">~# kubectl apply -f 5-secret-imagePull.yaml
+<pre><code class="language-shell">cat 5-secret-imagePull.yaml
+
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myserver-myapp-frontend-deployment
+  namespace: myserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myserver-myapp-frontend
+  template:
+    metadata:
+      labels:
+        app: myserver-myapp-frontend
+    spec:
+      containers:
+      - name: myserver-myapp-frontend
+        image: registry.cn-qingdao.aliyuncs.com/zhangshijie/nginx:1.16.1-alpine-perl 
+        ports:
+          - containerPort: 80
+      imagePullSecrets:  ##指定下载镜像Secrets
+        - name: aliyun-registry-image-pull-key
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myserver-myapp-frontend
+  namespace: myserver
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30018
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: myserver-myapp-frontend
+
+
+~# kubectl apply -f 5-secret-imagePull.yaml
 </code></pre>
 <p>验证pod运行状态</p>
 <pre><code class="language-shell">~# kubectl get pod -n myserver
