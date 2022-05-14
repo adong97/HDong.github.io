@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652406546239">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652530538189">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652406546239" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652530538189" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -45,12 +45,13 @@
 <ul>
 <li><a href="#21-persistentvolumepv">2.1 PersistentVolume(PV)</a>
 <ul>
-<li><a href="#211-persistentvolume%E5%8F%82%E6%95%B0">2.1.1 PersistentVolume参数</a></li>
+<li><a href="#211-pv%E5%88%9B%E5%BB%BA%E5%8F%82%E6%95%B0">2.1.1 PV创建参数</a></li>
 </ul>
 </li>
 <li><a href="#22-persistentvolumeclaimpvc">2.2 PersistentVolumeClaim(PVC)</a>
 <ul>
-<li><a href="#221-persistentvolume%E5%8F%82%E6%95%B0">2.2.1 PersistentVolume参数</a></li>
+<li><a href="#221-pvc%E5%88%9B%E5%BB%BA%E5%8F%82%E6%95%B0">2.2.1 PVC创建参数</a></li>
+<li><a href="#222-%E7%A4%BA%E4%BE%8B">2.2.2 示例</a></li>
 </ul>
 </li>
 <li><a href="#23-pvpvc%E6%80%BB%E7%BB%93">2.3 PV/PVC总结</a></li>
@@ -167,7 +168,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">kubernetes对接分部式存储</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-18 / 25 min read
+          2022-02-18 / 26 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/qJwfGvnw1.png" alt="">
@@ -281,11 +282,11 @@ spec:
 官方文档：https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/</p>
 <ul>
 <li>PV：PersistentVolume</li>
-<li>PVC ：PersistentVolumeClaim<br>
-PV/PVC用于实现pod和storage的解耦，这样我们修改storage的时候不需要修改pod。<br>
-与NFS的区别，可以在PV和PVC层面实现实现对存储服务器的空间分配、存储的访问权限管理等。<br>
-kubernetes 从1.0版本开始支持PersistentVolume和PersistentVolumeClaim。</li>
+<li>PVC ：PersistentVolumeClaim</li>
 </ul>
+<p>PV/PVC用于实现pod和storage的解耦，这样我们修改storage的时候不需要修改pod。<br>
+与NFS的区别，可以在PV和PVC层面实现实现对存储服务器的空间分配、存储的访问权限管理等。<br>
+kubernetes 从1.0版本开始支持PersistentVolume和PersistentVolumeClaim。</p>
 <figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1652406079692.png" alt="" loading="lazy"></figure>
 <h2 id="21-persistentvolumepv">2.1 PersistentVolume(PV)</h2>
 <p><strong>PersistentVolume(PV)</strong>（持久化卷），是集群中已经由kubernetes管理员配置的一个网络存储，集群中的存储资源一个集群资源，即不隶属于任何 namespace，PV的数据最终存储在硬件存储，pod不能直接挂载PV，PV需要绑定给PVC并最终由pod挂载PVC使用，PV其支持NFS、Ceph、商业存储或云提供商的 特定的存储等，可以自定义PV 的类型是块还是文件存储、存储空间大小、访问模式等，PV 的生命周期独立于Pod，即当使用PV的Pod被删除时可以对PV中的数据没有影响。</p>
@@ -304,26 +305,27 @@ spec:
     path: /data/k8s
     server: 172.21.51.55
 </code></pre>
-<h3 id="211-persistentvolume参数">2.1.1 PersistentVolume参数</h3>
+<h3 id="211-pv创建参数">2.1.1 PV创建参数</h3>
 <pre><code class="language-shell">~# kubectl explain PersistentVolume 
 
 Capacity： #当前PV空间大小，kubectl explain PersistentVolume.spec.capacity
+
 accessModes ：访问模式，#kubectl explain PersistentVolume.spec.accessModes     
     ReadWriteOnce – PV只能被单个节点以读写权限挂载，RWO 
     ReadOnlyMany – PV以可以被多个节点挂载但是权限是只读的,ROX 
     ReadWriteMany – PV可以被多个节点是读写方式挂载使用,RWX
 
-persistentVolumeReclaimPolicy #删除机制即删除存储卷卷时候，已经创建好的存储卷由以下删除操作： 
+persistentVolumeReclaimPolicy #删除机制。即删除存储卷的时候，已经创建好的存储卷由以下删除方式操作： 
 #kubectl explain PersistentVolume.spec.persistentVolumeReclaimPolicy 
-Retain – 删除PV后保持原装，最后需要管理员手动删除 
-Recycle – 空间回收，及删除存储卷上的所有数据(包括目录和隐藏文件),目前仅支持NFS和hostPath 
-Delete – 自动删除存储卷
+    Retain – 删除PV后保持原装，最后需要管理员手动删除 
+    Recycle – 空间回收，及删除存储卷上的所有数据(包括目录和隐藏文件),目前仅支持NFS和hostPath 
+    Delete – 自动删除存储卷
 
 volumeMode #卷类型，kubectl explain PersistentVolume.spec.volumeMode 
 定义存储卷使用的文件系统是块设备还是文件系统，默认为文件系统
 
 mountOptions #附加的挂载选项列表，实现更精细的权限控制
-    ro #等
+    ro #等，一般不使用
 </code></pre>
 <ul>
 <li>
@@ -351,8 +353,31 @@ mountOptions #附加的挂载选项列表，实现更精细的权限控制
 </li>
 </ul>
 <p>因为PV是直接对接底层存储的，就像集群中的Node可以为Pod提供计算资源（CPU和内存）一样，PV可以为Pod提供存储资源。因此PV不是namespaced的资源，属于集群层面可用的资源。Pod如果想使用该PV，需要通过创建PVC挂载到Pod中。</p>
+<p>官方提供的基于各后端存储创建的PV支持的访问模式：<br>
+https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1652410768255.png" alt="" loading="lazy"></p>
 <h2 id="22-persistentvolumeclaimpvc">2.2 PersistentVolumeClaim(PVC)</h2>
 <p><strong>PVC全写是PersistentVolumeClaim</strong>（持久化卷声明），是pod对存储的请求， pod挂载PVC并将数据存储在PVC， 而PVC需要绑定到PV才能使用， 另外PVC在创建的时候要指定 namespace，即pod要和PVC运行在同一个namespace，可以对PVC设置特定的空间大小和 访问模式，使用PVC的pod在删除时也可以对PVC中的数据没有影响。对于真正使用存储的用户不需要关心底层的存储实现细节，只需要直接使用 PVC 即可。</p>
+<h3 id="221-pvc创建参数">2.2.1 PVC创建参数</h3>
+<pre><code class="language-shell">~#kubectl explain PersistentVolumeClaim. 
+
+accessModes ：PVC 访问模式，#kubectl explain PersistentVolumeClaim.spec.volumeMode 
+    ReadWriteOnce – PVC只能被单个节点以读写权限挂载，RWO 
+    ReadOnlyMany – PVC以可以被多个节点挂载但是权限是只读的,ROX 
+    ReadWriteMany – PVC可以被多个节点是读写方式挂载使用,RWX
+
+resources： #定义PVC创建存储卷的空间大小，小于绑定PV的大小
+
+selector： #标签选择器，选择要绑定的PV 
+    matchLabels #匹配标签名称 
+    matchExpressions #基于正则表达式匹配
+
+volumeName #要绑定的PV名称
+
+volumeMode #卷类型
+    定义PVC使用的文件系统是块设备还是文件系统，默认为文件系统
+</code></pre>
+<h3 id="222-示例">2.2.2 示例</h3>
 <pre><code class="language-yaml">apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -384,32 +409,13 @@ spec:
           claimName: pvc-nfs
 ...
 </code></pre>
-<h3 id="221-persistentvolume参数">2.2.1 PersistentVolume参数</h3>
-<pre><code class="language-shell">~#kubectl explain PersistentVolumeClaim. 
-
-accessModes ：PVC 访问模式，#kubectl explain PersistentVolumeClaim.spec.volumeMode 
-    ReadWriteOnce – PVC只能被单个节点以读写权限挂载，RWO 
-    ReadOnlyMany – PVC以可以被多个节点挂载但是权限是只读的,ROX 
-    ReadWriteMany – PVC可以被多个节点是读写方式挂载使用,RWX
-
-resources： #定义PVC创建存储卷的空间大小
-
-selector： #标签选择器，选择要绑定的PV 
-    matchLabels #匹配标签名称 
-    matchExpressions #基于正则表达式匹配
-
-volumeName #要绑定的PV名称
-
-volumeMode #卷类型
-    定义PVC使用的文件系统是块设备还是文件系统，默认为文件系统
-</code></pre>
 <h2 id="23-pvpvc总结">2.3 PV/PVC总结</h2>
 <p>PV是对底层网络存储的抽象，即将网络存储定义为一种存储资源，将一个整体的存储资源拆分成多份后给不同的业务使用。</p>
 <p>PVC是对PV资源的申请调用，pod是通过PVC将数据保存至PV，PV再把数据保存至真正的硬件存储。<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1652402128895.png" alt="" loading="lazy"></p>
 <h1 id="三-volume-存储卷类型">三、Volume-存储卷类型</h1>
 <p><strong>static</strong>：静态存储卷 ,需要在使用前手动创建PV、然后创建PVC并绑定到PV，然后挂载至pod使用，适用于PV和 PVC相对比较固定的业务场景。</p>
-<p><strong>dynamin</strong>：动态存储卷,先创建一个存储类storageclass， 后期pod在使用PVC的时候可以通过存储类动态创建 PVC，适用于有状态服务集 群如MySQL一主多从、zookeeper集群等。</p>
+<p><strong>dynamin</strong>：动态存储卷,先创建一个存储类storageclass，后期pod在使用PVC的时候可以通过存储类动态创建 PVC，适用于有状态服务集群如MySQL一主多从、zookeeper集群等。</p>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1652402904127.png" alt="" loading="lazy"></figure>
 <h2 id="31-volume-静态存储卷示例">3.1 Volume-静态存储卷示例</h2>
 <h3 id="311-准备nfs存储">3.1.1 准备NFS存储</h3>
@@ -590,7 +596,9 @@ $ kubectl create -f deployment.yaml
 </code></pre>
 <h2 id="32-volume-动态存储卷">3.2 Volume-动态存储卷</h2>
 <p>官方文档：<br>
-https://kubernetes.io/zh/docs/concepts/storage/storage-classes/<br>
+StorageClass(存储类)官方文档：<br>
+https://kubernetes.io/zh/docs/concepts/storage/storage-classes/</p>
+<p>nfs-client-provisioner插件文档：<br>
 https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner</p>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1645342751450.jpg" alt="" loading="lazy"><br>
 创建pv及pvc过程是手动，且pv与pvc一一对应，手动创建很繁琐。<br>
@@ -601,74 +609,39 @@ https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner</p>
 <pre><code>unexpected error getting claim reference: selfLink was empty, can't  make reference
 </code></pre>
 <p>为apiserver添加如下参数，重新启动即可：</p>
-<pre><code>$ vim /etc/kubernetes/manifests/kube-apiserver.yaml
-
+<pre><code>kubeadmin安装：
+$ vim /etc/kubernetes/manifests/kube-apiserver.yaml
 ...
 - --feature-gates=RemoveSelfLink=false
 ...
+$ kubectl apply -f /etc/kubernetes/manifests/kube-apiserver.yaml
+
+
+二进制安装k8s,更改kube-apiserver.service文件:
+$ vim /etc/systemd/system/kube-apiserver.service
+...
+--feature-gates=RemoveSelfLink=false \
+...
+$ systemctl daemon-reload 
+$ systemctl restart kube-apiserver.service
 </code></pre>
 <h3 id="321-示例">3.2.1 示例</h3>
 <ol>
-<li>创建provisioner</li>
+<li>创建RBAC</li>
 </ol>
-<pre><code class="language-yaml">$ cat provisioner.yaml
+<pre><code class="language-yaml">vim rbac.yaml
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Namespace
 metadata:
-  name: nfs-client-provisioner
-  labels:
-    app: nfs-client-provisioner
-  # replace with namespace where provisioner is deployed
-  namespace: default
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: nfs-client-provisioner
-  template:
-    metadata:
-      labels:
-        app: nfs-client-provisioner
-    spec:
-      serviceAccountName: nfs-client-provisioner
-      containers:
-        - name: nfs-client-provisioner
-          image: registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images/nfs-subdir-external-provisioner:v4.0.2
-          # resources:
-          #    limits:
-          #      cpu: 10m
-          #    requests:
-          #      cpu: 10m
-          volumeMounts:
-            - name: nfs-client-root
-              mountPath: /persistentvolumes
-          env:
-            - name: PROVISIONER_NAME
-              value: k8s-sigs.io/nfs-subdir-external-provisioner   # 和storage-class的yaml文件的provisioner字段保持一致
-            - name: NFS_SERVER
-              value: 10.1.13.156 ## 指定自己nfs服务器地址
-            - name: NFS_PATH  
-              value: /data/k8s/  ## nfs服务器共享的目录
-      volumes:
-        - name: nfs-client-root
-          nfs:
-            server: 10.1.13.156
-            path: /data/k8s/
-</code></pre>
-<ol start="2">
-<li>创建rbac</li>
-</ol>
-<pre><code class="language-yaml">cat rbac.yaml
-
+  name: nfs
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: nfs-client-provisioner
   # replace with namespace where provisioner is deployed
-  namespace: default
+  namespace: nfs
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -699,7 +672,7 @@ subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
     # replace with namespace where provisioner is deployed
-    namespace: default
+    namespace: nfs
 roleRef:
   kind: ClusterRole
   name: nfs-client-provisioner-runner
@@ -710,7 +683,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: leader-locking-nfs-client-provisioner
   # replace with namespace where provisioner is deployed
-  namespace: default
+  namespace: nfs
 rules:
   - apiGroups: [&quot;&quot;]
     resources: [&quot;endpoints&quot;]
@@ -721,31 +694,78 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: leader-locking-nfs-client-provisioner
   # replace with namespace where provisioner is deployed
-  namespace: default
+  namespace: nfs
 subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
     # replace with namespace where provisioner is deployed
-    namespace: default
+    namespace: nfs
 roleRef:
   kind: Role
   name: leader-locking-nfs-client-provisioner
   apiGroup: rbac.authorization.k8s.io
 </code></pre>
-<ol start="3">
-<li>创建storage-class</li>
+<ol start="2">
+<li>创建storageclass</li>
 </ol>
-<pre><code class="language-yaml">$ cat storage-class.yaml
+<pre><code class="language-yaml">vim  storageclass.yaml
 
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: nfs-storage
-  annotations:
-    storageclass.kubernetes.io/is-default-class: &quot;true&quot; #  设置为default StorageClass
-provisioner: k8s-sigs.io/nfs-subdir-external-provisioner  # 和provisioner的yaml文件中的env段中&quot;PROVISIONER_NAME&quot;保持一致
+  name: managed-nfs-storage
+provisioner: k8s-sigs.io/nfs-subdir-external-provisioner # or choose another name, must match deployment's env PROVISIONER_NAME'
+reclaimPolicy: Retain #PV的删除策略，默认为delete，删除PV后立即删除NFS server的数据
+mountOptions:
+  - noresvport #告知NFS客户端在重新建立网络连接时，使用新的传输控制协议源端口
+  - noatime #访问文件时不更新文件inode中的时间戳，高并发环境可提高性能，降低I/O
 parameters:
-  archiveOnDelete: &quot;true&quot;  # 删除pv的时候，pv的内容是否要备份 
+  mountOptions: &quot;vers=4.1,noresvport,noatime&quot;
+  archiveOnDelete: &quot;true&quot;  #删除pod时保留pod数据，默认为false时为不保留数据 
+</code></pre>
+<ol start="3">
+<li>创建provisioner</li>
+</ol>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: nfs
+spec:
+  replicas: 1
+  strategy: #部署策略
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          #image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2 
+          image: quay.io/external_storage/nfs-client-provisioner:latest 
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:   ## 传递环境变量
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/nfs-subdir-external-provisioner  # 和storage-class的yaml文件的provisioner字段保持一致
+            - name: NFS_SERVER
+              value: 172.31.7.109     # 指定nfs服务器地址
+            - name: NFS_PATH
+              value: /data/volumes  # 指定nfs服务器共享目录
+      volumes:  #指定挂载类型
+        - name: nfs-client-root
+          nfs:
+            server: 172.31.7.109
+            path: /data/volumes
 </code></pre>
 <p>查看是否创建默认存储</p>
 <pre><code class="language-shell">$ kubectl get storageclasses.storage.k8s.io
@@ -753,21 +773,23 @@ NAME                    PROVISIONER                                   RECLAIMPOL
 nfs-storage (default)   k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate           false                  4m32s
 </code></pre>
 <ol start="4">
-<li>创建pvc测试</li>
+<li>创建PVC</li>
 </ol>
-<pre><code class="language-yaml">$ cat pvc.yaml
+<pre><code class="language-yaml">vim create-pvc.yaml
 
+# Test PVC
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: nginx-pvc
+  name: myserver-myapp-dynamic-pvc
+  namespace: myserver
 spec:
+  storageClassName: managed-nfs-storage #调用的storageclass 名称
   accessModes:
-    - ReadWriteMany
+    - ReadWriteMany #访问权限
   resources:
     requests:
-      storage: 200Mi
-  storageClassName: nfs-storage  # 和storageClass名称保持一致
+      storage: 500Mi #空间大小
 </code></pre>
 <p>查看pvc,pv</p>
 <pre><code class="language-shell">$ kubectl get pvc,pv

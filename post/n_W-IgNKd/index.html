@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652406546239">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652530538189">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652406546239" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652530538189" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,9 +34,30 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%9C%BA%E6%99%AF%E4%B8%80%E5%8D%95%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E5%88%B0%E7%A9%BA%E7%9B%AE%E5%BD%95">场景一：单文件挂载到空目录</a></li>
-<li><a href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD">场景二：多文件挂载</a></li>
-<li><a href="#%E5%9C%BA%E6%99%AF%E4%B8%89-%E6%8C%82%E8%BD%BD%E5%AD%90%E8%B7%AF%E5%BE%84">场景三  挂载子路径</a></li>
+<li><a href="#configmap%E5%92%8Csecret">Configmap和Secret</a>
+<ul>
+<li><a href="#51-configmap">5.1 Configmap</a></li>
+<li><a href="#52-configmap%E5%B8%B8%E7%94%A8%E6%8C%82%E8%BD%BD%E5%9C%BA%E6%99%AF">5.2 configmap常用挂载场景</a>
+<ul>
+<li><a href="#521-%E5%9C%BA%E6%99%AF%E4%B8%80%E5%8D%95%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD%E5%88%B0%E7%A9%BA%E7%9B%AE%E5%BD%95">5.2.1 场景一：单文件挂载到空目录</a></li>
+<li><a href="#522-%E5%9C%BA%E6%99%AF%E4%BA%8C%E5%A4%9A%E6%96%87%E4%BB%B6%E6%8C%82%E8%BD%BD">5.2.2 场景二：多文件挂载</a></li>
+<li><a href="#523-%E5%9C%BA%E6%99%AF%E4%B8%89-%E6%8C%82%E8%BD%BD%E5%AD%90%E8%B7%AF%E5%BE%84">5.2.3  场景三  挂载子路径</a></li>
+</ul>
+</li>
+<li><a href="#52-secret">5.2 Secret</a>
+<ul>
+<li><a href="#521-secret%E7%B1%BB%E5%9E%8B">5.2.1 Secret类型</a>
+<ul>
+<li><a href="#5211-secret%E7%B1%BB%E5%9E%8B-opaque%E6%A0%BC%E5%BC%8F">5.2.1.1 Secret类型-Opaque格式</a></li>
+<li><a href="#5212-secret%E7%B1%BB%E5%9E%8B-kubernetesiotls">5.2.1.2 Secret类型-kubernetes.io/tls</a></li>
+<li><a href="#5213-secret-kubernetesiodockerconfigjson">5.2.1.3 Secret-kubernetes.io/dockerconfigjson</a></li>
+</ul>
+</li>
+<li><a href="#522-secret%E6%8C%82%E8%BD%BD%E6%B5%81%E7%A8%8B">5.2.2 Secret挂载流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -125,19 +146,36 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">ConfigMap的配置文件挂载使用场景</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">Configmap和Secret</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-22 / 6 min read
+          2022-02-22 / 14 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/n_W-IgNKd.png" alt="">
         
         <div class="post-content yue">
-          <p>开始之前，我们先来回顾一下，configmap的常用的挂载场景。</p>
-<h1 id="场景一单文件挂载到空目录">场景一：单文件挂载到空目录</h1>
+          <h1 id="configmap和secret">Configmap和Secret</h1>
+<h2 id="51-configmap">5.1 Configmap</h2>
+<p>Configmap配置信息和镜像解耦, 实现方式为将配置信息放到configmap对象中，然后在pod的中作为Volume挂载到pod 中，从而实现导入配置的目的。</p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>通过Configmap给pod定义全局环境变量</li>
+<li>通过Configmap给pod传递命令行参数，如mysql -u -p中的账户名密码可以通过Configmap传递。</li>
+<li>通过Configmap给pod中的容器服务提供配置文件，配置文件以挂载到容器的形式使用。</li>
+</ul>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>Configmap需要在pod使用它之前创建。</li>
+<li>pod只能使用位于同一个namespace的Configmap，及 Configmap不能跨namespace使用。</li>
+<li>通常用于非安全加密的配置场景。</li>
+<li>Configmap通常是小于1MB的配置。</li>
+</ul>
+<h2 id="52-configmap常用挂载场景">5.2 configmap常用挂载场景</h2>
+<h3 id="521-场景一单文件挂载到空目录">5.2.1 场景一：单文件挂载到空目录</h3>
 <p>假如业务应用有一个配置文件，名为 <code>application.yml</code>，如果想将此配置挂载到pod的<code>/etc/application/</code>目录中。</p>
 <p><code>application.yml</code>的内容为：</p>
 <pre><code class="language-shell">$ cat application.yml
+
 spring:
   application:
     name: svca-service
@@ -156,7 +194,7 @@ spring:
 <p>该配置文件在k8s中可以通过configmap来管理，通常我们有如下两种方式来管理配置文件：</p>
 <ul>
 <li>
-<p>通过kubectl命令行来生成configmap（常用）</p>
+<p>方式一  通过kubectl命令行来生成configmap（常用）</p>
 <pre><code class="language-shell"># 通过文件直接创建
 $ kubectl -n default create configmap application-config --from-file=application.yml
 
@@ -165,7 +203,7 @@ $ kubectl -n default get cm application-config -oyaml
 </code></pre>
 </li>
 <li>
-<p>通过yaml文件直接创建</p>
+<p>方式二  通过yaml文件直接创建</p>
 <pre><code class="language-shell">$ cat application-config.yaml
 
 apiVersion: v1
@@ -197,6 +235,7 @@ $ kubectl apply -f application-config.yaml
 </ul>
 <p>准备一个<code>demo-deployment.yaml</code>文件，挂载上述configmap到<code>/etc/application/</code>中</p>
 <pre><code class="language-shell">$ cat demo-deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -211,7 +250,7 @@ spec:
       labels:
         app: demo
     spec:
-      volumes:   #定义
+      volumes:   #定义挂载卷
       - configMap:
           name: application-config
         name: config
@@ -221,7 +260,7 @@ spec:
         imagePullPolicy: IfNotPresent
         volumeMounts:  #挂载
         - mountPath: &quot;/etc/application&quot;
-          name: config  #将config挂载到&quot;/etc/application&quot;目录里
+          name: config  #将config挂载到 /etc/application 目录下
 </code></pre>
 <p>创建并查看：</p>
 <pre><code class="language-shell">$ kubectl apply -f demo-deployment.yaml
@@ -252,9 +291,10 @@ spring:
 <p>整个configmap文件直接挂载到pod中，若configmap变化，pod会自动感知并拉取到pod内部。</p>
 <p>但是pod内的进程不会自动重启，所以很多服务会实现一个内部的reload接口，用来加载最新的配置文件到进程中。</p>
 </blockquote>
-<h1 id="场景二多文件挂载">场景二：多文件挂载</h1>
-<p>假如有多个配置文件，都需要挂载到pod内部，且都在一个目录中</p>
+<h3 id="522-场景二多文件挂载">5.2.2 场景二：多文件挂载</h3>
+<p>假如有多个配置文件，都需要挂载到pod内部，且都在一个目录中。</p>
 <pre><code class="language-shell">$ cat application.yml
+
 spring:
   application:
     name: svca-service
@@ -271,6 +311,7 @@ spring:
         max-attempts: 10
 
 $ cat supervisord.conf
+
 [unix_http_server]
 file=/var/run/supervisor.sock
 chmod=0700
@@ -339,7 +380,7 @@ $ kubectl exec demo-77d685b9f7-68qz7 --  ls /etc/profile.d
 application.yml
 supervisord.conf
 </code></pre>
-<h1 id="场景三-挂载子路径">场景三  挂载子路径</h1>
+<h3 id="523-场景三-挂载子路径">5.2.3  场景三  挂载子路径</h3>
 <p>实现多个配置文件，可以挂载到pod内的不同的目录中。比如：</p>
 <ul>
 <li><code>application.yml</code>挂载到<code>/etc/application/</code></li>
@@ -400,6 +441,276 @@ locale
 整体挂载写路径，子路径挂载写文件。<br>
 整体文件挂载可以感知到ConfigMap文件的变更，子路径文件挂载不会自动感知原有ConfigMap的变更。</p>
 </blockquote>
+<h2 id="52-secret">5.2 Secret</h2>
+<p>Secret 的功能类似于 ConfigMap，用于给pod提供额外的配置信息。但是 Secret是一种包含少量敏感信息例如密码、令牌或密钥的对象。</p>
+<p>Secret 的名称必须是合法的 DNS 子域名。</p>
+<p>每个Secret的大小最多为1MiB，主要是为了避免用户创建非常大的 Secret进而导致API服务器和kubelet内存耗尽，不过创建很多小的 Secret也可能耗尽内存，可以使用资源配额来约束每个名字空间中<br>
+Secret的个数。</p>
+<p>在通过yaml文件创建secret时，可以设置data或stringData字段，data 和stringData字段都是可选的，data字段中所有键值都必须是base64 编码的字符串，如果不希望执行这种 base64字符串的转换操作，也 可以选择设置stringData字段，其中可以使用任何非加密的字符串作为其取值。<br>
+Secret和pod要保证在同一namespace下才可以使用，Secret不可以跨namespace引用。</p>
+<p>Pod 可以用三种方式的任意一种来使用 Secret：</p>
+<ul>
+<li>作为挂载到一个或多个容器上的卷 中的文件(crt文件、key文件)。</li>
+<li>作为容器的环境变量。</li>
+<li>由 kubelet 在为 Pod 拉取镜像时使用(与镜像仓库的认证)。</li>
+</ul>
+<h3 id="521-secret类型">5.2.1 Secret类型</h3>
+<p>Kubernetes默认支持多种不同类型的secret，用于一不同的使用场景，不同类型的secret的配置参数也不一样。</p>
+<table>
+<thead>
+<tr>
+<th>Secret类型</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opaque</td>
+<td>用户定义的任意数据</td>
+</tr>
+<tr>
+<td>kubernetes.io/service-account-token</td>
+<td>ServiceAccount 令牌</td>
+</tr>
+<tr>
+<td>kubernetes.io/dockercfg</td>
+<td>~/.dockercfg 文件的序列化形式</td>
+</tr>
+<tr>
+<td>kubernetes.io/dockerconfigjson</td>
+<td>~/.docker/config.json 文件的序列化形式,用于认证</td>
+</tr>
+<tr>
+<td>kubernetes.io/basic-auth</td>
+<td>用于基本身份认证的凭据</td>
+</tr>
+<tr>
+<td>kubernetes.io/ssh-auth</td>
+<td>用于 SSH 身份认证的凭据</td>
+</tr>
+<tr>
+<td>kubernetes.io/tls</td>
+<td>用于 TLS 环境，保存crt证书和key证书</td>
+</tr>
+<tr>
+<td>bootstrap.kubernetes.io/token</td>
+<td>启动引导令牌数据</td>
+</tr>
+</tbody>
+</table>
+<h4 id="5211-secret类型-opaque格式">5.2.1.1 Secret类型-Opaque格式</h4>
+<p><code>data类型</code>数据需要使用base64加密，<code>stringData类型</code>数据无需base64加密，直接使用字符串即可。</p>
+<ol>
+<li>Opaque格式-data类型数据：</li>
+</ol>
+<pre><code class="language-shell">base64加密字符串
+case11-secret# echo admin | base64
+case11-secret# echo 123456 | base64
+
+同时也可以使用base64 -d解密
+</code></pre>
+<p>创建secret：</p>
+<pre><code class="language-shell">~# cat 1-secret-Opaque-data.yaml 
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret-data
+  namespace: myserver  
+type: Opaque
+data:
+  user: YWRtaW4K
+  password: MTIzNDU2Cg==
+</code></pre>
+<p>验证secret：</p>
+<pre><code class="language-shell">~# kubectl apply -f 1-secret-Opaque-data.yaml
+secret/mysecret created
+</code></pre>
+<ol start="2">
+<li>Opaque格式-stringData类型数据：<br>
+创建secret：</li>
+</ol>
+<pre><code class="language-shell">~#  cat 2-secret-Opaque-stringData.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret-stringdata
+  namespace: myserver
+type: Opaque
+stringData:
+  user: 'admin'
+  password: '123456'
+</code></pre>
+<p>验证secret：</p>
+<pre><code class="language-shell">~#  kubectl get secrets mysecret-stringdata -n myserver -o yaml
+</code></pre>
+<h4 id="5212-secret类型-kubernetesiotls">5.2.1.2 Secret类型-kubernetes.io/tls</h4>
+<p>自签名证书</p>
+<pre><code class="language-shell">0220423/case11-secret# mkdir certs 
+0220423/case11-secret# cd certs/ 
+certs# openssl req -x509 -sha256 -newkey rsa:4096 -keyout ca.key -out ca.crt -days 3560 -nodes -subj '/CN=www.ca.com' 
+certs# openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr -nodes -subj '/CN=www.mysite.com' 
+certs# openssl x509 -req -sha256 -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+certs# kubectl create secret tls myserver-tls-key --cert=./server.crt --key=./server.key -n myserver
+</code></pre>
+<p>创建web服务</p>
+<pre><code class="language-shell">cat 4-secret-tls.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: myserver
+data:
+ default: |
+    server {
+       listen       80;
+       server_name  www.mysite.com;
+       listen       443 ssl;
+       ssl_certificate /etc/nginx/conf.d/certs/tls.crt;
+       ssl_certificate_key /etc/nginx/conf.d/certs/tls.key;
+
+       location / {
+           root /usr/share/nginx/html; 
+           index index.html;
+           if ($scheme = http ){  #未加条件判断，会导致死循环
+              rewrite / https://www.mysite.com permanent;
+           }  
+
+           if (!-e $request_filename) {
+               rewrite ^/(.*) /index.html last;
+           }
+       }
+    }
+
+---
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myserver-myapp-frontend-deployment
+  namespace: myserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myserver-myapp-frontend
+  template:
+    metadata:
+      labels:
+        app: myserver-myapp-frontend
+    spec:
+      containers:
+      - name: myserver-myapp-frontend
+        image: nginx:1.20.2-alpine 
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: nginx-config
+            mountPath:  /etc/nginx/conf.d/myserver
+          - name: myserver-tls-key
+            mountPath:  /etc/nginx/conf.d/certs
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+          items:
+             - key: default
+               path: mysite.conf
+      - name: myserver-tls-key
+        secret:
+          secretName: myserver-tls-key 
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myserver-myapp-frontend
+  namespace: myserver
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30018
+    protocol: TCP
+  - name: htts
+    port: 443
+    targetPort: 443
+    nodePort: 30019
+    protocol: TCP
+  selector:
+    app: myserver-myapp-frontend 
+
+case11-secret# kubectl apply -f 4-secret-tls.yaml
+
+</code></pre>
+<p>负载均衡</p>
+<pre><code class="language-shell">~# cat /etc/haproxy/haproxy.cfg 
+listen myserer-nginx-80 
+  bind 172.31.7.189:80 
+  mode tcp 
+  server 172.31.7.111 172.31.7.111:30018 check inter 3s fall 3 rise 3
+
+listen myserer-nginx-443   ##添加443
+  bind 172.31.7.189:443 
+  mode tcp
+  server 172.31.7.111 172.31.7.111:30019 check inter 3s fall 3 rise 3
+</code></pre>
+<p>配置hosts 解析</p>
+<pre><code class="language-shell">cat /etc/hosts 
+172.31.7.189 www.mysite.com
+
+~# kubectl exec -it myserver-myapp-frontend-deployment-85fb884bcd-wmb62 sh -n myserver 
+/ # ls /etc/nginx/conf.d/myserver/*.conf #验证配置文件 
+/etc/nginx/conf.d/myserver/mysite.conf 
+
+/ # ls /etc/nginx/conf.d/certs/ #验证证书 
+tls.crt tls.key
+
+/ # vi /etc/nginx/nginx.conf #编辑配置文件 
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/conf.d/myserver/*.conf;
+
+/ # nginx -s reload
+/ # netstat -tanlp
+</code></pre>
+<h4 id="5213-secret-kubernetesiodockerconfigjson">5.2.1.3 Secret-kubernetes.io/dockerconfigjson</h4>
+<p>存储docker registry的认证信息，在下载镜像的时候使用，这样每一个node节点就可以不登录也可以下载私有级别的镜像了。</p>
+<p>创建secret<br>
+方式一：通过命令创建</p>
+<pre><code class="language-shell">kubectl create secret docker-registry keyName \ --docker-server=registry.myserver.com \ 
+--docker-username=USER\
+--docker-password=PASSWORD
+</code></pre>
+<p>方式二：通过docker认证文件创建</p>
+<pre><code class="language-shell">root@k8s-master1:~# docker login --username=rooroot@aliyun.com registry.cn-qingdao.aliyuncs.com 
+root@k8s-master1:~# kubectl create secret generic aliyun-registry-image-pull-key \
+ --from-file=.dockerconfigjson=/root/.docker/config.json \ --type=kubernetes.io/dockerconfigjson \
+-n myserver
+</code></pre>
+<p>创建Pod</p>
+<pre><code class="language-shell">~# kubectl apply -f 5-secret-imagePull.yaml
+</code></pre>
+<p>验证pod运行状态</p>
+<pre><code class="language-shell">~# kubectl get pod -n myserver
+</code></pre>
+<h3 id="522-secret挂载流程">5.2.2 Secret挂载流程</h3>
+<p><img src="https://adong97.github.io/HDong.github.io/post-images/1652526717175.png" alt="" loading="lazy"><br>
+创建一个Secret,发送给Apiserver,ApiServer会写进ETCD中。<br>
+服务在使用的时候，宿主机的Secret从ApiServer将数据拿过来，放到宿主机，挂载到Pod中使用。</p>
+<pre><code class="language-shell">root@k8s-etcd1:~# etcdctl get / --keys-only --prefix | grep mysecret 
+/registry/secrets/myserver/mysecret-data
+/registry/secrets/myserver/mysecret-stringdata
+</code></pre>
+<pre><code class="language-shell">root@k8s-etcd1:~# etcdctl get /registry/secrets/myserver/mysecret-stringdata 
+root@k8s-node1:~# cat /var/lib/kubelet/pods/44a2bcca-2b5b-4c33-9d79-5753736331a4/volumes/kubernetes.io~secret/myserver-auth-secret/password 
+123456 
+root@k8s-node1:~# cat /var/lib/kubelet/pods/44a2bcca-2b5b-4c33-9d79-5753736331a4/volumes/kubernetes.io~secret/myserver-auth-secret/user
+admin
+</code></pre>
 
         </div>
 
