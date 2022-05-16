@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652628255388">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652666610833">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652628255388" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652666610833" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -144,7 +144,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">K8s管理业务应用--Pod控制器</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 15 min read
+          2022-02-10 / 17 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ms6GWrvV3.png" alt="">
@@ -625,8 +625,8 @@ spec:
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
-      hostNetwork: true
-      hostPID: true
+      hostNetwork: true   # 使用宿主机网络，以减少service开销。
+      hostPID: true    # 使用宿主机PID
       containers:
       - name: myserver-myapp-frontend
         image: nginx:1.20.2-alpine 
@@ -650,6 +650,70 @@ spec:
   selector:
     app: myserver-myapp-frontend
 
+</code></pre>
+<p>部署并查看pod状态</p>
+<pre><code class="language-shell">~# kubectl apply -f 1-DaemonSet-webserverp.yaml 
+
+~# kubectl -n myserver get pod  -owide
+NAME                   READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+myserver-myapp-45l8j   1/1     Running   0          19s   10.1.13.187   10.1.13.187   &lt;none&gt;           &lt;none&gt;
+myserver-myapp-csvzz   1/1     Running   0          19s   10.1.13.188   10.1.13.188   &lt;none&gt;           &lt;none&gt;
+myserver-myapp-gl4hz   1/1     Running   0          19s   10.1.13.190   10.1.13.190   &lt;none&gt;           &lt;none&gt;
+myserver-myapp-lt9px   1/1     Running   0          19s   10.1.13.186   10.1.13.186   &lt;none&gt;           &lt;none&gt;
+myserver-myapp-qhckr   1/1     Running   0          19s   10.1.13.189   10.1.13.189   &lt;none&gt;           &lt;none&gt;
+</code></pre>
+<p>示例2. 部署fluentd，做日志收集</p>
+<pre><code class="language-shell">vim 2-DaemonSet-fluentd.yaml
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      # remove it if your masters can't run pods
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+
+</code></pre>
+<p>创建并查看Pod状态</p>
+<pre><code class="language-shell">~# kubectl get pod -n kube-system
 </code></pre>
 
         </div>
