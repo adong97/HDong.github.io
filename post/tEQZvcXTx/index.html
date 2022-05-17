@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652666610833">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652779847651">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652666610833" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652779847651" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -62,6 +62,10 @@
 <li><a href="#3113-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.1.13 Pod资源限制</a></li>
 <li><a href="#3114-yaml%E4%BC%98%E5%8C%96">3.1.14 yaml优化</a></li>
 <li><a href="#3115-configmap%E5%92%8Csecret">3.1.15 Configmap和Secret</a></li>
+</ul>
+</li>
+<li><a href="#116-pod%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B">1.16 Pod调度流程</a>
+<ul>
 <li><a href="#3117-pod%E7%8A%B6%E6%80%81%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.1.17 pod状态与生命周期</a></li>
 <li><a href="#3118-%E5%B0%8F%E7%BB%93">3.1.18 小结</a></li>
 </ul>
@@ -158,7 +162,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用--Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 36 min read
+          2022-02-10 / 37 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
@@ -1297,6 +1301,27 @@ spec:
       periodSeconds: 15
 </code></pre>
 <p>在部署不同的环境时，pod的yaml无须再变化，只需要在每套环境中维护一套ConfigMap和Secret即可。但是注意configmap和secret不能跨namespace使用，且更新后，pod内的env不会自动更新，重建后方可更新。</p>
+<h2 id="116-pod调度流程">1.16 Pod调度流程</h2>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840400591.png" alt="" loading="lazy"></figure>
+<ol>
+<li>用户准备一个资源文件（.yaml 记录了业务应用的名称、镜像地址等信息），通过调用APIServer执行创建Pod</li>
+<li>APIServer收到用户的Pod创建请求，将Pod信息写入到etcd中</li>
+<li>调度器通过list-watch的方式，发现有新的pod数据，但是这个pod还没有绑定到某一个节点中</li>
+<li>调度器通过调度算法，计算出最适合该pod运行的节点，并调用APIServer，把信息更新到etcd中</li>
+<li>kubelet同样通过list-watch方式，发现有新的pod调度到本机的节点了，因此调用容器运行时，去根据pod的描述信息，拉取镜像，启动容器，同时生成事件信息</li>
+<li>同时，把容器的信息、事件及状态也通过APIServer写入到etcd中</li>
+</ol>
+<pre><code>当使用deployment控制器创建Pod时，
+controller-manager在Scheduler之前，生成Pod元数据，写到ETCD中去，Scheduler才可以进行调度。
+</code></pre>
+<p>问题1：当用户创建deployment时，是如何转换成pod的？通过怎样的流程？<br>
+问题2：controller-manager和scheduler谁工作在前？谁工作在后？</p>
+<pre><code>controller-manager工作在scheduler前面，
+deployment通过controller-manager生成pod，然后pod通过scheduler调度到最合适的工作节点。
+
+controller-manager根据定义的deployment yaml文件来生成pod的模板，
+例如pod名称等都是controller-manager生成出来的
+</code></pre>
 <h3 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h3>
 <p>Pod的状态如下表所示：</p>
 <table>
@@ -1338,9 +1363,9 @@ spec:
 </tbody>
 </table>
 <p>生命周期示意图：</p>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></figure>
 <p>启动和关闭示意：</p>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></figure>
 <pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
 Pod从开始启动得时候，先执行得就是init container里面得内容。
 initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
