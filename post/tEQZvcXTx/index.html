@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652890272502">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652890861173">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652890272502" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652890861173" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -489,7 +489,7 @@ spec: #定义service的详细信息，service.spec
   selector: #service的标签选择器，定义要访问的目标pod
     app: linux36-nginx #将流量路到选择的pod上，须等于Deployment.spec.selector.matchLabels
 </code></pre>
-<p>nodeport -&gt; port(service端口) -&gt; targetPort(目的容器端口)</p>
+<p>nodeport(宿主机端口) -&gt; port(service端口) -&gt; targetPort(目的容器端口)</p>
 <ul>
 <li>
 <p>Deplotment 控制器通过 spec 下的 matchLables 标签来筛选 namespace 下,有几个pod是正在运行的。</p>
@@ -509,6 +509,8 @@ spec: #定义service的详细信息，service.spec
 <li>
 <p>拿来主义，从机器中已有的资源中拿</p>
 <pre><code class="language-shell">$ kubectl -n kube-system get po,deployment,ds
+
+$ kubectl  -n kube-system get pod coredns-7db6b45f67-wkt8j -o yaml
 </code></pre>
 </li>
 <li>
@@ -790,9 +792,12 @@ controller-manager根据定义的deployment yaml文件来生成pod的模板，
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></p>
 <p><strong>启动和关闭示意:</strong><br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></p>
-<pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
+<pre><code>mian为主容器,
+init为初始化容器,
+infra为基础设施容器
+
 Pod从开始启动得时候，先执行得就是init container里面得内容。
-initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
+yaml文件中 initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
 init container启动完就退出了，不会持久的存在。
 </code></pre>
 <p><strong>通常用初始化容器(init container)来做什么事情</strong> ？</p>
