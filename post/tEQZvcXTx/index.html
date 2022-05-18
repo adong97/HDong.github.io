@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652779847651">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652889482814">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652779847651" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652889482814" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,8 +34,6 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%AE%9E%E8%B7%B5-%E4%BD%BF%E7%94%A8k8s%E7%AE%A1%E7%90%86%E4%B8%9A%E5%8A%A1%E5%BA%94%E7%94%A8">实践--使用k8s管理业务应用</a>
-<ul>
 <li><a href="#%E4%B8%80-%E6%9C%80%E5%B0%8F%E8%B0%83%E5%BA%A6%E5%8D%95%E5%85%83-pod">一、 最小调度单元 Pod</a>
 <ul>
 <li><a href="#11-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%95%E5%85%A5pod">1.1 为什么引入Pod</a></li>
@@ -50,26 +48,27 @@
 <li><a href="#%E4%BA%8C-pod-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C">二、Pod 常用操作</a>
 <ul>
 <li><a href="#21-%E5%88%9B%E5%BB%BA%E5%92%8C%E8%AE%BF%E9%97%AEpod">2.1 创建和访问Pod</a></li>
-<li><a href="#314-infra%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.1.4 Infra容器(基础设施容器)</a></li>
-<li><a href="#315-%E6%9F%A5%E7%9C%8Bpod%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">3.1.5 查看pod详细信息</a></li>
-<li><a href="#316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</a></li>
-<li><a href="#317-%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1%E7%89%88%E6%9C%AC">3.1.7 更新服务版本</a></li>
-<li><a href="#318-%E5%88%A0%E9%99%A4pod%E6%9C%8D%E5%8A%A1">3.1.8 删除Pod服务</a></li>
-<li><a href="#319-pod%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96">3.1.9 Pod数据持久化</a></li>
-<li><a href="#3110-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.1.10 服务健康检查</a></li>
-<li><a href="#3111-%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.1.11 重启策略</a></li>
-<li><a href="#3112-%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96%E7%AD%96%E7%95%A5">3.1.12 镜像拉取策略</a></li>
-<li><a href="#3113-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.1.13 Pod资源限制</a></li>
-<li><a href="#3114-yaml%E4%BC%98%E5%8C%96">3.1.14 yaml优化</a></li>
-<li><a href="#3115-configmap%E5%92%8Csecret">3.1.15 Configmap和Secret</a></li>
+<li><a href="#22-%E6%9F%A5%E7%9C%8Bpod%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF">2.2 查看pod详细信息</a></li>
+<li><a href="#23-%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%92%8C%E8%B0%83%E8%AF%95">2.3 故障排查和调试</a></li>
+<li><a href="#24-%E6%9B%B4%E6%96%B0%E6%9C%8D%E5%8A%A1">2.4 更新服务</a></li>
+<li><a href="#25-%E5%88%A0%E9%99%A4pod">2.5 删除Pod</a></li>
+<li><a href="#26-pod%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96">2.6 Pod数据持久化</a></li>
 </ul>
 </li>
-<li><a href="#116-pod%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B">1.16 Pod调度流程</a>
+<li><a href="#%E4%B8%89-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E6%8E%A2%E9%92%88">三、Pod生命周期与探针</a>
 <ul>
-<li><a href="#3117-pod%E7%8A%B6%E6%80%81%E4%B8%8E%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.1.17 pod状态与生命周期</a></li>
-<li><a href="#3118-%E5%B0%8F%E7%BB%93">3.1.18 小结</a></li>
-</ul>
-</li>
+<li><a href="#31-pod%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81">3.1 Pod常见状态</a></li>
+<li><a href="#32-pod%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B">3.2 Pod调度流程</a></li>
+<li><a href="#33-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.3 Pod生命周期</a></li>
+<li><a href="#34-pause%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.4 pause容器(基础设施容器)</a></li>
+<li><a href="#35-init%E5%AE%B9%E5%99%A8">3.5 init容器</a></li>
+<li><a href="#36-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.6 服务健康检查</a></li>
+<li><a href="#37-%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.7 重启策略</a></li>
+<li><a href="#38-%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96%E7%AD%96%E7%95%A5">3.8 镜像拉取策略</a></li>
+<li><a href="#39-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.9 Pod资源限制</a></li>
+<li><a href="#310-yaml%E4%BC%98%E5%8C%96">3.10 yaml优化</a></li>
+<li><a href="#311-configmap%E5%92%8Csecret">3.11 Configmap和Secret</a></li>
+<li><a href="#312-%E5%B0%8F%E7%BB%93">3.12 小结</a></li>
 </ul>
 </li>
 </ul>
@@ -162,17 +161,16 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用--Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 37 min read
+          2022-02-10 / 41 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="实践-使用k8s管理业务应用">实践--使用k8s管理业务应用</h1>
-<h2 id="一-最小调度单元-pod">一、 最小调度单元 Pod</h2>
+          <h1 id="一-最小调度单元-pod">一、 最小调度单元 Pod</h1>
 <p>docker调度的是容器，在k8s集群中，最小的调度单元是Pod（豆荚）<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840469887.png" alt="" loading="lazy"></p>
-<h3 id="11-为什么引入pod">1.1 为什么引入Pod</h3>
+<h2 id="11-为什么引入pod">1.1 为什么引入Pod</h2>
 <ul>
 <li>
 <p>与容器引擎解耦<br>
@@ -182,7 +180,7 @@ Docker、Rkt等容器 平台设计与引擎的具体的实现解耦</p>
 <p>多容器共享网络|存储|进程 空间, 支持的业务场景更加灵活</p>
 </li>
 </ul>
-<h3 id="12-pod概述">1.2 Pod概述</h3>
+<h2 id="12-pod概述">1.2 Pod概述</h2>
 <ol>
 <li>pod 是 k8s 中的最小单元。</li>
 <li>一个 pod 中可以运行一个容器，也可以运行多个容器。</li>
@@ -190,7 +188,7 @@ Docker、Rkt等容器 平台设计与引擎的具体的实现解耦</p>
 <li>Pod 的生命周期是短暂的，不会自愈， 是用完就销毁的实体。</li>
 <li>一般我们是通过 Controller 来创建和管理 pod 的生命周期。</li>
 </ol>
-<h3 id="13-资源对象重要概念">1.3 资源对象重要概念</h3>
+<h2 id="13-资源对象重要概念">1.3 资源对象重要概念</h2>
 <ul>
 <li>资源对象：kubernetes基于声明式API与资源对象进行交互。</li>
 <li>yaml文件：为了方便后期管理，通过使用yaml文件通过API管理资源对象。</li>
@@ -210,7 +208,7 @@ spec 和 status 的区别：</p>
 <p>spec是期望状态<br>
 status是实际状态</p>
 </blockquote>
-<h3 id="14-yaml文件格式定义">1.4 yaml文件格式定义</h3>
+<h2 id="14-yaml文件格式定义">1.4 yaml文件格式定义</h2>
 <pre><code class="language-yaml">人员名单: 
   张三: 
     年龄: 18 # 
@@ -244,7 +242,7 @@ k8s中的yaml文件以及其他场景的yaml文件，大部分都是以下类型
 <li>列表</li>
 <li>键值对(也称为maps，即key:value 格式的键值对数据)</li>
 </ul>
-<h3 id="15-yaml和json格式定义pod的区别">1.5  yaml和json格式定义pod的区别</h3>
+<h2 id="15-yaml和json格式定义pod的区别">1.5  yaml和json格式定义pod的区别</h2>
 <p><strong>使用yaml格式定义Pod</strong><br>
 <em>myblog/one-pod/pod.yaml</em></p>
 <pre><code class="language-yaml">apiVersion: v1
@@ -422,7 +420,7 @@ spec:
 <pre><code class="language-shell">$ kubectl explain pod
 $ kubectl explain Pod.apiVersion
 </code></pre>
-<h3 id="16-yaml文件参数详解">1.6 yaml文件参数详解</h3>
+<h2 id="16-yaml文件参数详解">1.6 yaml文件参数详解</h2>
 <p>以nginx.yaml文件为例：</p>
 <pre><code class="language-yaml">kind: Deployment  #资源类型，deployment控制器，#kubectl explain  Deployment
 apiVersion: extensions/v1beta1  #API版本，# kubectl explain  Deployment.apiVersion
@@ -507,7 +505,7 @@ spec: #定义service的详细信息，service.spec
 <p>凡是通过 template 模板创建的 pod 都会继承 metadata 中的 lables 标签，所以 pod 会有一个app=linux36-nginx-selector 的标签。</p>
 </li>
 </ul>
-<h3 id="17-如何编写资源yaml">1.7 如何编写资源yaml</h3>
+<h2 id="17-如何编写资源yaml">1.7 如何编写资源yaml</h2>
 <ol>
 <li>
 <p>拿来主义，从机器中已有的资源中拿</p>
@@ -525,8 +523,8 @@ https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#pod-v1-core
 <p>kubectl explain 查看具体字段含义</p>
 </li>
 </ol>
-<h2 id="二-pod-常用操作">二、Pod 常用操作</h2>
-<h3 id="21-创建和访问pod">2.1 创建和访问Pod</h3>
+<h1 id="二-pod-常用操作">二、Pod 常用操作</h1>
+<h2 id="21-创建和访问pod">2.1 创建和访问Pod</h2>
 <pre><code class="language-shell">## 创建namespace, namespace是逻辑上的资源池
 $ kubectl create namespace luffy
 
@@ -556,26 +554,8 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 ## 再次访问服务,3306和8002
 $ curl 10.244.1.146:8002/blog/index/
 </code></pre>
-<h3 id="314-infra容器基础设施容器">3.1.4 Infra容器(基础设施容器)</h3>
-<p>登录<code>k8s-slave1</code>节点</p>
-<pre><code class="language-shell">$ docker ps -a |grep myblog  
-
-## 发现有三个容器
-## 其中包含mysql和myblog程序以及Infra容器
-为了实现Pod内部的容器可以通过localhost通信，每个Pod都会启动Infra容器，
-然后Pod内部的其他容器的网络空间会共享该Infra容器的网络空间(Docker网络的container模式)，
-Infra容器只需要hang住网络空间，不需要额外的功能，因此资源消耗极低。
-
-## 登录master节点，查看pod内部的容器ip均相同，为pod ip
-$ kubectl -n luffy exec -ti myblog -c myblog bash
-/ # ifconfig
-
-$ kubectl -n luffy exec -ti myblog -c mysql bash
-/ # ifconfig
-</code></pre>
-<p>pod容器命名规则: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
-<h3 id="315-查看pod详细信息">3.1.5 查看pod详细信息</h3>
-<pre><code class="language-shell">## 查看pod调度节点及pod_ip
+<h2 id="22-查看pod详细信息">2.2 查看pod详细信息</h2>
+<pre><code class="language-shell">## 查看pod调度节点及pod ip
 $ kubectl -n luffy get pods -o wide
 
 ## 查看完整的yaml
@@ -587,24 +567,24 @@ $ kubectl -n luffy describe pod myblog
 ## 查看pod的labels标签
 $ kubectl -n luffy get pod --show-lables
 </code></pre>
-<h3 id="316-troubleshooting-and-debugging">3.1.6 Troubleshooting and Debugging</h3>
+<h2 id="23-故障排查和调试">2.3 故障排查和调试</h2>
 <pre><code class="language-shell">#进入Pod内的容器
 $ kubectl -n &lt;namespace&gt; exec &lt;pod_name&gt; -c &lt;container_name&gt; -ti /bin/sh
 
 #查看Pod内容器日志,显示标准或者错误输出日志
 $ kubectl -n &lt;namespace&gt; logs -f --tail=100 &lt;pod_name&gt; -c &lt;container_name&gt;
 </code></pre>
-<h3 id="317-更新服务版本">3.1.7 更新服务版本</h3>
+<h2 id="24-更新服务">2.4 更新服务</h2>
 <pre><code class="language-shell">$ kubectl apply -f demo-pod.yaml
 </code></pre>
-<h3 id="318-删除pod服务">3.1.8 删除Pod服务</h3>
+<h2 id="25-删除pod">2.5 删除Pod</h2>
 <pre><code class="language-shell">#根据文件删除
 $ kubectl delete -f demo-pod.yaml
 
 #根据pod_name删除
 $ kubectl -n &lt;namespace&gt; delete pod &lt;pod_name&gt;
 </code></pre>
-<h3 id="319-pod数据持久化">3.1.9 Pod数据持久化</h3>
+<h2 id="26-pod数据持久化">2.6 Pod数据持久化</h2>
 <p>若删除了Pod，由于mysql的数据都在容器内部，会造成数据丢失，因此需要数据进行持久化。</p>
 <ul>
 <li>
@@ -717,7 +697,250 @@ $ curl 10.244.1.151:8002/blog/index/
 </ul>
 </li>
 </ul>
-<h3 id="3110-服务健康检查">3.1.10 服务健康检查</h3>
+<h1 id="三-pod生命周期与探针">三、Pod生命周期与探针</h1>
+<h2 id="31-pod常见状态">3.1 Pod常见状态</h2>
+<pre><code class="language-shell">Unschedulable：#Pod不能被调度，kube-scheduler没有匹配到合适的node节点 (通常由于Node节点资源不足)
+PodScheduled：#pod正处于调度中，在kube-scheduler刚开始调度的时候，还没有将pod分配到指定的node，在筛选出 合适的节点后就会更新etcd数据，将pod分配到指定的node 
+Pending: #正在创建Pod但是Pod中的容器还没有全部被创建完成=[处于此状态的Pod应该检查Pod依赖的存储是否有权限挂载等。 
+Failed： #Pod中有容器启动失败而导致pod工作异常。 
+Unknown： #由于某种原因无法获得pod的当前状态，通常是由于与pod所在的node节点通信错误。 
+Initialized：#所有pod中的初始化容器已经完成了 
+ImagePullBackOff： #Pod所在的node节点下载镜像失败 
+Running： #Pod内部的容器已经被创建并且启动。
+Ready： #表示pod中的容器已经可以提供访问服务
+Error: #pod 启动过程中发生错误 
+NodeLost: #Pod 所在节点失联 
+Waiting: #Pod 等待启动 
+Terminating: #Pod 正在被销毁 
+CrashLoopBackOff：#pod探针检测失败，但是kubelet正在将它重启 
+InvalidImageName：#node节点无法解析镜像名称导致的镜像无法下载 
+ImageInspectError：#无法校验镜像，镜像不完整导致 
+ErrImageNeverPull：#策略禁止拉取镜像，镜像中心权限是私有等 
+RegistryUnavailable：#镜像服务器不可用，网络原因或harbor宕机 
+ErrImagePull：#镜像拉取出错，超时或下载被强制终止 
+CreateContainerConfigError：#不能创建kubelet使用的容器配置 
+CreateContainerError：#创建容器失败 
+RunContainerError：#pod运行失败，容器中没有初始化PID为1的守护进程等 
+ContainersNotInitialized：#pod没有初始化完毕 
+ContainersNotReady：#pod没有准备完毕（探针或心跳检测没有通过导致） 
+ContainerCreating：#pod正在创建中 
+PodInitializing：#pod正在初始化中 
+DockerDaemonNotReady：#node节点decker服务没有启动
+NetworkPluginNotReady：#网络插件没有启动
+</code></pre>
+<h2 id="32-pod调度流程">3.2 Pod调度流程</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840400591.png" alt="" loading="lazy"></figure>
+<ol>
+<li>用户准备一个资源文件（.yaml 记录了业务应用的名称、镜像地址等信息），通过调用APIServer执行创建Pod</li>
+<li>APIServer收到用户的Pod创建请求，将Pod信息写入到etcd中,再返回给ApiServer</li>
+<li>调度器(Scheduler)通过list-watch的方式，发现有新的pod数据，但是这个pod还没有绑定到某一个节点中</li>
+<li>调度器(Scheduler)通过调度算法，计算出最适合该pod运行的节点，并调用APIServer，把信息更新到etcd中</li>
+<li>kubelet同样通过list-watch方式，发现有新的pod调度到本机的节点了，因此调用容器运行时，去根据pod的描述信息，拉取镜像，启动容器，同时生成事件信息</li>
+<li>同时，把容器的信息、事件及状态也通过APIServer写入到etcd中</li>
+</ol>
+<pre><code>当使用deployment控制器创建Pod时，
+controller-manager在Scheduler之前，生成Pod元数据，写到ETCD中去，Scheduler才可以进行调度。
+</code></pre>
+<p>问题1：当用户创建deployment时，是如何转换成pod的？通过怎样的流程？<br>
+问题2：controller-manager和scheduler谁工作在前？谁工作在后？</p>
+<pre><code>controller-manager工作在scheduler前面，
+deployment通过controller-manager生成pod，然后pod通过scheduler调度到最合适的工作节点。
+
+controller-manager根据定义的deployment yaml文件来生成pod的模板，
+例如pod名称等都是controller-manager生成出来的
+</code></pre>
+<h2 id="33-pod生命周期">3.3 Pod生命周期</h2>
+<p>Pod的常见状态如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>状态值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pending</td>
+<td>API Server已经创建该Pod，等待调度器调度</td>
+</tr>
+<tr>
+<td>ContainerCreating</td>
+<td>拉取镜像启动容器中</td>
+</tr>
+<tr>
+<td>Running</td>
+<td>Pod内容器均已创建，且至少有一个容器处于运行状态、正在启动状态或正在重启状态</td>
+</tr>
+<tr>
+<td>Succeeded|Completed</td>
+<td>Pod内所有容器均已成功执行退出，且不再重启</td>
+</tr>
+<tr>
+<td>Failed|Error</td>
+<td>Pod内所有容器均已退出，但至少有一个容器退出为失败状态</td>
+</tr>
+<tr>
+<td>CrashLoopBackOff</td>
+<td>Pod内有容器启动失败，比如配置文件丢失导致主进程启动失败</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>由于某种原因无法获取该Pod的状态，可能由于网络通信不畅导致</td>
+</tr>
+</tbody>
+</table>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1652887282774.png" alt="" loading="lazy"></figure>
+<p><strong>生命周期示意图:</strong><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></p>
+<p><strong>启动和关闭示意:</strong><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></p>
+<pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
+Pod从开始启动得时候，先执行得就是init container里面得内容。
+initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
+init container启动完就退出了，不会持久的存在。
+</code></pre>
+<p>通常用init container来做什么事情 ？</p>
+<p>初始化容器(init container)：</p>
+<ul>
+<li>验证业务应用依赖的组件是否均已启动</li>
+<li>修改目录的权限</li>
+<li>调整系统参数</li>
+<li>istio -&gt; iptables规则的设置</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-yaml">...
+      initContainers:
+      - command:
+        - /sbin/sysctl
+        - -w
+        - vm.max_map_count=262144
+        image: alpine:3.6
+        imagePullPolicy: IfNotPresent
+        name: elasticsearch-logging-init
+        resources: {}
+        securityContext:
+          privileged: true
+      - name: fix-permissions
+        image: alpine:3.6
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: elasticsearch-logging
+          mountPath: /usr/share/elasticsearch/data
+...
+</code></pre>
+<p>验证Pod生命周期：</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-lifecycle
+  namespace: luffy
+  labels:
+    component: pod-lifecycless
+spec:
+  initContainers:
+  - name: init
+    image: busybox
+    command: ['sh', '-c', 'echo $(date +%s): INIT &gt;&gt; /loap/timing']
+    volumeMounts:
+    - mountPath: /loap
+      name: timing
+  containers:
+  - name: main
+    image: busybox
+    command: ['sh', '-c', 'echo $(date +%s): START &gt;&gt; /loap/timing;
+sleep 10; echo $(date +%s): END &gt;&gt; /loap/timing;']
+    volumeMounts:
+    - mountPath: /loap 
+      name: timing
+    livenessProbe:
+      exec:
+        command: ['sh', '-c', 'echo $(date +%s): LIVENESS &gt;&gt; /loap/timing']
+    readinessProbe:
+      exec:
+        command: ['sh', '-c', 'echo $(date +%s): READINESS &gt;&gt; /loap/timing']
+    lifecycle:
+      postStart:
+        exec:
+          command: ['sh', '-c', 'echo $(date +%s): POST-START &gt;&gt; /loap/timing']
+      preStop:
+        exec:
+          command: ['sh', '-c', 'echo $(date +%s): PRE-STOP &gt;&gt; /loap/timing']
+  volumes:
+  - name: timing
+    hostPath:
+      path: /tmp/loap
+</code></pre>
+<p>创建pod测试：</p>
+<pre><code class="language-shell">$ kubectl create -f pod-lifecycle.yaml
+
+## 查看demo状态
+$ kubectl -n luffy get po -o wide -w
+
+## 查看调度节点的/tmp/loap/timing
+$ cat /tmp/loap/timing
+1585424708: INIT
+1585424746: START
+1585424746: POST-START
+1585424754: READINESS
+1585424756: LIVENESS
+1585424756: END
+</code></pre>
+<blockquote>
+<p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
+</blockquote>
+<h2 id="34-pause容器基础设施容器">3.4 pause容器(基础设施容器)</h2>
+<p>Pause 容器，又叫 Infra 容器，是pod的基础容器，镜像体积只有几百KB 左右，配置在kubelet中，主要的功能是一个pod中多个容器的网络通信。</p>
+<p>Infra 容器被创建后会初始化 Network Namespace，之后其它容器就可以加入到 Infra 容器中共享Infra 容器的网络了，因此如果一个 Pod 中的两个容器 A 和 B，那么关系如下 ：</p>
+<ol>
+<li>A容器和B容器能够直接使用 localhost 通信；</li>
+<li>A容器和B容器可以看到网卡、IP与端口监听信息。</li>
+<li>Pod 只有一个 IP 地址，也就是该 Pod 的 Network Namespace 对应的 IP 地址(由Infra 容器初始化并创建)。</li>
+<li>k8s环境中的每个Pod有一个独立的IP地址(前提是地址足够用)，并且此IP被当前 Pod 中所有容器在内部共享使用。</li>
+<li>pod删除后Infra 容器随机被删除,其IP被回收。</li>
+</ol>
+<p><strong>Pause容器共享的Namespace:</strong></p>
+<ol>
+<li>NET Namespace：Pod中的多个容器共享同一个网络命名空间， 即使用相同的IP和端口信息。</li>
+<li>IPC Namespace：Pod中的多个容器可以使用System V IPC或 POSIX消息队列进行通信。</li>
+<li>UTS Namespace：pod中的多个容器共享一个主机名。</li>
+<li>MNT Namespace、PID Namespace、User Namespace未共享。</li>
+</ol>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1652782470554.png" alt="" loading="lazy"></figure>
+<p>登录<code>k8s-slave1</code>节点</p>
+<pre><code class="language-shell">$ docker ps -a |grep myblog  
+
+## 发现有三个容器
+## 其中包含mysql和myblog程序以及Infra容器
+为了实现Pod内部的容器可以通过localhost通信，每个Pod都会启动Infra容器，
+然后Pod内部的其他容器的网络空间会共享该Infra容器的网络空间(Docker网络的container模式)，
+Infra容器只需要hang住网络空间，不需要额外的功能，因此资源消耗极低。
+
+## 登录master节点，查看pod内部的容器ip均相同，为pod ip
+$ kubectl -n luffy exec -ti myblog -c myblog bash
+/ # ifconfig
+
+$ kubectl -n luffy exec -ti myblog -c mysql bash
+/ # ifconfig
+</code></pre>
+<p>pod容器命名规则: <code>k8s_&lt;container_name&gt;_&lt;pod_name&gt;_&lt;namespace&gt;_&lt;random_string&gt;</code></p>
+<h2 id="35-init容器">3.5 init容器</h2>
+<p><strong>init容器的作用：</strong></p>
+<ol>
+<li>可以为业务容器提前准备好业务容器的运行环境，比如将业务容器需要的配置文件提前生成并放在指定位置、检查数据权限或完整性、软件版本等基础运行环境。</li>
+<li>可以在运行业务容器之前准备好需要的业务数据，比如从OSS下载、或者从其它位置copy。</li>
+<li>检查依赖的服务是否能够访问。</li>
+</ol>
+<p><strong>init容器的特点：</strong></p>
+<ol>
+<li>一个pod可以有多个业务容器还能在有多个init容器，但是每个init容器和业务容器的运行环境都是隔离的。</li>
+<li>init容器会比业务容器先启动。</li>
+<li>init容器运行成功之后才会继续运行业务容器。</li>
+<li>如果一个pod有多个init容器，则需要从上到下逐个运行并且全部成功，最后才会运行业务容器。</li>
+<li>init容器不支持探针检测(因为初始化完成后就退出再也不运行了)。</li>
+</ol>
+<h2 id="36-服务健康检查">3.6 服务健康检查</h2>
 <p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
 <p>两种机制：</p>
 <ul>
@@ -740,7 +963,7 @@ $ curl 10.244.1.151:8002/blog/index/
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840513305.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840513305.webp" alt="" loading="lazy"></figure>
 <ul>
 <li>
 <p><strong>ReadinessProbe探针</strong><br>
@@ -761,7 +984,7 @@ $ curl 10.244.1.151:8002/blog/index/
 </code></pre>
 </li>
 </ul>
-<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840524981.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840524981.webp" alt="" loading="lazy"></figure>
 <p><strong>三种探测类型：</strong></p>
 <ul>
 <li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康</li>
@@ -805,7 +1028,7 @@ $ curl 10.244.1.151:8002/blog/index/
 <li>failureThreshold：探测成功后，最少连续探测失败多少次才被认定为失败。默认是3，最小值是1。</li>
 </ul>
 <p>K8S将在Pod开始<strong>启动10s(initialDelaySeconds)后</strong>利用HTTP访问8002端口的/blog/index/，如果<strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
-<h3 id="3111-重启策略">3.1.11 重启策略</h3>
+<h2 id="37-重启策略">3.7 重启策略</h2>
 <p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。<br>
 Pod的重启策略包括Always、OnFailure和Never，默认值为Always。</p>
 <ul>
@@ -839,7 +1062,7 @@ spec:
 <li>使用Never时，退出了就不再重启</li>
 </ol>
 <p>可以看出，若容器正常退出，Pod的状态会是Completed，非正常退出，状态为CrashLoopBackOff</p>
-<h3 id="3112-镜像拉取策略">3.1.12 镜像拉取策略</h3>
+<h2 id="38-镜像拉取策略">3.8 镜像拉取策略</h2>
 <pre><code class="language-yaml">spec:
   containers:
   - name: myblog
@@ -852,7 +1075,7 @@ spec:
 <li>IfNotPresent ，本地有则使用本地镜像，本地没有则去仓库拉取</li>
 <li>Never，只使用本地镜像，本地没有则报错</li>
 </ul>
-<h3 id="3113-pod资源限制">3.1.13 Pod资源限制</h3>
+<h2 id="39-pod资源限制">3.9 Pod资源限制</h2>
 <p>为了保证充分利用集群资源，且确保重要容器在运行周期内能够分配到足够的资源稳定运行，因此平台需要具备</p>
 <p>Pod的资源限制的能力。 对于一个pod来说，资源最基础的2个的指标就是：CPU和内存。</p>
 <p>Kubernetes提供了个采用requests和limits 两种类型参数对资源进行预分配和使用限制。</p>
@@ -932,7 +1155,7 @@ spec:
 <blockquote>
 <p>注意：若内存使用超出限制，会引发系统的OOM机制，因CPU是可压缩资源，不会引发Pod退出或重建</p>
 </blockquote>
-<h3 id="3114-yaml优化">3.1.14 yaml优化</h3>
+<h2 id="310-yaml优化">3.10 yaml优化</h2>
 <p>目前完善后的yaml，<code>myblog/one-pod/pod-completed.yaml</code></p>
 <pre><code class="language-yaml">apiVersion: v1
 kind: Pod
@@ -1131,7 +1354,7 @@ mysql    1/1     Running   0          52s   172.21.51.67      k8s-slave1
 ## 访问myblog服务正常
 $ curl 10.244.1.152:8002/blog/index/
 </code></pre>
-<h3 id="3115-configmap和secret">3.1.15 Configmap和Secret</h3>
+<h2 id="311-configmap和secret">3.11 Configmap和Secret</h2>
 <p><strong>解决问题二，环境变量中敏感信息带来的安全隐患</strong></p>
 <p>为什么要统一管理环境变量</p>
 <ul>
@@ -1145,7 +1368,7 @@ $ curl 10.244.1.152:8002/blog/index/
 
 configMap通常用来存储配置文件或环境变量信息
 </code></pre>
-<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840559140.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840559140.png" alt="" loading="lazy"></figure>
 <ul>
 <li>
 <p>configMap，通常用来管理应用的配置文件或者环境变量，<code>myblog/two-pod/configmap.yaml</code></p>
@@ -1204,8 +1427,10 @@ data:
   MYSQL_USER: cm9vdA==		#注意加-n参数， echo -n root|base64
   MYSQL_PASSWD: MTIzNDU2
 </code></pre>
+</li>
+</ul>
 <p>创建并查看：</p>
-<pre><code class="language-powershell">$ kubectl create -f secret.yaml
+<pre><code class="language-shell">$ kubectl create -f secret.yaml
 $ kubectl -n luffy get secret
 </code></pre>
 <p>如果不习惯这种方式，可以通过如下方式：<strong>（推荐使用）</strong></p>
@@ -1215,8 +1440,6 @@ MYSQL_PASSWD=123456
 
 $ kubectl -n luffy create secret generic myblog --from-env-file=secret.txt 
 </code></pre>
-</li>
-</ul>
 <p>修改后的mysql的yaml，资源路径：<code>myblog/two-pod/mysql-with-config.yaml</code></p>
 <pre><code class="language-yaml">...
 spec:
@@ -1301,168 +1524,7 @@ spec:
       periodSeconds: 15
 </code></pre>
 <p>在部署不同的环境时，pod的yaml无须再变化，只需要在每套环境中维护一套ConfigMap和Secret即可。但是注意configmap和secret不能跨namespace使用，且更新后，pod内的env不会自动更新，重建后方可更新。</p>
-<h2 id="116-pod调度流程">1.16 Pod调度流程</h2>
-<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840400591.png" alt="" loading="lazy"></figure>
-<ol>
-<li>用户准备一个资源文件（.yaml 记录了业务应用的名称、镜像地址等信息），通过调用APIServer执行创建Pod</li>
-<li>APIServer收到用户的Pod创建请求，将Pod信息写入到etcd中</li>
-<li>调度器通过list-watch的方式，发现有新的pod数据，但是这个pod还没有绑定到某一个节点中</li>
-<li>调度器通过调度算法，计算出最适合该pod运行的节点，并调用APIServer，把信息更新到etcd中</li>
-<li>kubelet同样通过list-watch方式，发现有新的pod调度到本机的节点了，因此调用容器运行时，去根据pod的描述信息，拉取镜像，启动容器，同时生成事件信息</li>
-<li>同时，把容器的信息、事件及状态也通过APIServer写入到etcd中</li>
-</ol>
-<pre><code>当使用deployment控制器创建Pod时，
-controller-manager在Scheduler之前，生成Pod元数据，写到ETCD中去，Scheduler才可以进行调度。
-</code></pre>
-<p>问题1：当用户创建deployment时，是如何转换成pod的？通过怎样的流程？<br>
-问题2：controller-manager和scheduler谁工作在前？谁工作在后？</p>
-<pre><code>controller-manager工作在scheduler前面，
-deployment通过controller-manager生成pod，然后pod通过scheduler调度到最合适的工作节点。
-
-controller-manager根据定义的deployment yaml文件来生成pod的模板，
-例如pod名称等都是controller-manager生成出来的
-</code></pre>
-<h3 id="3117-pod状态与生命周期">3.1.17 pod状态与生命周期</h3>
-<p>Pod的状态如下表所示：</p>
-<table>
-<thead>
-<tr>
-<th>状态值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pending</td>
-<td>API Server已经创建该Pod，等待调度器调度</td>
-</tr>
-<tr>
-<td>ContainerCreating</td>
-<td>拉取镜像启动容器中</td>
-</tr>
-<tr>
-<td>Running</td>
-<td>Pod内容器均已创建，且至少有一个容器处于运行状态、正在启动状态或正在重启状态</td>
-</tr>
-<tr>
-<td>Succeeded|Completed</td>
-<td>Pod内所有容器均已成功执行退出，且不再重启</td>
-</tr>
-<tr>
-<td>Failed|Error</td>
-<td>Pod内所有容器均已退出，但至少有一个容器退出为失败状态</td>
-</tr>
-<tr>
-<td>CrashLoopBackOff</td>
-<td>Pod内有容器启动失败，比如配置文件丢失导致主进程启动失败</td>
-</tr>
-<tr>
-<td>Unknown</td>
-<td>由于某种原因无法获取该Pod的状态，可能由于网络通信不畅导致</td>
-</tr>
-</tbody>
-</table>
-<p>生命周期示意图：</p>
-<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></figure>
-<p>启动和关闭示意：</p>
-<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></figure>
-<pre><code>mian为主容器,init为初始化容器,infra为基础设施容器
-Pod从开始启动得时候，先执行得就是init container里面得内容。
-initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
-init container启动完就退出了，不会持久的存在
-</code></pre>
-<p>通常用init container来做什么事情 ？</p>
-<p>初始化容器(init container)：</p>
-<ul>
-<li>验证业务应用依赖的组件是否均已启动</li>
-<li>修改目录的权限</li>
-<li>调整系统参数</li>
-<li>istio -&gt; iptables规则的设置</li>
-</ul>
-<pre><code class="language-yaml">示例：
-...
-      initContainers:
-      - command:
-        - /sbin/sysctl
-        - -w
-        - vm.max_map_count=262144
-        image: alpine:3.6
-        imagePullPolicy: IfNotPresent
-        name: elasticsearch-logging-init
-        resources: {}
-        securityContext:
-          privileged: true
-      - name: fix-permissions
-        image: alpine:3.6
-        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: elasticsearch-logging
-          mountPath: /usr/share/elasticsearch/data
-...
-</code></pre>
-<p>验证Pod生命周期：</p>
-<pre><code class="language-yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: pod-lifecycle
-  namespace: luffy
-  labels:
-    component: pod-lifecycless
-spec:
-  initContainers:
-  - name: init
-    image: busybox
-    command: ['sh', '-c', 'echo $(date +%s): INIT &gt;&gt; /loap/timing']
-    volumeMounts:
-    - mountPath: /loap
-      name: timing
-  containers:
-  - name: main
-    image: busybox
-    command: ['sh', '-c', 'echo $(date +%s): START &gt;&gt; /loap/timing;
-sleep 10; echo $(date +%s): END &gt;&gt; /loap/timing;']
-    volumeMounts:
-    - mountPath: /loap 
-      name: timing
-    livenessProbe:
-      exec:
-        command: ['sh', '-c', 'echo $(date +%s): LIVENESS &gt;&gt; /loap/timing']
-    readinessProbe:
-      exec:
-        command: ['sh', '-c', 'echo $(date +%s): READINESS &gt;&gt; /loap/timing']
-    lifecycle:
-      postStart:
-        exec:
-          command: ['sh', '-c', 'echo $(date +%s): POST-START &gt;&gt; /loap/timing']
-      preStop:
-        exec:
-          command: ['sh', '-c', 'echo $(date +%s): PRE-STOP &gt;&gt; /loap/timing']
-  volumes:
-  - name: timing
-    hostPath:
-      path: /tmp/loap
-</code></pre>
-<p>创建pod测试：</p>
-<pre><code class="language-powershell">$ kubectl create -f pod-lifecycle.yaml
-
-## 查看demo状态
-$ kubectl -n luffy get po -o wide -w
-
-## 查看调度节点的/tmp/loap/timing
-$ cat /tmp/loap/timing
-1585424708: INIT
-1585424746: START
-1585424746: POST-START
-1585424754: READINESS
-1585424756: LIVENESS
-1585424756: END
-</code></pre>
-<blockquote>
-<p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
-</blockquote>
-<h3 id="3118-小结">3.1.18 小结</h3>
+<h2 id="312-小结">3.12 小结</h2>
 <ol>
 <li>实现k8s平台与特定的容器运行时解耦，提供更加灵活的业务部署方式，引入了Pod概念</li>
 <li>k8s使用yaml格式定义资源文件，yaml中Map与List的语法，与json做类比</li>
