@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652889482814">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652890272502">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652889482814" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652890272502" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -464,8 +464,7 @@ spec: #定义deployment中容器的详细信息，#kubectl explain  Deployment.s
           requests: #资源请求的设置
             cpu: 200m #cpu请求数，容器启动的初始可用数量,可以写0.5或者500m等CPU压缩值
             memory: 512Mi #内存请求大小，容器启动的初始可用数量，用于调度pod时候使用
-    
-          
+
 ---
 kind: Service #类型为service
 apiVersion: v1 #service API版本， service.apiVersion
@@ -738,12 +737,9 @@ NetworkPluginNotReady：#网络插件没有启动
 <li>kubelet同样通过list-watch方式，发现有新的pod调度到本机的节点了，因此调用容器运行时，去根据pod的描述信息，拉取镜像，启动容器，同时生成事件信息</li>
 <li>同时，把容器的信息、事件及状态也通过APIServer写入到etcd中</li>
 </ol>
-<pre><code>当使用deployment控制器创建Pod时，
-controller-manager在Scheduler之前，生成Pod元数据，写到ETCD中去，Scheduler才可以进行调度。
-</code></pre>
 <p>问题1：当用户创建deployment时，是如何转换成pod的？通过怎样的流程？<br>
 问题2：controller-manager和scheduler谁工作在前？谁工作在后？</p>
-<pre><code>controller-manager工作在scheduler前面，
+<pre><code>当使用deployment控制器创建Pod时，controller-manager工作在scheduler前面，生成Pod元数据，写到ETCD中去，Scheduler才可以进行调度。
 deployment通过controller-manager生成pod，然后pod通过scheduler调度到最合适的工作节点。
 
 controller-manager根据定义的deployment yaml文件来生成pod的模板，
@@ -799,14 +795,13 @@ Pod从开始启动得时候，先执行得就是init container里面得内容。
 initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
 init container启动完就退出了，不会持久的存在。
 </code></pre>
-<p>通常用init container来做什么事情 ？</p>
-<p>初始化容器(init container)：</p>
-<ul>
+<p><strong>通常用初始化容器(init container)来做什么事情</strong> ？</p>
+<ol>
 <li>验证业务应用依赖的组件是否均已启动</li>
 <li>修改目录的权限</li>
 <li>调整系统参数</li>
 <li>istio -&gt; iptables规则的设置</li>
-</ul>
+</ol>
 <p>示例：</p>
 <pre><code class="language-yaml">...
       initContainers:
