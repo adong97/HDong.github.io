@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1652890861173">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1653632552366">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1652890861173" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1653632552366" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -62,7 +62,13 @@
 <li><a href="#33-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.3 Pod生命周期</a></li>
 <li><a href="#34-pause%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.4 pause容器(基础设施容器)</a></li>
 <li><a href="#35-init%E5%AE%B9%E5%99%A8">3.5 init容器</a></li>
-<li><a href="#36-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.6 服务健康检查</a></li>
+<li><a href="#36-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.6 服务健康检查</a>
+<ul>
+<li><a href="#361-livenessprobe%E6%8E%A2%E9%92%88">3.6.1 LivenessProbe探针</a></li>
+<li><a href="#362-readinessprobe%E6%8E%A2%E9%92%88">3.6.2 ReadinessProbe探针</a></li>
+<li><a href="#363-%E4%B8%89%E7%A7%8D%E6%8E%A2%E6%B5%8B%E7%B1%BB%E5%9E%8B">3.6.3 三种探测类型：</a></li>
+</ul>
+</li>
 <li><a href="#37-%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.7 重启策略</a></li>
 <li><a href="#38-%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96%E7%AD%96%E7%95%A5">3.8 镜像拉取策略</a></li>
 <li><a href="#39-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.9 Pod资源限制</a></li>
@@ -161,7 +167,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用--Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 41 min read
+          2022-02-10 / 42 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
@@ -794,7 +800,7 @@ controller-manager根据定义的deployment yaml文件来生成pod的模板，
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></p>
 <pre><code>mian为主容器,
 init为初始化容器,
-infra为基础设施容器
+infra(pause)为基础设施容器
 
 Pod从开始启动得时候，先执行得就是init container里面得内容。
 yaml文件中 initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
@@ -891,8 +897,8 @@ $ cat /tmp/loap/timing
 <p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
 </blockquote>
 <h2 id="34-pause容器基础设施容器">3.4 pause容器(基础设施容器)</h2>
-<p>Pause 容器，又叫 Infra 容器，是pod的基础容器，镜像体积只有几百KB 左右，配置在kubelet中，主要的功能是一个pod中多个容器的网络通信。</p>
-<p>Infra 容器被创建后会初始化 Network Namespace，之后其它容器就可以加入到 Infra 容器中共享Infra 容器的网络了，因此如果一个 Pod 中的两个容器 A 和 B，那么关系如下 ：</p>
+<p>Pause 容器，又叫 Infra 容器，是pod的基础容器，镜像体积只有几百KB 左右，配置在kubelet中，主要的功能是：共享一个pod中多个容器的网络通信。</p>
+<p>Infra 容器被创建后会<strong>初始化 Network Namespace</strong>，之后其它容器就可以加入到 Infra 容器中共享Infra 容器的网络了，因此如果一个 Pod 中的两个容器 A 和 B，那么关系如下 ：</p>
 <ol>
 <li>A容器和B容器能够直接使用 localhost 通信；</li>
 <li>A容器和B容器可以看到网卡、IP与端口监听信息。</li>
@@ -903,10 +909,10 @@ $ cat /tmp/loap/timing
 <p><strong>Pause容器共享的Namespace:</strong></p>
 <ol>
 <li>NET Namespace：Pod中的多个容器共享同一个网络命名空间， 即使用相同的IP和端口信息。</li>
-<li>IPC Namespace：Pod中的多个容器可以使用System V IPC或 POSIX消息队列进行通信。</li>
+<li>IPC Namespace：Pod中的多个容器可以使用System V IPC或 POSIX消息队列进行通信(UINUX通信协议)。</li>
 <li>UTS Namespace：pod中的多个容器共享一个主机名。</li>
-<li>MNT Namespace、PID Namespace、User Namespace未共享。</li>
 </ol>
+<p>注意：MNT Namespace、PID Namespace、User Namespace未共享。</p>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1652782470554.png" alt="" loading="lazy"></figure>
 <p>登录<code>k8s-slave1</code>节点</p>
 <pre><code class="language-shell">$ docker ps -a |grep myblog  
@@ -934,19 +940,41 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 </ol>
 <p><strong>init容器的特点：</strong></p>
 <ol>
-<li>一个pod可以有多个业务容器还能在有多个init容器，但是每个init容器和业务容器的运行环境都是隔离的。</li>
+<li>一个pod可以有多个业务容器，可以有0个或多个init容器，但是每个init容器和业务容器的运行环境都是隔离的。</li>
 <li>init容器会比业务容器先启动。</li>
 <li>init容器运行成功之后才会继续运行业务容器。</li>
 <li>如果一个pod有多个init容器，则需要从上到下逐个运行并且全部成功，最后才会运行业务容器。</li>
 <li>init容器不支持探针检测(因为初始化完成后就退出再也不运行了)。</li>
 </ol>
+<p>示例：</p>
+<pre><code class="language-shell">...
+      containers:  # 业务容器
+        - name: myserver-myapp-container
+          image: nginx:1.16.0
+          #imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: &quot;/usr/share/nginx/html/myserver&quot;
+            name: myserver-data
+      initContainers:   # 初始化容器，优先执行。
+        - name: init-web-data
+          image: centos:7.9.2009
+          command: ['/bin/bash','-c',&quot;for i in `seq 1 10`;do echo '&lt;h1&gt;'$i web page at $(date +%Y%m%d%H%M%S) '&lt;h1&gt;' &gt;&gt; /data/nginx/html/myserver/index.html;sleep 1;done&quot;]
+          volumeMounts:
+          - mountPath: &quot;/data/nginx/html/myserver&quot;
+            name: myserver-data
+        - name: change-data-owner
+          image: busybox:1.28
+          command: ['/bin/sh','-c',&quot;/bin/chmod 644 /data/nginx/html/myserver/* -R&quot;]
+          volumeMounts:
+          - mountPath: &quot;/data/nginx/html/myserver&quot;
+            name: myserver-data
+...
+</code></pre>
 <h2 id="36-服务健康检查">3.6 服务健康检查</h2>
 <p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
-<p>两种机制：</p>
-<ul>
-<li>
-<p><strong>LivenessProbe探针</strong><br>
-存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包含LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。</p>
+<p>两种机制：LivenessProbe探针、ReadinessProbe探针</p>
+<h3 id="361-livenessprobe探针">3.6.1 LivenessProbe探针</h3>
+<p>存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包含LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。</p>
 <pre><code class="language-yaml">...
   containers:
   - name: myblog
@@ -961,13 +989,9 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
       timeoutSeconds: 2		# 探测超时时间
 ...
 </code></pre>
-</li>
-</ul>
 <figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840513305.webp" alt="" loading="lazy"></figure>
-<ul>
-<li>
-<p><strong>ReadinessProbe探针</strong><br>
-可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。</p>
+<h3 id="362-readinessprobe探针">3.6.2 ReadinessProbe探针</h3>
+<p>可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。</p>
 <pre><code class="language-yaml">...
   containers:
   - name: myblog
@@ -982,10 +1006,8 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
       periodSeconds: 10
 ...
 </code></pre>
-</li>
-</ul>
 <figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840524981.webp" alt="" loading="lazy"></figure>
-<p><strong>三种探测类型：</strong></p>
+<h3 id="363-三种探测类型">3.6.3 三种探测类型：</h3>
 <ul>
 <li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康</li>
 <li>httpGet方式：通过发送http请求检查服务是否正常，返回200-399状态码则表明容器健康</li>
@@ -1338,7 +1360,7 @@ spec:
       periodSeconds: 15
 </code></pre>
 <p>创建测试</p>
-<pre><code class="language-powershell">## 先删除旧pod
+<pre><code class="language-shell">## 先删除旧pod
 $ kubectl -n luffy delete po myblog
 
 ## 分别创建mysql和myblog
