@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1653632552366">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1653787793179">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1653632552366" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1653787793179" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -59,17 +59,23 @@
 <ul>
 <li><a href="#31-pod%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81">3.1 Pod常见状态</a></li>
 <li><a href="#32-pod%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B">3.2 Pod调度流程</a></li>
-<li><a href="#33-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.3 Pod生命周期</a></li>
+<li><a href="#33-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.3 Pod生命周期</a>
+<ul>
+<li><a href="#331-pod-%E7%BB%88%E6%AD%A2%E6%B5%81%E7%A8%8B">3.3.1 Pod 终止流程</a></li>
+</ul>
+</li>
 <li><a href="#34-pause%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.4 pause容器(基础设施容器)</a></li>
 <li><a href="#35-init%E5%AE%B9%E5%99%A8">3.5 init容器</a></li>
 <li><a href="#36-%E6%9C%8D%E5%8A%A1%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5">3.6 服务健康检查</a>
 <ul>
-<li><a href="#361-livenessprobe%E6%8E%A2%E9%92%88">3.6.1 LivenessProbe探针</a></li>
-<li><a href="#362-readinessprobe%E6%8E%A2%E9%92%88">3.6.2 ReadinessProbe探针</a></li>
-<li><a href="#363-%E4%B8%89%E7%A7%8D%E6%8E%A2%E6%B5%8B%E7%B1%BB%E5%9E%8B">3.6.3 三种探测类型：</a></li>
+<li><a href="#361-startupprobe%E6%8E%A2%E9%92%88">3.6.1 StartupProbe探针</a></li>
+<li><a href="#362-livenessprobe%E6%8E%A2%E9%92%88">3.6.2 LivenessProbe探针</a></li>
+<li><a href="#363-readinessprobe%E6%8E%A2%E9%92%88">3.6.3 ReadinessProbe探针</a></li>
+<li><a href="#364-%E4%B8%89%E7%A7%8D%E6%8E%A2%E6%B5%8B%E7%B1%BB%E5%9E%8B">3.6.4 三种探测类型：</a></li>
+<li><a href="#365-%E6%8E%A2%E9%92%88%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">3.6.5 探针通用配置参数</a></li>
 </ul>
 </li>
-<li><a href="#37-%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.7 重启策略</a></li>
+<li><a href="#37-pod%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.7 Pod重启策略</a></li>
 <li><a href="#38-%E9%95%9C%E5%83%8F%E6%8B%89%E5%8F%96%E7%AD%96%E7%95%A5">3.8 镜像拉取策略</a></li>
 <li><a href="#39-pod%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">3.9 Pod资源限制</a></li>
 <li><a href="#310-yaml%E4%BC%98%E5%8C%96">3.10 yaml优化</a></li>
@@ -167,7 +173,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用--Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 42 min read
+          2022-02-10 / 46 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
@@ -796,8 +802,16 @@ controller-manager根据定义的deployment yaml文件来生成pod的模板，
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1652887282774.png" alt="" loading="lazy"></figure>
 <p><strong>生命周期示意图:</strong><br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></p>
+<p><img src="https://adong97.github.io/HDong.github.io/post-images/1653732183537.png" alt="" loading="lazy"><br>
+Pod环境初始化，开始会有一个或多个init容器进行初始化。pod的生命周期，从start后可以配置postStart检测，运行过程中可以配置livenessProbe(存活探针)和readinessProbe(就绪探针),最后在 stop前可以配置preStop操作。</p>
 <p><strong>启动和关闭示意:</strong><br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"></p>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"><br>
+官方文档：<br>
+https://kubernetes.io/zh/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/</p>
+<p>postStart 和 preStop handlers 处理函数：<br>
+postStart： Pod被创建后立即执行检测,即不等待pod中的服务启动。 如果postStart执行失败pod不会继续创建</p>
+<p>preStop：<br>
+在pod被停止之前执行</p>
 <pre><code>mian为主容器,
 init为初始化容器,
 infra(pause)为基础设施容器
@@ -896,6 +910,28 @@ $ cat /tmp/loap/timing
 <blockquote>
 <p>须主动杀掉 Pod 才会触发 <code>pre-stop hook</code>，如果是 Pod 自己 Down 掉，则不会执行 <code>pre-stop hook</code> ,且杀掉Pod进程前，进程必须是正常运行状态，否则不会执行pre-stop钩子</p>
 </blockquote>
+<h3 id="331-pod-终止流程">3.3.1 Pod 终止流程</h3>
+<ol>
+<li>
+<p>创建pod<br>
+完成调度流程<br>
+容器启动并执行postStart<br>
+livenessProbe<br>
+进入running状态<br>
+readinessProbe<br>
+service关联pod<br>
+接受客户端请求</p>
+</li>
+<li>
+<p>删除pod<br>
+Pod被设置为”Terminating”状态、从service的Endpoints列表中删除并不再接受客户端请求。<br>
+执行PreStop<br>
+Kubernetes向pod中的容器发送SIGTERM信号(正常终止信号)终止pod里面的主进程，这个信号让容器知道自己很快将会被关闭<br>
+terminationGracePeriodSeconds: 60 #可选终止等待期，如果有设置删除宽限时间，则等待宽限时间到期，否则最多等待30s， Kubernetes等待指定的时间称为优雅终止宽限期,默认情况下是30秒,值得注意的是等待期与preStop Hook和SIGTERM信号并行执行，即 Kubernetes可能不会等待preStop Hook完成(最长30秒之后主进程还没有结束就就强制终止pod)。<br>
+SIGKILL信号被发送到Pod，并删除Pod<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1653787767790.png" alt="" loading="lazy"></p>
+</li>
+</ol>
 <h2 id="34-pause容器基础设施容器">3.4 pause容器(基础设施容器)</h2>
 <p>Pause 容器，又叫 Infra 容器，是pod的基础容器，镜像体积只有几百KB 左右，配置在kubelet中，主要的功能是：共享一个pod中多个容器的网络通信。</p>
 <p>Infra 容器被创建后会<strong>初始化 Network Namespace</strong>，之后其它容器就可以加入到 Infra 容器中共享Infra 容器的网络了，因此如果一个 Pod 中的两个容器 A 和 B，那么关系如下 ：</p>
@@ -971,27 +1007,31 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 ...
 </code></pre>
 <h2 id="36-服务健康检查">3.6 服务健康检查</h2>
-<p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，两种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
-<p>两种机制：LivenessProbe探针、ReadinessProbe探针</p>
-<h3 id="361-livenessprobe探针">3.6.1 LivenessProbe探针</h3>
-<p>存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包含LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。</p>
-<pre><code class="language-yaml">...
-  containers:
-  - name: myblog
-    image: 172.21.51.143:5000/myblog:v1
-    livenessProbe:
-      httpGet:
-        path: /blog/index/
-        port: 8002
-        scheme: HTTP
-      initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
-      periodSeconds: 10 	# 执行探测的频率
-      timeoutSeconds: 2		# 探测超时时间
-...
+<p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，三种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
+<p>三种机制分别为：StartupProbe探针、LivenessProbe探针、ReadinessProbe探针</p>
+<h3 id="361-startupprobe探针">3.6.1 StartupProbe探针</h3>
+<p>启动探针：kubernetes v1.16引入。判断容器内的应用程序是否已启动完成，如果配置了启动探测，则会先禁用所有其它的探测，直到startupProbe检测成功为止，如果 startupProbe探测失败，则kubelet将杀死容器，容器将按照重启策略进行下一步操作，如果容器没有提供启动探测，则默认状态为成功</p>
+<h3 id="362-livenessprobe探针">3.6.2 LivenessProbe探针</h3>
+<p>存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包 LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。<br>
+<strong>LivenessProbe用于控制是否重启pod。</strong></p>
+<pre><code class="language-yaml">  ...
+    containers:
+    - name: myblog
+      image: 172.21.51.143:5000/myblog:v1
+      livenessProbe:
+        httpGet:
+          path: /blog/index/
+          port: 8002
+          scheme: HTTP
+        initialDelaySeconds: 10  # 容器启动后第一次执行探测是需要等待多少秒
+        periodSeconds: 10 	# 执行探测的频率
+        timeoutSeconds: 2		# 探测超时时间
+  ...
 </code></pre>
 <figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840513305.webp" alt="" loading="lazy"></figure>
-<h3 id="362-readinessprobe探针">3.6.2 ReadinessProbe探针</h3>
-<p>可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。</p>
+<h3 id="363-readinessprobe探针">3.6.3 ReadinessProbe探针</h3>
+<p>可用性探测：用于判断容器是否正常提供服务，即容器的Ready是否为True，是否可以接收请求，如果ReadinessProbe探测失败，则容器的Ready将为False， Endpoint Controller 控制器将此Pod的Endpoint从对应的service的Endpoint列表中移除，不再将任何请求调度此Pod上，直到下次探测成功。（剔除此pod不参与接收请求不会将流量转发给此Pod）。<br>
+<strong>ReadinessProbe用于控制pod是否添加至service。</strong></p>
 <pre><code class="language-yaml">...
   containers:
   - name: myblog
@@ -1007,14 +1047,28 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
 ...
 </code></pre>
 <figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1639840524981.webp" alt="" loading="lazy"></figure>
-<h3 id="363-三种探测类型">3.6.3 三种探测类型：</h3>
+<h3 id="364-三种探测类型">3.6.4 三种探测类型：</h3>
+<p><strong>探针是由 kubelet 对容器执行的定期诊断</strong>，以保证Pod的状态始终处于运行状态，要执行诊断，kubelet 调用由容器实现的Handler(处理程序)，也成为Hook(钩子)，有三种类型的处理程序：</p>
+<p><strong>ExecAction</strong>：</p>
 <ul>
-<li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康</li>
-<li>httpGet方式：通过发送http请求检查服务是否正常，返回200-399状态码则表明容器健康</li>
-<li>tcpSocket：通过容器的IP和Port执行TCP检查，如果能够建立TCP连接，则表明容器健康</li>
+<li>exec：通过进入容器执行命令来检查服务是否正常，返回值为0则表示容器健康。</li>
 </ul>
-<p>示例：</p>
-<p>完整文件路径 <code>myblog/one-pod/pod-with-healthcheck.yaml</code></p>
+<p><strong>TCPSocketAction</strong>：</p>
+<ul>
+<li>tcpSocket：通过容器的IP和Port执行TCP检查，如果能够建立TCP连接，则表明容器健康。</li>
+</ul>
+<p><strong>HTTPGetAction</strong>：</p>
+<ul>
+<li>httpGet方式：通过发送http请求检查服务是否正常，返回200-399状态码则表明容器健康。</li>
+</ul>
+<p><strong>每次探测都将获得以下三种结果之一:</strong></p>
+<ul>
+<li>成功：容器通过了诊断。</li>
+<li>失败：容器未通过诊断。</li>
+<li>未知：诊断失败，因此不会采取任何行动。</li>
+</ul>
+<p><strong>示例:</strong><br>
+完整文件路径 <code>myblog/one-pod/pod-with-healthcheck.yaml</code></p>
 <pre><code class="language-yaml">  containers:
   - name: myblog
     image: 172.21.51.143:5000/myblog:v1
@@ -1042,21 +1096,58 @@ $ kubectl -n luffy exec -ti myblog -c mysql bash
       timeoutSeconds: 2
       periodSeconds: 10
 </code></pre>
+<p>K8S将在Pod开始<strong>启动10s后(initialDelaySeconds)<strong>利用HTTP访问8002端口的/blog/index/，如果</strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
+<h3 id="365-探针通用配置参数">3.6.5 探针通用配置参数</h3>
+<p>探针有很多配置字段，可以使用这些字段精确的控制存活和就绪检测的行为：<br>
+官方文档：https://kubernetes.io/zh/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/</p>
 <ul>
-<li>initialDelaySeconds：容器启动后第一次执行探测是需要等待多少秒。</li>
-<li>periodSeconds：执行探测的频率。默认是10秒，最小1秒。</li>
-<li>timeoutSeconds：探测超时时间。默认1秒，最小1秒。</li>
-<li>successThreshold：探测失败后，最少连续探测成功多少次才被认定为成功。默认是1。</li>
-<li>failureThreshold：探测成功后，最少连续探测失败多少次才被认定为失败。默认是3，最小值是1。</li>
+<li>
+<p>initialDelaySeconds：120<br>
+初始化延迟时间，告诉kubelet在执行第一次探测前应该等待多少秒，默认是0秒，最小值是0</p>
+</li>
+<li>
+<p>periodSeconds：10<br>
+探测周期间隔时间，指定了kubelet应该每多少秒秒执行一次存活探测，默认是 10 秒。最小值是 1</p>
+</li>
+<li>
+<p>timeoutSeconds：1<br>
+单次探测超时时间，探测的超时后等待多少秒，默认值是1秒，最小值是1。</p>
+</li>
+<li>
+<p>successThreshold：1<br>
+从失败转为成功的重试次数，探测器在失败后，被视为成功的最小连续成功数，默认值是1，存活探测的这个值必须是1，最小值是 1。</p>
+</li>
+<li>
+<p>failureThreshold：3<br>
+从成功转为失败的重试次数，当Pod启动了并且探测到失败，Kubernetes的重试次数，存活探测情况下的放弃就意味着重新启动容器， 就绪探测情况下的放弃Pod 会被打上未就绪的标签，默认值是3，最小值是1。</p>
+</li>
 </ul>
-<p>K8S将在Pod开始<strong>启动10s(initialDelaySeconds)后</strong>利用HTTP访问8002端口的/blog/index/，如果<strong>超过2s</strong>或者返回码不在200~399内，则健康检查失败。</p>
-<h2 id="37-重启策略">3.7 重启策略</h2>
-<p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。<br>
-Pod的重启策略包括Always、OnFailure和Never，默认值为Always。</p>
+<p><strong>探针http配置参数</strong><br>
+HTTP 探测器可以在 httpGet 上配置额外的字段：</p>
+<pre><code class="language-shell">host: 
+#连接使用的主机名，默认是Pod的 IP，也可以在HTTP头中设置 “Host” 来代替。
+
+scheme: http 
+#用于设置连接主机的方式（HTTP 还是 HTTPS），默认是 HTTP。
+
+path: /monitor/index.html 
+#访问 HTTP 服务的路径。
+
+httpHeaders: 
+#请求中自定义的 HTTP 头,HTTP 头字段允许重复。
+
+port: 80
+#访问容器的端口号或者端口名，如果数字必须在 1 ～ 65535 之间。
+</code></pre>
+<h2 id="37-pod重启策略">3.7 Pod重启策略</h2>
+<p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。</p>
+<p>Pod的重启策略包括Always、OnFailure和Never，<br>
+ReplicationController/Replicaset/Deployment资源类型，默认值为Always。</p>
+<p>Pod一旦配置探针，在检测失败时候，会基于restartPolicy(容器重启策略)对Pod进行下一步操作：</p>
 <ul>
-<li>Always：当容器进程退出后，由kubelet自动重启该容器；</li>
-<li>OnFailure：当容器终止运行且退出码不为0时，由kubelet自动重启该容器；</li>
-<li>Never：不论容器运行状态如何，kubelet都不会重启该容器。</li>
+<li>Always：当容器进程退出后，由kubelet自动重启该容器;</li>
+<li>OnFailure：当容器失败(终止运行且退出码不为0) 时，由kubelet自动重启该容器；</li>
+<li>Never：不论容器运行状态如何，kubelet都不会重启该容器。(Job或CronJob)</li>
 </ul>
 <p>演示重启策略：</p>
 <pre><code class="language-yaml">apiVersion: v1
@@ -1077,7 +1168,7 @@ spec:
 <li>使用默认的重启策略，即 restartPolicy: Always ，无论容器是否是正常退出，都会自动重启容器</li>
 <li>使用OnFailure的策略时
 <ul>
-<li>如果把exit 1，去掉，即让容器的进程正常退出的话，则不会重启</li>
+<li>如果把 exit 1 去掉，即让容器的进程正常退出的话，则不会重启</li>
 <li>只有非正常退出状态才会重启</li>
 </ul>
 </li>
@@ -1085,6 +1176,7 @@ spec:
 </ol>
 <p>可以看出，若容器正常退出，Pod的状态会是Completed，非正常退出，状态为CrashLoopBackOff</p>
 <h2 id="38-镜像拉取策略">3.8 镜像拉取策略</h2>
+<p>imagePullPolicy (镜像拉取策略)</p>
 <pre><code class="language-yaml">spec:
   containers:
   - name: myblog
