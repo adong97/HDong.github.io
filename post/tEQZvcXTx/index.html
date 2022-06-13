@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1653790243783">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655139705507">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1653790243783" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655139705507" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -61,7 +61,7 @@
 <li><a href="#32-pod%E8%B0%83%E5%BA%A6%E6%B5%81%E7%A8%8B">3.2 Pod调度流程</a></li>
 <li><a href="#33-pod%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">3.3 Pod生命周期</a>
 <ul>
-<li><a href="#331-pod-%E7%BB%88%E6%AD%A2%E6%B5%81%E7%A8%8B">3.3.1 Pod 终止流程</a></li>
+<li><a href="#331-pod-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B5%81%E7%A8%8B">3.3.1 Pod 生命周期流程</a></li>
 </ul>
 </li>
 <li><a href="#34-pause%E5%AE%B9%E5%99%A8%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%AE%B9%E5%99%A8">3.4 pause容器(基础设施容器)</a></li>
@@ -73,6 +73,7 @@
 <li><a href="#363-readinessprobe%E6%8E%A2%E9%92%88">3.6.3 ReadinessProbe探针</a></li>
 <li><a href="#364-%E4%B8%89%E7%A7%8D%E6%8E%A2%E6%B5%8B%E7%B1%BB%E5%9E%8B">3.6.4 三种探测类型：</a></li>
 <li><a href="#365-%E6%8E%A2%E9%92%88%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">3.6.5 探针通用配置参数</a></li>
+<li><a href="#366-poststart-and-prestop">3.6.6 postStart and preStop</a></li>
 </ul>
 </li>
 <li><a href="#37-pod%E9%87%8D%E5%90%AF%E7%AD%96%E7%95%A5">3.7 Pod重启策略</a></li>
@@ -173,7 +174,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">k8s管理业务应用--Pod常用配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 45 min read
+          2022-02-10 / 46 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/tEQZvcXTx.png" alt="">
@@ -804,14 +805,6 @@ controller-manager根据定义的deployment yaml文件来生成pod的模板，
 <img src="https://adong97.github.io/HDong.github.io/post-images/1639840588832.jpg" alt="" loading="lazy"></p>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1653732183537.png" alt="" loading="lazy"><br>
 Pod环境初始化，开始会有一个或多个init容器进行初始化。pod的生命周期，从start后可以配置postStart检测，运行过程中可以配置livenessProbe(存活探针)和readinessProbe(就绪探针),最后在 stop前可以配置preStop操作。</p>
-<p><strong>启动和关闭示意:</strong><br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"><br>
-官方文档：<br>
-https://kubernetes.io/zh/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/</p>
-<p>postStart 和 preStop handlers 处理函数：<br>
-postStart： Pod被创建后立即执行检测,即不等待pod中的服务启动。 如果postStart执行失败pod不会继续创建</p>
-<p>preStop：<br>
-在pod被停止之前执行</p>
 <pre><code>mian为主容器,
 init为初始化容器,
 infra(pause)为基础设施容器
@@ -820,27 +813,25 @@ Pod从开始启动得时候，先执行得就是init container里面得内容。
 yaml文件中 initContainers:和containers:是同一级，但是init container得执行顺序是最早的，优于主业务容器执行。
 init container启动完就退出了，不会持久的存在。
 </code></pre>
-<h3 id="331-pod-终止流程">3.3.1 Pod 终止流程</h3>
+<h3 id="331-pod-生命周期流程">3.3.1 Pod 生命周期流程</h3>
+<p><strong>创建pod</strong></p>
 <ol>
-<li>
-<p>创建pod<br>
-完成调度流程<br>
-容器启动并执行postStart<br>
-livenessProbe<br>
-进入running状态<br>
-readinessProbe<br>
-service关联pod<br>
-接受客户端请求</p>
-</li>
-<li>
-<p>删除pod<br>
-Pod被设置为”Terminating”状态、从service的Endpoints列表中删除并不再接受客户端请求。<br>
-执行PreStop<br>
-Kubernetes向pod中的容器发送SIGTERM信号(正常终止信号)终止pod里面的主进程，这个信号让容器知道自己很快将会被关闭<br>
-terminationGracePeriodSeconds: 60 #可选终止等待期，如果有设置删除宽限时间，则等待宽限时间到期，否则最多等待30s， Kubernetes等待指定的时间称为优雅终止宽限期,默认情况下是30秒,值得注意的是等待期与preStop Hook和SIGTERM信号并行执行，即 Kubernetes可能不会等待preStop Hook完成(最长30秒之后主进程还没有结束就就强制终止pod)。<br>
-SIGKILL信号被发送到Pod，并删除Pod<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1653788956665.png" alt="" loading="lazy"></p>
-</li>
+<li>完成调度流程</li>
+<li>容器启动并执行postStart</li>
+<li>livenessProbe</li>
+<li>进入running状态</li>
+<li>readinessProbe</li>
+<li>service关联pod</li>
+<li>接受客户端请求</li>
+</ol>
+<p><strong>删除pod</strong></p>
+<ol>
+<li>Pod被设置为”Terminating”状态、从service的Endpoints列表中删除并不再接受客户端请求。</li>
+<li>执行PreStop</li>
+<li>Kubernetes向pod中的容器发送SIGTERM信号(正常终止信号)终止pod里面的主进程，这个信号让容器知道自己很快将会被关闭</li>
+<li>terminationGracePeriodSeconds: 60 #可选终止等待期，如果有设置删除宽限时间，则等待宽限时间到期，否则最多等待30s， Kubernetes等待指定的时间称为优雅终止宽限期,默认情况下是30秒,值得注意的是等待期与preStop Hook和SIGTERM信号并行执行，即 Kubernetes可能不会等待preStop Hook完成(最长30秒之后主进程还没有结束就就强制终止pod)。</li>
+<li>SIGKILL(强制终止)信号被发送到Pod，并删除Pod<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1653788956665.png" alt="" loading="lazy"></li>
 </ol>
 <h2 id="34-pause容器基础设施容器">3.4 pause容器(基础设施容器)</h2>
 <p>Pause 容器，又叫 Infra 容器，是pod的基础容器，镜像体积只有几百KB 左右，配置在kubelet中，主要的功能是：共享一个pod中多个容器的网络通信。</p>
@@ -980,7 +971,22 @@ $ cat /tmp/loap/timing
 <p>检测容器服务是否健康的手段，若不健康，会根据设置的重启策略（restartPolicy）进行操作，三种检测机制可以分别单独设置，若不设置，默认认为Pod是健康的。</p>
 <p>三种机制分别为：StartupProbe探针、LivenessProbe探针、ReadinessProbe探针</p>
 <h3 id="361-startupprobe探针">3.6.1 StartupProbe探针</h3>
-<p>启动探针：kubernetes v1.16引入。判断容器内的应用程序是否已启动完成，如果配置了启动探测，则会先禁用所有其它的探测，直到startupProbe检测成功为止，如果 startupProbe探测失败，则kubelet将杀死容器，容器将按照重启策略进行下一步操作，如果容器没有提供启动探测，则默认状态为成功</p>
+<p>启动探针：kubernetes v1.16引入。判断容器内的应用程序是否已启动完成，如果配置了启动探测，则会先禁用所有其它的探测，直到startupProbe检测成功为止，如果 startupProbe探测失败，则kubelet将杀死容器，容器将按照重启策略进行下一步操作，如果容器没有提供启动探测，则默认状态为成功。</p>
+<pre><code class="language-yaml">...
+      containers:
+      - name: myserver-myapp-frontend-label
+        image: nginx:1.20.2
+        ports:
+        - containerPort: 80
+        startupProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+          initialDelaySeconds: 5 #首次检测延迟5s
+          failureThreshold: 3  #从成功转为失败的次数
+          periodSeconds: 3 #探测间隔周期，不生效。启动后检测一次，不会周期检测
+...
+</code></pre>
 <h3 id="362-livenessprobe探针">3.6.2 LivenessProbe探针</h3>
 <p>存活性探测：用于判断容器是否存活，即Pod是否为running状态，如果LivenessProbe探针探测到容器不健康，则kubelet将kill掉容器，并根据容器的重启策略是否重启，如果一个容器不包 LivenessProbe探针，则Kubelet认为容器的LivenessProbe探针的返回值永远成功。<br>
 <strong>LivenessProbe用于控制是否重启pod。</strong></p>
@@ -1108,6 +1114,37 @@ httpHeaders:
 
 port: 80
 #访问容器的端口号或者端口名，如果数字必须在 1 ～ 65535 之间。
+</code></pre>
+<h3 id="366-poststart-and-prestop">3.6.6 postStart and preStop</h3>
+<p><strong>启动和关闭示意:</strong><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1639840601236.jpg" alt="" loading="lazy"><br>
+官方文档：<br>
+https://kubernetes.io/zh/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/</p>
+<p>postStart 和 preStop handlers 处理函数：<br>
+<strong>postStart</strong>： Pod被创建后立即执行检测,即不等待pod中的服务启动。 如果postStart执行失败pod不会继续创建</p>
+<p><strong>preStop</strong>：<br>
+在pod被停止之前执行</p>
+<p>postStart 和 preStop通常成对出现。<br>
+示例：</p>
+<pre><code class="language-yaml">      containers:
+      - name: myserver-myapp1-lifecycle-label
+        image: tomcat:7.0.94-alpine
+        lifecycle:
+          postStart:
+            exec:
+             #command: 把自己注册到注册在中心
+              command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;echo 'Hello from the postStart handler' &gt;&gt; /usr/local/tomcat/webapps/ROOT/index.html&quot;]
+
+            #httpGet:
+            #  #path: /monitor/monitor.html
+            #  host: www.magedu.com
+            #  port: 80
+            #  scheme: HTTP
+            #  path: index.html
+          preStop:
+            exec:
+             #command: 把自己从注册中心移除
+              command: [&quot;/usr/local/tomcat/bin/catalina.sh&quot;,&quot;stop&quot;]
 </code></pre>
 <h2 id="37-pod重启策略">3.7 Pod重启策略</h2>
 <p>Pod的重启策略（RestartPolicy）应用于Pod内的所有容器，并且仅在Pod所处的Node上由kubelet进行判断和重启操作。当某个容器异常退出或者健康检查失败时，kubelet将根据RestartPolicy的设置来进行相应的操作。</p>

@@ -1,0 +1,711 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655139705507">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655139705507" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%80-nginxtomcatnfs%E5%AE%9E%E7%8E%B0%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB">一、Nginx+Tomcat+NFS实现动静分离</a>
+<ul>
+<li><a href="#11-nginx%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.1 Nginx镜像制作</a></li>
+<li><a href="#12-tomcat%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.2 Tomcat镜像制作</a></li>
+<li><a href="#13-k8s%E5%90%AF%E5%8A%A8%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8">1.3 K8s启动业务容器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 0.8s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.2000000000000002s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.4000000000000001s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.6s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 1.8s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s业务迁移</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-05-29 / 11 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/gn2hvi2hF.png" alt="">
+        
+        <div class="post-content yue">
+          <p>业务容器化优势：<br>
+① 提高资源利用率、节约部署IT成本。<br>
+② 提高部署效率，基于kubernetes实现微服务的快速部署与交付、 容器的批量调度与秒级启动。<br>
+③ 实现横向扩容、灰度部署、回滚、链路追踪、服务治理等。<br>
+④ 可根据业务负载进行自动弹性伸缩。<br>
+⑤ 容器将环境和代码打包在镜像内，保证了测试与生产运行环境 的一致性。<br>
+⑥ 紧跟云原生社区技术发展的步伐，不给公司遗留技术债，为后 期技术升级夯实了基础。<br>
+⑦ 为个人储备前沿技术，提高个人level。</p>
+<p>业务规划及镜像分层构建<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1653801256699.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1653801262834.png" alt="" loading="lazy"></p>
+<h2 id="一-nginxtomcatnfs实现动静分离">一、Nginx+Tomcat+NFS实现动静分离</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1653809060292.png" alt="" loading="lazy"></figure>
+<h3 id="11-nginx镜像制作">1.1 Nginx镜像制作</h3>
+<p>基于基础的centos/ubuntu/alpine镜像，制作公司内部基础镜像-Nginx基础镜像--Nginx业务镜像</p>
+<p><strong>Centos基础镜像制作</strong>：<br>
+镜像文件列表：</p>
+<pre><code class="language-shell"># cd /opt/k8s-data/ #dockerfile与yaml⽬录 
+# cd dockerfile/system/centos/ #系统镜像⽬录
+root@k8s-master1:/opt/k8s-data/dockerfile/system/centos
+# tree .
+├── build-command.sh
+├── Dockerfile 
+└── filebeat-6.8.1-x86_64.rpm 
+0 directories, 3 files
+
+root@k8s-master1:/opt/k8s-data/dockerfile/system/centos#
+</code></pre>
+<p>Dockerfile文件内容:<br>
+安装基础命令并配置语⾔环境为中⽂</p>
+<pre><code class="language-shell">root@k8s-master1:/opt/k8s-data/dockerfile/system/centos# cat Dockerfile 
+#制作基础镜像,centos:v7.5是基于官⽅centos 7.5镜像更改tag并上传到Harbor服务器的最原始官方镜像
+
+FROM harbor.magedu.net/baseimages/centos:7.6.1810 
+
+MAINTAINER weixd &quot;weixdslef@163.com&quot;
+
+ADD filebeat-6.8.1-x86_64.rpm /tmp/ 
+RUN yum install -y epel-release /tmp/filebeat-6.5.4-x86_64.rpm &amp;&amp; rm -rf /tmp/filebeat-6.5.4-x86_64.rpm 
+RUN yum install -y vim wget tree pcre pcre-devel gcc gcc-c++ zlib zlib-devel openssl openssl-devel net-tools iotop unzip zip iproute ntpdate nfs-utils tcp dump telnet traceroute
+RUN rm -rf /etc/localtime &amp;&amp; ln -snf /usr/share/zoneinfo/Asia/Shanghai
+/etc/localtime
+</code></pre>
+<p>build-command脚本:<br>
+基于脚本实现镜像⾃动build及上传到harbor功能</p>
+<pre><code class="language-shell">root@k8s-master1:/opt/k8s-data/dockerfile/system/centos# cat build-command.sh 
+#!/bin/bash
+docker build -t harbor.weixd.com/baseimages/centos-base:v7.6 . 
+sleep 1
+docker push harbor.weixd.com/baseimages/centos-base:v7.6
+</code></pre>
+<p>执行构建centos 基础镜像</p>
+<pre><code class="language-shell">bash build-command.sh 
+</code></pre>
+<p><strong>Nginx 基础镜像制作</strong><br>
+镜像⽂件列表：</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/web/pub-images/nginx-base
+
+# tree .
+├── build-command.sh
+├── Dockerfile 
+└── nginx-1.14.2.tar.gz
+
+0 directories, 3 files
+</code></pre>
+<p>Dockerfile⽂件内容</p>
+<pre><code class="language-shell"># cat Dockerfile 
+#Nginx Base Image
+FROM harbor.weixd.com/baseimage/centos-base:v7.6 
+
+MAINTAINER weixdslef@163.com
+
+RUN yum install -y vim wget tree lrzsz gcc gcc-c++ automake pcre pcre-devel zlib zlib-devel openssl openssl-devel iproute net-tools iotop 
+ADD nginx-1.14.2.tar.gz /usr/local/src/ 
+RUN cd /usr/local/src/nginx-1.14.2 &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install &amp;&amp;ln -sv /usr/local/nginx/sbin/nginx /usr/sbin/nginx &amp;&amp; useradd nginx -u 2001
+</code></pre>
+<p>build-command脚本</p>
+<pre><code class="language-shell"># cat build-command.sh 
+
+#!/bin/bash
+docker build -t harbor.weixd.com/pub-image/nginx-base:v1.14.2 . 
+sleep 1
+docker push harbor.weixd.com/pub-image/nginx-base:v1.14.2
+</code></pre>
+<p>执行构建Nginx基础镜像</p>
+<pre><code class="language-shell">bash build-command.sh 
+</code></pre>
+<p><strong>Nginx业务镜像制作</strong><br>
+基于Nginx基础镜像，制作N个不同服务的Nginx业务镜像：<br>
+镜像⽂件列表：</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/web/linux36/nginx 
+# tree 
+.
+├── build-command.sh 
+├── Dockerfile 
+├── index.html
+├── nginx.conf 
+└── webapp 
+       └── index.html
+
+1 directory, 5 files
+</code></pre>
+<p>Dockerfile文件内容：</p>
+<pre><code class="language-shell"># cat Dockerfile 
+
+#Nginx Base Image
+FROM harbor.weixd.com/pub-images/nginx-base:v1.14.2
+
+RUN useradd tomcat -u 2050
+ADD nginx.conf /usr/local/nginx/conf/nginx.conf 
+ADD webapp/* /usr/local/nginx/html/webapp/ 
+ADD index.html /usr/local/nginx/html/index.html 
+
+#静态资源挂载路径
+RUN mkdir -p /usr/local/nginx/html/webapp/static /usr/local/nginx/html/webapp/images &amp;&amp; chown tomcat.tomcat -R /usr/local/nginx/html/webapp/static /usr/local/nginx/html/webapp/images
+
+EXPOSE  80  443
+
+CMD [&quot;nginx&quot;]
+</code></pre>
+<p>build-command脚本</p>
+<pre><code class="language-shell"># cat build-command.sh 
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/nginx-web1:${TAG} .
+echo &quot;镜像构建完成，即将上传到harbor&quot;
+sleep 1
+docker push harbor.weixd.com/magedu/nginx-web1:${TAG}
+echo &quot;镜像上传到harbor完成&quot;
+</code></pre>
+<p>执行构建Nginx基础镜像</p>
+<pre><code class="language-shell">bash build-command.sh 
+</code></pre>
+<p>测试文件内容：</p>
+<pre><code class="language-shell"># cat webapp/index.html 
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Devops&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;magedu devops v11111111&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>测试nginx业务镜像可以启动为容器:</p>
+<pre><code class="language-shell"># docker run -it --rm -p 8801:80 harbor.weixd.com/magedu/nginx-web1:v1
+</code></pre>
+<h3 id="12-tomcat镜像制作">1.2 Tomcat镜像制作</h3>
+<p>基于基础的centos镜像，制作公司内部基础镜像--jdk镜像--tomcat基础镜像--tomcat业务镜像：</p>
+<p><strong>JDK基础镜像制作</strong><br>
+JDK基础镜像⽂件列表</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/pub-images #共⽤镜像⽬录 
+
+# cd jdk-1.8.212/ 
+# tree 
+.
+├── build-command.sh 
+├── Dockerfile
+├── jdk-8u212-linux-x64.tar.gz 
+└── profile
+
+0 directories, 4 files
+</code></pre>
+<p>Dockerfile⽂件内容</p>
+<pre><code class="language-shell"># cat Dockerfile 
+#JDK Base Image
+FROM weixd.com/baseimage/magedu-centos-base:7.9.2009 
+
+MAINTAINER weixd &quot;weixd@163.com&quot;
+
+ADD jdk-8u212-linux-x64.tar.gz /usr/local/src/ 
+RUN ln -sv /usr/local/src/jdk1.8.0_212 /usr/local/jdk &amp;&amp; groupadd tomcat -g 2018 &amp;&amp; useradd tomcat -u 2018 -g 2018 
+ADD profile /etc/profile
+
+
+ENV JAVA_HOME /usr/local/jdk 
+ENV JRE_HOME $JAVA_HOME/jre
+ENV CLASSPATH $JAVA_HOME/lib/:$JRE_HOME/lib/
+ENV PATH $PATH:$JAVA_HOME/bin
+</code></pre>
+<p>build-command脚本：</p>
+<pre><code class="language-shell"># cat build-command.sh #!/bin/bash
+docker build -t harbor.weixd.com/pub-image/jdk-base:v8.212 . 
+sleep 1
+docker push harbor.weixd.com/pub-image/jdk-base:v8.212
+</code></pre>
+<p>执行构建JDK基础镜像</p>
+<pre><code class="language-shell">bash build-command.sh 
+</code></pre>
+<p><strong>tomcat基础镜像制作</strong><br>
+基础镜像⽂件列表</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/web/pub-images/tomcat-base 
+# tree 
+.
+├── apache-tomcat-8.5.43.tar.gz
+├── build-command.sh 
+└── Dockerfile
+
+0 directories, 3 files
+</code></pre>
+<p>Dockerfile⽂件内容</p>
+<pre><code class="language-shell"># cat Dockerfile 
+
+#JDK Base Image
+FROM harbor.weixd.com/pub-image/jdk-base:v8.212 
+
+MAINTAINER weixd &quot;weixdself@163.com&quot;
+
+RUN mkdir /apps /data/tomcat/webapps /data/tomcat/logs -pv 
+ADD apache-tomcat-8.5.43.tar.gz /apps
+RUN ln -sv /apps/apache-tomcat-8.5.43 /apps/tomcat &amp;&amp; chown -R tomcat.tomcat /apps /data -R 
+#ADD filebeat-6.4.2-x86_64.rpm /tmp/ 
+#RUN yum install -y /tmp/filebeat-6.4.2-x86_64.rpm &amp;&amp; rm -rf /tmp/filebeat-6.4.2-x86_64.rpm
+</code></pre>
+<p>build-command脚本：</p>
+<pre><code class="language-shell"># cat build-command.sh 
+#!/bin/bash
+docker build -t harbor.magedu.net/pub-images/tomcat-base:v8.5.43 . 
+sleep 3
+docker push harbor.magedu.net/pub-images/tomcat-base:v8.5.43
+</code></pre>
+<p>执行构建Tomcat基础镜像</p>
+<pre><code class="language-shell">bash build-command.sh 
+</code></pre>
+<p><strong>tomcat业务镜像app1制作</strong><br>
+cat业务镜像⽂件列表</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/web/magedu/tomcat-app1
+# tree 
+.
+├── app1.tar.gz
+├── build-command.sh 
+├── catalina.sh 
+├── Dockerfile 
+├── filebeat.yml 
+├── myapp 
+│     └── index.html
+├── run_tomcat.sh 
+└── server.xml
+
+1 directory, 8 files
+</code></pre>
+<p>Dockerfile⽂件内容</p>
+<pre><code class="language-shell"># cat Dockerfile 
+#tomcat web1
+
+FROM harbor.magedu.net/pub-images/tomcat-base:v8.5.43
+
+ADD catalina.sh /apps/tomcat/bin/catalina.sh 
+ADD server.xml /apps/tomcat/conf/server.xml 
+#ADD myapp/* /data/tomcat/webapps/myapp/ 
+ADD app1.tar.gz /data/tomcat/webapps/myapp/ 
+ADD run_tomcat.sh /apps/tomcat/bin/run_tomcat.sh 
+#ADD filebeat.yml /etc/filebeat/filebeat.yml 
+RUN chown -R tomcat.tomcat /data/ /apps/
+
+EXPOSE 8080 8443
+
+CMD [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+</code></pre>
+<h3 id="13-k8s启动业务容器">1.3 K8s启动业务容器</h3>
+<p><strong>nginx 业务容器yaml</strong></p>
+<pre><code class="language-yaml">kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-nginx-deployment-label
+  name: magedu-nginx-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-nginx-selector
+  template:
+    metadata:
+      labels:
+        app: magedu-nginx-selector
+    spec:
+      containers:
+      - name: magedu-nginx-container
+        image: harbor.weixd.com/magedu/nginx-web1:20220613
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;20&quot;
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+
+        volumeMounts:
+        - name: magedu-images
+          mountPath: /usr/local/nginx/html/webapp/images
+          readOnly: false
+        - name: magedu-static
+          mountPath: /usr/local/nginx/html/webapp/static
+          readOnly: false
+      volumes:
+      - name: magedu-images
+        nfs:
+          server: 10.1.13.186
+          path: /data/k8s/magedu/images
+      - name: magedu-static
+        nfs:
+          server: 10.1.13.186
+          path: /data/k8s/magedu/static
+      #nodeSelector:
+      #  group: magedu
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-nginx-service-label
+  name: magedu-nginx-service
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30090
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    nodePort: 30091
+  selector:
+    app: magedu-nginx-selector
+</code></pre>
+<p><strong>执⾏更新yaml⽂件</strong></p>
+<pre><code class="language-shell">~# kubectl apply -f nginx.yaml 
+deployment.extensions/linux36-nginx-deployment configured
+service/linux36-nginx-service unchanged
+</code></pre>
+<p><strong>tomcat业务pod更新挂载</strong></p>
+<pre><code class="language-yaml">kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-tomcat-app1-deployment-label
+  name: magedu-tomcat-app1-deployment
+  namespace: magedu
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: magedu-tomcat-app1-selector
+  template:
+    metadata:
+      labels:
+        app: magedu-tomcat-app1-selector
+    spec:
+      containers:
+      - name: magedu-tomcat-app1-container
+        image: harbor.weixd.com/magedu/tomcat-app1:20220613
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m
+            memory: &quot;512Mi&quot;
+        volumeMounts:
+        - name: magedu-images
+          mountPath: /usr/local/nginx/html/webapp/images
+          readOnly: false
+        - name: magedu-static
+          mountPath: /usr/local/nginx/html/webapp/static
+          readOnly: false
+      volumes:
+      - name: magedu-images
+        nfs:
+          server: 10.1.13.186
+          path: /data/k8s/magedu/images
+      - name: magedu-static
+        nfs:
+          server: 10.1.13.186
+          path: /data/k8s/magedu/static
+#      nodeSelector:
+#        project: magedu
+#        app: tomcat
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-tomcat-app1-service-label
+  name: magedu-tomcat-app1-service
+  namespace: magedu
+spec:
+  #type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    #nodePort: 30092
+  selector:
+    app: magedu-tomcat-app1-selector
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ffYjV0kyR/">
+                <h3 class="post-title">
+                  Velero结合minio实现kubernetes 业务数据备份与恢复
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

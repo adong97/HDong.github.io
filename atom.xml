@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-05-29T02:10:46.262Z</updated>
+    <updated>2022-06-13T17:02:09.522Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[K8s业务迁移]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/">
+        </link>
+        <updated>2022-05-29T04:59:48.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Velero结合minio实现kubernetes 业务数据备份与恢复]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/ffYjV0kyR/</id>
@@ -72,12 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/l_BDakLb3/">
         </link>
         <updated>2022-04-18T09:13:54.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[微服务间调用之服务消费者]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/Ko-0dl_Mb/">
-        </link>
-        <updated>2022-04-18T09:12:04.000Z</updated>
     </entry>
 </feed>
