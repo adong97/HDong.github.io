@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655618134754">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655659348128">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655618134754" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655659348128" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,9 +34,31 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%9F%BA%E4%BA%8Ezookeeper%E5%AE%9E%E7%8E%B0%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8A%A8%E6%80%81%E6%B3%A8%E5%86%8C%E5%92%8C%E5%8F%91%E7%8E%B0">基于Zookeeper实现微服务动态注册和发现</a>
+<li><a href="#%E5%9F%BA%E4%BA%8Ezookeeper%E5%AE%9E%E7%8E%B0%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%8A%A8%E6%80%81%E6%B3%A8%E5%86%8C%E5%92%8C%E5%8F%91%E7%8E%B0">基于Zookeeper实现微服务动态注册和发现</a></li>
+<li><a href="#%E4%B8%80-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%A7%A3%E6%9E%90">一、微服务解析</a>
 <ul>
-<li><a href="#11-%E6%9E%84%E5%BB%BA%E7%94%9F%E4%BA%A7%E8%80%85-provider">1.1 构建生产者 provider</a></li>
+<li><a href="#11-%E5%8D%95%E4%BD%93%E6%9C%8D%E5%8A%A1%E5%92%8C%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%8C%BA%E5%88%AB">1.1 单体服务和微服务的区别</a></li>
+<li><a href="#12-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D">1.2 微服务介绍</a></li>
+<li><a href="#13-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%87%A0%E4%B8%AA%E8%A6%81%E7%B4%A0">1.3 微服务实现的几个要素</a></li>
+<li><a href="#14-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83">1.4 微服务开发环境</a></li>
+<li><a href="#15-%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90">1.5 架构解析</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E9%83%A8%E7%BD%B2dubbo%E6%9C%8D%E5%8A%A1">二、部署Dubbo服务</a>
+<ul>
+<li><a href="#21-%E6%9E%84%E5%BB%BA%E7%94%9F%E4%BA%A7%E8%80%85-provider%E9%95%9C%E5%83%8F">2.1 构建生产者 provider镜像</a></li>
+<li><a href="#22-%E7%BC%96%E5%86%99-yaml-%E6%96%87%E4%BB%B6%E5%B9%B6%E5%88%9B%E5%BB%BA-pod">2.2 编写 yaml 文件并创建 pod</a></li>
+<li><a href="#23-%E9%83%A8%E7%BD%B2consumer-%E6%B6%88%E8%B4%B9%E8%80%85">2.3 部署consumer 消费者</a>
+<ul>
+<li><a href="#231-%E6%9E%84%E5%BB%BA%E6%B6%88%E8%B4%B9%E8%80%85%E9%95%9C%E5%83%8F">2.3.1 构建消费者镜像</a></li>
+</ul>
+</li>
+<li><a href="#24-%E9%83%A8%E7%BD%B2dubbo-admin">2.4 部署dubbo admin</a>
+<ul>
+<li><a href="#241-%E6%9E%84%E5%BB%BAdubbo-admin%E9%95%9C%E5%83%8F">2.4.1 构建dubbo admin镜像</a></li>
+<li><a href="#242-%E7%BC%96%E5%86%99yaml%E5%B9%B6%E9%83%A8%E7%BD%B2pod">2.4.2 编写yaml并部署pod</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -135,7 +157,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">K8s实战：运⾏dubbo服务</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-06-19 / 1 min read
+          2022-06-19 / 21 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/3SrlIs9OK.png" alt="">
@@ -147,12 +169,596 @@
 官⽅⽹站：http://dubbo.apache.org/zh-cn/</p>
 <pre><code class="language-shell"># mvn clean package -Dmaven.skip.test=true
 </code></pre>
-<h2 id="11-构建生产者-provider">1.1 构建生产者 provider</h2>
+<h1 id="一-微服务解析">一、微服务解析</h1>
+<p>微服务最需要的就是注册中心, K8S 中跑的服务会有很多个，对应的服务起来之后会注册到 zookeeper 这种注册中心，然后服务之间进行内部调用。<br>
+生产者用于提供服务能够被客户端访问，客户端也就是所谓的消费者</p>
+<p>如果客户端想要调用生产者，这里拿 tomcat 和 nginx 来说，tomcat 就是生产者 nginx 就是消费者。nginx 想要调用 tomcat 要么写 tomcat 地址，要么写 tomcat pod 的 svc，但是现在这种结构就不行了</p>
+<p>因为在这种场合下，尤其是在 K8S 中，每个服务的地址都不是固定的，所以没有办法通过固定的地址来访问生产者，那这种情况该怎么办呢？就是当生产者起来之后将自己注册进去，生产者注册的时候至少会包含他的一些基本信息(ip 和 port)</p>
+<p>注册之后如果有消费者想要对他进行调用从注册中心去拿这个地址，消费者并不是通过配置文件读的，而且生产者 pod 的地址是不固定的（因为我们知道每当 pod 重启之后会就重新分配地址），不过这个没有关系，因为生产者起来之后会第一时间将自己注册进去。</p>
+<p>而消费者起来之后也会第一时间连接注册中心，再从注册中心里面将生产者的地址拿到，当消费者拿到生产者的地址后就相当于客户端知道了服务端地址了，然后在通过拿到的地址进行调用</p>
+<p>当我们的生产者和消费者注册到 zookeeper 之后，相对他们进行管理的话就需要 dubbo admin 连接到注册中心，通过注册中心查到他的生产者地址和消费者地址，然后再进行统计或管理，但这个 dubbo admin 组件并不是必须的。这种情况就没有通过 svc ，从而性能会更好。</p>
+<h2 id="11-单体服务和微服务的区别">1.1 单体服务和微服务的区别</h2>
+<ol>
+<li>单体服务、单体应用<br>
+单体服务随着业务增长及开发团队的不断扩大、遇到的问题如下：</li>
+</ol>
+<ul>
+<li>部署效率问题<br>
+一套代码几十兆或上百兆，需要较长的编译时间和部署时间</li>
+<li>团队协作问题<br>
+一个单体应用中包含多个功能，但是每个功能可能是不同的开发小组单独开发，那么代码怎么一起打包与构建</li>
+<li>影响业务稳定<br>
+一个 tomcat 运行的代码过于臃肿、会导致内存溢出问题</li>
+</ul>
+<ol start="2">
+<li>微服务<br>
+微服务就是将单个应用拆分为多个应用（由开发进行拆分），每个应用运行在单独的运行环境（这个运行环境其实就是通过 pod 来提供的，如果是 java 的业务就提供 jdk 环境， go 的就提供 go 的环境），应用之间通过指定接口与方式调用，应用之间的代码版本升级互不影响。</li>
+</ol>
+<p>实现微服务的方式：</p>
+<ul>
+<li>横向拆分（按照功能拆分，如将 100M 的服务拆分为 10M 这样的话进行编译就会快很多）：<br>
+按照不同的业务进行拆分，如支付、订单、登录、物流等</li>
+<li>纵向拆分（将一个业务中的功能组件在进行细拆）：<br>
+把一个业务中的组件在细致拆分，比如支付系统拆分为，微信支付、银联支付、支付宝支付等</li>
+</ul>
+<h2 id="12-微服务介绍">1.2 微服务介绍</h2>
+<p>微服务，又叫微服务架构，是一种软件架构方式。<br>
+它将应用构建成一系列按业务领域划分模块的、小的自治服务。<br>
+在微服务架构中，每个服务都是自我包含的，并且实现了单一的业务功能。</p>
+<p>简单来说，就是将一个系统按业务划分成多个子系统，每个子系统都是完整的，可独立运行的，子系统间的交互可通过HTTP协议进行通信（也可以采用消息队列来通信，如RoocketMQ，Kafka等）。</p>
+<p>所以，不同子系统可以使用不同的编程语言实现，使用不同的存储技术。但是，因为子系统服务数量越多，管理起来越复杂，因此需要采用集中化管理，例如Eureka，Zookeeper等都是比较常见的服务集中化管理框架；同时，使用自动化部署（如Jenkins）减少人为控制，降低出错概率，提高效率。</p>
+<p><strong>微服务的特点</strong></p>
+<ul>
+<li>解耦：同一系统内的服务大部分可以被解耦。因此应用，作为一个整体，可以轻易地被构建、修改和扩展。</li>
+<li>组件化：微服务可以被看成相互独立的组件，这些组件可以被轻易地替换和升级。</li>
+<li>业务能力：微服务很小，它们可以专注于某种单一的能力</li>
+<li>自治：开发者和团队可以独立地工作，提高开发速度。</li>
+<li>持续交付：允许持续发布软件新版本，通过系统化的自动手段来创建、测试和批准新版本。</li>
+<li>职责明确：微服务不把应用看成一个又一个的项目。相反，它们把应用当成了自己需要负责的项目。</li>
+<li>去中心化管理：关注于使用正确的工具来完成正确的工作。这也就是说，没有标准化的方式或者技术模式。开发者们有权选择最好的工具来解决问题。</li>
+<li>敏捷性：微服务支持敏捷开发。任何新功能都可以被快速开发或丢弃。</li>
+</ul>
+<p><strong>微服务的优势</strong></p>
+<ul>
+<li>独立开发：基于各个微服务所独有的功能，它们可以被轻易开发出来。</li>
+<li>独立部署：基于它们所提供的服务，它们可以被独立地部署到应用中。</li>
+<li>错误隔离：即便其中某个服务发生了故障，整个系统还可以继续工作。</li>
+<li>混合技术栈：可以使用不同的语言和技术来为同一个应用构建不同的服务。</li>
+<li>按粒度扩展：可以根据需求扩展某一个组件，不需要将所有组件全部扩展。</li>
+</ul>
+<h2 id="13-微服务实现的几个要素">1.3 微服务实现的几个要素</h2>
+<ul>
+<li>微服务如何落地（容器+K8S）<br>
+这样成本会降低很多，只有一个服务器的时候也能跑几百个微服务，而且如果在物理机上</li>
+<li>微服务之间如何发现对方（注册中心、服务发现）</li>
+<li>微服务之间如何访问对方（服务访问 -&gt; resetful API）</li>
+<li>微服务如何快速扩容（服务治理）<br>
+通过 deployment 快速扩容副本数。扩容之后还得需要通过注册中心将扩容好的那些新的容器在加入到我们的可用服务列表中，让用户访问，那么新启的一个 pod 怎么才能让别的服务访问到呢？那就是通过服务注册了，通过注册中心发现新启动的 pod 然后再对它进行调用</li>
+<li>微服务如何监控（服务监控）<br>
+容器我们主要是使用 Prometheus 或者 zabbix</li>
+<li>微服务如何升级与回滚（CI/CD）<br>
+主要是通过 Jenkins+gitlab</li>
+<li>微服务访问日志如何查看（ELK）</li>
+</ul>
+<h2 id="14-微服务开发环境">1.4 微服务开发环境</h2>
+<ul>
+<li>
+<p>sprint boot：是一个快速开发框架，内置 java 运行环境 ，但是 spring boot 倾向于开发单个服务</p>
+</li>
+<li>
+<p>sprint cloud：基于Spring Boot,为微服务体系开发中的架构问题，提供了一整套的解决方案的服务注册与发现， 服务消费，服务保护与熔断，网关，分布式调用追踪，分布式配置管理等。</p>
+</li>
+<li>
+<p>Dubbo：是阿里巴巴开源的分布式服务治理框架，也具备服务注册与发现，服务消费等功能，出现比Spring Cloud早，功能没有Spring Cloud多，但是国内目前依然有很多互联网企业实现dubbo实现微服务。</p>
+</li>
+</ul>
+<h2 id="15-架构解析">1.5 架构解析</h2>
+<p>当我们的消费者和生产者在事先不知道对方的地址的时候，基于注册中心来做发现。</p>
+<p>整个流程如下：</p>
+<ol>
+<li>先启动生产者（provider），以容器为例会将自己的地址和端口注册到注册中心</li>
+<li>当生产者注册好了之后在启动消者（consumer），消费者启动之后会从注册中心获取地址</li>
+<li>这个地址可能不止一个，因为生产者可能有多个 pod，有多个 pod 的话就是多个地址列表。<br>
+这时候消费者就会轮询一遍该列表，如果只有一个生产者那只能调用该生产者，如果有多个就挨着每个生产者轮询调用一遍</li>
+<li>并且当消费者起来之后会发起订阅（subscribe）<br>
+就是一旦生产者的地址发生变化或者服务器状态发生变化（比如这时候生产者的 pod 副本数在多一个呢？这时候就会有 3 个 server 端，并且都会注册到注册中心中），这时注册中心就会主动通知（notify）消费者说生产者的地址发生变化，这样我们的消费者就能拿到最新的生产者<br>
+如果是我们的生产者 pod 挂了，这时注册中心也会及时发现并通知消费者，消费者得到消息之后也不会再去调用挂掉的 pod ，而是调用剩下可用的 pod</li>
+</ol>
+<p><strong>角色说明</strong></p>
+<ul>
+<li>provider: 服务提供方</li>
+<li>consumer: 服务消费方</li>
+<li>registry: 服务注册与发现的注册中心</li>
+<li>monitor: 统计服务的调用次数和调用时间的监控中心</li>
+<li>container: 服务运行容器</li>
+</ul>
+<p><strong>调用关系说明</strong></p>
+<ol>
+<li>服务器负责启动、加载、运行服务提供者</li>
+<li>服务提供者在启动时，向注册中心注册自己提供的服务</li>
+<li>服务消费者在启动时，向注册中心订阅自己所需的服务</li>
+<li>注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费</li>
+<li>服务消费者，从提供者列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，更换另一台调用</li>
+<li>服务消费者和服务提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心</li>
+</ol>
+<h1 id="二-部署dubbo服务">二、部署Dubbo服务</h1>
+<p>zookeeper 起来之后，我们就将微服务跑进来，在整个部署流程中的启动顺序：</p>
+<ul>
+<li>部署生产者（server）<br>
+如果是先部署消费者的话，消费者对应的 pod 被拉起来就会立马向生产者进行访问就会报错</li>
+<li>部署消费者</li>
+<li>并且在部署期间使用的镜像也需要我们自己构建，因为在构建的时候要告诉镜像我们的注册中心在什么地方，有的时候还要连接数据库、还要链接存储 redis 等，都需要在配置文件中指定</li>
+</ul>
+<p>注册中心这里使用在 K8S 实战系列：zookeeper 集群 部署的 zookeeper 即可</p>
+<h2 id="21-构建生产者-provider镜像">2.1 构建生产者 provider镜像</h2>
+<ol>
+<li>构建镜像目录</li>
+</ol>
 <pre><code class="language-shell"># pwd
 /opt/k8s-data/dockerfile/web/magedu/dubbo/provider
 
+root@k8s-master01:# tree . 
+.
+├── Dockerfile                  
+├── build-command.sh    
+├── dubbo-demo-provider-2.1.5    
+│   ├── bin                         # dubbo 启动文件
+│   ├── conf                       # dubbo 配置文件
+│   │   └── dubbo.properties
+│   └── lib                         # dubbo 库文件
+├── dubbo-demo-provider-2.1.5-assembly.tar.gz      # dubbo 安装包
+└── run_java.sh                 # 启动容器后台运行脚本
+
+4 directories, 42 files
 
 </code></pre>
+<ol start="2">
+<li>编写配置文件，在配置文件中指定注册中心地址</li>
+</ol>
+<pre><code class="language-shell">vim dubbo-demo-provider-2.1.5/conf/dubbo.properties 
+
+##
+# Copyright 1999-2011 Alibaba Group.
+#
+# Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##
+dubbo.container=log4j,spring
+dubbo.application.name=demo-provider
+dubbo.application.owner=
+#dubbo.registry.address=multicast://224.5.6.7:1234
+dubbo.registry.address=zookeeper://zookeeper1.magedu.svc.cluster.local:2181 | zookeeper://zookeeper2.magedu.svc.cluster.local:2181 | zookeeper://zookeeper3.magedu.svc.cluster.local:2181
+#dubbo.registry.address=&quot;zookeeper://zookeeper1.linux36.svc.linux36.local:2181,&quot;
+#dubbo.registry.address=zookeeper://zookeeper1.linux36.svc.linux36.local:2181 | zookeeper2.linux36.svc.linux36.local:2181 | zookeeper3.linux36.svc.linux36.local:2181
+#dubbo.registry.address=redis://127.0.0.1:6379
+#dubbo.registry.address=dubbo://127.0.0.1:9090
+dubbo.monitor.protocol=registry
+dubbo.protocol.name=dubbo
+dubbo.protocol.port=20880
+dubbo.log4j.file=logs/dubbo-demo-provider.log
+dubbo.log4j.level=WARN
+
+
+# dubbo.registry.address 注册地址后面写的都是对应的 zookeeper pod 的 DNS 解析进行注册，
+# K8S 中有 3 个 zookeeper，所以这里分别写了 3 个不同的 zookeeper pod 
+</code></pre>
+<ol start="3">
+<li>编写 Dockerfile</li>
+</ol>
+<pre><code class="language-shell">vim Dockerfile
+
+#Dubbo provider
+#Dubbo provider
+FROM harbor.weixd.com/pub-image/jdk-base:v8.212
+
+MAINTAINER Weixd &quot;wxdongself@163.com&quot;
+
+RUN useradd nginx -u 2088
+RUN yum install file nc -y
+RUN mkdir -p /apps/dubbo/provider
+ADD dubbo-demo-provider-2.1.5/  /apps/dubbo/provider
+ADD run_java.sh /apps/dubbo/provider/bin
+RUN chown nginx.nginx /apps -R
+RUN chmod a+x /apps/dubbo/provider/bin/*.sh
+
+CMD [&quot;/apps/dubbo/provider/bin/run_java.sh&quot;]
+
+</code></pre>
+<ol start="4">
+<li>编写后台启动脚本</li>
+</ol>
+<pre><code class="language-shell">vim run_java.sh
+
+#!/bin/bash
+#echo &quot;nameserver 223.6.6.6&quot; &gt; /etc/resolv.conf
+#/usr/share/filebeat/bin/filebeat -c /etc/filebeat/filebeat.yml -path.home /usr/share/filebeat -path.config /etc/filebeat -path.data /var/lib/filebeat -path.logs /var/log/filebeat  &amp;
+su - nginx -c &quot;/apps/dubbo/provider/bin/start.sh&quot;
+tail -f /etc/hosts
+
+</code></pre>
+<ol start="5">
+<li>执行构建脚本</li>
+</ol>
+<pre><code class="language-shell"># vim build-command.sh
+#!/bin/bash
+docker build -t  harbor.weixd.com/magedu/dubbo-demo-provider:v1  .
+sleep 3
+docker push harbor.weixd.com/magedu/dubbo-demo-provider:v1
+
+## 执行构建
+bash build-command.sh 
+</code></pre>
+<h2 id="22-编写-yaml-文件并创建-pod">2.2 编写 yaml 文件并创建 pod</h2>
+<ol>
+<li>编写yaml</li>
+</ol>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/yaml/magedu/dubbo/provider
+
+# vim  provider.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-provider
+  name: magedu-provider-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-provider
+  template:
+    metadata:
+      labels:
+        app: magedu-provider
+    spec:
+      containers:
+      - name: magedu-provider-container
+        image: harbor.weixd.com/magedu/dubbo-demo-provider:v1
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 20880    # 容器端口开启 20880 主要是给不同程序之间调用使用
+          protocol: TCP
+          name: http
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-provider
+  name: magedu-provider-spec
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 20880
+    #nodePort: 30001    一般情况下是不需要固定 nodeport 
+  selector:
+    app: magedu-provider
+
+</code></pre>
+<ol start="2">
+<li>创建pod</li>
+</ol>
+<pre><code class="language-shell"># kubectl apply -f provider.yaml 
+</code></pre>
+<h2 id="23-部署consumer-消费者">2.3 部署consumer 消费者</h2>
+<p>消费者也需要和生产者连接同一个注册中心</p>
+<h3 id="231-构建消费者镜像">2.3.1 构建消费者镜像</h3>
+<ol>
+<li>目录结构</li>
+</ol>
+<pre><code class="language-shell">#pwd
+/opt/k8s-data/dockerfile/web/magedu/dubbo/consumer
+
+# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── dubbo-demo-consumer-2.1.5
+│   ├── bin
+│   ├── conf
+│   │   └── dubbo.properties
+│   └── lib
+├── dubbo-demo-consumer-2.1.5-assembly.tar.gz
+└── run_java.sh
+
+4 directories, 42 files
+</code></pre>
+<ol start="2">
+<li>修改dubbo的配置文件</li>
+</ol>
+<pre><code class="language-shell">vim dubbo-demo-consumer-2.1.5/conf/dubbo.properties
+##
+# Copyright 1999-2011 Alibaba Group.
+#
+# Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+##
+dubbo.container=log4j,spring
+dubbo.application.name=demo-consumer
+dubbo.application.owner=
+dubbo.registry.address=zookeeper://zookeeper1.magedu.svc.cluster.local:2181 | zookeeper://zookeeper1.magedu.svc.cluster.local:2181 | zookeeper://zookeeper1.magedu.svc.cluster.local:2181
+dubbo.monitor.protocol=registry
+dubbo.log4j.file=logs/dubbo-demo-consumer.log
+dubbo.log4j.level=WARN
+</code></pre>
+<ol start="3">
+<li>编写Dockerfile</li>
+</ol>
+<pre><code class="language-shell">vim Dockerfile
+#Dubbo consumer
+FROM harbor.weixd.com/pub-image/jdk-base:v8.212
+
+MAINTAINER Weixd &quot;weixdself@163.com&quot;
+
+RUN useradd nginx -u 2088
+RUN yum install file -y
+RUN mkdir -p /apps/dubbo/consumer
+ADD dubbo-demo-consumer-2.1.5  /apps/dubbo/consumer
+ADD run_java.sh /apps/dubbo/consumer/bin
+RUN chown nginx.nginx /apps -R
+RUN chmod a+x /apps/dubbo/consumer/bin/*.sh
+
+CMD [&quot;/apps/dubbo/consumer/bin/run_java.sh&quot;]
+</code></pre>
+<ol start="4">
+<li>编写后台运行脚本</li>
+</ol>
+<pre><code class="language-shell"># cat run_java.sh
+#!/bin/bash
+#echo &quot;nameserver 223.6.6.6&quot; &gt; /etc/resolv.conf
+#/usr/share/filebeat/bin/filebeat -c /etc/filebeat/filebeat.yml -path.home /usr/share/filebeat -path.config /etc/filebeat -path.data /var/lib/filebeat -path.logs /var/log/filebeat  &amp;
+su - nginx -c &quot;/apps/dubbo/consumer/bin/start.sh&quot;
+tail -f /etc/hosts
+</code></pre>
+<ol start="5">
+<li>编写执行脚本</li>
+</ol>
+<pre><code class="language-shell">vim build-command.sh
+
+#!/bin/bash
+docker build -t  harbor.weixd.com/magedu/dubbo-demo-consumer:v1  .
+sleep 3
+docker push harbor.weixd.com/magedu/dubbo-demo-consumer:v1
+</code></pre>
+<ol start="6">
+<li>执行构建脚本</li>
+</ol>
+<pre><code class="language-shell"> bash build-command.sh
+</code></pre>
+<ol start="7">
+<li>编写 yaml 文件并创建 pod</li>
+</ol>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/yaml/magedu/dubbo/consumer
+
+# vim consumer.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-consumer
+  name: magedu-consumer-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-consumer
+  template:
+    metadata:
+      labels:
+        app: magedu-consumer
+    spec:
+      containers:
+      - name: magedu-consumer-container
+        image: harbor.weixd.com/magedu/dubbo-demo-consumer:v1
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-consumer
+  name: magedu-consumer-server
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    #nodePort: 30001
+  selector:
+    app: magedu-consumer
+
+#执行构建
+kubectl apply -f consumer.yaml
+</code></pre>
+<h2 id="24-部署dubbo-admin">2.4 部署dubbo admin</h2>
+<p>基于 zookeeper 发现并管理 生产者(provider) 和 消费者(consumer)<br>
+部署 dubbo admin 需要通过 tomcat 渲染前端页面</p>
+<h3 id="241-构建dubbo-admin镜像">2.4.1 构建dubbo admin镜像</h3>
+<ol>
+<li>目录结构</li>
+</ol>
+<pre><code class="language-shell">pwd
+/opt/k8s-data/dockerfile/web/magedu/dubbo/dubboadmin
+
+# tree . -L 1
+.
+├── Dockerfile       #Docker镜像文件
+├── build-command.sh    #构建脚本
+├── catalina.sh       #tomcat配置文件
+├── dubboadmin   #dubboadmin配置目录
+├── logging.properties
+├── run_tomcat.sh   #后台启动脚本
+└── server.xml         #tomcat配置文件
+
+1 directory, 8 files
+</code></pre>
+<ol start="2">
+<li>编写配置文件</li>
+</ol>
+<pre><code class="language-shell">vim dubboadmin/WEB-INF/dubbo.properties
+# 在配置文件将 admin 指定链接到 zookeeper 注册中心，因为需要链接至 zookeeper 发现生产者和消费者并进行管理
+dubbo.registry.address=zookeeper://zookeeper1.magedu.svc.cluster.local:2181   
+dubbo.admin.root.password=root        # 登录账户
+dubbo.admin.guest.password=guest    # 登录密码
+
+将dubbo目录重新打成war包
+zip -r dubboadmin.war dubboadmin
+</code></pre>
+<ol start="3">
+<li>编写Dockerfile</li>
+</ol>
+<pre><code class="language-shell">vim Dockerfile
+
+#Dubbo dubboadmin
+#FROM harbor.magedu.local/pub-images/tomcat-base:v8.5.43
+FROM  harbor.weixd.com/pub-image/tomcat-base:v8.5.43
+
+MAINTAINER weixd &quot;wxdongself@163.com&quot;
+
+RUN useradd nginx -u 2088
+RUN yum install unzip -y
+ADD server.xml /apps/tomcat/conf/server.xml
+ADD logging.properties /apps/tomcat/conf/logging.properties
+ADD catalina.sh /apps/tomcat/bin/catalina.sh
+ADD run_tomcat.sh /apps/tomcat/bin/run_tomcat.sh
+# 要求 tomcat 能够在加载的时候，加载 /data/tomcat/webapps/ 这个目录下的 war 包
+ADD dubboadmin.war  /data/tomcat/webapps/dubboadmin.war
+RUN cd /data/tomcat/webapps &amp;&amp; unzip dubboadmin.war &amp;&amp; rm -rf dubboadmin.war &amp;&amp; chown -R nginx.nginx /data /apps
+
+EXPOSE 8080 8443
+
+CMD [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+</code></pre>
+<ol start="4">
+<li>编写server.xml</li>
+</ol>
+<pre><code class="language-shell">#cat server.xml | grep 'data/tomcat/webapps'
+      &lt;Host appBase=&quot;/data/tomcat/webapps&quot; autoDeploy=&quot;true&quot; name=&quot;localhost&quot; unpackWARs=&quot;true&quot;&gt;
+</code></pre>
+<ol start="5">
+<li>编写构建脚本</li>
+</ol>
+<pre><code class="language-shell"># vim build-command.sh
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/dubboadmin:${TAG}  .
+sleep 3
+docker push  harbor.weixd.com/magedu/dubboadmin:${TAG}
+</code></pre>
+<ol start="6">
+<li>编写启动tomcat后台脚本</li>
+</ol>
+<pre><code class="language-shell"># cat run_tomcat.sh
+#!/bin/bash
+
+su - nginx -c &quot;/apps/tomcat/bin/catalina.sh start&quot;
+su - nginx -c &quot;tail -f /etc/hosts&quot;
+</code></pre>
+<ol start="7">
+<li>构建镜像</li>
+</ol>
+<pre><code class="language-shell">bash build-command.sh v1
+</code></pre>
+<h3 id="242-编写yaml并部署pod">2.4.2 编写yaml并部署pod</h3>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/yaml/magedu/dubbo/dubboadmin
+
+# cat dubboadmin.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-dubboadmin
+  name: magedu-dubboadmin-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-dubboadmin
+  template:
+    metadata:
+      labels:
+        app: magedu-dubboadmin
+    spec:
+      containers:
+      - name: magedu-dubboadmin-container
+        image: harbor.weixd.com/magedu/dubboadmin:v1
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-dubboadmin
+  name: magedu-dubboadmin-service
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30080
+  selector:
+    app: magedu-dubboadmin
+</code></pre>
+<p>部署dubbo</p>
+<pre><code class="language-shell">kubectl apply -f dubboadmin.yaml
+</code></pre>
+<p>页面访问测试<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655658759241.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655658824935.png" alt="" loading="lazy"></p>
 
         </div>
 
