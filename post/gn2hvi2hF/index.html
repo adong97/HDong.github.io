@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655618134754">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655618134754" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,13 +34,25 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li>
+<li><a href="#nginxtomcatnfs%E5%AE%9E%E7%8E%B0%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB">Nginx+Tomcat+NFS实现动静分离</a>
 <ul>
-<li><a href="#%E4%B8%80-nginxtomcatnfs%E5%AE%9E%E7%8E%B0%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB">一、Nginx+Tomcat+NFS实现动静分离</a>
+<li><a href="#11-nginx%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.1 Nginx镜像制作</a>
 <ul>
-<li><a href="#11-nginx%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.1 Nginx镜像制作</a></li>
-<li><a href="#12-tomcat%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.2 Tomcat镜像制作</a></li>
-<li><a href="#13-k8s%E5%90%AF%E5%8A%A8%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8">1.3 K8s启动业务容器</a></li>
+<li><a href="#centos-%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">Centos 基础镜像制作</a></li>
+<li><a href="#nginx-%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">Nginx 基础镜像制作</a></li>
+<li><a href="#nginx%E4%B8%9A%E5%8A%A1%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">Nginx业务镜像制作</a></li>
+</ul>
+</li>
+<li><a href="#12-tomcat%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">1.2 Tomcat镜像制作</a>
+<ul>
+<li><a href="#jdk%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">JDK基础镜像制作</a></li>
+<li><a href="#tomcat%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C">tomcat基础镜像制作</a></li>
+<li><a href="#tomcat%E4%B8%9A%E5%8A%A1%E9%95%9C%E5%83%8Fapp1%E5%88%B6%E4%BD%9C">tomcat业务镜像app1制作</a></li>
+</ul>
+</li>
+<li><a href="#13-k8s%E5%90%AF%E5%8A%A8%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8">1.3 K8s启动业务容器</a>
+<ul>
+<li><a href="#%E6%9E%84%E5%BB%BAnginx-%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8">构建nginx 业务容器</a></li>
 </ul>
 </li>
 </ul>
@@ -141,7 +153,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">K8s实战: Nginx+Tomcat 动静分离</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-05-29 / 11 min read
+          2022-05-29 / 13 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/gn2hvi2hF.png" alt="">
@@ -153,17 +165,27 @@
 ③ 实现横向扩容、灰度部署、回滚、链路追踪、服务治理等。<br>
 ④ 可根据业务负载进行自动弹性伸缩。<br>
 ⑤ 容器将环境和代码打包在镜像内，保证了测试与生产运行环境 的一致性。<br>
-⑥ 紧跟云原生社区技术发展的步伐，不给公司遗留技术债，为后 期技术升级夯实了基础。<br>
-⑦ 为个人储备前沿技术，提高个人level。</p>
+⑥ 紧跟云原生社区技术发展的步伐，不给公司遗留技术债，为后 期技术升级夯实了基础。</p>
 <p>业务规划及镜像分层构建<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1653801256699.png" alt="" loading="lazy"><br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1653801262834.png" alt="" loading="lazy"></p>
-<h2 id="一-nginxtomcatnfs实现动静分离">一、Nginx+Tomcat+NFS实现动静分离</h2>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1653809060292.png" alt="" loading="lazy"></figure>
-<h3 id="11-nginx镜像制作">1.1 Nginx镜像制作</h3>
+<h1 id="nginxtomcatnfs实现动静分离">Nginx+Tomcat+NFS实现动静分离</h1>
+<p>在工作中尽量推荐分层构建镜像，一般都是先构建一个基础镜像，然后再通过 base 镜像在构建其他的业务镜像。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1653809060292.png" alt="" loading="lazy"></p>
+<ol>
+<li>先下载官方的系统镜像</li>
+<li>再构建基础镜像：在这个镜像中安装常用的基础包</li>
+<li>构建服务镜像：基础镜像构建好之后往后可能会做一些其他服务的分支镜像，但是这一层我们不会存放研发写的代码和配置文件</li>
+<li>构建业务镜像：不同的业务和项目都可以基于我们的 nginx 或者其他服务镜像</li>
+<li>后期做业务变更基于最后的业务镜像来重新构建</li>
+<li>最后再将研发写好的代码打入到业务镜像，然后再上传harbor，最后 K8S 基于 harbor 实现 pod 业务迁移</li>
+</ol>
+<p>我们需要在 K8S 中跑一个 nginx 和 tomcat，nginx svc 通过 nodeport 的方式对外提供访问，当我们一旦访问 nginx-svc 就访问到了 nginx 的 pod 上，当然我们的 nginx-svc 可以通过 我们的 LB 层进行代理访问，nginx 只能提供静态访问。</p>
+<p>如果需要提供动态访问，就交给tomcat服务来处理。访问请求需要tomcat 有一个 URL 或者在 nginx 中配置 location 来调用 tomcat 的路由，这个流程是先调用 tomcat-svc 然后 tomcat-svc 在转发给 tomcat-pod ，当然我们这里 tomcat 为了防止单点失败，可能有多个。</p>
+<h2 id="11-nginx镜像制作">1.1 Nginx镜像制作</h2>
 <p>基于基础的centos/ubuntu/alpine镜像，制作公司内部基础镜像-Nginx基础镜像--Nginx业务镜像</p>
-<p><strong>Centos基础镜像制作</strong>：<br>
-镜像文件列表：</p>
+<h3 id="centos-基础镜像制作">Centos 基础镜像制作</h3>
+<p>镜像文件列表：</p>
 <pre><code class="language-shell"># cd /opt/k8s-data/ #dockerfile与yaml⽬录 
 # cd dockerfile/system/centos/ #系统镜像⽬录
 root@k8s-master1:/opt/k8s-data/dockerfile/system/centos
@@ -201,8 +223,8 @@ docker push harbor.weixd.com/baseimages/centos-base:v7.6
 <p>执行构建centos 基础镜像</p>
 <pre><code class="language-shell">bash build-command.sh 
 </code></pre>
-<p><strong>Nginx 基础镜像制作</strong><br>
-镜像⽂件列表：</p>
+<h3 id="nginx-基础镜像制作">Nginx 基础镜像制作</h3>
+<p>镜像⽂件列表：</p>
 <pre><code class="language-shell"># pwd 
 /opt/k8s-data/dockerfile/web/pub-images/nginx-base
 
@@ -235,8 +257,8 @@ docker push harbor.weixd.com/pub-image/nginx-base:v1.14.2
 <p>执行构建Nginx基础镜像</p>
 <pre><code class="language-shell">bash build-command.sh 
 </code></pre>
-<p><strong>Nginx业务镜像制作</strong><br>
-基于Nginx基础镜像，制作N个不同服务的Nginx业务镜像：<br>
+<h3 id="nginx业务镜像制作">Nginx业务镜像制作</h3>
+<p>基于Nginx基础镜像，制作N个不同服务的Nginx业务镜像：<br>
 镜像⽂件列表：</p>
 <pre><code class="language-shell"># pwd 
 /opt/k8s-data/dockerfile/web/linux36/nginx 
@@ -299,10 +321,10 @@ echo &quot;镜像上传到harbor完成&quot;
 <p>测试nginx业务镜像可以启动为容器:</p>
 <pre><code class="language-shell"># docker run -it --rm -p 8801:80 harbor.weixd.com/magedu/nginx-web1:v1
 </code></pre>
-<h3 id="12-tomcat镜像制作">1.2 Tomcat镜像制作</h3>
+<h2 id="12-tomcat镜像制作">1.2 Tomcat镜像制作</h2>
 <p>基于基础的centos镜像，制作公司内部基础镜像--jdk镜像--tomcat基础镜像--tomcat业务镜像：</p>
-<p><strong>JDK基础镜像制作</strong><br>
-JDK基础镜像⽂件列表</p>
+<h3 id="jdk基础镜像制作">JDK基础镜像制作</h3>
+<p>JDK基础镜像⽂件列表</p>
 <pre><code class="language-shell"># pwd 
 /opt/k8s-data/dockerfile/pub-images #共⽤镜像⽬录 
 
@@ -342,8 +364,8 @@ docker push harbor.weixd.com/pub-image/jdk-base:v8.212
 <p>执行构建JDK基础镜像</p>
 <pre><code class="language-shell">bash build-command.sh 
 </code></pre>
-<p><strong>tomcat基础镜像制作</strong><br>
-基础镜像⽂件列表</p>
+<h3 id="tomcat基础镜像制作">tomcat基础镜像制作</h3>
+<p>基础镜像⽂件列表</p>
 <pre><code class="language-shell"># pwd 
 /opt/k8s-data/dockerfile/web/pub-images/tomcat-base 
 # tree 
@@ -378,8 +400,8 @@ docker push harbor.magedu.net/pub-images/tomcat-base:v8.5.43
 <p>执行构建Tomcat基础镜像</p>
 <pre><code class="language-shell">bash build-command.sh 
 </code></pre>
-<p><strong>tomcat业务镜像app1制作</strong><br>
-cat业务镜像⽂件列表</p>
+<h3 id="tomcat业务镜像app1制作">tomcat业务镜像app1制作</h3>
+<p>cat业务镜像⽂件列表</p>
 <pre><code class="language-shell"># pwd 
 /opt/k8s-data/dockerfile/web/magedu/tomcat-app1
 # tree 
@@ -414,9 +436,11 @@ EXPOSE 8080 8443
 
 CMD [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
 </code></pre>
-<h3 id="13-k8s启动业务容器">1.3 K8s启动业务容器</h3>
-<p><strong>nginx 业务容器yaml</strong></p>
-<pre><code class="language-yaml">kind: Deployment
+<h2 id="13-k8s启动业务容器">1.3 K8s启动业务容器</h2>
+<h3 id="构建nginx-业务容器">构建nginx 业务容器</h3>
+<pre><code class="language-shell">vim nginx.yaml
+
+kind: Deployment
 apiVersion: apps/v1
 metadata:
   labels:

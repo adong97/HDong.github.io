@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655618134754">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655618134754" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,7 +36,7 @@
             <ul class="markdownIt-TOC">
 <li><a href="#zookeeper%E9%9B%86%E7%BE%A4%E4%B8%9A%E5%8A%A1%E8%BF%81%E7%A7%BB">zookeeper集群业务迁移</a>
 <ul>
-<li><a href="#21-%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">2.1 准备基础镜像</a></li>
+<li><a href="#11-%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">1.1 准备基础镜像</a></li>
 <li><a href="#12-k8s-%E8%BF%90%E8%A1%8Czookeeper%E6%9C%8D%E5%8A%A1">1.2 k8s 运⾏zookeeper服务</a></li>
 <li><a href="#13-%E9%AA%8C%E8%AF%81zookeeper%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">1.3 验证zookeeper集群状态</a></li>
 </ul>
@@ -145,7 +145,16 @@
         <div class="post-content yue">
           <h1 id="zookeeper集群业务迁移">zookeeper集群业务迁移</h1>
 <p>基于PV和PVC作为后端存储，实现zookeeper集群业务迁移</p>
-<h2 id="21-准备基础镜像">2.1 准备基础镜像</h2>
+<p>zookeeper 的选举分为以下几个步骤：</p>
+<ol>
+<li>
+<p>第一次将集群启动 zookeeper 会优先对比每个 server 之间的事务 id ，但是这个时候没有数据所以他的事物 id 是一样的</p>
+</li>
+<li>
+<p>既然通过事务 id 的方式选举不出来那第二次就通过 server id，谁的 id 大谁就是 leader</p>
+</li>
+</ol>
+<h2 id="11-准备基础镜像">1.1 准备基础镜像</h2>
 <p>下载JDK镜像</p>
 <pre><code class="language-shell"># docker pull elevy/slim_java:8 
 # docker tag elevy/slim_java:8  harbor.weixd.com/magedu/slim_java:8
