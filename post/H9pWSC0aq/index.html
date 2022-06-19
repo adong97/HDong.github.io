@@ -1,0 +1,604 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-k8s%E7%A4%BA%E4%BE%8B%E4%B9%8Bwordpress">一、 K8s示例之WordPress</a>
+<ul>
+<li><a href="#11-%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">1.1 准备基础镜像</a></li>
+<li><a href="#12-%E9%83%A8%E7%BD%B2wordpress">1.2 部署wordpress</a></li>
+<li><a href="#13-%E5%88%9D%E5%A7%8B%E5%8C%96wordpress">1.3 初始化wordpress</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes实战
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s实战: 部署WordPress</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-06-19 / 8 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/H9pWSC0aq.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="一-k8s示例之wordpress">一、 K8s示例之WordPress</h1>
+<p>LNMP案例之基于Nginx+PHP实现WordPress博客站点，要求Nginx+PHP运⾏在同⼀个Pod的不同容器，MySQL运⾏与default的namespace并可以通过service name增删改查数据库。</p>
+<p>https://cn.wordpress.org/<br>
+https://cn.wordpress.org/download/releases/<br>
+wordpress-5.0.2-zh_CN.tar.gz</p>
+<h2 id="11-准备基础镜像">1.1 准备基础镜像</h2>
+<ol>
+<li>准备PHP镜像</li>
+</ol>
+<p>使用官方镜像</p>
+<pre><code class="language-shell">docker pull php:5.6.40-fpm
+docker tag php:5.6.40-fpm harbor.weixd.com/magedu/php:5.6.40-fpm 
+docker push harbor.weixd.com/magedu/php:5.6.40-fpm 
+</code></pre>
+<p>或者使用自制镜像</p>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/dockerfile/web/magedu/wordpress/php
+
+# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── run_php.sh
+└── www.conf  #变更启动php用户
+
+0 directories, 4 files
+
+## 编辑Dockerfile
+vim Dockerfile
+#PHP Base Image
+FROM harbor.weixd.com/baseimage/magedu-centos-base:7.9.2009
+
+MAINTAINER  wxdongself@163.com
+
+RUN yum install -y  https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-7.rpm &amp;&amp; yum install  php56-php-fpm php56-php-mysql -y  &amp;&amp; useradd nginx -u 2088
+ADD www.conf /opt/remi/php56/root/etc/php-fpm.d/www.conf
+#RUN useradd nginx -u 2019
+ADD run_php.sh /usr/local/bin/run_php.sh
+EXPOSE 9000
+
+CMD [&quot;/usr/local/bin/run_php.sh&quot;]
+
+# 编辑启动脚本
+vim run_php.sh
+#!/bin/bash
+#echo &quot;nameserver 10.20.254.254&quot; &gt; /etc/resolv.conf
+
+/opt/remi/php56/root/usr/sbin/php-fpm
+#/opt/remi/php56/root/usr/sbin/php-fpm --nodaemonize
+tail -f /etc/hosts
+
+# 编辑构建脚本
+# vim build-command.sh
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/wordpress-php-5.6:${TAG} .
+echo &quot;镜像制作完成，即将上传至Harbor服务器&quot;
+sleep 1
+docker push harbor.weixd.com/magedu/wordpress-php-5.6:${TAG}
+echo &quot;镜像上传完成&quot;
+
+
+## 执行构建
+bash  build-command.sh  v1
+</code></pre>
+<ol start="2">
+<li>准备Nginx镜像<br>
+先制作一个只安装nginx的Centos镜像</li>
+</ol>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/dockerfile/web/pub-images/nginx-base-wordpress
+
+# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── nginx-1.14.2.tar.gz
+└── nginx-1.20.2.tar.gz
+
+0 directories, 4 files
+
+## 编写Dockerfile
+vim Dockerfile
+#Nginx Base Image
+FROM harbor.weixd.com/baseimage/magedu-centos-base:7.9.2009
+
+MAINTAINER  wxdongself@163.com
+
+RUN yum install -y vim wget tree  lrzsz gcc gcc-c++ automake pcre pcre-devel zlib zlib-devel openssl openssl-devel iproute net-tools iotop
+ADD nginx-1.20.2.tar.gz /usr/local/src/
+RUN cd /usr/local/src/nginx-1.20.2 &amp;&amp; ./configure --prefix=/apps/nginx  &amp;&amp; make &amp;&amp; make install &amp;&amp; ln -sv  /apps/nginx/sbin/nginx /usr/sbin/nginx  &amp;&amp;rm -rf /usr/local/src/nginx-1.20.2.tar.gz
+
+
+## 编写构建脚本
+# vim build-command.sh
+#!/bin/bash
+docker build -t harbor.weixd.com/pub-image/nginx-base-wordpress:v1.20.2  .
+sleep 1
+docker push  harbor.weixd.com/pub-image/nginx-base-wordpress:v1.20.2
+
+## 执行构建
+bash build-command.sh
+</code></pre>
+<p>再制作一个用于wordpress 配置的nginx镜像</p>
+<pre><code class="language-shell"># pwd
+/opt/k8s-data/dockerfile/web/magedu/wordpress/nginx
+
+# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── index.html
+├── nginx.conf
+└── run_nginx.sh
+
+0 directories, 5 files
+
+
+## 编写Dockerfie
+# vim Dockerfile
+#FROM harbor.magedu.local/pub-images/nginx-base-wordpress:v1.20.2
+FROM harbor.weixd.com/pub-image/nginx-base-wordpress:v1.20.2
+
+ADD nginx.conf /apps/nginx/conf/nginx.conf
+ADD run_nginx.sh /apps/nginx/sbin/run_nginx.sh
+RUN mkdir -pv /home/nginx/wordpress
+RUN useradd nginx -u 2088 &amp;&amp; chown nginx.nginx /home/nginx/wordpress/ -R
+
+EXPOSE 80 443
+
+CMD [&quot;/apps/nginx/sbin/run_nginx.sh&quot;]
+
+##编写pod内守护进程文件
+# vim run_nginx.sh
+#!/bin/bash
+#echo &quot;nameserver 10.20.254.254&quot; &gt; /etc/resolv.conf
+#chown nginx.nginx /home/nginx/wordpress/ -R
+/apps/nginx/sbin/nginx
+tail -f /etc/hosts
+
+## 编写构建脚本
+# vim build-command.sh
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/wordpress-nginx:${TAG} .
+echo &quot;镜像制作完成，即将上传至Harbor服务器&quot;
+sleep 1
+docker push harbor.weixd.com/magedu/wordpress-nginx:${TAG}
+echo &quot;镜像上传完成&quot;
+
+## 执行构建
+bash build-command.sh v1.20.0
+</code></pre>
+<p>这个nginx镜像只做了动静分离，将php的请求转发给php pod，将默认路径指向/home/nginx/wordpress</p>
+<p>验证nginx镜像是否可用</p>
+<pre><code class="language-shell">docker run -it --rm harbor.weixd.com/magedu/wordpress-nginx:v1.20.0
+</code></pre>
+<h2 id="12-部署wordpress">1.2 部署wordpress</h2>
+<p>创建数据存储目录</p>
+<pre><code class="language-shell">mkdir -p /data/k8s/magedu/wordpress
+</code></pre>
+<p>编辑yaml文件</p>
+<pre><code class="language-shell">vim wordpress.yaml
+
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: wordpress-app
+  name: wordpress-app-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress-app
+  template:
+    metadata:
+      labels:
+        app: wordpress-app
+    spec:
+      containers:
+      - name: wordpress-app-nginx
+        image: harbor.weixd.com/magedu/wordpress-nginx:v1.20.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
+        volumeMounts:
+        - name: wordpress
+          mountPath: /home/nginx/wordpress
+          readOnly: false
+
+      - name: wordpress-app-php
+        image: harbor.weixd.com/magedu/wordpress-php-5.6:v1
+        #image: harbor.magedu.net/magedu/php:5.6.40-fpm
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+          name: http
+        volumeMounts:
+        - name: wordpress
+          mountPath: /home/nginx/wordpress
+          readOnly: false
+
+      volumes:
+      - name: wordpress
+        nfs:
+          server: 10.1.13.186
+          path: /data/k8s/magedu/wordpress
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: wordpress-app
+  name: wordpress-app-spec
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30031
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    nodePort: 30033
+  selector:
+    app: wordpress-app
+
+## 部署wordpress
+kubectl apply -f wordpress.yaml
+</code></pre>
+<p>创建PHP测试⻚<br>
+准备WordPress⻚⾯⽂件并更改权限为指定⽤户</p>
+<pre><code class="language-shell"># pwd
+/data/k8s/magedu/wordpress   ##wordpress数据存储目录
+
+创建php测试页
+# cat index.php
+&lt;?php
+    phpinfo();
+?&gt;
+</code></pre>
+<p>访问测试: 10.1.13.186:30031<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655609792985.png" alt="" loading="lazy"></p>
+<p>下载wordpress安装包到数据存储目录</p>
+<pre><code class="language-shell"># pwd 
+/data/k8s/magedu/wordpress
+
+# wget https://cn.wordpress.org/wordpress-6.0-zh_CN.tar.gz
+# tar -zxvf wordpress-6.0-zh_CN.tar.gz
+# mv wordpress/* .
+# rm wordpress-6.0-zh_CN.tar.gz -rf
+# rm wordpress/ -rf
+</code></pre>
+<p>添加负载均衡，通过负载均衡访问</p>
+<pre><code class="language-shell">vim /etc/haproxy/haproxy.cfg
+listen magedu-nginx-80
+  bind 10.1.13.186:80
+  mode tcp
+  server node1 10.1.13.188:30031 check inter 3s fall 3 rise 1
+  server node2 10.1.13.189:30031 check inter 3s fall 3 rise 1
+
+## 重启haproxy服务
+systemctl restart haproxy.service
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1655610695057.png" alt="" loading="lazy"></figure>
+<h2 id="13-初始化wordpress">1.3 初始化wordpress</h2>
+<p>进入nginx和php容器查看nginx用户的ID是否一致</p>
+<pre><code class="language-shell">## php容器
+# kubectl -n magedu exec -it wordpress-app-deployment-6948746f44-lzrfz -c wordpress-app-php -- bash
+[root@wordpress-app-deployment-6948746f44-lzrfz /]# id nginx
+uid=2088(nginx) gid=2088(nginx) groups=2088(nginx)
+
+## nginx容器
+# kubectl -n magedu exec -it wordpress-app-deployment-6948746f44-lzrfz -c wordpress-app-nginx -- bash
+[root@wordpress-app-deployment-6948746f44-lzrfz /]# id nginx
+uid=2088(nginx) gid=2088(nginx) groups=2088(nginx)
+</code></pre>
+<p>修改wordpress数据目录权限</p>
+<pre><code class="language-shell">
+# 更改权限
+# pwd
+/data/k8s/magedu
+
+chown 2088.2088 wordpress/ -R
+</code></pre>
+<p>k8s中MySQL创建数据库<br>
+使⽤k8s中运⾏的mysql服务，作为mysql服务器</p>
+<pre><code class="language-shell">#进入mysql master容器
+kubectl -n magedu exec -it mysql-0 -- bash
+
+..... 
+mysql&gt; CREATE DATABASE wordpress; 
+Query OK, 1 row affected (0.01 sec)
+
+mysql&gt; GRANT ALL PRIVILEGES ON wordpress.* TO &quot;wordpress&quot;@&quot;%&quot; IDENTIFIED BY &quot;wordpress&quot;;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql&gt; flush privileges;
+Query OK, 0 rows affected (0.09 sec)
+</code></pre>
+<p>wordpress页面初始化<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655611783602.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655611934607.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655612035839.png" alt="" loading="lazy"></p>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3/">
+            <span class="flex-auto">K8s实战</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  K8s实战：运⾏dubbo服务
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/YawT38S5G/">
+                <h3 class="post-title">
+                  K8s实战:  部署Jenkins
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

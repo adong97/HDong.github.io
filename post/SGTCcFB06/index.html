@@ -1,0 +1,756 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#zookeeper%E9%9B%86%E7%BE%A4%E4%B8%9A%E5%8A%A1%E8%BF%81%E7%A7%BB">zookeeper集群业务迁移</a>
+<ul>
+<li><a href="#21-%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">2.1 准备基础镜像</a></li>
+<li><a href="#12-k8s-%E8%BF%90%E8%A1%8Czookeeper%E6%9C%8D%E5%8A%A1">1.2 k8s 运⾏zookeeper服务</a></li>
+<li><a href="#13-%E9%AA%8C%E8%AF%81zookeeper%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81">1.3 验证zookeeper集群状态</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes实战
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s实战: zookeeper集群</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-06-19 / 10 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/SGTCcFB06.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="zookeeper集群业务迁移">zookeeper集群业务迁移</h1>
+<p>基于PV和PVC作为后端存储，实现zookeeper集群业务迁移</p>
+<h2 id="21-准备基础镜像">2.1 准备基础镜像</h2>
+<p>下载JDK镜像</p>
+<pre><code class="language-shell"># docker pull elevy/slim_java:8 
+# docker tag elevy/slim_java:8  harbor.weixd.com/magedu/slim_java:8
+# docker push harbor.weixd.com/magedu/slim_java:8
+</code></pre>
+<p>zookeeper镜像准备</p>
+<pre><code class="language-shell">官⽅程序包下载官⽅⽹址:
+https://www.apache.org/dist/zookeeper 
+</code></pre>
+<p>构建zookeeper镜像</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/dockerfile/linux36/zookeeper
+
+#修改Dockerfile
+#vim Dockefile
+FROM harbor.weixd.com/magedu/slim_java:8
+
+ENV ZK_VERSION 3.4.14
+ADD repositories /etc/apk/repositories
+# Download Zookeeper
+COPY zookeeper-3.4.14.tar.gz /tmp/zk.tgz
+COPY zookeeper-3.4.14.tar.gz.asc /tmp/zk.tgz.asc
+COPY KEYS /tmp/KEYS
+RUN apk add --no-cache --virtual .build-deps \
+      ca-certificates   \
+      gnupg             \
+      tar               \
+      wget &amp;&amp;           \
+    #
+    # Install dependencies
+    apk add --no-cache  \
+      bash &amp;&amp;           \
+    #
+    #
+    # Verify the signature
+    export GNUPGHOME=&quot;$(mktemp -d)&quot; &amp;&amp; \
+    gpg -q --batch --import /tmp/KEYS &amp;&amp; \
+    gpg -q --batch --no-auto-key-retrieve --verify /tmp/zk.tgz.asc /tmp/zk.tgz &amp;&amp; \
+    #
+    # Set up directories
+    #
+    mkdir -p /zookeeper/data /zookeeper/wal /zookeeper/log &amp;&amp; \
+    #
+    # Install
+    tar -x -C /zookeeper --strip-components=1 --no-same-owner -f /tmp/zk.tgz &amp;&amp; \
+    #
+    # Slim down
+    cd /zookeeper &amp;&amp; \
+    cp dist-maven/zookeeper-${ZK_VERSION}.jar . &amp;&amp; \
+    rm -rf \
+      *.txt \
+      *.xml \
+      bin/README.txt \
+      bin/*.cmd \
+      conf/* \
+      contrib \
+      dist-maven \
+      docs \
+      lib/*.txt \
+      lib/cobertura \
+      lib/jdiff \
+      recipes \
+      src \
+      zookeeper-*.asc \
+      zookeeper-*.md5 \
+      zookeeper-*.sha1 &amp;&amp; \
+    #
+    # Clean up
+    apk del .build-deps &amp;&amp; \
+    rm -rf /tmp/* &quot;$GNUPGHOME&quot;
+
+COPY conf /zookeeper/conf/
+COPY bin/zkReady.sh /zookeeper/bin/
+COPY entrypoint.sh /
+
+ENV PATH=/zookeeper/bin:${PATH} \
+    ZOO_LOG_DIR=/zookeeper/log \
+    ZOO_LOG4J_PROP=&quot;INFO, CONSOLE, ROLLINGFILE&quot; \
+    JMXPORT=9010
+
+ENTRYPOINT [ &quot;/entrypoint.sh&quot; ]
+
+CMD [ &quot;zkServer.sh&quot;, &quot;start-foreground&quot; ]
+
+EXPOSE 2181 2888 3888 9010
+</code></pre>
+<p>编写 entrypoint.sh</p>
+<pre><code class="language-shell">#!/bin/bash
+
+echo ${MYID:-1} &gt; /zookeeper/data/myid
+
+# 判断service是否为空
+if [ -n &quot;$SERVERS&quot; ]; then
+	IFS=\, read -a servers &lt;&lt;&lt;&quot;$SERVERS&quot;
+	for i in &quot;${!servers[@]}&quot;; do
+		printf &quot;\nserver.%i=%s:2888:3888&quot; &quot;$((1 + $i))&quot; &quot;${servers[$i]}&quot; &gt;&gt; /zookeeper/conf/zoo.cfg
+	done
+fi
+
+cd /zookeeper
+exec &quot;$@&quot;
+
+# 这个脚本的意思是获取zookeeper的 server id
+# 然后输出重定向到 /zookeeper/conf/zoo.cfg 文件
+</code></pre>
+<p>编写构建脚本</p>
+<pre><code class="language-shell"># vim  build-command.sh
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/zookeeper:${TAG} .
+sleep 1
+docker push harbor.weixd.com/magedu/zookeeper:${TAG}
+
+# chmod a+x *.sh 
+# bash build-command.sh v3.4.14
+</code></pre>
+<p>测试zookeeper镜像</p>
+<pre><code class="language-shell"># docker run -it --rm -p 2181:2181 harbor.weixd.com/magedu/zookeeper:v3.4.14
+</code></pre>
+<p>测试客户端连接zookeeper</p>
+<h2 id="12-k8s-运行zookeeper服务">1.2 k8s 运⾏zookeeper服务</h2>
+<p>通过yaml⽂件将zookeeper集群服务运⾏k8s环境</p>
+<p>yaml⽂件准备</p>
+<pre><code class="language-shell">yaml⽬录结构
+
+# pwd 
+/opt/k8s-data/yaml/magedu/zookeeper
+
+# tree .
+├── pv 
+│     ├── zookeeper-persistentvolumeclaim.yaml
+│     └── zookeeper-persistentvolume.yaml 
+└── zookeeper.yaml
+
+1 directory, 3 files
+</code></pre>
+<p>创建PV</p>
+<pre><code class="language-shell"># pwd
+ /opt/k8s-data/yaml/magedu/zookeeper/pv
+
+root@k8s-master01:# vim zookeeper-persistentvolume.yaml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-datadir-pv-1
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/zookeeper-datadir-1
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-datadir-pv-2
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/zookeeper-datadir-2
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zookeeper-datadir-pv-3
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/zookeeper-datadir-3
+
+# kubectl apply -f zookeeper-persistentvolume.yaml 
+</code></pre>
+<p>创建PVC</p>
+<pre><code class="language-shell"># pwd
+ /opt/k8s-data/yaml/magedu/zookeeper/pv
+
+root@k8s-master01:# cat zookeeper-persistentvolumeclaim.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-datadir-pvc-1
+  namespace: magedu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: zookeeper-datadir-pv-1
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-datadir-pvc-2
+  namespace: magedu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: zookeeper-datadir-pv-2
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-datadir-pvc-3
+  namespace: magedu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeName: zookeeper-datadir-pv-3
+  resources:
+    requests:
+      storage: 10Gi
+
+# kubectl apply -f zookeeper-persistentvolumeclaim.yaml 
+</code></pre>
+<p>运⾏zookeeper集群</p>
+<pre><code class="language-shell"># pwd 
+/opt/k8s-data/yaml/magedu/zookeeper
+
+root@k8s-master01:# cat zookeeper.yaml
+# 这个 svc 是给 K8S 集群来使用的
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: magedu
+spec:
+  ports:
+    - name: client
+      port: 2181
+  selector:
+    app: zookeeper
+---
+# 这个 svc 是通过 nodeport 的方式给 K8S 集群外的服务来访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper1
+  namespace: magedu
+spec:
+  type: NodePort                             # svc 类型为 nodeport
+  ports:                                            # 端口信息
+    - name: client                              
+      port: 2181                                 # pod 内端口
+      nodePort: 32181                       # 绑定在 node 上的端口
+    - name: followers                        # zookeeper 集群内通讯使用(Leader监听此端口)
+      port: 2888                                  
+    - name: election
+      port: 3888                                 # zookeeper 集群内部选举端口 3888
+  selector:                                        # SVC 标签选择器
+    app: zookeeper                           # 匹配 app=zookeeper  的 pod 
+    server-id: &quot;1&quot;                               # 匹配 server-id= &quot;1&quot; 的 pod，用来选举 leader
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper2
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+    - name: client
+      port: 2181
+      nodePort: 32182
+    - name: followers
+      port: 2888
+    - name: election
+      port: 3888
+  selector:
+    app: zookeeper
+    server-id: &quot;2&quot;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper3
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+    - name: client
+      port: 2181
+      nodePort: 32183
+    - name: followers
+      port: 2888
+    - name: election
+      port: 3888
+  selector:
+    app: zookeeper
+    server-id: &quot;3&quot;
+---
+# zookeeper Deployment 信息
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  name: zookeeper1
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper                              # 定义 app=zookeeper 标签
+  template:
+    metadata:
+      labels:
+        app: zookeeper                           # 定义 pod 标配 app=zookeeper 给 Deployment 匹配
+        server-id: &quot;1&quot;                               # 定义 server-id=&quot;1&quot; 标签给 svc 匹配
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: wal
+          emptyDir:
+            medium: Memory
+      containers:
+        - name: server
+          image: harbor.weixd.com/magedu/zookeeper:v3.4.14
+          imagePullPolicy: Always
+          env:
+            - name: MYID
+              value: &quot;1&quot;
+            - name: SERVERS            # 传入变量 servers 对应 entrypoint.sh 脚本中的 servers 调用
+              value: &quot;zookeeper1,zookeeper2,zookeeper3&quot;
+            - name: JVMFLAGS        # 设置 jvm 内存大小的文件变量
+              value: &quot;-Xmx2G&quot;
+          ports:                               # 监听端口信息
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+          volumeMounts:               # pod 挂载信息
+          - mountPath: &quot;/zookeeper/data&quot;    # 挂载到容器目录，打镜像时指定 zoo.cfg 文件里有
+            name: zookeeper-datadir-pvc-1    # 匹配需要挂载卷的名称
+      volumes:
+        - name: zookeeper-datadir-pvc-1    # 提供给 pod 的挂载名字
+          persistentVolumeClaim:                   # pvc
+            claimName: zookeeper-datadir-pvc-1   # 指定需要匹配的 pvc 名字
+---
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  name: zookeeper2
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        server-id: &quot;2&quot;
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: wal
+          emptyDir:
+            medium: Memory
+      containers:
+        - name: server
+          image: harbor.weixd.com/magedu/zookeeper:v3.4.14
+          imagePullPolicy: Always
+          env:
+            - name: MYID
+              value: &quot;2&quot;
+            - name: SERVERS
+              value: &quot;zookeeper1,zookeeper2,zookeeper3&quot;
+            - name: JVMFLAGS
+              value: &quot;-Xmx2G&quot;
+          ports:
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+          volumeMounts:
+          - mountPath: &quot;/zookeeper/data&quot;
+            name: zookeeper-datadir-pvc-2
+      volumes:
+        - name: zookeeper-datadir-pvc-2
+          persistentVolumeClaim:
+            claimName: zookeeper-datadir-pvc-2
+---
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  name: zookeeper3
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        server-id: &quot;3&quot;
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: wal
+          emptyDir:
+            medium: Memory
+      containers:
+        - name: server
+          image: harbor.magedu.net/magedu/zookeeper:v3.4.14
+          imagePullPolicy: Always
+          env:
+            - name: MYID
+              value: &quot;3&quot;
+            - name: SERVERS
+              value: &quot;zookeeper1,zookeeper2,zookeeper3&quot;
+            - name: JVMFLAGS
+              value: &quot;-Xmx2G&quot;
+          ports:
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+          volumeMounts:
+          - mountPath: &quot;/zookeeper/data&quot;
+            name: zookeeper-datadir-pvc-3
+      volumes:
+        - name: zookeeper-datadir-pvc-3
+          persistentVolumeClaim:
+           claimName: zookeeper-datadir-pvc-3
+
+# kubectl apply -f zookeeper.yaml
+# kubectl get pod -n magedu
+
+# kubectl exec -it zookeeper2-5844958588-9gvjh sh -n magedu
+
+删除期中⼀个pod，⽐如删除leader，验证在其余两个pod是否能自动选举出新的leader，
+然后验证删除的pod重建后是否以follower的身份加⼊到zookeeper集群中。
+</code></pre>
+<h2 id="13-验证zookeeper集群状态">1.3 验证zookeeper集群状态</h2>
+<pre><code class="language-shell"># 进入 zookeeper1 的 pod 中
+# kubectl -n magedu exec -it zookeeper1-7478b4cd96-fq4hx -- bash
+​
+# 查看当前 zookeeper 状态
+bash-4.3# /zookeeper/bin/zkServer.sh status
+ZooKeeper JMX enabled by default
+ZooKeeper remote JMX Port set to 9010
+ZooKeeper remote JMX authenticate set to false
+ZooKeeper remote JMX ssl set to false
+ZooKeeper remote JMX log4j set to true
+Using config: /zookeeper/bin/../conf/zoo.cfg
+Mode: follower          # 模式为 follower 或者 leader 就表示 zookeeper 集群部署成功
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3/">
+            <span class="flex-auto">K8s实战</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  K8s实战：Redis 业务容器化
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/">
+                <h3 class="post-title">
+                  K8s实战: Nginx+Tomcat 动静分离
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

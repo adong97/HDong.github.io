@@ -1,0 +1,480 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-%E8%BF%90%E8%A1%8Cjava%E5%BA%94%E7%94%A8">一、运行Java应用</a>
+<ul>
+<li><a href="#11-%E6%9E%84%E5%BB%BA%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">1.1 构建基础镜像</a></li>
+<li><a href="#12-%E8%BF%90%E8%A1%8Cjenkins%E5%BA%94%E7%94%A8">1.2 运行Jenkins应用</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes实战
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s实战:  部署Jenkins</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-06-19 / 4 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/YawT38S5G.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="一-运行java应用">一、运行Java应用</h1>
+<p>基于java命令，运⾏java war包或jar包，本次以jenkins.war 包部署⽅式为例，且要求jenkins的数据保存⾄外部存储(NFS或者PVC)，其他java应⽤看实际需求是否需要将数据保存⾄外部存储。</p>
+<h2 id="11-构建基础镜像">1.1 构建基础镜像</h2>
+<p>镜像目录文件</p>
+<pre><code class="language-shell"> ~# pwd
+/opt/k8s-data/dockerfile/web/magedu/jenkins
+
+# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── jenkins-2.319.2.war
+└── run_jenkins.sh
+
+0 directories, 4 files
+</code></pre>
+<p>构建Jenkins镜像</p>
+<pre><code class="language-shell"># cat Dockerfile
+#Jenkins Version 2.190.1
+FROM harbor.weixd.com/pub-image/jdk-base:v8.212
+
+MAINTAINER weixd wxdongself@163.com
+
+ADD jenkins-2.319.2.war /apps/jenkins/jenkins.war
+ADD run_jenkins.sh /usr/bin/
+
+
+EXPOSE 8080
+
+CMD [&quot;/usr/bin/run_jenkins.sh&quot;]
+
+启动脚本
+# cat run_jenkins.sh
+#!/bin/bash
+cd /apps/jenkins &amp;&amp; java -server -Xms1024m -Xmx1024m -Xss512k -jar jenkins.war --webroot=/apps/jenkins/jenkins-data --httpPort=8080
+
+
+# cat build-command.sh
+#!/bin/bash
+docker build -t  harbor.weixd.com/magedu/jenkins:v2.319.2 .
+echo &quot;镜像制作完成，即将上传至Harbor服务器&quot;
+sleep 1
+docker push harbor.weixd.com/magedu/jenkins:v2.319.2
+echo &quot;镜像上传完成&quot;
+
+执行构建Jenkins
+# bash build-command.sh
+</code></pre>
+<p>验证Jenkins镜像</p>
+<pre><code class="language-shell"># docker run -it --rm -p 8088:8080 harbor.weixd.com/magedu/jenkins:v2.319.2
+</code></pre>
+<h2 id="12-运行jenkins应用">1.2 运行Jenkins应用</h2>
+<ol>
+<li>创建PV/PVC<br>
+需要两个PVC，⼀个保存jenkins的数据，⼀个保存.jenkins的数据。</li>
+</ol>
+<pre><code class="language-shell">创建数据目录
+# mkdir -p /data/k8s/magedu/{jenkins-data,jenkins-root-data}
+
+
+vim jenkins-persistentvolume.yaml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-datadir-pv
+  namespace: magedu
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/jenkins-data
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-root-datadir-pv
+  namespace: magedu
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/jenkins-root-data
+
+
+vim jenkins-persistentvolumeclaim.yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-datadir-pvc
+  namespace: magedu
+spec:
+  volumeName: jenkins-datadir-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 80Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-root-data-pvc
+  namespace: magedu
+spec:
+  volumeName: jenkins-root-datadir-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 80Gi
+
+</code></pre>
+<p>创建PV/PVC</p>
+<pre><code class="language-shell"># kubectl apply -f jenkins-persistentvolume.yaml
+
+# kubectl apply -f jenkins-persistentvolumeclaim.yaml
+
+# kubectl -n magedu get pv,pvc
+</code></pre>
+<ol start="2">
+<li>部署Jenkins服务</li>
+</ol>
+<pre><code class="language-shell">vim  jenkins.yaml
+
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-jenkins
+  name: magedu-jenkins-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-jenkins
+  template:
+    metadata:
+      labels:
+        app: magedu-jenkins
+    spec:
+      containers:
+      - name: magedu-jenkins-container
+        image: harbor.weixd.com/magedu/jenkins:v2.319.2
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        volumeMounts:
+        - mountPath: &quot;/apps/jenkins/jenkins-data/&quot;
+          name: jenkins-datadir-magedu
+        - mountPath: &quot;/root/.jenkins&quot;
+          name: jenkins-root-datadir
+      volumes:
+        - name: jenkins-datadir-magedu
+          persistentVolumeClaim:
+            claimName: jenkins-datadir-pvc
+        - name: jenkins-root-datadir
+          persistentVolumeClaim:
+            claimName: jenkins-root-data-pvc
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-jenkins
+  name: magedu-jenkins-service
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30880
+  selector:
+    app: magedu-jenkins
+
+</code></pre>
+<p>部署Jenkins</p>
+<pre><code class="language-shell"># kubectl apply -f jenkins.yaml
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3/">
+            <span class="flex-auto">K8s实战</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/H9pWSC0aq/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  K8s实战: 部署WordPress
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/554ZzYvc5/">
+                <h3 class="post-title">
+                  K8s实战: MySQL 主从
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

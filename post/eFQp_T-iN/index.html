@@ -1,0 +1,796 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655617177478">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655617177478" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-%E5%8D%95%E6%9C%BA-redis-%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8%E5%8C%96">一、单机 Redis 业务容器化</a>
+<ul>
+<li><a href="#11-%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E9%95%9C%E5%83%8F">1.1 准备基础镜像</a></li>
+<li><a href="#22-k8s%E5%BA%94%E7%94%A8-redis-%E6%9C%8D%E5%8A%A1">2.2 K8s应用 redis 服务</a></li>
+<li><a href="#13-%E8%AE%BF%E9%97%AE%E6%B5%8B%E8%AF%95">1.3 访问测试</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-redis-cluster%E4%B8%9A%E5%8A%A1%E5%AE%B9%E5%99%A8%E5%8C%96">二、Redis Cluster业务容器化</a>
+<ul>
+<li><a href="#21-%E5%88%9B%E5%BB%BApv%E5%92%8Cpvc">2.1 创建PV和PVC</a></li>
+<li><a href="#22-%E5%88%9B%E5%BB%BAredisconf%E6%96%87%E4%BB%B6">2.2 创建redis.conf文件</a></li>
+<li><a href="#23-%E9%83%A8%E7%BD%B2redis-cluster">2.3 部署redis cluster</a></li>
+<li><a href="#24-%E5%88%9D%E5%A7%8B%E5%8C%96redis-cluster">2.4 初始化redis cluster</a></li>
+<li><a href="#25-%E9%AA%8C%E8%AF%81redis-cluster%E7%8A%B6%E6%80%81">2.5 验证redis cluster状态</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes实战
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s实战：Redis 业务容器化</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-06-19 / 12 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/eFQp_T-iN.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="一-单机-redis-业务容器化">一、单机 Redis 业务容器化</h1>
+<p>在k8s环境中运⾏redis服务</p>
+<h2 id="11-准备基础镜像">1.1 准备基础镜像</h2>
+<pre><code class="language-shell">~#pwd
+/opt/k8s-data/dockerfile/web/magedu/redis
+
+~# tree .
+.
+├── Dockerfile
+├── build-command.sh
+├── redis-4.0.14.tar.gz
+├── redis.conf
+└── run_redis.sh
+
+0 directories, 5 files
+</code></pre>
+<p>编辑Dockerfile</p>
+<pre><code class="language-shell">vim Dockerfile
+
+#Redis Image
+FROM harbor.weixd.com/baseimage/magedu-centos-base:7.9.2009
+
+MAINTAINER weixd &quot;weixdself@163.com&quot;
+
+ADD redis-4.0.14.tar.gz /usr/local/src
+RUN ln -sv /usr/local/src/redis-4.0.14 /usr/local/redis &amp;&amp; cd /usr/local/redis &amp;&amp; make &amp;&amp; cp src/redis-cli /usr/sbin/ &amp;&amp; cp src/redis-server  /usr/sbin/ &amp;&amp; mkdir -pv /data/redis-data
+ADD redis.conf /usr/local/redis/redis.conf
+ADD run_redis.sh /usr/local/redis/run_redis.sh
+
+EXPOSE 6379
+
+CMD [&quot;/usr/local/redis/run_redis.sh&quot;]
+
+</code></pre>
+<p>在构建镜像得时候，会将redis.conf配置文件添加到镜像当中。因此，需要提前做好配置优化，包括快照触发参数等</p>
+<pre><code class="language-shell">vim redis.conf 
+
+save 900 1
+save 5 1
+save 300 10
+save 60 10000
+
+requirepass 123456  #配置redis密码
+</code></pre>
+<p>在Dockerfile中添加run_redis.sh文件，主要是为了将redis跑起来</p>
+<pre><code class="language-shell">vim run_redis.sh
+
+#!/bin/bash
+/usr/sbin/redis-server /usr/local/redis/redis.conf  #启动redis服务
+tail -f  /etc/hosts  # 作为守护进程
+</code></pre>
+<p>执行构建脚本</p>
+<pre><code class="language-shell">vim build-command.sh
+
+#!/bin/bash
+TAG=$1
+docker build -t harbor.weixd.com/magedu/redis:${TAG} .
+sleep 3
+docker push  harbor.weixd.com/magedu/redis:${TAG}
+
+##开始构建镜像
+bash build-command.sh 4.0.14
+</code></pre>
+<p>测试redis镜像是否可用</p>
+<pre><code class="language-shell">~# docker run -it -p 6379:6379 harbor.weixd.com/magedu/redis:4.0.14
+</code></pre>
+<h2 id="22-k8s应用-redis-服务">2.2 K8s应用 redis 服务</h2>
+<p>基于PV/PVC保存数据，实现k8s中运⾏Redis服务</p>
+<p>创建PV</p>
+<pre><code class="language-shell">vim redis-persistentvolume.yaml
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-datadir-pv-1
+  namespace: magedu
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    path: /data/k8s/magedu/redis-datadir-1
+    server: 10.1.13.186
+
+~# kubectl apply -f redis-persistentvolume.yaml
+</code></pre>
+<p>创建PVC</p>
+<pre><code class="language-shell">vim redis-persistentvolumeclaim.yaml
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-datadir-pvc-1
+  namespace: magedu
+spec:
+  volumeName: redis-datadir-pv-1
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+~# kubectl apply -f redis-persistentvolumeclaim.yaml
+</code></pre>
+<p>创建redis服务</p>
+<pre><code class="language-shell">vim redis.yaml
+
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: devops-redis
+  name: deploy-devops-redis
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-redis
+  template:
+    metadata:
+      labels:
+        app: devops-redis
+    spec:
+      containers:
+        - name: redis-container
+          image: harbor.weixd.com/magedu/redis:4.0.14
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: &quot;/data/redis-data/&quot;
+            name: redis-datadir
+      volumes:
+        - name: redis-datadir
+          persistentVolumeClaim:
+            claimName: redis-datadir-pvc-1
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: devops-redis
+  name: srv-devops-redis
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 6379
+    targetPort: 6379
+    nodePort: 30379
+  selector:
+    app: devops-redis
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+
+~# kubectl apply -f redis.yaml
+</code></pre>
+<h2 id="13-访问测试">1.3 访问测试</h2>
+<pre><code class="language-shell">~# telnet redis-cli -h 10.1.13.186 -p 36379 -a 123456
+Trying 10.1.13.186...
+Connected to 10.1.13.186.
+Escape character is '^]'.
+</code></pre>
+<h1 id="二-redis-cluster业务容器化">二、Redis Cluster业务容器化</h1>
+<ul>
+<li>创建PV和PVC</li>
+<li>部署redis cluster</li>
+<li>初始化redis cluster</li>
+<li>验证redis cluser状态</li>
+<li>验证redis cluster高可用</li>
+</ul>
+<p>本次Redis Cliuster业务容器化，使用Redis 5.0.14版本。</p>
+<h2 id="21-创建pv和pvc">2.1 创建PV和PVC</h2>
+<p>创建PV</p>
+<pre><code class="language-shell"># 创建持久化储存目录
+~# mkdir -p /data/k8s/magedu/{redis0,redis1,redis2,redis3,redis4,redis5}
+
+# 创建PV
+~# vim redis-cluster-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv0
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis0
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv1
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis1
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv2
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis2
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv3
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis3
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv4
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis4
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-cluster-pv5
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 10.1.13.186
+    path: /data/k8s/magedu/redis5
+
+~# kubectl apply -f redis-cluster-pv.yaml
+~# kubectl -n magedu get pv
+</code></pre>
+<h2 id="22-创建redisconf文件">2.2 创建redis.conf文件</h2>
+<p>redis cluster配置文件,以configmap得形式给集群提供。</p>
+<pre><code class="language-shell">~# cat redis.conf
+
+appendonly yes   #打开aof文件
+cluster-enabled yes #开启集群，必须打开
+cluster-config-file /var/lib/redis/nodes.conf  #集群配置文件，自动生成
+cluster-node-timeout 5000  #集群初始化超时时间
+dir /var/lib/redis  #数据目录
+port 6379  #端口
+</code></pre>
+<h2 id="23-部署redis-cluster">2.3 部署redis cluster</h2>
+<p>基于redis.conf创建cpnfigmap</p>
+<pre><code class="language-shell">~# kubectl -n  magedu create configmap redis-conf --from-file=redis.conf
+configmap/redis-conf created
+
+~# kubectl -n magedu describe configmaps redis-conf
+</code></pre>
+<p>部署redis集群</p>
+<pre><code class="language-shell">~# vim  redis.yaml
+
+## 这个SVC用于K8S内部访问
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: magedu
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+    appCluster: redis-cluster
+  ports:
+  - name: redis
+    port: 6379
+  clusterIP: None
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-access
+  namespace: magedu
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+    appCluster: redis-cluster
+  ports:
+  - name: redis-access
+    protocol: TCP
+    port: 6379
+    targetPort: 6379
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: magedu
+spec:
+  serviceName: redis
+  replicas: 6
+  selector:
+    matchLabels:
+      app: redis
+      appCluster: redis-cluster
+  template:
+    metadata:
+      labels:
+        app: redis
+        appCluster: redis-cluster
+    spec:
+      terminationGracePeriodSeconds: 20
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - redis
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: redis
+        image: harbor.weixd.com/magedu/redis:5.0.14
+        command:
+          - &quot;redis-server&quot;
+        args:
+          - &quot;/etc/redis/redis.conf&quot;  #配置文件
+          - &quot;--protected-mode&quot;  # 不打开安全模式
+          - &quot;no&quot;
+        resources:
+          requests:
+            cpu: &quot;500m&quot;
+            memory: &quot;500Mi&quot;
+        ports:
+        - containerPort: 6379
+          name: redis
+          protocol: TCP
+        - containerPort: 16379
+          name: cluster
+          protocol: TCP
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/redis
+        - name: data
+          mountPath: /var/lib/redis
+      volumes:
+      - name: conf
+        configMap:
+          name: redis-conf
+          items:
+          - key: redis.conf
+            path: redis.conf
+  volumeClaimTemplates:  #通过PVC模板文件创建
+  - metadata:
+      name: data
+      namespace: magedu
+    spec:
+      accessModes: [ &quot;ReadWriteOnce&quot; ]  #权限，每个PVC以读写得方式被单个挂载
+      resources:
+        requests:
+          storage: 5Gi
+
+创建redis pod和svc
+~# kubectl apply -f redis.yaml
+~# kubectl -n magedu get pod -o wide
+</code></pre>
+<h2 id="24-初始化redis-cluster">2.4 初始化redis cluster</h2>
+<p>初始化只需要初始化一次，redis 4及之前的版本需要使用redis-tribe工具进行初始化，redis 5开始使用redis-cli。</p>
+<pre><code class="language-shell">可以通过kubectl查询各pod ip地址
+~# kubectl -n magedu get pod -o wide
+redis-0                                          1/1     Running   0          23m    10.200.58.211    10.1.13.189   &lt;none&gt;           &lt;none&gt;
+redis-1                                          1/1     Running   0          23m    10.200.135.155   10.1.13.190   &lt;none&gt;           &lt;none&gt;
+redis-2                                          1/1     Running   0          23m    10.200.85.223    10.1.13.188   &lt;none&gt;           &lt;none&gt;
+redis-3                                          1/1     Running   0          23m    10.200.58.212    10.1.13.189   &lt;none&gt;           &lt;none&gt;
+redis-4                                          1/1     Running   0          23m    10.200.135.156   10.1.13.190   &lt;none&gt;           &lt;none&gt;
+redis-5                                          1/1     Running   0          22m    10.200.85.224    10.1.13.188   &lt;none&gt;           &lt;none&gt;
+
+
+进入redis-0pod容器中，进行redis cluster初始化。
+~# kubectl -n magedu exec -it redis-0 -- bash
+
+/]# redis-cli --cluster create 10.200.58.211:6379 10.200.135.155:6379 10.200.85.223:6379 10.200.58.212:6379 10.200.135.156:6379 10.200.85.224:6379 --cluster-replicas 1
+
+&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...
+Master[0] -&gt; Slots 0 - 5460
+Master[1] -&gt; Slots 5461 - 10922
+Master[2] -&gt; Slots 10923 - 16383
+Adding replica 10.200.135.156:6379 to 10.200.58.211:6379
+Adding replica 10.200.85.224:6379 to 10.200.135.155:6379
+Adding replica 10.200.58.212:6379 to 10.200.85.223:6379
+M: 8d0af97e692ba28ae87be05240d93d2ca07be1c6 10.200.58.211:6379
+   slots:[0-5460] (5461 slots) master
+M: cdfbef93c3e9716350f1033e474915afd01024e8 10.200.135.155:6379
+   slots:[5461-10922] (5462 slots) master
+M: b11d3a98a633f088fc372783ee25d5345cf99265 10.200.85.223:6379
+   slots:[10923-16383] (5461 slots) master
+S: 73a2e874cfe298c6e121f006cdadcdf3ef396fdf 10.200.58.212:6379
+   replicates b11d3a98a633f088fc372783ee25d5345cf99265
+S: f8fbe20b135d561b1d32d682299733f66d948ee0 10.200.135.156:6379
+   replicates 8d0af97e692ba28ae87be05240d93d2ca07be1c6
+S: 25f994e4b9fc3544b83ea4b4614b657401e018db 10.200.85.224:6379
+   replicates cdfbef93c3e9716350f1033e474915afd01024e8
+Can I set the above configuration? (type 'yes' to accept): yes
+&gt;&gt;&gt; Nodes configuration updated
+&gt;&gt;&gt; Assign a different config epoch to each node
+&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster
+Waiting for the cluster to join
+
+&gt;&gt;&gt; Performing Cluster Check (using node 10.200.58.211:6379)
+M: 8d0af97e692ba28ae87be05240d93d2ca07be1c6 10.200.58.211:6379
+   slots:[0-5460] (5461 slots) master
+   1 additional replica(s)
+S: 25f994e4b9fc3544b83ea4b4614b657401e018db 10.200.85.224:6379
+   slots: (0 slots) slave
+   replicates cdfbef93c3e9716350f1033e474915afd01024e8
+M: cdfbef93c3e9716350f1033e474915afd01024e8 10.200.135.155:6379
+   slots:[5461-10922] (5462 slots) master
+   1 additional replica(s)
+S: f8fbe20b135d561b1d32d682299733f66d948ee0 10.200.135.156:6379
+   slots: (0 slots) slave
+   replicates 8d0af97e692ba28ae87be05240d93d2ca07be1c6
+M: b11d3a98a633f088fc372783ee25d5345cf99265 10.200.85.223:6379
+   slots:[10923-16383] (5461 slots) master
+   1 additional replica(s)
+S: 73a2e874cfe298c6e121f006cdadcdf3ef396fdf 10.200.58.212:6379
+   slots: (0 slots) slave
+   replicates b11d3a98a633f088fc372783ee25d5345cf99265
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+</code></pre>
+<p>初始化完成</p>
+<h2 id="25-验证redis-cluster状态">2.5 验证redis cluster状态</h2>
+<pre><code class="language-shell">[root@redis-0 /]# redis-cli
+127.0.0.1:6379&gt; CLUSTER INFO
+cluster_state:ok
+cluster_slots_assigned:16384
+cluster_slots_ok:16384
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:3
+cluster_current_epoch:6
+cluster_my_epoch:1
+cluster_stats_messages_ping_sent:185
+cluster_stats_messages_pong_sent:191
+cluster_stats_messages_sent:376
+cluster_stats_messages_ping_received:186
+cluster_stats_messages_pong_received:185
+cluster_stats_messages_meet_received:5
+cluster_stats_messages_received:376
+
+127.0.0.1:6379&gt; CLUSTER NODES
+8d0af97e692ba28ae87be05240d93d2ca07be1c6 10.200.58.211:6379@16379 myself,master - 0 1655306939000 1 connected 0-5460
+25f994e4b9fc3544b83ea4b4614b657401e018db 10.200.85.224:6379@16379 slave cdfbef93c3e9716350f1033e474915afd01024e8 0 1655306941502 6 connected
+cdfbef93c3e9716350f1033e474915afd01024e8 10.200.135.155:6379@16379 master - 0 1655306942706 2 connected 5461-10922
+f8fbe20b135d561b1d32d682299733f66d948ee0 10.200.135.156:6379@16379 slave 8d0af97e692ba28ae87be05240d93d2ca07be1c6 0 1655306942000 5 connected
+b11d3a98a633f088fc372783ee25d5345cf99265 10.200.85.223:6379@16379 master - 0 1655306941502 3 connected 10923-16383
+73a2e874cfe298c6e121f006cdadcdf3ef396fdf 10.200.58.212:6379@16379 slave b11d3a98a633f088fc372783ee25d5345cf99265 0 1655306941000 4 connected
+
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3/">
+            <span class="flex-auto">K8s实战</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/554ZzYvc5/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  K8s实战: MySQL 主从
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/SGTCcFB06/">
+                <h3 class="post-title">
+                  K8s实战: zookeeper集群
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

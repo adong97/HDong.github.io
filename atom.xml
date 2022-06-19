@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-06-18T17:22:42.521Z</updated>
+    <updated>2022-06-19T05:39:44.163Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -11,7 +11,49 @@
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[K8s应用业务迁移]]></title>
+        <title type="html"><![CDATA[K8s实战：运⾏dubbo服务]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/">
+        </link>
+        <updated>2022-06-19T05:27:58.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战: 部署WordPress]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/H9pWSC0aq/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/H9pWSC0aq/">
+        </link>
+        <updated>2022-06-19T05:26:21.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战:  部署Jenkins]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/YawT38S5G/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/YawT38S5G/">
+        </link>
+        <updated>2022-06-19T05:24:44.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战: MySQL 主从]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/554ZzYvc5/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/554ZzYvc5/">
+        </link>
+        <updated>2022-06-19T05:23:08.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战：Redis 业务容器化]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/">
+        </link>
+        <updated>2022-06-19T05:20:58.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战: zookeeper集群]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/SGTCcFB06/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/SGTCcFB06/">
+        </link>
+        <updated>2022-06-19T05:18:12.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s实战: Nginx+Tomcat 动静分离]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/">
         </link>
@@ -37,47 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/V-rgl2QeO/">
         </link>
         <updated>2022-04-18T09:30:13.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[istio流量分发控制]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/pwnFEY3H_/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/pwnFEY3H_/">
-        </link>
-        <updated>2022-04-18T09:27:24.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[服务网格细节剖析]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/8eDIzWC3e/">
-        </link>
-        <updated>2022-04-18T09:25:01.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[基于Istio实现微服务治理]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/iDScWi09A/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/iDScWi09A/">
-        </link>
-        <updated>2022-04-18T09:17:30.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[调用链路追踪]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/jhS7DKoeK/">
-        </link>
-        <updated>2022-04-18T09:15:50.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[微服务网关]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/cnkwz7WlR/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/cnkwz7WlR/">
-        </link>
-        <updated>2022-04-18T09:14:43.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hystrix 断路器]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/l_BDakLb3/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/l_BDakLb3/">
-        </link>
-        <updated>2022-04-18T09:13:54.000Z</updated>
     </entry>
 </feed>
