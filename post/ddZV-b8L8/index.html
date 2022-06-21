@@ -1,0 +1,436 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655829614839">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655829614839" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#k8s%E4%B8%AD%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6%E6%A6%82%E6%8B%AC">K8s中资源限制概括</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%B8%AA%E5%AE%B9%E5%99%A8container%E7%9A%84cpu%E5%8F%8Amemory%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">实现单个容器(container)的CPU及memory资源限制</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E5%AF%B9%E5%8D%95%E4%B8%AApod%E7%9A%84cpu%E5%8F%8Amemory%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">实现对单个pod的CPU及memory资源限制</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes实战
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">kubernetes 资源限制</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-06-20 / 7 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ddZV-b8L8.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="k8s中资源限制概括">K8s中资源限制概括</h1>
+<ol>
+<li>
+<p>如果运行的容器没有定义资源(memory、CPU)等限制，但是在namespace定义了LimitRange限制，那么该容器会继承LimitRange中的默认限制。</p>
+</li>
+<li>
+<p>如果namespace没有定义LimitRange限制，那么该容器可以只要宿主机的最大可用资源，直到无资源可用而触发宿主机(OOM Killer)。</p>
+</li>
+</ol>
+<pre><code class="language-shell">https://kubernetes.io/zh/docs/tasks/configure-pod-container/assign-cpu-resource/ 
+CPU 以核心为单位进行限制，单位可以是整核、浮点核心数或毫核(m/milli)： 
+2=2核心=200%  0.5=500m=50%  1.2=1200m=120%
+
+https://kubernetes.io/zh/docs/tasks/configure-pod-container/assign-memory-resource/ 
+memory 以字节为单位,单位可以是E、P、T、G、M、K、Ei、Pi、Ti、Gi、Mi、Ki 
+1536Mi=1.5Gi
+</code></pre>
+<ul>
+<li>CPU 以核心为单位</li>
+<li>memory 以字节为单位</li>
+<li>limits 为 pod 运行成功后最多可以使用的资源上限。</li>
+</ul>
+<p><strong>requests</strong>(请求)为kubernetes scheduler执行pod调度时node节点至少需要拥有的资源。<br>
+<strong>limits</strong>(限制)为pod运行成功后最多可以使用的资源上限。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655740054708.png" alt="" loading="lazy"></p>
+<p>在工作中各个服务之间的推荐限制：</p>
+<ul>
+<li>nginx：2C 2G</li>
+<li>微服务：2G 2G</li>
+<li>数据库：mysql/ES：4C 6G</li>
+</ul>
+<h1 id="实现单个容器container的cpu及memory资源限制">实现单个容器(container)的CPU及memory资源限制</h1>
+<p>主要是限制单个服务中使用过多的内存<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1655826934432.png" alt="" loading="lazy"><br>
+在yaml文件中定义resources字段，添加资源限制。</p>
+<p>编写控制器<br>
+<em>vim pod-memory-limit.yml</em></p>
+<pre><code class="language-shell">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: limit-test-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels: #rs or deployment
+      app: limit-test-pod
+  template:
+    metadata:
+      labels:
+        app: limit-test-pod
+    spec:
+      containers:        # 这个容器专门用于压力测试
+      - name: limit-test-container
+        image: lorel/docker-stress-ng
+        resources:       # 资源限制
+          limits:
+            cpu: &quot;1.3&quot;                   # 容器最多使用1.3核CPU
+            memory: &quot;256Mi&quot;      # 容器最多使用256Mi内存资源
+          requests:
+            cpu: &quot;500m&quot;              # 被调度的 node 必须要有指定的资源
+            memory: &quot;100Mi&quot;      
+        args: [&quot;--vm&quot;, &quot;2&quot;, &quot;--vm-bytes&quot;, &quot;256M&quot;] #给容器传递参数，创建两个进程，每个进程占用256M内存
+</code></pre>
+<p>创建资源</p>
+<pre><code class="language-shell">kubectl apply -f pod-memory-limit.yml
+</code></pre>
+<p>通过top命令查看</p>
+<pre><code class="language-shell">kubectl top pod -n magedu
+NAME                                     CPU(cores)   MEMORY(bytes)   
+limit-test-deployment-7545f64fcc-xzvtd   202m         196Mi 
+</code></pre>
+<h1 id="实现对单个pod的cpu及memory资源限制">实现对单个pod的CPU及memory资源限制</h1>
+<p><strong>Limit Range</strong>是对具体某个Pod或容器的资源使用进行限制<br>
+https://kubernetes.io/zh/docs/concepts/policy/limit-range/</p>
+<p>Limit Range限制类型：</p>
+<ul>
+<li>容器</li>
+<li>pod</li>
+<li>PVC</li>
+</ul>
+<p>默认情况下， Kubernetes 集群上的容器运行使用的计算资源没有限制。 使用资源配额，集群管理员可以以名字空间为单位，限制其资源的使用与创建。 在命名空间中，一个 Pod 或 Container 最多能够使用命名空间的资源配额所定义的 CPU 和内存用量。 有人担心，一个 Pod 或 Container 会垄断所有可用的资源。 <strong>LimitRange 是在命名空间内限制资源分配（给多个 Pod 或 Container）的策略对象</strong>。</p>
+<p>一个 LimitRange（限制范围） 对象提供的限制能够做到：</p>
+<ul>
+<li>限制namespace中每个Pod或容器的最小与最大计算资源</li>
+<li>限制namespace中每个Pod或容器计算资源request、limit之间的比例</li>
+<li>限制namespace中每个存储卷声明（PersistentVolumeClaim）可使用的最小与最大存储空间</li>
+<li>设置namespace中容器默认计算资源的request、limit，并在运行时自动注入到容器中</li>
+</ul>
+<p>也就是说担心研发人员在创建 pod 的时候资源使用过高而导致其他的 work pod 无法被正常启动。</p>
+<p><strong>启用 LimitRange</strong>：<br>
+对 LimitRange 的支持自 Kubernetes 1.10 版本默认启用。<br>
+LimitRange 支持在很多 Kubernetes 发行版本中也是默认启用的。<br>
+LimitRange 的名称必须是合法的 DNS 子域名。</p>
+<p><strong>限制范围总览</strong>：</p>
+<ul>
+<li>管理员在一个命名空间内创建一个 LimitRange 对象。</li>
+<li>用户在命名空间内创建 Pod ，Container 和 PersistentVolumeClaim 等资源。</li>
+<li>LimitRanger 准入控制器对所有没有设置计算资源需求的 Pod 和 Container 设置默认值与限制值， 并跟踪其使用量以保证没有超出命名空间中存在的任意 LimitRange 对象中的最小、最大资源使用量以及使用量比值。</li>
+<li>若创建或更新资源（Pod、 Container、PersistentVolumeClaim）违反了 LimitRange 的约束， 向 API 服务器的请求会失败，并返回 HTTP 状态码 403 FORBIDDEN 与描述哪一项约束被违反的消息。</li>
+<li>若命名空间中的 LimitRange 启用了对 cpu 和 memory 的限制， 用户必须指定这些值的需求使用量与限制使用量。否则，系统将会拒绝创建 Pod。</li>
+<li>LimitRange 的验证仅在 Pod 准入阶段进行，不对正在运行的 Pod 进行验证。</li>
+</ul>
+<p><strong>能够使用限制范围创建的策略示例有</strong>：</p>
+<ul>
+<li>在一个 master 有两个 node 节点，8 GiB 内存与16个核的集群中，限制一个命名空间的 Pod 申请 100m 单位，最大 500m 单位的 CPU，以及申请 200Mi，最大 600Mi 的内存。</li>
+<li>为 spec 中没有 cpu 和内存需求值的 Container 定义默认 CPU 限制值与需求值 150m，内存默认需求值 300Mi。</li>
+</ul>
+<p>在命名空间的总限制值小于 Pod 或 Container 的限制值的总和的情况下，可能会产生资源竞争。 在这种情况下，将不会创建 Container 或 Pod。</p>
+<p><strong>竞争和对 LimitRange 的改变都不会影响任何已经创建了的资源。</strong></p>
+<p>编写Limit yaml文件<br>
+<em>vim LimitRange.yaml</em></p>
+<pre><code class="language-shell">apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limitrange-magedu
+  namespace: magedu
+spec:
+  limits:
+  - type: Container       #限制的资源类型
+    max:
+      cpu: &quot;2&quot;            #限制单个容器的最大CPU
+      memory: &quot;2Gi&quot;       #限制单个容器的最大内存
+    min:
+      cpu: &quot;500m&quot;         #限制单个容器的最小CPU
+      memory: &quot;512Mi&quot;     #限制单个容器的最小内存
+    default:
+      cpu: &quot;500m&quot;         #默认单个容器的CPU限制
+      memory: &quot;512Mi&quot;     #默认单个容器的内存限制
+    defaultRequest:
+      cpu: &quot;500m&quot;         #默认单个容器的CPU创建请求
+      memory: &quot;512Mi&quot;     #默认单个容器的内存创建请求
+    maxLimitRequestRatio:
+      cpu: 2              #限制CPU limit/request比值最大为2
+      memory: 2         #限制内存limit/request比值最大为1.5
+  - type: Pod
+    max:
+      cpu: &quot;4&quot;            #限制单个Pod的最大CPU
+      memory: &quot;4Gi&quot;       #限制单个Pod最大内存
+  - type: PersistentVolumeClaim
+    max:
+      storage: 50Gi        #限制PVC最大的requests.storage
+    min:
+      storage: 30Gi        #限制PVC最小的requests.storage
+</code></pre>
+<p>部署Limit资源</p>
+<pre><code class="language-shell">kubectl apply -f LimitRange.yaml
+</code></pre>
+<p>查看资源</p>
+<pre><code class="language-shell">kubectl -n magedu get limitranges
+NAME                CREATED AT
+limitrange-magedu   2022-06-21T16:34:30Z
+
+kubectl -n magedu describe limitranges limitrange-magedu
+Name:                  limitrange-magedu
+Namespace:             magedu
+Type                   Resource  Min    Max   Default Request  Default Limit  Max Limit/Request Ratio
+----                   --------  ---    ---   ---------------  -------------  -----------------------
+Container              cpu       500m   2     500m             500m           2
+Container              memory    512Mi  2Gi   512Mi            512Mi          2
+Pod                    cpu       -      4     -                -              -
+Pod                    memory    -      4Gi   -                -              -
+PersistentVolumeClaim  storage   30Gi   50Gi  -                -              -
+
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/">
+                <h3 class="post-title">
+                  K8s实战：运⾏dubbo服务
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
