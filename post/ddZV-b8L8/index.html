@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655829614839">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656346851316">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655829614839" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656346851316" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,7 +36,17 @@
             <ul class="markdownIt-TOC">
 <li><a href="#k8s%E4%B8%AD%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6%E6%A6%82%E6%8B%AC">K8s中资源限制概括</a></li>
 <li><a href="#%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%B8%AA%E5%AE%B9%E5%99%A8container%E7%9A%84cpu%E5%8F%8Amemory%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">实现单个容器(container)的CPU及memory资源限制</a></li>
-<li><a href="#%E5%AE%9E%E7%8E%B0%E5%AF%B9%E5%8D%95%E4%B8%AApod%E7%9A%84cpu%E5%8F%8Amemory%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">实现对单个pod的CPU及memory资源限制</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E5%AF%B9%E5%8D%95%E4%B8%AApod%E7%9A%84cpu%E5%8F%8Amemory%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">实现对单个pod的CPU及memory资源限制</a>
+<ul>
+<li><a href="#%E9%94%99%E8%AF%AF%E8%B5%84%E6%BA%90%E8%AF%B7%E6%B1%82%E9%99%90%E5%88%B6%E7%A4%BA%E4%BE%8B">错误资源请求限制示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AF%B9-namespace-%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6">对 namespace 资源限制</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA-resourcequota">创建 ResourceQuota</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BApod%E9%AA%8C%E8%AF%81">创建pod验证</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -133,7 +143,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">kubernetes 资源限制</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-06-20 / 7 min read
+          2022-06-20 / 15 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ddZV-b8L8.png" alt="">
@@ -255,7 +265,7 @@ LimitRange 的名称必须是合法的 DNS 子域名。</p>
 kind: LimitRange
 metadata:
   name: limitrange-magedu
-  namespace: magedu
+  namespace: magedu      # 指定对该 namespace 下的资源进行限制
 spec:
   limits:
   - type: Container       #限制的资源类型
@@ -274,11 +284,11 @@ spec:
     maxLimitRequestRatio:
       cpu: 2              #限制CPU limit/request比值最大为2
       memory: 2         #限制内存limit/request比值最大为1.5
-  - type: Pod
+  - type: Pod            #针对Pod限制
     max:
       cpu: &quot;4&quot;            #限制单个Pod的最大CPU
       memory: &quot;4Gi&quot;       #限制单个Pod最大内存
-  - type: PersistentVolumeClaim
+  - type: PersistentVolumeClaim    #针对PVC限制
     max:
       storage: 50Gi        #限制PVC最大的requests.storage
     min:
@@ -303,6 +313,242 @@ Pod                    cpu       -      4     -                -              -
 Pod                    memory    -      4Gi   -                -              -
 PersistentVolumeClaim  storage   30Gi   50Gi  -                -              -
 
+</code></pre>
+<h2 id="错误资源请求限制示例">错误资源请求限制示例</h2>
+<p>将内存更改为超出LimitRange 的配置，并且百分比也不是 2 的倍数。</p>
+<pre><code class="language-shell"># cat case4-pod-RequestRatio-limit.yaml
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-wordpress-deployment-label
+  name: magedu-wordpress-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-wordpress-selector
+  template:
+    metadata:
+      labels:
+        app: magedu-wordpress-selector
+    spec:
+      containers:
+      - name: magedu-wordpress-nginx-container
+        image: nginx:1.16.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 2
+            memory: 1Gi
+          requests:
+            cpu: 1.2
+            memory: 512Mi
+
+      - name: magedu-wordpress-php-container
+        image: php:5.6-fpm-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 2
+            #cpu: 2
+            memory: 1Gi
+          requests:
+            cpu: 2
+            memory: 512Mi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-wordpress-service-label
+  name: magedu-wordpress-service
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30036
+  selector:
+    app: magedu-wordpress-selector
+
+
+创建pod：
+kubectl apply -f case4-pod-RequestRatio-limit.yaml
+</code></pre>
+<p>查看namespace中的pod并未发现对应的pod</p>
+<pre><code class="language-shell">kubectl -n magedu get pod 
+</code></pre>
+<p>通过查看 events 会发现警告信息</p>
+<pre><code class="language-shell">kubectl -n magedu get events
+
+11m         Warning   FailedCreate        replicaset/wordpress-deployment-7fc9cd79b8   Error creating: pods &quot;wordpress-deployment-7fc9cd79b8-qj7z2&quot; is forbidden: maximum memory usage per Container is 2Gi, but limit is 3Gi
+11m         Warning   FailedCreate        replicaset/wordpress-deployment-7fc9cd79b8   Error creating: pods &quot;wordpress-deployment-7fc9cd79b8-hr82k&quot; is forbidden: maximum memory usage per Container is 2Gi, but limit is 3Gi
+11m         Warning   FailedCreate        replicaset/wordpress-deployment-7fc9cd79b8   Error creating: pods &quot;wordpress-deployment-7fc9cd79b8-qbll5&quot; is forbidden: maximum memory usage per Container is 2Gi, but limit is 3Gi
+10m         Warning   FailedCreate        replicaset/wordpress-deployment-7fc9cd79b8   (combined from similar events): Error creating: pods &quot;wordpress-deployment-7fc9cd79b8-kmfpp&quot; is forbidden: maximum memory usage per Container is 2Gi, but limit is 3Gi
+
+
+# maximum memory usage per Container is 2Gi, but limit is 3Gi
+# 容器的最大内存为 2G 但是这里设置为 3G 超出，所有未能成功创建
+</code></pre>
+<p>或者通过查看 deployment 并通过 json 格式输出</p>
+<pre><code class="language-shell">kubectl get deployments.apps -n magedu  wordpress-deployment -o json
+</code></pre>
+<h1 id="对-namespace-资源限制">对 namespace 资源限制</h1>
+<p>官方文档：https://kubernetes.io/zh/docs/concepts/policy/resource-quotas/<br>
+限定某个对象类型（如Pod、service）可创建对象的总数；<br>
+限定某个对象类型可消耗的计算资源（CPU、内存）与存储资源（存储卷声明）总数，也就是数在当前 namespace 中最多可以创建多少的 PV PVC</p>
+<p>当多个用户或团队共享具有固定节点数目的集群时，人们会担心有人使用超过其基于公平原则所分配到的资源量。资源配额是帮助管理员解决这一问题的工具。</p>
+<p>资源配额，通过 ResourceQuota 对象来定义，对每个命名空间的资源消耗总量提供限制。 它可以限制命名空间中某种类型的对象的总数目上限，也可以限制命令空间中的 Pod 可以使用的计算资源的总上限。</p>
+<p><strong>资源配额的工作方式如下:</strong></p>
+<ul>
+<li>不同的团队可以在不同的命名空间下工作，目前这是非约束性的，在未来的版本中可能会通过 ACL (Access Control List 访问控制列表) 来实现强制性约束。</li>
+<li>集群管理员可以为每个命名空间创建一个或多个 ResourceQuota 对象。</li>
+<li>当用户在命名空间下创建资源（如 Pod、Service 等）时，Kubernetes 的配额系统会 跟踪集群的资源使用情况，以确保使用的资源用量不超过 ResourceQuota 中定义的硬性资源限额。</li>
+<li>如果资源创建或者更新请求违反了配额约束，那么该请求会报错（HTTP 403 FORBIDDEN）， 并在消息中给出有可能违反的约束。</li>
+<li>如果命名空间下的计算资源 （如 cpu 和 memory）的配额被启用，则用户必须为 这些资源设定请求值（request）和约束值（limit），否则配额系统将拒绝 Pod 的创建。 提示: 可使用 LimitRanger 准入控制器来为没有设置计算资源需求的 Pod 设置默认值。</li>
+</ul>
+<h2 id="创建-resourcequota">创建 ResourceQuota</h2>
+<p>创建 ResourceQuota 来进行对每个命名空间的资源消耗总量提供限制。</p>
+<ol>
+<li>编写yaml文件</li>
+</ol>
+<pre><code class="language-shell">vim ResourceQuota-magedu.yaml
+
+apiVersion: v1
+kind: ResourceQuota              # 资源限额
+metadata:
+  name: quota-magedu
+  namespace: quota               # 对 指定 命名空间做限制
+spec:
+  hard:                                     # 硬限制，不能超过这个值
+    requests.cpu: &quot;8&quot;                # 对运行中的 pod cpu 需求总量不能超过该值
+    limits.cpu: &quot;8&quot;                     # 对运行中的 pod cpu 限额总量不能超过该值。(宿主机CPU最大值)
+    requests.memory: 4Gi        # 对运行中的 pod mem 其内存需求总量不能超过该值。
+    limits.memory: 4Gi             #  对运行中的 pod mem 其内存限额总量不能超过该值。
+    requests.nvidia.com/gpu: 4    # 由于现在有人工智能的场景所以 K8S 中也限制 GPU
+    pods: &quot;20&quot;                               # 在该命名空间中有多少个 Pod 总数上限
+    services: &quot;6&quot;                            # 在该命名空间中允许存在的 Service 总数上限。
+
+</code></pre>
+<p>创建资源限制并查看</p>
+<pre><code class="language-shell"># kubectl apply -f case6-ResourceQuota.yaml
+
+# kubectl -n quota get resourcequotas
+NAME           AGE   REQUEST                                                                                             LIMIT
+quota-magedu   29s   pods: 0/2, requests.cpu: 0/8, requests.memory: 0/4Gi, requests.nvidia.com/gpu: 0/4, services: 0/6   limits.cpu: 0/8, limits.memory: 0/4Gi
+
+# kubectl -n quota describe resourcequotas
+Name:                    quota-magedu
+Namespace:               quota
+Resource                 Used  Hard
+--------                 ----  ----
+limits.cpu               0     8
+limits.memory            0     4Gi
+pods                     0     2
+requests.cpu             0     8
+requests.memory          0     4Gi
+requests.nvidia.com/gpu  0     4
+services                 0     6
+root@k8s-master01:/opt/20220522/magedu-limit-case#
+
+</code></pre>
+<h2 id="创建pod验证">创建pod验证</h2>
+<p>编写一个 yaml 文件，并指定pod 数量</p>
+<pre><code class="language-shell"># cat case7-namespace-pod-limit-test.yaml
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-nginx-deployment-label
+  name: magedu-nginx-deployment
+  namespace: quota
+spec:
+  replicas: 5         # 指定创建 5 个 pod
+  selector:
+    matchLabels:
+      app: magedu-nginx-selector
+  template:
+    metadata:
+      labels:
+        app: magedu-nginx-selector
+    spec:
+      containers:
+      - name: magedu-nginx-container
+        image: nginx:1.16.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: magedu-nginx-service-label
+  name: magedu-nginx-service
+  namespace: magedu
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    #nodePort: 30033
+  selector:
+    app: magedu-nginx-selector
+</code></pre>
+<p>创建并验证</p>
+<pre><code class="language-shell">#kubectl apply -f case7-namespace-pod-limit-test.yaml 
+</code></pre>
+<p>可以看到即使在 yaml 文件中指定了 pod 的副本数量为 5 但是在创建的时候只能创建出两个 pod ，因为在 resourceQuota 中明确中的了 pod 总数为 2</p>
+<pre><code class="language-shell"># kubectl -n quota get pod
+NAME                                       READY   STATUS    RESTARTS   AGE
+magedu-nginx-deployment-5c6b6b7b85-jm7w5   1/1     Running   0          5m1s
+magedu-nginx-deployment-5c6b6b7b85-mstlv   1/1     Running   0          5m1s
+
+# kubectl -n quota get deployments.apps
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+magedu-nginx-deployment   2/5     2            2           5m33s
 </code></pre>
 
         </div>

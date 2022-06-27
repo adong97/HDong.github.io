@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1655829614839">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656346851316">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1655829614839" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656346851316" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -42,8 +42,13 @@
 <li><a href="#%E4%BC%98%E9%80%89">优选：</a></li>
 </ul>
 </li>
-<li><a href="#nodeselector%E8%8A%82%E7%82%B9%E9%80%89%E6%8B%A9%E5%99%A8">NodeSelector(节点选择器)</a></li>
-<li><a href="#nodeaffinitynode%E4%BA%B2%E5%92%8C%E6%80%A7">nodeAffinity(Node亲和性)</a></li>
+<li><a href="#nodeselector%E8%8A%82%E7%82%B9%E9%80%89%E6%8B%A9%E5%99%A8">NodeSelector(节点选择器)</a>
+<ul>
+<li><a href="#%E9%AA%8C%E8%AF%81%E6%A0%87%E7%AD%BE%E5%8C%B9%E9%85%8D">验证标签匹配</a></li>
+<li><a href="#%E9%AA%8C%E8%AF%81%E7%B2%BE%E5%87%86%E5%8C%B9%E9%85%8D">验证精准匹配</a></li>
+</ul>
+</li>
+<li><a href="#nodeaffinity%E8%8A%82%E7%82%B9%E4%BA%B2%E5%92%8C%E6%80%A7">nodeAffinity(节点亲和性)</a></li>
 <li><a href="#pod%E4%BA%B2%E5%92%8C%E6%80%A7%E5%92%8C%E5%8F%8D%E4%BA%B2%E5%92%8C%E6%80%A7">pod亲和性和反亲和性</a></li>
 <li><a href="#%E6%B1%A1%E7%82%B9taints%E4%B8%8E%E5%AE%B9%E5%BF%8Dtolerations">污点（Taints）与容忍（tolerations）</a></li>
 <li><a href="#cordon-and-drain">Cordon and Drain</a></li>
@@ -143,7 +148,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes调度系统</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-15 / 12 min read
+          2022-02-15 / 15 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/sn0OllrL_.png" alt="">
@@ -204,15 +209,19 @@ kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，
 <h2 id="优选">优选：</h2>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1644918567497.jpg" alt="" loading="lazy"></figure>
 <h1 id="nodeselector节点选择器">NodeSelector(节点选择器)</h1>
+<ul>
+<li>可用于基于服务类型干预Pod调度结果，如对磁盘I/O要求高的pod调度到SSD节点，对内存要求比较高的pod调度的内存较高的节点。</li>
+<li>也可以用于区分不同项目的pod，如将node添加不同项目的标签，然后区分调度。</li>
+</ul>
 <p><code>label</code>是<code>kubernetes</code>中一个非常重要的概念，用户可以非常灵活的利用 <code>label</code> 来管理集群中的资源，Pod 的调度可以根据节点的 label 进行特定的部署。</p>
 <p>查看节点的label：</p>
-<pre><code>$ kubectl get nodes --show-labels
+<pre><code class="language-shell">$ kubectl get nodes --show-labels
 </code></pre>
 <p>为节点打label：</p>
-<pre><code>$ kubectl label node k8s-master disktype=ssd
+<pre><code class="language-shell">$ kubectl label node k8s-master disktype=ssd
 </code></pre>
 <p>当 node 被打上了相关标签后，在调度的时候就可以使用这些标签了，只需要在spec 字段中添加nodeSelector字段，里面是我们需要被调度的节点的 label。</p>
-<pre><code>spec:
+<pre><code class="language-shell">spec:
   hostNetwork: true    # 声明pod的网络模式为host模式，效果通docker run --net=host
   volumes: 
   - name: mysql-data
@@ -224,7 +233,155 @@ kube-scheduler是K8S系统的核心组件之一，其主要负责Pod的调度，
   - name: mysql
       image: 172.21.51.143:5000/demo/mysql:5.7
 </code></pre>
-<h1 id="nodeaffinitynode亲和性">nodeAffinity(Node亲和性)</h1>
+<p>删除节点的label:</p>
+<pre><code class="language-shell">$ kubectl label node k8s-master disktype-
+</code></pre>
+<p>也可以将pod调度到目的node，需要在yaml文件中指定的key与value必须精确匹配。</p>
+<pre><code class="language-shell">...
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat-app2-selector
+  template:
+    metadata:
+      labels:
+        app: tomcat-app2-selector
+    spec:
+      nodeName: 172.31.7.113     # 精准匹配NodeNmae
+...
+</code></pre>
+<h2 id="验证标签匹配">验证标签匹配</h2>
+<ol>
+<li>给两个Node节点打一个相同的标签，两个不同的标签</li>
+</ol>
+<pre><code class="language-shell">$ kubectl get node
+NAME          STATUS                     ROLES    AGE   VERSION
+10.1.13.186   Ready,SchedulingDisabled   master   72d   v1.23.5
+10.1.13.187   Ready,SchedulingDisabled   master   72d   v1.23.5
+10.1.13.189   Ready                      node     72d   v1.23.5
+10.1.13.190   Ready                      node     50d   v1.23.5
+
+ $ kubectl label node 10.1.13.189 project=magedu
+ $ kubectl label node 10.1.13.190 project=maged
+ $ kubectl label node 10.1.13.189 disktype=ssd
+ $ kubectl label node 10.1.13.190 disktype=hdd
+</code></pre>
+<ol start="2">
+<li>编写pod yaml文件并创建</li>
+</ol>
+<pre><code class="language-shell">$ cat case1-nodeSelector.yaml
+
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: magedu-tomcat-app2-deployment-label
+  name: magedu-tomcat-app2-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magedu-tomcat-app2-selector
+  template:
+    metadata:
+      labels:
+        app: magedu-tomcat-app2-selector
+    spec:
+      containers:
+      - name: magedu-tomcat-app2-container
+        image: tomcat:7.0.94-alpine
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m
+            memory: &quot;512Mi&quot;
+      nodeSelector:     #指定标签选择器
+        project: magedu    
+        disktype: hdd
+
+# 创建pod
+$  kubectl apply -f case1-nodeSelector.yaml
+</code></pre>
+<ol start="3">
+<li>查看pod被调度在哪个节点上</li>
+</ol>
+<pre><code class="language-shell">$ kubectl get pod -n magedu -o wide
+NAME                                             READY   STATUS    RESTARTS       AGE     IP               NODE          NOMINATED NODE   READINESS GATES
+magedu-tomcat-app2-deployment-66f587c45f-lx2qt   1/1     Running   0              78s     10.200.135.173   10.1.13.190   &lt;none&gt;           &lt;none&gt;
+
+# Pod被调度到10.1.13.190  上
+
+4. 通过describe发现，在进行调度的时候会通过标签进行节点匹配
+$ kubectl -n magedu describe pod magedu-tomcat-app2-deployment-66f587c45f-lx2qt
+Node-Selectors:              disktype=hdd
+                             project=magedu
+</code></pre>
+<h2 id="验证精准匹配">验证精准匹配</h2>
+<p>编写yaml文件</p>
+<pre><code class="language-shell"># cat case2-nodename.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: tomcat-app2-deployment-label
+  name: tomcat-app2-deployment
+  namespace: magedu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat-app2-selector
+  template:
+    metadata:
+      labels:
+        app: tomcat-app2-selector
+    spec:
+      nodeName: 10.1.13.189     # 如果名称不匹配，将会调度失败
+      containers:
+      - name: tomcat-app2-container
+        image: tomcat:7.0.94-alpine
+        imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m
+            memory: &quot;512Mi&quot;
+
+# 创建Pod
+$ kubectl apply -f case2-nodename.yaml
+NAME                                             READY   STATUS    RESTARTS       AGE     IP               NODE          NOMINATED NODE   READINESS GATES
+magedu-tomcat-app2-deployment-59c9764d77-hzjpm   1/1     Running   0              104s    10.200.58.230    10.1.13.189   &lt;none&gt;           &lt;none&gt;
+</code></pre>
+<h1 id="nodeaffinity节点亲和性">nodeAffinity(节点亲和性)</h1>
 <p>Pod -&gt; Node的标签做出选择</p>
 <p>节点亲和性 ， 比上面的nodeSelector更加灵活，它可以进行一些简单的逻辑组合，不只是简单的相等匹配 。分为两种，硬策略和软策略。</p>
 <p><strong>requiredDuringSchedulingIgnoredDuringExecution</strong>： 硬策略，如果没有满足条件的节点的话，就不断重试直到满足条件为止，简单说就是你必须满足我的要求，不然我就不会调度Pod。</p>
