@@ -34,10 +34,13 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%89%8D%E8%A8%80">前言</a>
+<li><a href="#%E4%B8%80-%E4%BC%A0%E7%BB%9F%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E5%8D%87%E7%BA%A7">一、传统架构代码升级</a></li>
+<li><a href="#%E4%BA%8C-k8s-%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E5%8D%87%E7%BA%A7">二、K8S 架构代码升级</a>
 <ul>
-<li><a href="#elk-%E5%92%8C-efk-%E6%A6%82%E8%BF%B0">ELK 和 EFK 概述</a></li>
-<li><a href="#filebeats-logstash-fluentd-%E4%B8%89%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB">Filebeats、Logstash、Fluentd 三者的区别和联系</a></li>
+<li><a href="#21-k8s%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E6%96%B9%E5%BC%8F%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%A4%BA%E4%BE%8B">2.1 K8s镜像更新方式简介及示例</a></li>
+<li><a href="#22-%E6%9A%82%E5%81%9C%E6%9B%B4%E6%96%B0%E4%B8%8E%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0">2.2 暂停更新与恢复更新</a></li>
+<li><a href="#23-%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%9E%8B-recreate%E7%AE%80%E4%BB%8B">2.3 镜像更新类型-Recreate简介</a></li>
+<li><a href="#recreate%E7%A4%BA%E4%BE%8B">Recreate示例</a></li>
 </ul>
 </li>
 </ul>
@@ -134,66 +137,121 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">开源日志管理方案ELK和EFK的区别</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">K8s CI/CD</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 4 min read
+          2022-06-28 / 7 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/lqDokfMSo.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ggkWrISWj.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="前言">前言</h1>
-<p>主流的 ELK (Elasticsearch, Logstash, Kibana) 目前已经转变为 EFK (Elasticsearch, Filebeat or Fluentd, Kibana) ，对于容器云的日志方案业内也普遍推荐采用 Fluentd，我们一起来看下从 ELK 到 EFK 发生了哪些变化。</p>
-<h2 id="elk-和-efk-概述">ELK 和 EFK 概述</h2>
-<p>随着现在各种软件系统的复杂度越来越高，特别是部署到云上之后，再想登录各个节点上查看各个模块的 log，基本是不可行了。因为不仅效率低下，而且有时由于安全性，不可能让工程师直接访问各个物理节点。而且现在大规模的软件系统基本都采用集群的部署方式，意味着对每个 service，会启动多个完全一样的 POD 对外提供服务，每个 container 都会产生自己的 log，仅从产生的 log 来看，你根本不知道是哪个 POD 产生的，这样对查看分布式的日志更加困难。</p>
-<p>所以在云时代，需要一个收集并分析 log 的解决方案。首先需要将分布在各个角落的 log 收集到一个集中的地方，方便查看。收集了之后，还可以进行各种统计分析，甚至用流行的大数据或 maching learning 的方法进行分析。</p>
-<p>ELK 就是这样的解决方案，而且基本就是事实上的标准。ELK 是三个开源项目的首字母缩写，如下：</p>
+          <h1 id="一-传统架构代码升级">一、传统架构代码升级</h1>
+<p>传统情况下，在虚拟机进行代码升级与回滚。公司内部采用 gitlab ，由开发将代码提交，通过Jenkins进行代码部署：</p>
+<ol>
+<li>先执行代码 clone</li>
+<li>代码 clone 之后就会通过 maven 进行编译</li>
+<li>将编译好的包拷贝至虚拟机的（scp、ansible）一个新目录</li>
+<li>拷贝过去之后如果需要对代码进行替换，切换软连接重启服务（将虚拟机下线，主要是担心用户的访问会转发到虚拟机上，从而导致虚拟机报错）</li>
+<li>停掉对应服务</li>
+<li>下线之后再将代码换掉，替换代码有两种方法：
 <ul>
-<li>E: Elasticsearch</li>
-<li>L: Logstash</li>
-<li>K: Kibana</li>
+<li>将之前存储代码的目录清空，或者将之前存储代码的目录全删完然后在将目录替换</li>
+<li>或者通过软连接的方式进行替换</li>
 </ul>
-<p>Logstash 的主要作用是收集分布在各处的 log 并进行处理；<br>
-Elasticsearch 则是一个集中存储 log 的地方，更重要的是它是一个全文检索以及分析的引擎，它能让用户以近乎实时的方式来查看、分析海量的数据。<br>
-Kibana 则是为 Elasticsearch 开发的前端 GUI，让用户可以很方便的以图形化的接口查询，Elasticsearch 中存储的数据，同时也提供了各种分析的模块，比如构建 dashboard 的功能。</p>
-<p>将 ELK 中的 L 理解成 Logging Agent 更合适。Elasticsearch 和 Kibana 基本就是存储、检索和分析 log 的标准方案，而 Logstash 则并不是唯一的收集 log 的方案，Fluentd 和 Filebeats 也能用于收集 log。所以现在网上有 ELK，EFK 之类的缩写。</p>
-<p>一般采用的架构如下图所示。通常一个小型的 cluster 有三个节点，在这三个节点上可能会运行几十个甚至上百个容器。而我们只需要在每个节点上启动一个 logging agent 的实例（在 kubernetes 中就是 DaemonSet 的概念）即可。<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1645835475319.jpg" alt="" loading="lazy"></p>
-<h2 id="filebeats-logstash-fluentd-三者的区别和联系">Filebeats、Logstash、Fluentd 三者的区别和联系</h2>
-<p>Filebeats 是一个轻量级的收集本地 log 数据的方案，官方对 Filebeats 的说明如下。可以看出 Filebeats 功能比较单一，它仅仅只能收集本地的 log，但并不能对收集到的 Log 做什么处理，所以通常 Filebeats 通常需要将收集到的 log 发送到 Logstash 做进一步的处理。</p>
-<p>Logstash 和 Fluentd 都具有收集并处理 log 的能力，网上有很多关于二者的对比，提供一个写得比较好的文章链接如下。功能上二者旗鼓相当，但 Logstash 消耗更多的 memory，对此 Logstash 的解决方案是使用 Filebeats 从各个叶子节点上收集 log，当然 Fluentd 也有对应的 Fluent Bit。<br>
-https://logz.io/blog/fluentd-Logstash/</p>
-<p>另外一个重要的区别是 Fluentd 抽象性做得更好，对用户屏蔽了底层细节的繁琐。<br>
-Filebeats、Logstash、Elasticsearch 和 Kibana 是属于同一家公司的开源项目，官方文档如下：   https://www.elastic.co/guide/index.html<br>
-Fluentd 则是另一家公司的开源项目，官方文档如下：<br>
-https://docs.fluentd.org</p>
+</li>
+<li>启动服务，其实这时候就会使用的我们上一步加载的新代码</li>
+<li>测试，因为服务起来之后为了确保能够正常访问所以需要提前测试（通过 curl 命令或者简单的 API 进行测试）</li>
+<li>测试通过上线</li>
+<li>然后在负载均衡中将需要升级的主机从负载均衡里面摘掉，然后升级完成在加回负载均衡，并做灰度发布，这样的话我在升级过程中是不影响用户访问的。如果在以此类推升级其他服务器</li>
+<li>然后灰度发布，如上图有两个版本是 v1 有一个本版是新发布的 v2 ，即使有用户访问有问题也只能说影响那百分之 30 左右的用户，如果这时候 v2 版本 有问题就直接回滚为 v1 ，如果 v2 没有问题，我们直接将其他版本升级到 v2</li>
+<li>没有问题之后部署到负载均衡</li>
+<li>最后用户就能直接访问</li>
+</ol>
+<h1 id="二-k8s-架构代码升级">二、K8S 架构代码升级</h1>
+<p>执行滚动更新:<br>
+https://kubernetes.io/zh/docs/tutorials/kubernetes-basics/update/update-intro/</p>
+<p>用户希望应用程序始终可用，而开发人员则需要每天多次部署它们的新版本。在 Kubernetes 中，这些是通过滚动更新（Rolling Updates）完成的。 滚动更新允许通过使用新的实例逐步更新 Pod 实例，零停机进行 Deployment 更新。新的 Pod 将在具有可用资源的节点上进行调度。</p>
+<p>在前面的模块中，我们将应用程序扩展为运行多个实例。这是在不影响应用程序可用性的情况下执行更新的要求。默认情况下，更新期间不可用的 pod 的最大值和可以创建的新 pod 数都是 1。这两个选项都可以配置为（pod）数字或百分比。 在 Kubernetes 中，更新是经过版本控制的，任何 Deployment 更新都可以恢复到以前的（稳定）版本。</p>
+<p>在 K8S 中进行代码升级相对来说就比较简单，K8S 也是通过滚动升级来实现代码更新的，一般都是 3 个 pod 跑一个业务。</p>
+<p>在升级过程中 svc 会把请求逐渐的转向新的。升级的话（v1 到 v2），K8S 中会先启动一个新的Pod将其升级为 V2 版本，等 v2 版本起来之后将三个 pod 中的其中某一个删除，并且 svc 会将删除掉的 pod 的请求往 v2 pod 进行转发。</p>
+<p>当这个删除掉老的 v1 之后会在启动一个 v2 的 pod ，并且这时在将一个 v1 版本的删除掉，然后在启 v2 pod。</p>
+<p>所以通过这种方式来保证我们在代码升级中是可用的，不会说将 pod 全部删除而导致用户无法访问，从而实现了零停机进行控制器的版本更新。</p>
+<p><strong>滚动更新允许以下操作</strong>：</p>
+<ul>
+<li>将应用程序从一个环境提升到另一个环境（通过容器镜像更新）</li>
+<li>回滚到以前的版本</li>
+<li>持续集成和持续交付应用程序，无需停机</li>
+</ul>
+<h2 id="21-k8s镜像更新方式简介及示例">2.1 K8s镜像更新方式简介及示例</h2>
+<p>常见的更新方式有三大类:</p>
+<ol>
+<li>更新yaml文件中image的版本，然后kubectl apply -f app.yaml</li>
+<li>使用kubectl命令实现镜像更新及回滚。kubecetl set image</li>
+</ol>
+<pre><code class="language-shell">镜像更新命令格式为： 
+$ kubectl set image deployment/deployment-name container-name=image -n namespace 
+$ kubectl set image deployment/magedu-tomcat-app1-deployment magedu-tomcat-app1-container=registry.cn-hangzhou.aliyuncs.com/tomcat-app1:v2 -n magedu 
+deployment.apps/magedu-tomcat-app1-deployment image updated
+
+查看历史版本信息： 
+$ kubectl rollout history deployment/magedu-tomcat-app1-deployment -n magedu deployment.apps/magedu-tomcat-app1-deployment 
+REVISION CHANGE-CAUSE 
+3               &lt;none&gt; 
+4               &lt;none&gt;
+
+回退到上一个版本： (只能在最近两个版本进行回退)
+$ kubectl rollout undo deployment/magedu-tomcat-app1-deployment -n magedu 
+deployment.apps/magedu-tomcat-app1-deployment rolled back
+
+回退到指定版本： 
+$ kubectl rollout undo deployment/magedu-tomcat-app1-deployment --to-revision=4 -n magedu
+deployment.apps/magedu-tomcat-app1-deployment rolled back
+</code></pre>
+<ol start="3">
+<li>开发debops平台调用API更新</li>
+</ol>
+<pre><code class="language-shell">root@k8s-etcd1:~# apt install python3-pip 
+root@k8s-etcd1:~# python3 update-image.py 
+root@k8s-etcd1:~# mkdir /data/.kube -p 
+root@k8s-etcd1:~# scp 172.31.7.101:/root/.kube/config /data/.kube/ 
+root@k8s-etcd1:~# cat update-image.py
+root@k8s-etcd1:~# python3 update-image.py
+
+namespace:magedu, deployment:magedu-tomcat-app1-deployment,
+当前镜像版本:registry.cnhangzhou.aliyuncs.com/zhangshijie/tomcat-app1:v4, 
+更新完成!!!
+</code></pre>
+<h2 id="22-暂停更新与恢复更新">2.2 暂停更新与恢复更新</h2>
+<p>https://kubernetes.io/zh/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment</p>
+<pre><code class="language-shell">$ kubectl rollout pause deployment magedu-tomcat-app1-deployment -n magedu 
+$ kubectl rollout resume deployment magedu-tomcat-app1-deployment -n magedu
+</code></pre>
+<h2 id="23-镜像更新类型-recreate简介">2.3 镜像更新类型-Recreate简介</h2>
+<p>Recreate(重建更新)：<br>
+先删除现有的pod，然后基于新版本的镜像重建，Pod重建期间服务是不可用的，其优势是同时只有一个版本在线， 不会产生多版本在线问题，缺点是pod删除后到pod重建成功中间的时间会导致服务无法访问，因此较少使用。</p>
+<p>Pod镜像更新过程中的状态：<br>
+具体流程为先删除旧版本Pod，然后deployment控制器再新建 一个ReplicaSet控制器并基于新版本镜像创建新的Pod，旧版本的ReplicaSet控制会保留用于版本回退。</p>
+<pre><code class="language-shell">kubectl describe replicasets magedu-tomcat-app1deployment-7bcb67c868 -n magedu
+</code></pre>
+<h2 id="recreate示例">Recreate示例</h2>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
-            <span class="flex-auto">Kubernetes日志采集</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH/">
+            <span class="flex-auto">Devops</span>
           </a>
         
 
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/hR_asgw8g/">
-                <h3 class="post-title">
-                  <i class="ri-arrow-left-line"></i>
-                  Prometheus实现k8s集群的服务监控
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
+              <a href="https://adong97.github.io/HDong.github.io/post/ddZV-b8L8/">
                 <h3 class="post-title">
-                  EFK基于k8s部署及验证
+                  kubernetes 资源限制
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>

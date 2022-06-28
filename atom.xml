@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-06-28T00:31:51.773Z</updated>
+    <updated>2022-06-28T16:26:44.633Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[K8s CI/CD]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/ggkWrISWj/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/ggkWrISWj/">
+        </link>
+        <updated>2022-06-28T15:24:32.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[kubernetes 资源限制]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/ddZV-b8L8/</id>
@@ -72,12 +79,5 @@
         <link href="https://adong97.github.io/HDong.github.io/post/ffYjV0kyR/">
         </link>
         <updated>2022-05-07T15:39:04.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[istio总结]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/9uMxGYG8T/">
-        </link>
-        <updated>2022-04-18T09:31:52.000Z</updated>
     </entry>
 </feed>

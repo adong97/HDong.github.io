@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656376189562">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656433563119">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656376189562" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656433563119" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -59,8 +59,17 @@
 </ul>
 </li>
 <li><a href="#pod%E4%BA%B2%E5%92%8C%E6%80%A7%E5%92%8C%E5%8F%8D%E4%BA%B2%E5%92%8C%E6%80%A7">Pod亲和性和反亲和性</a></li>
-<li><a href="#%E6%B1%A1%E7%82%B9taints%E4%B8%8E%E5%AE%B9%E5%BF%8Dtolerations">污点（Taints）与容忍（tolerations）</a></li>
-<li><a href="#cordon-and-drain">Cordon and Drain</a></li>
+<li><a href="#%E6%B1%A1%E7%82%B9taints%E4%B8%8E%E5%AE%B9%E5%BF%8Dtolerations">污点（Taints）与容忍（tolerations）</a>
+<ul>
+<li><a href="#%E6%B1%A1%E7%82%B9taints">污点(Taints)</a></li>
+<li><a href="#tolerations%E5%AE%B9%E5%BF%8D">tolerations容忍</a></li>
+</ul>
+</li>
+<li><a href="#cordon-and-drain">Cordon and Drain</a>
+<ul>
+<li><a href="#%E8%8A%82%E7%82%B9%E5%8E%8B%E5%8A%9B%E9%A9%B1%E9%80%90">节点压力驱逐</a></li>
+</ul>
+</li>
 </ul>
 
           </div>
@@ -157,7 +166,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes调度系统</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-15 / 22 min read
+          2022-02-15 / 27 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/sn0OllrL_.png" alt="">
@@ -666,16 +675,26 @@ spec:
 </code></pre>
 <h1 id="pod亲和性和反亲和性">Pod亲和性和反亲和性</h1>
 <p>Pod -&gt; Pod的标签</p>
-<p>Pod亲和性与反亲和性可以基于已经在node节点上运行的Pod的标签来约束新创建的Pod可以调度到的目的节点，注意不 是基于node上的标签而是使用的已经运行在node上的pod标签匹配。</p>
-<p>其规则的格式为如果 node节点 A已经运行了一个或多个满足调度新创建的Pod B的规则，那么新的Pod B在亲和的条件 下会调度到A节点之上，而在反亲和性的情况下则不会调度到A节点至上。</p>
-<p>其中规则表示一个具有可选的关联命名空间列表的LabelSelector，只所以Pod亲和与反亲和需可以通过LabelSelector选择 namespace，是因为Pod是命名空间限定的而node不属于任何nemespace所以node的亲和与反亲和不需要namespace， 因此作用于Pod标签的标签选择算符必须指定选择算符应用在哪个命名空间。</p>
+<ul>
+<li>
+<p>Pod亲和性与反亲和性可以基于已经在node节点上运行的Pod的标签来约束新创建的Pod可以调度到的目的节点，注意不是基于node上的标签而是使用的已经运行在node上的pod标签匹配。</p>
+</li>
+<li>
+<p>其规则的格式为如果 node节点 A已经运行了一个或多个满足调度新创建的Pod B的规则，那么新的Pod B在亲和的条件下会调度到A节点之上，而在反亲和性的情况下则不会调度到A节点至上。</p>
+</li>
+<li>
+<p>其中规则表示一个具有可选的关联命名空间列表的LabelSelector，只所以Pod亲和与反亲和需可以通过LabelSelector选择 namespace，是因为Pod是命名空间限定的，而node不属于任何nemespace所以node的亲和与反亲和不需要namespace， 因此作用于Pod标签的标签选择算符必须指定选择算符应用在哪个命名空间。</p>
+</li>
+<li>
 <p>从概念上讲，node节点是一个拓扑域(具有拓扑结构的域)，比如k8s集群中的单台node节点、一个机架、云供应商可用区、 云供应商地理区域等，可以使用topologyKey来定义亲和或者反亲和的颗粒度是node级别还是可用区级别，以便kubernetes调度系统用来识别并选择正确的目的拓扑域。</p>
+</li>
+</ul>
 <p>Pod 亲和性与反亲和性的合法操作符(operator)有 In、NotIn、Exists、DoesNotExist。</p>
-<p>在Pod亲和性配置中，在requiredDuringSchedulingIgnoredDuringExecution和preferredDuringSchedulingIgnoredDuringExecution中， topologyKey不允许为空(Empty topologyKey is not allowed.)。</p>
+<p>在Pod亲和性配置中，在requiredDuringSchedulingIgnoredDuringExecution(硬亲和)和preferredDuringSchedulingIgnoredDuringExecution(软亲和)中， topologyKey不允许为空(Empty topologyKey is not allowed.)。</p>
 <p>在Pod反亲和性中配置中，requiredDuringSchedulingIgnoredDuringExecution和preferredDuringSchedulingIgnoredDuringExecution 中， topologyKey也不可以为空(Empty topologyKey is not allowed.)。</p>
-<p>对于requiredDuringSchedulingIgnoredDuringExecution要求的Pod反亲和性，准入控制器LimitPodHardAntiAffinityTopology被引入以确 保topologyKey只能是 kubernetes.io/hostname，如果希望 topologyKey 也可用于其他定制拓扑逻辑，可以更改准入控制器或者禁用。</p>
+<p>对于requiredDuringSchedulingIgnoredDuringExecution要求的Pod反亲和性，准入控制器（LimitPodHardAntiAffinityTopology）被引入以确 保topologyKey只能是 kubernetes.io/hostname，如果希望 topologyKey 也可用于其他定制拓扑逻辑，可以更改准入控制器或者禁用。</p>
 <p>除上述情况外，topologyKey 可以是任何合法的标签键。</p>
-<p>场景：</p>
+<p><strong>场景</strong>：</p>
 <blockquote>
 <p>myblog 启动多副本，但是期望可以尽量分散到集群的可用节点中</p>
 </blockquote>
@@ -722,11 +741,23 @@ spec:
 <p>官方文档：https://kubernetes.io/zh/docs/concepts/scheduling-eviction/assign-pod-node/</p>
 <h1 id="污点taints与容忍tolerations">污点（Taints）与容忍（tolerations）</h1>
 <p>对于<code>nodeAffinity</code>(node亲和性)无论是硬策略还是软策略方式，都是调度 Pod 到预期节点上，而<code>Taints</code>恰好与之相反，如果一个节点标记为<code>Taints</code>，除非 Pod 也被标识为可以容忍污点节点，否则该 <code>Taints</code> 节点不会被调度Pod。<br>
-<code>Taints</code>是打给Node的，<code>Tolerations</code>是给Pod设置的。污点是让Node默认不接受调度，容忍是说怎么样把Pod调度到带有污点的Node上。</p>
+https://kubernetes.io/zh/docs/concepts/scheduling-eviction/taint-and-toleration/</p>
+<p><strong>污点(taints)</strong>,用于node节点排斥 Pod调度，与亲和的作用是完全相反的,即taint的node和pod是排斥调度关系。<br>
+<strong>容忍(toleration)</strong>,用于Pod容忍node节点的污点信息，即node有污点信息也会将新的pod调度到node。</p>
+<p><em>通过污点拒绝大部分，通过容忍允许小部分</em></p>
+<h2 id="污点taints">污点(Taints)</h2>
 <p>Taints(污点)是Node的一个属性，设置了Taints(污点)后，因为有了污点，所以Kubernetes是不会将Pod调度到这个Node上的。于是Kubernetes就给Pod设置了个属性Tolerations(容忍)，只要Pod能够容忍Node上的污点，那么Kubernetes就会忽略Node上的污点，就能够(不是必须)把Pod调度过去。</p>
-<p>场景一：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
-<p>场景二：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
-<p>设置污点：</p>
+<p>污点的三种类型：</p>
+<ul>
+<li><strong>NoSchedule</strong>: 表示k8s将不会将Pod调度到具有该污点的Node上</li>
+<li><strong>PreferNoSchedule</strong>: 表示k8s将尽量避免将Pod调度到具有该污点的Node上</li>
+<li><strong>NoExecute</strong>: 表示k8s将不会将Pod调度到具有该污点的Node上，同时会将Node上已经存在的Pod强制驱逐出去</li>
+</ul>
+<p><strong>场景一</strong>：私有云服务中，某业务使用GPU进行大规模并行计算。为保证性能，希望确保该业务对服务器的专属性，避免将普通业务调度到部署GPU的服务器。</p>
+<p><strong>场景二</strong>：用户希望把 Master 节点保留给 Kubernetes 系统组件使用，或者把一组具有特殊资源预留给某些 Pod，则污点就很有用了，Pod 不会再被调度到 taint 标记过的节点。taint 标记节点举例如下：</p>
+<ol>
+<li>设置污点：</li>
+</ol>
 <pre><code class="language-shell">$ kubectl taint node [node_name] key=value:[effect]   
       其中[effect] 可取值： [ NoSchedule | PreferNoSchedule | NoExecute ]
        NoSchedule：一定不能被调度。
@@ -736,7 +767,9 @@ spec:
   示例：kubectl taint node k8s-slave1 smoke=true:NoSchedule
             #不能容忍k8s-slave1抽烟的Pod就不要调度过来了
 </code></pre>
-<p>去除污点：</p>
+<ol start="2">
+<li>去除污点：</li>
+</ol>
 <pre><code class="language-shell">去除指定key及其effect：
      kubectl taint nodes [node_name] key:[effect]-    #这里的key不用指定value
      kubectl taint node k8s-slave1 smoke-
@@ -747,24 +780,30 @@ spec:
  示例：
      #打污点 smoke=true:NoSchedule
      kubectl taint node k8s-master smoke=true:NoSchedule
+
      #去除污点，去除指定key及其effect
      kubectl taint node k8s-master smoke:NoExecute-
+
      #去除污点，去除指定key所有的effect
      kubectl taint node k8s-master smoke-
 </code></pre>
-<p>污点演示：</p>
+<ol start="3">
+<li>污点演示：</li>
+</ol>
 <pre><code class="language-shell">## 给k8s-slave1打上污点，smoke=true:NoSchedule
 $ kubectl taint node k8s-master gamble=true:NoSchedule
 $ kubectl taint node k8s-slave1 drunk=true:NoSchedule
 $ kubectl taint node k8s-slave2 smoke=true:NoSchedule
 
-
-
 ## 扩容myblog的Pod，观察新Pod的调度情况
 $ kuebctl -n luffy scale deploy myblog --replicas=3
 $ kubectl -n luffy get po -w    ## pending
-
 </code></pre>
+<h2 id="tolerations容忍">tolerations容忍</h2>
+<p>定义 Pod 的容忍度，可以调度至含有污点的node。</p>
+<p>基于operator的污点匹配：<br>
+如果operator是Exists，则容忍度不需要value而是直接匹配污点类型。<br>
+如果operator是Equal，则需要指定value并且value的值需要等于tolerations的key。</p>
 <p>Pod容忍污点示例：myblog/deployment/deploy-myblog-taint.yaml</p>
 <pre><code class="language-yaml">##污点是给Node打的，容忍是给业务设置的
 ...
@@ -783,8 +822,7 @@ spec:
 #意思是这个Pod要容忍的有污点的Node的key是smoke Equal true,效果是NoSchedule，
 #tolerations属性下各值必须使用引号，容忍的值都是设置Node的taints时给的值。
 
-</code></pre>
-<pre><code>$ kubectl apply -f deploy-myblog-taint.yaml
+$ kubectl apply -f deploy-myblog-taint.yaml
 </code></pre>
 <pre><code class="language-yaml">spec:
       containers:
@@ -797,13 +835,122 @@ spec:
 <p>NoExecute</p>
 </blockquote>
 <h1 id="cordon-and-drain">Cordon and Drain</h1>
-<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的。也是基于污点实现。</p>
-<p>drain：驱逐。drain包含cordon。drain会首先将节点变成不可调度</p>
+<p>Cordon 标记Node是不可调度的, Uncordon 取消Node不可调度的，也是基于污点实现。</p>
+<p>drain：驱逐。<br>
+drain包含cordon，drain会首先将节点变成不可调度</p>
 <pre><code>#标记k8s-slave2是可调度的
 $ kubectl cordon k8s-slave2
 
 #驱逐k8s-slave2上的Pod
 $ kubectl drain k8s-slave2
+</code></pre>
+<p>手动驱逐Pod,node因为硬件故障或其他原因要下线。</p>
+<pre><code class="language-shell">kubectl drain 172.31.7.111 --ignore-daemonsets # 驱逐pod并打SchedulingDisabled标签
+kubectl taint nodes 172.31.7.111 key1=value:NoExecute # 不会打标签但是会配置污点，并立即驱逐pod
+</code></pre>
+<p>然后delete node,关机，下线。</p>
+<h2 id="节点压力驱逐">节点压力驱逐</h2>
+<p>节点压力驱逐是由各kubelet进程主动终止Pod，以回收节点上的内存、磁盘空间等资源的过程，kubelet监控当前 node节点的CPU、内存、磁盘空间和文件系统的inode等资源，当这些资源中的一个或者多个达到特定的消耗水平，kubelet就会主动地将节点上一个或者多个Pod强制驱逐，以防止当前node节点资源无法正常分配而引发的OOM。<br>
+https://kubernetes.io/zh/docs/concepts/scheduling-eviction/node-pressure-eviction/</p>
+<pre><code class="language-shell">宿主机内存： memory.available   #node节点可用内存，默认 &lt;100Mi
+
+nodefs是节点的主要文件系统,用于保存本地磁盘卷、emptyDir、日志存储等数据，
+默认是/var/lib/kubelet/，或者是通过kubelet通过 --root-dir所指定的磁盘挂载目录
+nodefs.inodesFree #nodefs的可用inode，默认&lt;5% 
+nodefs.available #nodefs的可用空间,默认&lt;10%
+
+imagefs是可选文件系统，用于给容器提供运行时存储容器镜像和容器可写层。 
+imagefs.inodesFree #imagefs的inode可用百分比 
+imagefs.available #imagefs的磁盘空间可用百分比，默认&lt;15% 
+pid.available #可用pid百分比
+
+示例： 
+evictionHard: 
+  imagefs.inodesFree: 5% 
+  imagefs.available: 15% 
+  memory.available: 300Mi 
+  nodefs.available: 10% 
+  nodefs.inodesFree: 5%
+  pid.available: 5%
+在kubelet的配置文件中配置：/var/lib/kubelet/config.yaml
+</code></pre>
+<ul>
+<li>
+<p>kube-controller-manager实现 eviction:<br>
+node宕机后的驱逐</p>
+</li>
+<li>
+<p>kubelet实现的eviction：<br>
+基于node负载、资源利用率等进行pod驱逐。</p>
+</li>
+</ul>
+<p>驱逐(eviction，节点驱逐)，用于当node节点资源不足的时候自动将pod进行强制驱逐，以保证当前node节点的正常运行。 Kubernetes基于是QoS(服务质量等级)驱逐Pod , Qos等级包括目前包括以下三个:</p>
+<pre><code class="language-shell">Guaranteed: limits和request的值相等，等级最高、最后被驱逐 
+resources: 
+  limits: 
+    cpu: 500m 
+    memory: 256Mi
+  requests: 
+    cpu: 500m
+    memory: 256Mi
+
+Burstable: limit和request不相等，等级折中、中间被驱逐 
+resources: 
+  limits: 
+    cpu: 500m 
+    memory: 256Mi
+  requests: 
+    cpu: 256m
+    memory: 128Mi
+
+BestEffort: 没有限制，即resources为空，等级最低、最先被驱逐
+</code></pre>
+<p><strong>驱逐条件</strong>：</p>
+<ul>
+<li>
+<p><strong>eviction-signal</strong>：kubelet捕获node节点驱逐触发信号，进行判断是否驱逐，比如通过cgroupfs获取 memory.available的值来进行下一步匹配。</p>
+</li>
+<li>
+<p><strong>operator</strong>：操作符，通过操作符对比条件是否匹配资源量是否触发驱逐</p>
+</li>
+<li>
+<p><strong>quantity</strong>：使用量，即基于指定的资源使用值进行判断，如memory.available: 300Mi、nodefs.available: 10%等。</p>
+</li>
+</ul>
+<p>比如：nodefs.available&lt;10%<br>
+以上公式为当Node节点磁盘空间可用率低于10%就会触发驱逐信号</p>
+<p><strong>软驱逐</strong>：<br>
+软驱逐不会立即驱逐pod，可以自定义宽限期，在条件持续到宽限期还没有恢复，kubelet再强制杀死pod并触发驱逐：</p>
+<p>软驱逐条件：</p>
+<ul>
+<li>eviction-soft： 软驱逐触发条件，比如memory.available &lt; 1.5Gi，如果驱逐条件持续时长超过指定的宽限期，可以触发Pod驱逐。</li>
+<li>eviction-soft-grace-period：软驱逐宽限期， 如 memory.available=1m30s，定义软驱逐条件在触发Pod驱逐之前 必须保持多长时间。</li>
+<li>eviction-max-pod-grace-period：终止pod的宽限期，即在满足软驱逐条件而终止Pod时使用的最大允许宽限期（以秒为单位）。</li>
+</ul>
+<p><strong>硬驱逐</strong>：<br>
+硬驱逐条件没有宽限期，当达到硬驱逐条件时，kubelet 会强制立即杀死 pod并驱逐：</p>
+<ul>
+<li>kubelet 具有以下默认硬驱逐条件(可以自行调整)：</li>
+</ul>
+<pre><code class="language-shell">memory.available&lt;100Mi 
+nodefs.available&lt;10% 
+imagefs.available&lt;15% 
+nodefs.inodesFree&lt;5%（Linux 节点）
+</code></pre>
+<ul>
+<li>kubelet service文件：</li>
+</ul>
+<pre><code># vim /etc/systemd/system/kubelet.service
+</code></pre>
+<ul>
+<li>kubelet配置文件：</li>
+</ul>
+<pre><code> # vim /var/lib/kubelet/config.yaml 
+ evictionHard: 
+  imagefs.available: 15% 
+  memory.available: 300Mi 
+  nodefs.available: 10%
+  nodefs.inodesFree: 5%
 </code></pre>
 
         </div>
