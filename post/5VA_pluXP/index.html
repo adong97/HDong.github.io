@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656433563119">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656603500377">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656433563119" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656603500377" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -37,9 +37,9 @@
 <li><a href="#%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E7%9A%84%E7%9B%AE%E7%9A%84">容器网络的目的</a></li>
 <li><a href="#kubernetes-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B">Kubernetes 网络模型</a>
 <ul>
-<li><a href="#overlay">overlay：</a></li>
-<li><a href="#%E8%B7%AF%E7%94%B1">路由：</a></li>
-<li><a href="#underlay">Underlay：</a></li>
+<li><a href="#overlay">overlay</a></li>
+<li><a href="#%E8%B7%AF%E7%94%B1">路由</a></li>
+<li><a href="#underlay">Underlay</a></li>
 </ul>
 </li>
 <li><a href="#cni%E4%BB%8B%E7%BB%8D%E5%8F%8A%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E9%80%89%E5%9E%8B">CNI介绍及集群网络选型</a></li>
@@ -58,6 +58,7 @@
 <li><a href="#%E5%BC%80%E5%90%AF%E6%88%96%E5%85%B3%E9%97%AD-ipip">开启或关闭 ipip</a></li>
 <li><a href="#%E9%AA%8C%E8%AF%81-ipip-%E9%9A%A7%E9%81%93%E5%B0%81%E8%A3%85">验证 ipip 隧道封装</a></li>
 <li><a href="#ipip-%E5%92%8C-bgp-%E7%9A%84%E5%8C%BA%E5%88%AB">ipip 和 BGP 的区别</a></li>
+<li><a href="#calico%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B">Calico通信流程</a></li>
 </ul>
 </li>
 </ul>
@@ -156,7 +157,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes集群的网络实现</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-18 / 34 min read
+          2022-02-18 / 38 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/5VA_pluXP.png" alt="">
@@ -177,20 +178,20 @@
 <li>节点上的代理（比如：系统守护进程、kubelet）可以和节点上的所有Pod通信<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1645317655041.png" alt="" loading="lazy"></li>
 </ul>
-<h2 id="overlay">overlay：</h2>
+<h2 id="overlay">overlay</h2>
 <p>​ 不同主机的容器间通信，容器需要在本地创建一个二层的虚拟网桥，让后网桥将请求报文进行封装，最后将封装好后发送至 VTEP ，VTEP 本身是一个网络设备用于创建隧道，并且在每个主机上都有这么一个虚拟网卡，每个主机的报文都会进入到这个隧道上，在这个隧道上进行封装和解封装，隧道封装一次将报文发送至物理机，然后物理机在封装一次。</p>
 <p>​ 在隧道中封装的是容器的源 mac 和源 ip 封装好了之后将报文交给了物理网卡，物理网卡在原有的基础上在封装一次，这次封装的就是物理机的源 mac 和 IP ，这个时候在发送至交换机，而对于交换机来说能够看到的只是物理层面的 ip 和 mac 地址，然后通过拆分最后找到了目的 mac 和 ip 地址，然后将报文发送至目的物理机。</p>
 <p>​ 这时候目的物理机在进行报文的拆分，就会获取到目的容器地址和 ip</p>
 <p>​ 这样的好处就是可以实现跨网段，这个报文可以在不同的网段进行转发，他的通信是靠三层路由来打通的，不会受 mac 地址限制，但是可能会有损耗因为需要给他进行封装多层</p>
-<h2 id="路由">路由：</h2>
+<h2 id="路由">路由</h2>
 <p>​ 将封装设备去点，在宿主机上直接通过路由选址，就是直接创建容器，这个容器直接调用物理网卡，并不需要在宿主机上进行封装了，到了物理网卡然后发现这是要去那个网段就直接丢到网桥，网桥再将报文直接转给容器，这样的好处就是不需要虚拟设备的封装。</p>
 <p>​ 虽然少了一层封装性能有所提升，但是问题在于不能实现跨网段，因为这个地方是通过二层设备来转发并没有直连设备。交换机只能够识别到 mac 地址</p>
-<p>​ 解决方法就是在交换机上添加对应的容器网段，从而实现直连</p>
-<h2 id="underlay">Underlay：</h2>
+<p>​ 解决方法就是在交换机上添加对应的容器网段，从而实现直连。</p>
+<h2 id="underlay">Underlay</h2>
 <p>​ 直接通过底层网络打通，强力依赖于底层网络，容器的网段直接和宿主机在同一网段，不在由 K8S 给容器分配地址，我们可以理解为直接将地址桥接至宿主机上，然后在由宿主机直接将报文交给交换机，可以通过 macvlan 来实现</p>
-<p>​ 这样的话一个网口有多个子接口，每个子接口有多个地址和 mac 地址，对交换机来讲他就是一个独立的地址，类似于虚拟化的桥接</p>
+<p>​ 这样的话一个网口有多个子接口，每个子接口有多个地址和 mac 地址，对交换机来讲他就是一个独立的地址，类似于虚拟化的桥接。</p>
 <p>​ 这样的好处在于通信模式比较简单，不用再多次封装，而实直接将报文通过宿主机转发给交换机，性能很强但是管理起来相对麻烦。因为每个容器都需要一个独立的 ip 地址，所有对应的地址池都非常多，而且会有大量的广播报文。</p>
-<p>总结：<br>
+<p><strong>总结</strong><br>
 从性能角度来看：underlay 是最强、接着是路由、overlay 最次</p>
 <p>兼容性角度来看：overlay 是最强、路由第二、underlay 最次</p>
 <h1 id="cni介绍及集群网络选型">CNI介绍及集群网络选型</h1>
@@ -206,8 +207,8 @@
 </li>
 </ul>
 <p>以上两种插件的支持，使得k8s的网络可以支持各式各样的管理模式，当前在业界也出现了大量的支持方案，其中比较流行的比如flannel、calico等。</p>
-<p><strong>网络创建流程</strong></p>
-<p>kubernetes配置了cni网络插件后，其容器网络创建流程为：</p>
+<p><strong>网络创建流程</strong><br>
+kubernetes配置了cni网络插件后，其容器网络创建流程为：</p>
 <ul>
 <li>kubelet先创建pause容器生成对应的network namespace</li>
 <li>调用网络driver，因为配置的是CNI，所以会调用CNI相关代码，识别CNI的配置目录为/etc/cni/net.d</li>
@@ -223,16 +224,39 @@
 <li>网络性能等，MacVlan</li>
 </ul>
 <h1 id="flannel网络模型实现剖析">Flannel网络模型实现剖析</h1>
-<p>flannel的网络有多种实现：</p>
+<p><strong>flannel的网络有多种实现</strong>：</p>
 <ul>
-<li>udp (已废弃)</li>
-<li>vxlan</li>
-<li>host-gw</li>
-<li>...</li>
+<li>
+<p>UDP： (已废弃)<br>
+早期版本的Flannel使用UDP封装完成报文的跨越主机转发，其安全性及性能略有不足。</p>
+</li>
+<li>
+<p>VXLAN<br>
+Linux 内核在在2012年底的v3.7.0之后加入了VXLAN协议支持，因此新版本的Flannel也有UDP转换为VXLAN，VXLAN本质上 是一种tunnel（隧道）协议，用来基于3层网络实现虚拟的2层网络(在宿主机上创建路由，维护路由表，确定下一跳要走哪个主机)，目前flannel 的网络模型已经是基于VXLAN的叠加(覆盖)网络，目前推荐使用vxlan作为其网络模型。</p>
+</li>
+<li>
+<p>Host-gw<br>
+也就是Host GateWay，通过在node节点上创建到达各目标容器地址的路由表而完成报文的转发，因此这种方式要求各node节 点本身必须处于同一个局域网(二层网络)中，因此不适用于网络变动频繁或比较大型的网络环境，但是其性能较好。</p>
+</li>
 </ul>
-<p>网络插件是为了解决K8s环境中容器之间相互通信的。</p>
-<p>不特殊指定的话，默认会使用vxlan技术作为Backend，可以通过如下查看：</p>
-<pre><code class="language-powershell">$ kubectl -n kube-system exec  kube-flannel-ds-amd64-cb7hs 
+<p><strong>Flannel 组件的解释</strong>：<br>
+<strong>Cni0</strong>:网桥设备(当前主机所有容器的网关)，每创建一个pod都会创建一对 veth pair，其中一端是pod中的eth0，另一端是Cni0网桥中的端口（网卡），Pod中从网卡 eth0发出的流量都会发送到Cni0网桥设备的端口（网卡）上，Cni0 设备获得的ip地址是该节点分配到的网段的第一个地址。</p>
+<p><strong>Flannel.1</strong>: overlay网络的设备，用来进行vxlan报文的处理（封包和解包），不同node之间的pod数据流量都从overlay设备以隧道的形式发送到对端。(源主机进行封装，目的主机进行解封装)</p>
+<p><strong>Flannel的系统文件及目录</strong>：</p>
+<pre><code class="language-shell">root@k8s-node2:~# find / -name flannel #运行环境 
+/run/flannel 
+/usr/bin/flannel
+/var/lib/cni/flannel
+
+root@k8s-node2:~# cat /run/flannel/subnet.env #子网信息(子网环境变量，)
+FLANNEL_NETWORK=172.31.0.0/16   # 记录大子网
+FLANNEL_SUBNET=172.31.2.1/24  # 记录当前主机小子网，2.1为容器网关
+FLANNEL_MTU=1450
+FLANNEL_IPMASQ=true
+</code></pre>
+<p>网络插件是为了解决K8s环境中容器之间相互通信的。<br>
+不特殊指定的话，默认会使用vxlan技术作为Backend(网络模型)，可以通过如下查看：</p>
+<pre><code class="language-shell">$ kubectl -n kube-system exec  kube-flannel-ds-amd64-cb7hs 
 $ cat /etc/kube-flannel/net-conf.json
 {
   &quot;Network&quot;: &quot;10.244.0.0/16&quot;,
@@ -270,7 +294,6 @@ $ ip link set vxlan20 up
 
 # 设置ip地址
 $ ip addr add 10.0.51.55/24 dev vxlan20
-
 </code></pre>
 <p><code>172.21.52.84</code>节点：</p>
 <pre><code class="language-shell"># 创建VTEP设备，对端指向k8s-slave1节点，指定VNI及underlay网络使用的网卡
@@ -304,8 +327,8 @@ $ tcpdump -i vxlan20 icmp
 </code></pre>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1645154656854.jpg" alt="" loading="lazy"><br>
 隧道是一个逻辑上的概念，在 vxlan 模型中并没有具体的物理实体想对应。隧道可以看做是一种虚拟通道，vxlan 通信双方（图中的虚拟机）认为自己是在直接通信，并不知道底层网络的存在。从整体来说，每个 vxlan 网络像是为通信的虚拟机搭建了一个单独的通信通道，也就是隧道。</p>
-<p>实现的过程：</p>
-<p>虚拟机的报文通过 vtep 添加上 vxlan 以及外部的报文层，然后发送出去，对方 vtep 收到之后拆除 vxlan 头部然后根据 VNI 把原始报文发送到目的虚拟机。 (封包和解包的过程)</p>
+<p><strong>实现的过程</strong>：<br>
+虚拟机的报文通过 vtep 添加上 vxlan 以及外部的报文层，然后发送出去，对方 vtep 收到之后拆除 vxlan 头部然后根据 VNI 把原始报文发送到目的虚拟机。 (封包和解包的过程)</p>
 <pre><code class="language-shell"># 查看172.21.51.55主机路由
 $ route -n
 10.0.51.0       0.0.0.0         255.255.255.0   U     0      0        0 vxlan20
@@ -530,6 +553,21 @@ k8s-node节点上Pod容器中的Container通过Pause共享网络命令空间。v
 <li>解封装后的 IP 包匹配节点 k8s-slave2 当中的路由表（10.244.2.0），内核将 IP 包转发给<code>cni0</code></li>
 <li><code>cni0</code>将 IP 包转发给连接在 <code>cni0</code> 上的 pod-b</li>
 </ul>
+<p><strong>VXLAN架构图</strong>：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656516017573.png" alt="" loading="lazy"><br>
+flannel network(10.244.0.0/24)为k8s pod网段。并且会在宿主机上生成一个cni0网桥，每创建一个Pod,都会在这个网桥上生成一个对应的虚拟网卡，这个网卡一端在网桥上，另一端在pod容器里(eth0),每个eth0都会对应到宿主机的一个虚拟网卡，这个网卡就在cni0网桥上。</p>
+<p>网桥如果在同一个服务器上，那么容器之间的通信就可以直接基于MAC地址来进行转发报文。<br>
+如果不是本机的容器之间通信(跨主机通信)，会直接将报文交给flannel.1，flannel1.1会进行overly封装，最后通过宿主机出去。宿主机通过物理交换机将报文转发给目的主机，目录主机收到之后，在内核进行解封装。</p>
+<p><strong>VXLAN示意图</strong>：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656516816261.png" alt="" loading="lazy"><br>
+用户的每个pod都会在cni0上有一个虚拟网卡。</p>
+<p>Pod容器(eth0)-&gt;对端网卡-&gt;cni0-&gt;flannel.1-&gt;vxlan(内核封装overlay)-eth0(源宿主机，源端口为UDP 随机，目的端口为目的主机UDP 8472)-&gt;对端主机eth0(UDP 8472)-&gt;flannel.1-&gt;cni0-&gt;对端网卡-&gt;eth0(pod)</p>
+<ul>
+<li>cni0是一个二层设备，用来连接不同的容器</li>
+<li>flannel是一个基于MAC地址实现通信的网络组件，在二层网络实现三层的通信</li>
+</ul>
+<p><strong>flannel通信流程</strong>：<br>
+在容器里产生请求报文发送给容器所在的宿主机对端网卡，然后如果是同一个宿主机就发送给cni0转发给目的容器,如果不是同一个服务器，cni0再发送给flannel.1，由内核进行overlay报文封装,封装完成再通过eth0 UDP随机端口出去，到达目的主机的UDP 8472，接下来就会发送给对端主机eth0(UDP 8472)-&gt;flannel.1-&gt;cni0-&gt;对端网卡-&gt;pod eth0</p>
 <h2 id="利用host-gw模式提升集群网络性能">利用host-gw模式提升集群网络性能</h2>
 <p>vxlan模式适用于三层可达的网络环境，对集群的网络要求很宽松，但是同时由于会通过VTEP设备进行额外封包和解包，因此给性能带来了额外的开销。</p>
 <p>网络插件的目的其实就是将本机的cni0网桥的流量送到目的主机的cni0网桥。实际上有很多集群是部署在同一二层网络环境下的，可以直接利用二层的主机当作流量转发的网关。这样的话，可以不用进行封包解包，直接通过路由表去转发流量。<br>
@@ -721,6 +759,12 @@ kube-system   kube-scheduler-k8s-master                  1/1     Running   34   
 ipip缺点：性能不如 BGP</p>
 <p>BGP优点：性能比 IPIP 模式强劲<br>
 BGP缺点：由于不能够跨子网所有使用场景受限制</p>
+<h2 id="calico通信流程">Calico通信流程</h2>
+<p>注: calico 默认工作模式是 BGP 的 node-to-node mesh,如果要使用 Route Reflector 需要进行相关配置。<br>
+https://docs . projectcalico. org/v3. 4/usage/ routereflector<br>
+https://docs. projectcalico.org/v3.2/usage/ routereflector/calico-routereflector</p>
+<figure data-type="image" tabindex="6"><img src="https://adong97.github.io/HDong.github.io/post-images/1656543704397.png" alt="" loading="lazy"></figure>
+<p>eth0(容器)-&gt;cali71be67429f9-&gt;tun0(直接转发)-&gt;eth0(IPinIP,源主机)-&gt;eth0(目的主机)-&gt;tun0-&gt;calid941116c5b6-&gt;eth0(容器)</p>
 
         </div>
 

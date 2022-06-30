@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656433563119">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656603500377">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656433563119" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656603500377" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -38,9 +38,25 @@
 <li><a href="#%E4%BA%8C-k8s-%E6%9E%B6%E6%9E%84%E4%BB%A3%E7%A0%81%E5%8D%87%E7%BA%A7">二、K8S 架构代码升级</a>
 <ul>
 <li><a href="#21-k8s%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E6%96%B9%E5%BC%8F%E7%AE%80%E4%BB%8B%E5%8F%8A%E7%A4%BA%E4%BE%8B">2.1 K8s镜像更新方式简介及示例</a></li>
-<li><a href="#22-%E6%9A%82%E5%81%9C%E6%9B%B4%E6%96%B0%E4%B8%8E%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0">2.2 暂停更新与恢复更新</a></li>
-<li><a href="#23-%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%9E%8B-recreate%E7%AE%80%E4%BB%8B">2.3 镜像更新类型-Recreate简介</a></li>
-<li><a href="#recreate%E7%A4%BA%E4%BE%8B">Recreate示例</a></li>
+<li><a href="#22-%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%9E%8B-recreate%E7%AE%80%E4%BB%8B">2.2 镜像更新类型-Recreate简介</a></li>
+<li><a href="#23-%E9%95%9C%E5%83%8F%E6%9B%B4%E6%96%B0%E7%B1%BB%E5%9E%8B-rollingupdate%E7%AE%80%E4%BB%8B">2.3 镜像更新类型-RollingUpdate简介</a></li>
+<li><a href="#24-deployment-%E4%B8%AD%E4%BB%A3%E7%A0%81%E6%9B%B4%E6%96%B0%E5%92%8C%E5%9B%9E%E6%BB%9A">2.4 Deployment 中代码更新和回滚</a>
+<ul>
+<li><a href="#241-%E5%8D%87%E7%BA%A7%E9%95%9C%E5%83%8F%E5%88%B0%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%AC">2.4.1 升级镜像到指定版本</a></li>
+<li><a href="#242-rs%E9%AA%8C%E8%AF%81">2.4.2 RS验证</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E9%95%9C%E5%83%8F%E5%9B%9E%E6%BB%9A">三、镜像回滚</a>
+<ul>
+<li><a href="#31-%E8%B7%A8%E7%89%88%E6%9C%AC%E5%9B%9E%E6%BB%9A">3.1 跨版本回滚</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-k8s%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83">四、K8s中实现灰度发布</a>
+<ul>
+<li><a href="#41-%E5%9F%BA%E4%BA%8E%E6%9A%82%E5%81%9C%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83">4.1 基于暂停实现灰度发布</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E9%80%9A%E8%BF%87svc-%E5%AE%9E%E7%8E%B0%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83">五、通过SVC  实现灰度发布</a></li>
 </ul>
 </li>
 </ul>
@@ -137,9 +153,9 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">K8s CI/CD</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">K8s Pod实现代码升级和回滚</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-06-28 / 7 min read
+          2022-06-28 / 26 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ggkWrISWj.png" alt="">
@@ -162,8 +178,8 @@
 <li>启动服务，其实这时候就会使用的我们上一步加载的新代码</li>
 <li>测试，因为服务起来之后为了确保能够正常访问所以需要提前测试（通过 curl 命令或者简单的 API 进行测试）</li>
 <li>测试通过上线</li>
-<li>然后在负载均衡中将需要升级的主机从负载均衡里面摘掉，然后升级完成在加回负载均衡，并做灰度发布，这样的话我在升级过程中是不影响用户访问的。如果在以此类推升级其他服务器</li>
-<li>然后灰度发布，如上图有两个版本是 v1 有一个本版是新发布的 v2 ，即使有用户访问有问题也只能说影响那百分之 30 左右的用户，如果这时候 v2 版本 有问题就直接回滚为 v1 ，如果 v2 没有问题，我们直接将其他版本升级到 v2</li>
+<li>然后在负载均衡中将需要升级的主机从负载均衡里面摘掉，然后升级完成在加回负载均衡，并做灰度发布，这样的话在升级过程中是不影响用户访问的。如果在以此类推升级其他服务器</li>
+<li>然后灰度发布，有两个版本是 v1 有一个本版是新发布的 v2 ，即使有用户访问有问题也只能说影响那百分之 30 左右的用户，如果这时候 v2 版本 有问题就直接回滚为 v1 ，如果 v2 没有问题，我们直接将其他版本升级到 v2</li>
 <li>没有问题之后部署到负载均衡</li>
 <li>最后用户就能直接访问</li>
 </ol>
@@ -214,32 +230,627 @@ deployment.apps/magedu-tomcat-app1-deployment rolled back
 root@k8s-etcd1:~# python3 update-image.py 
 root@k8s-etcd1:~# mkdir /data/.kube -p 
 root@k8s-etcd1:~# scp 172.31.7.101:/root/.kube/config /data/.kube/ 
+
 root@k8s-etcd1:~# cat update-image.py
+#!/usr/bin/env python
+#coding:utf-8
+
+import os
+from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+
+#拼接要更新的namespace、deployment name及目的镜像为一个请求body
+def update_deployment_image(namespace,deployment_name,update_image):
+    body = api_instance.read_namespaced_deployment(deployment_name,namespace)
+    #指定deployment下pod中第一个container的镜像
+    body.spec.template.spec.containers[0].image = update_image
+    return body
+
+#执行镜像更新并打印response信息
+def replace_deployment(deployment_name,namespace,body):
+    try:
+        api_response = api_instance.replace_namespaced_deployment(deployment_name,namespace,body)
+        #print(api_response)
+        print(&quot;\033[0;32mnamespace:{}, deployment:{},当前镜像版本:{}, 更新完成!!!\033[0m&quot;.format(namespace,deployment_name,update_image))
+    except ApiException as e:
+        print(&quot;Exception when calling AppsV1Api-&gt;replace_namespaced_deployment: %s\n&quot; % e)
+
+
+if __name__ == &quot;__main__&quot;:
+    #kubernetes的认证文件,一般位于master节点的/root/.kube/config
+    kube_conf = os.path.join('/data/.kube/config')
+    config.load_kube_config(kube_conf)
+    api_instance = client.AppsV1Api()
+
+    #配置更新参数，指定要更新的namespace、deployment name及目的镜像名称
+    namespace = 'magedu'
+    deployment_name = 'magedu-tomcat-app1-deployment'
+    update_image = 'registry.cn-hangzhou.aliyuncs.com/zhangshijie/tomcat-app1:v4'
+
+    #调用update_deployment_image函数
+    body = update_deployment_image(namespace,deployment_name,update_image)
+
+    #调用replace_deployment执行镜像更新并打印response信息
+    replace_deployment(deployment_name, namespace, body)
+
 root@k8s-etcd1:~# python3 update-image.py
 
 namespace:magedu, deployment:magedu-tomcat-app1-deployment,
-当前镜像版本:registry.cnhangzhou.aliyuncs.com/zhangshijie/tomcat-app1:v4, 
-更新完成!!!
+当前镜像版本:registry.cnhangzhou.aliyuncs.com/tomcat-app1:v4, 更新完成!!!
 </code></pre>
-<h2 id="22-暂停更新与恢复更新">2.2 暂停更新与恢复更新</h2>
-<p>https://kubernetes.io/zh/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment</p>
-<pre><code class="language-shell">$ kubectl rollout pause deployment magedu-tomcat-app1-deployment -n magedu 
+<p><strong>暂停更新与恢复更新</strong><br>
+https://kubernetes.io/zh/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment</p>
+<pre><code class="language-shell"># 暂停更新
+$ kubectl rollout pause deployment magedu-tomcat-app1-deployment -n magedu  
+# 恢复更新
 $ kubectl rollout resume deployment magedu-tomcat-app1-deployment -n magedu
 </code></pre>
-<h2 id="23-镜像更新类型-recreate简介">2.3 镜像更新类型-Recreate简介</h2>
-<p>Recreate(重建更新)：<br>
-先删除现有的pod，然后基于新版本的镜像重建，Pod重建期间服务是不可用的，其优势是同时只有一个版本在线， 不会产生多版本在线问题，缺点是pod删除后到pod重建成功中间的时间会导致服务无法访问，因此较少使用。</p>
+<h2 id="22-镜像更新类型-recreate简介">2.2 镜像更新类型-Recreate简介</h2>
+<p><strong>Recreate(重建更新)</strong>：<br>
+先删除现有的pod，然后基于新版本的镜像重建，Pod重建期间服务是不可用的。其优势是同时只有一个版本在线，不会产生多版本在线问题，缺点是pod删除后到pod重建成功中间的时间会导致服务无法访问，因此<strong>较少使用</strong>。</p>
 <p>Pod镜像更新过程中的状态：<br>
 具体流程为先删除旧版本Pod，然后deployment控制器再新建 一个ReplicaSet控制器并基于新版本镜像创建新的Pod，旧版本的ReplicaSet控制会保留用于版本回退。</p>
-<pre><code class="language-shell">kubectl describe replicasets magedu-tomcat-app1deployment-7bcb67c868 -n magedu
+<pre><code class="language-shell">$ kubectl describe replicasets magedu-tomcat-app1deployment-7bcb67c868 -n magedu
+
+# 查询更新类型
+$  kubectl explain deployment.spec.strategy.type
 </code></pre>
-<h2 id="recreate示例">Recreate示例</h2>
+<h2 id="23-镜像更新类型-rollingupdate简介">2.3 镜像更新类型-RollingUpdate简介</h2>
+<p><img src="https://adong97.github.io/HDong.github.io/post-images/1656458071888.png" alt="" loading="lazy"><br>
+<strong>滚动更新(RollingUpdate)</strong>：<br>
+滚动更新是默认的更新策略，滚动更新是新建一个ReplicaSet并基于新版本镜像创建一部分新版本的pod，然后删除一部分旧版本的Pod， 然后再创建新一部分版本Pod，再删除一部分旧版本Pod，直到旧版本Pod删除完成，滚动更新优势是在升级过程当中不会导致服务不可用，缺点是升级过程中会导致新版本和旧版本两个版本在短时间内的并存。 具体升级过程是在执行更新操作后k8s会再创建一个新版本的ReplicaSet控制器，再删除旧版本的ReplicaSet控制器下的一部分Pod的同时会在新版本ReplicaSet控制器下创建新的Pod，直到旧版本的Pod全部被删除完成。</p>
+<p><strong>镜像更新类型-RollingUpdate更新过程</strong><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656458081072.png" alt="" loading="lazy"><br>
+在执行滚动更新的同时，为了保证服务的可用性，当前控制器内不可用的pod(pod需要拉取镜像执行创建和执行探针探测期间是不可用的)不能超出一定范围，因此需要至少保留一定数量的pod以保证服务可以被客户端正常访问，可以通过以下参数指定：</p>
+<pre><code class="language-shell">$ kubectl explain deployment.spec.strategy 
+</code></pre>
+<p><strong>deployment.spec.strategy.rollingUpdate.maxSurge</strong><br>
+指定在升级期间pod总数可以超出定义好的期望的pod数的个数或者百分比，<br>
+maxSurge是如果是百分比会向上取pod整数，默认为25%，如果设置为10%，<br>
+假如当前是100个pod，那么升级时最多将创建100个pod即 额外有10%的pod临时会超出当前(replicas)指定的副本数限制。</p>
+<p><strong>deployment.spec.strategy.rollingUpdate.maxUnavailable</strong><br>
+指定在升级期间最大不可用的pod数，可以是整数或者当前pod的百分比，<br>
+而maxUnavailable如果是百分比则向下取pod整数，默认是25%，<br>
+假如当前是100个pod，那么升级时最多可以有25个(25%)pod不可用即还要75个(75%)pod是可用的。</p>
+<blockquote>
+<p>注意：以上两个值不能同时为0，如果maxUnavailable最大不可用pod为0，maxSurge超出pod数也为0，那么将会导致pod无法进行滚动更新</p>
+</blockquote>
+<p>假如副本数正好是10个，maxSurge和maxUnavailable的值都是默认的25%。</p>
+<ol>
+<li>那么在代码部署过程中pod最多可以有当前的副本数(replica 10)+ (10 x maxSurge的25%=10+3(往上取整)=13个 当前副本数 + 可以超出的副本数(maxSurge)=升级过程中总副本数</li>
+<li>maxUnavailable也是25%，那么包含两层含义: 2.1：<br>
+2.1:   更新期间不可用的pod最多是(maxUnavailable)个，即用当前副本数10 x 25%=2(往下取整)。 maxUnavailable=当前副本数 x 25% = 2(往下取整)<br>
+2.2：更新期间可用的pod是当前副本数10 - （10 x 25%=2） =8个。 可用副本数=当前副本数-maxUnavailable</li>
+<li>10个pod，在基于RollingUpdate升级过程中会出现13个pod，其中8个可用的以及5个不可用的，直到滚动全部更新后恢复10个。</li>
+</ol>
+<h2 id="24-deployment-中代码更新和回滚">2.4 Deployment 中代码更新和回滚</h2>
+<p>在指定的 deployment 中通过 kubect set image 指定新版本的 镜像:tag来实现更新代码的目的。</p>
+<p>构建三个不同版本的 nginx 镜像，第一次使用 v1 版本， 后组逐渐升级到 v2 与 v3 , 测试镜像版本升级与回滚操作。<br>
+deployment 会创建一个 replicaset ，而这个 replicaset 会维持这个 v1 版本的 pod 3副本。</p>
+<p>当执行 set image 的时候 deployment 会在创建一个新的 replicaset ，而这个 replicaset 维护的是 v2 版本的镜像 pod 3副本。</p>
+<h3 id="241-升级镜像到指定版本">2.4.1 升级镜像到指定版本</h3>
+<ol>
+<li>编写测试 yaml 文件</li>
+</ol>
+<pre><code class="language-shell">[11:09:32 root@k8s-master update]#vim nginx.yaml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dm
+  namespace: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx-containers
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m 
+            memory: &quot;512Mi&quot;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: web
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31180
+  selector:
+    name: nginx
+</code></pre>
+<ol start="2">
+<li>创建并查看</li>
+</ol>
+<pre><code class="language-shell">$ kubectl apply -f nginx.yaml 
+
+$ kubectl get pod -n web 
+NAME                       READY   STATUS    RESTARTS   AGE
+nginx-dm-d5c788d6c-fqzpq   1/1     Running   0          5s
+nginx-dm-d5c788d6c-hr7l6   1/1     Running   0          5s
+nginx-dm-d5c788d6c-ps62g   1/1     Running   0          5s
+
+
+$ kubectl get svc -n web 
+NAME        TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+nginx-svc   NodePort   172.30.76.104   &lt;none&gt;        80:31180/TCP   9m47s
+</code></pre>
+<ol start="3">
+<li>通过浏览器访问</li>
+<li>我们在现在的终端中监控当前 web namespace 的 pod 状态</li>
+</ol>
+<pre><code class="language-shell">$ kubectl get pod -n web -w
+NAME                       READY   STATUS    RESTARTS   AGE
+nginx-dm-d5c788d6c-fqzpq   1/1     Running   0          5s
+nginx-dm-d5c788d6c-hr7l6   1/1     Running   0          5s
+nginx-dm-d5c788d6c-ps62g   1/1     Running   0          5s
+
+# 当前的控制器 ID 是 d5c788d6c
+</code></pre>
+<ol start="5">
+<li>更新为 nginx:1.16.1 版本<br>
+<strong>更新过程中 K8S 会先更新一部分，然后在更新一部分，知道滚动更新完</strong></li>
+</ol>
+<pre><code class="language-shell">$ kubectl set image --record -n web deployment/nginx-dm nginx-containers=nginx:1.16.1
+
+kubectl set image           # 设置更新镜像
+-n web deployment/nginx-dm  # 对 web namespace 下 nginx-dm deployment 进行更新
+nginx-containers            # 对该容器的镜像进行更新
+habor.weixd.com/baseimage/nginx:v1test # 容器更新的镜像
+--record：           #该选项可以记录命令，我们可以很方便的查看每次 revision 的变化
+</code></pre>
+<ol start="6">
+<li>当执行完上面的命令之后会发现原有的d5c788d6c 这个控制器将会被替换</li>
+</ol>
+<pre><code class="language-shell">$ kubectl get pod -n web
+NAME                        READY   STATUS    RESTARTS   AGE
+nginx-dm-7495fb94fb-88rbh   1/1     Running   0          3m1s
+nginx-dm-7495fb94fb-b2jxr   1/1     Running   0          2m57s
+nginx-dm-7495fb94fb-qfkcl   1/1     Running   0          2m59s
+</code></pre>
+<ol start="7">
+<li>通过浏览器 F12 访问 nginx 版本已经替换为了 1.16.1</li>
+</ol>
+<h3 id="242-rs验证">2.4.2 RS验证</h3>
+<p>每一个 RS 控制器其实他管理的就是对应的镜像信息</p>
+<ol>
+<li>通过查看 RS 发现他有两个</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl get rs -n web 
+NAME                  DESIRED   CURRENT   READY   AGE
+nginx-dm-7495fb94fb   3         3         3       10m
+nginx-dm-d5c788d6c    0         0         0       13m
+</code></pre>
+<ol start="2">
+<li>也可以通过 rollout history 查看历史版本</li>
+</ol>
+<pre><code class="language-shell">$ kubectl rollout history -n web deployment nginx-dm 
+deployment.apps/nginx-dm 
+REVISION  CHANGE-CAUSE
+1         &lt;none&gt;
+2         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.16.1 --record=true --namespace=web
+
+REVISION：       #标识历史版本，现有 1、2 版本
+CHANGE-CAUSE：   #因为在创建的时候添加 record 参数，所以查看每次 revision 的变化，如果我们在创建的时候没有加 record 这里就会显示为 none
+
+kubectl rollout history：        #查看控制器历史版本
+deployment nginx-dm：      #查看 deployment控制器的nginx 这个的历史版本
+</code></pre>
+<ol start="3">
+<li>可以看到现在只有两个 rs ，如果这里再升级一个镜像，只要镜像版本不一样就会在多一个 RS</li>
+</ol>
+<pre><code class="language-shell"> ~]$  kubectl set image --record -n web deployment/nginx-dm nginx-containers=nginx:1.18.0
+
+# 这里将容器镜像换成了 1.18.0
+</code></pre>
+<ol start="4">
+<li>验证发现这次的 RS 就有 3 个<br>
+因为每次更新镜像发生变化的话就会创建一个新的 RS 控制器</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl rollout history -n web deployment nginx-dm 
+deployment.apps/nginx-dm 
+REVISION  CHANGE-CAUSE
+1         &lt;none&gt;
+2         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.16.1 --record=true --namespace=web
+3         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.18.0 --record=true --namespace=web
+</code></pre>
+<ol start="5">
+<li>查看 pod 对应的 RS id 也变为了 64d9ccc4f7</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl get pod -n web 
+NAME                        READY   STATUS    RESTARTS   AGE
+nginx-dm-64d9ccc4f7-k6xt7   1/1     Running   0          2m7s
+nginx-dm-64d9ccc4f7-np87g   1/1     Running   0          2m36s
+nginx-dm-64d9ccc4f7-tg6wf   1/1     Running   0          2m4s
+</code></pre>
+<ol start="6">
+<li>浏览器访问，版本更新为了 1.18.0<br>
+所以每次我们更新完镜像之后都会有 RS 控制器被创建出来，而这个 RS 控制器也可以用来做版本控制、版本回滚，由此引出了下面的镜像回滚。</li>
+</ol>
+<h2 id="三-镜像回滚">三、镜像回滚</h2>
+<p>假如现在我们的版本出现了问题，就可以使用下面的这条命令滚回到之前的旧状态。它默认会回滚到之前的这么一个老旧版本上，而且这个回滚不再需要重新构建镜像。</p>
+<ol>
+<li>执行下面命令实现回滚</li>
+</ol>
+<pre><code class="language-shell">]$  kubectl rollout undo -n web deployment nginx-dm 
+</code></pre>
+<ol start="2">
+<li>会发现他已经从 64d9ccc4f7 的 RS 回滚到了 7495fb94fb</li>
+</ol>
+<pre><code class="language-shell">]$  kubectl get pod -n web  -w
+NAME                        READY   STATUS        RESTARTS   AGE
+nginx-dm-64d9ccc4f7-k6xt7   0/1     Terminating   0          7m55s
+nginx-dm-64d9ccc4f7-np87g   0/1     Terminating   0          8m24s
+nginx-dm-7495fb94fb-jm2s4   1/1     Running       0          13s
+nginx-dm-7495fb94fb-lcl88   1/1     Running       0          11s
+nginx-dm-7495fb94fb-qm9pc   1/1     Running       0          9s
+</code></pre>
+<ol start="3">
+<li>通过kubectl get rs 查看我们的 RS 已经回滚至以前的旧版本 rs中</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl get rs -n web 
+NAME                  DESIRED   CURRENT   READY   AGE
+nginx-dm-64d9ccc4f7   0         0         0       13m
+nginx-dm-7495fb94fb   3         3         3       29m   # 回滚至该 RS 中
+nginx-dm-d5c788d6c    0         0         0       31m
+</code></pre>
+<ol start="4">
+<li>查看 rollout history，现在已经更新到 4 版本，由于镜像采用的是 nginx 1.16.1 所以 RS 中的 2 版本也替换到了 4 版本，只要镜像一样就会修改 version id</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl rollout history -n web deployment nginx-dm 
+deployment.apps/nginx-dm 
+REVISION  CHANGE-CAUSE
+1         &lt;none&gt;
+3         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.18.0 --record=true --namespace=web
+4         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.16.1 --record=true --namespace=web
+</code></pre>
+<p><strong>undo 只能够在最近的两个版本之间进行回滚</strong></p>
+<h3 id="31-跨版本回滚">3.1 跨版本回滚</h3>
+<p>因为在上面的案例中我们可以看到 undo 只能够在最近的两个版本之间进行回滚，但是如果我们像跨版本回滚就可以通过 --to-revision 参数来实现</p>
+<p>如果当我们升级一个版本，但是更新后的版本可能有问题，这时候还想通过更新来解决由此更新到了第三个版本，可是当我们更新到了第三个版本之后发现依旧有问题而且时间也不足以更新到第 4 个版本，这时候我们只能回滚到最初的那个 v1 版本</p>
+<ol>
+<li>查看当前版本 revision=5</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl rollout history -n web deployment nginx-dm 
+deployment.apps/nginx-dm 
+REVISION  CHANGE-CAUSE
+1         &lt;none&gt;
+4         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.16.1 --record=true --namespace=web
+5         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.18.0 --record=true --namespace=web
+</code></pre>
+<ol start="2">
+<li>回滚至 revision=1 的版本</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl rollout undo -n web deployment nginx-dm --to-revision=1
+
+# --to-revision=1               # 指定回滚至 1 版本
+</code></pre>
+<ol start="3">
+<li>查看 rs</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl rollout history -n web deployment nginx-dm 
+deployment.apps/nginx-dm 
+REVISION  CHANGE-CAUSE
+4         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.16.1 --record=true --namespace=web
+5         kubectl set image deployment/nginx-dm nginx-containers=nginx:1.18.0 --record=true --namespace=web
+6         &lt;none&gt;                # 就回到了最初始化的版本中
+</code></pre>
+<h2 id="四-k8s中实现灰度发布">四、K8s中实现灰度发布</h2>
+<p>在升级的时候暂停更新，先升级第一部分，K8S 会计算出来当前的 deployment 中有几个 pod 然后基于 pod 总数的 25% 标准进行更新，如果说新发布的 pod 版本有问题就将其回滚，如果新发布的没有问题，将其剩下的 pod 全部升级。</p>
+<h3 id="41-基于暂停实现灰度发布">4.1 基于暂停实现灰度发布</h3>
+<p>这里采用的镜像是 nginx:1.16.1 和 nginx:1.18.0 ，通过这两个镜像来实现类似于灰度发布的效果，从 1.16.1 升级到 1.18.0 但不一次性升级完毕，而是只升级一部分。</p>
+<ol>
+<li>编写 yaml</li>
+</ol>
+<pre><code class="language-shell">]$  vim nginx.yaml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dm
+  namespace: web
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      name: nginx
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx-containers
+        image: nginx:1.16.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m 
+            memory: &quot;512Mi&quot;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: web
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31180
+  selector:
+    name: nginx
+
+</code></pre>
+<ol start="2">
+<li>应用并查看Pod状态</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl apply -f nginx.yaml
+
+]$  kubectl get deployments.apps -n web 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-dm   6/6     6            6           16m
+
+# 并且我们可以看到当前的 rs 都是 7495fb94fb
+~]$  kubectl get po -n web 
+NAME                        READY   STATUS    RESTARTS   AGE
+nginx-dm-7495fb94fb-gng7x   1/1     Running   0          23m
+nginx-dm-7495fb94fb-g6vjr   1/1     Running   0          23m
+nginx-dm-7495fb94fb-j85sd   1/1     Running   0          23m
+nginx-dm-7495fb94fb-l4psn   1/1     Running   0          23m
+nginx-dm-7495fb94fb-mbq8z   1/1     Running   0          23m
+nginx-dm-7495fb94fb-w46jn   1/1     Running   0          23m
+
+</code></pre>
+<ol start="3">
+<li>升级nginx版本至 1.18.0<br>
+在升级的时候我们基于暂停来实现灰度发布</li>
+</ol>
+<pre><code class="language-shell"># 镜像升级至 1.18.0
+]$ kubectl set image deployment/nginx-dm nginx-containers=nginx:1.18.0 --record=true --namespace=web
+deployment.apps/nginx-dm image updated
+
+# 这条命令在执行完 set image 之后立即执行暂停
+]$ kubectl rollout pause -n web deployment nginx-dm 
+deployment.apps/nginx-dm paused
+</code></pre>
+<ol start="4">
+<li>查看当前 pod ，就会发现有所替换</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl get pod -n web 
+NAME                        READY   STATUS    RESTARTS   AGE
+nginx-dm-64d9ccc4f7-dzvjj   1/1     Running   0          116m
+nginx-dm-64d9ccc4f7-gng7x   1/1     Running   0          116m
+nginx-dm-64d9ccc4f7-xnpl8   0/1     Pending   0          116m
+nginx-dm-7495fb94fb-g6vjr   1/1     Running   0          138m
+nginx-dm-7495fb94fb-j85sd   1/1     Running   0          138m
+nginx-dm-7495fb94fb-l4psn   1/1     Running   0          138m
+nginx-dm-7495fb94fb-mbq8z   1/1     Running   0          138m
+nginx-dm-7495fb94fb-w46jn   1/1     Running   0          138m
+
+
+# 并且可以看到现在一共起了 8 个 pod ，5 个旧的 7495fb94fb ，然后三个新的 64d9ccc4f7
+</code></pre>
+<p>如果说访问的时候发现业务代码有问题了那我们就赶紧 undo ，如果说发布的没有问题那我们就直接取消暂停。</p>
+<ol start="6">
+<li>取消暂停</li>
+</ol>
+<pre><code class="language-shell">~]$ kubectl rollout resume -n web deployment nginx-dm 
+</code></pre>
+<h2 id="五-通过svc-实现灰度发布">五、通过SVC  实现灰度发布</h2>
+<p>除了暂停更新和恢复更新的另外一种灰度发布方法，我们在升级的时候先写一个 yaml 文件，用新的 yaml 文件来部署我们的 pod ，通过这种方式来控制我们的 pod 副本。</p>
+<p>实现机制也是 pod 两个版本需要同时在线，用户的访问既能访问到旧版本也能访问到新版本。</p>
+<p>让两个版本并行运行一段时间，如果没有问题我就直接替换为新的版本。</p>
+<ol>
+<li>编写 namespace 文件</li>
+</ol>
+<pre><code class="language-shell">]$ vim ns.yaml
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: web
+
+  ]$ kubectl apply -f ns.yaml 
+</code></pre>
+<ol start="2">
+<li>编写测试 yaml 文件，这个 yaml 文件采用的是 nginx:1.16.1 得镜像，作为旧版本</li>
+</ol>
+<pre><code class="language-shell">]$ vim nginx.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dm
+  namespace: web
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      name: nginx      # 老版本和新版本公共标签
+  template:
+    metadata:
+      labels:
+        name: nginx
+    spec:
+      containers:
+      - name: nginx-containers
+        image: nginx:1.16.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m
+            memory: &quot;512Mi&quot;
+
+
+]$ kubectl apply -f nginx.yaml 
+</code></pre>
+<ol start="3">
+<li>编写 svc yaml</li>
+</ol>
+<pre><code class="language-shell">]$ vim svc.yaml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: web
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31180
+  selector:
+    name: nginx         # 匹配两个 deployment 中的标签
+
+]$  kubectl apply -f svc.yaml 
+</code></pre>
+<ol start="4">
+<li>编写 nginx-v2 yaml 文件，这个作为需要灰度发布的版本，这里nginx:1.18.0</li>
+</ol>
+<pre><code class="language-shell">]$ vim nginx-v2.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v2
+  namespace: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      version: v2       # 用于区分我们的发布版本
+      name: nginx    # 老版本和新版本公共标签
+  template:
+    metadata:
+      labels:
+        version: v2      # 用于区分我们的发布版本
+        name: nginx
+    spec:
+      containers:
+      - name: nginx-containers
+        image: nginx:1.18.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1
+            memory: &quot;512Mi&quot;
+          requests:
+            cpu: 500m
+            memory: &quot;512Mi&quot;
+
+]$  kubectl apply -f nginx-v2.yaml 
+</code></pre>
+<ol start="5">
+<li>查看 ep</li>
+</ol>
+<pre><code class="language-shell">]$ kubectl get ep -n web 
+NAME        ENDPOINTS                                                        AGE
+nginx-svc   10.10.113.185:80,10.10.113.186:80,10.10.169.156:80 + 4 more...   27m
+
+# 会发现一共有 7 个 EP
+</code></pre>
+<p>如果后期我们发布的例如 nginx/1.18.0 版本没有问题，那么我们就修改 svc，添加 v2 标签，并注释掉老版本和新版本公共标签。</p>
+<ol start="6">
+<li>修改 svc yaml 文件</li>
+</ol>
+<pre><code class="language-shell">]$ vim svc.yaml 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: web
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      nodePort: 31180
+  selector:
+#   name: nginx
+    version: v2
+
+
+]$  kubectl apply -f svc.yaml 
+</code></pre>
+<p>现在只有一个 ep 能够满足，因为现在 svc 只能够匹配 version: v2 标签的 pod</p>
+<pre><code class="language-shell">]$  kubectl get ep -n web 
+NAME        ENDPOINTS          AGE
+nginx-svc   10.10.169.156:80   28m
+</code></pre>
+<ol start="7">
+<li>再次通过客户端访问，可以看到现在全部调度到了 nginx/1.18.0</li>
+</ol>
+<pre><code class="language-shell">~]#while true ; do curl -I http://10.0.0.131:31180/ | grep nginx ;sleep 1 ; done
+</code></pre>
+<ol start="8">
+<li>如果替换的代码没有问题，那么现在就可以修改新版本的 yaml 文件，将 pod 副本数改为对应的发布情况即可。</li>
+</ol>
+<pre><code class="language-shell">]$ vim nginx-v2.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-v2
+  namespace: web
+spec:
+  replicas: 6                   # 将副本数改为 6
+
+]$  kubectl apply -f nginx-v2.yaml 
+</code></pre>
+<p>发布完成之后在将 nginx/1.16.1 版本 delete 即可</p>
+<pre><code class="language-shell">]$  kubectl delete -f nginx.yaml 
+</code></pre>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH/">
-            <span class="flex-auto">Devops</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
           </a>
         
 
