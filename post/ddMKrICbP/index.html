@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656632581214">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656815606549">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656632581214" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656815606549" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -82,7 +82,7 @@
     
       
         <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
-          Kubernetes实战
+          Kubernetes业务迁移
         </a>
       
     
@@ -145,7 +145,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Service</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 16 min read
+          2022-02-10 / 17 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/ddMKrICbP.png" alt="">
@@ -157,6 +157,23 @@
 <ul>
 <li>Pod IP 仅仅是集群内可见的虚拟IP，外部无法访问。</li>
 <li>Pod IP会随着Pod的销毁而消失，当ReplicaSet对Pod进行动态伸缩时，Pod IP可能随时随地都会变化，这样对于我们访问这个服务带来了难度。</li>
+</ul>
+<p>通过创建 Service，可以为一组具有相同功能的容器应用提供一个统一的入口地址，并且将请求负载分发到后端的各个容器应用上。其主要类型有：</p>
+<pre><code class="language-shell">$ kubectl explain service.spec.type
+</code></pre>
+<ul>
+<li>
+<p><strong>ClusterIP</strong>：默认的类型，用于k8s内部之间的服务访问，即通过内部的service ip实现服务间的访问，service IP仅可以在内部访问，不能从外部访问。</p>
+</li>
+<li>
+<p><strong>NodePort</strong>：在cluster IP的基础之上，通过在每个node节点监听一个可以指定宿主机端口(nodeport)来暴漏服务，从而允许外部client访问k8s集群中的服务，nodePort把外部client的请求转发至service进行处理。</p>
+</li>
+<li>
+<p><strong>LoadBalancer</strong>：主要在公有云如阿里云、AWS上使用，LoadBalancer构建在nodePort基础之上，通过公有云服务商提供的负载均衡器将k8s集群中的服务暴漏给集群外部的client访问。</p>
+</li>
+<li>
+<p><strong>ExternalName</strong>: 用于将k8s集群外部的服务映射至k8s集群内部访问，从而让集群内部的pod能够通过固定的service name访问集群外部的服务，有时候也用于将不同namespace之间的pod通过ExternalName进行访问。</p>
+</li>
 </ul>
 <h3 id="331-service-负载均衡之cluster-ip">3.3.1 Service 负载均衡之Cluster IP</h3>
 <p>service是一组pod的服务抽象，相当于一组pod的LB，负责将请求分发给对应的pod。<br>

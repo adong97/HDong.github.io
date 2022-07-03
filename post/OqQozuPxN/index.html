@@ -1,0 +1,1047 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656815606549">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656815606549" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#networkpolicy-%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5">NetworkPolicy 网络策略</a>
+<ul>
+<li><a href="#%E6%8B%92%E7%BB%9D%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5">拒绝网络策略</a>
+<ul>
+<li><a href="#%E7%A4%BA%E4%BE%8B1">示例1</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C">示例二</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%89">示例三</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E5%9B%9B">示例四</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BA%94">示例五</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E5%85%AD">示例六</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%83">示例七</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E5%85%AB">示例八</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes业务迁移
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">K8s 网络策略</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-07-03 / 21 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/OqQozuPxN.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="networkpolicy-网络策略">NetworkPolicy 网络策略</h1>
+<p>https://kubernetes.io/zh/docs/concepts/services-networking/network-policies/</p>
+<p>基于NetworkPolicy在三层(网络层)或四层(传输层)控制拒绝或允许请求流量。</p>
+<ul>
+<li>允许或拒绝特定的pod请求目的namespace中的目的pod的所有或指定端口。</li>
+<li>允许或拒绝特定的namespace请求目的namespace中的所有或特定的pod所有或指定端口。</li>
+<li>允许或拒绝特定的源IP范围或IP地址请求目的pod的所有或特定端口。</li>
+</ul>
+<p><strong>环境准备</strong>：</p>
+<ol>
+<li>kubernetes 1.22.5，calico网络组件， 2个node节点或以上。</li>
+<li>两个namespace，linux和python，分别代表不同项目的Pod。</li>
+<li>每个namespace 运行多个pod，且pod可以运行在不同的node主机。</li>
+<li>测试环境为每个namespace分别运行一个nginx和一个tomcat pod，用于测试不同主机的Pod运行在同一个ns的场景以及跨ns的访问通信及访问限制。</li>
+</ol>
+<p><strong>验证</strong>：</p>
+<ol>
+<li>创建两个namespace</li>
+</ol>
+<pre><code class="language-shell">$ kubectl create ns linux 
+$ kubectl create ns python 
+
+分别标记不同得标签
+$ kubectl label ns linux nsname=linux
+$ kubectl label ns python nsname=python
+</code></pre>
+<ol start="2">
+<li>部署web服务</li>
+</ol>
+<ul>
+<li>linux ns部署nginx和tomcat，并让nginx可以将来自于/app的请求转发至当前namespace的tomcat pod。</li>
+</ul>
+<pre><code class="language-shell">1. 创建linux命令空间
+$ kubectl create namespace linux
+
+2. 部署nginx和tomcat到linux命令空间中
+
+$  cat nginx.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: linux-nginx-deployment-label
+  name: linux-nginx-deployment
+  namespace: linux
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linux-nginx-selector
+  template:
+    metadata:
+      labels:
+        app: linux-nginx-selector
+    spec:
+      containers:
+      - name: linux-nginx-container
+        image: nginx:1.20.2-alpine
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+#        resources:
+#          limits:
+#            cpu: 2
+#            memory: 2Gi
+#          requests:
+#            cpu: 500m
+#            memory: 1Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: linux-nginx-service-label
+  name: linux-nginx-service
+  namespace: linux
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30008
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    nodePort: 30043
+  selector:
+    app: linux-nginx-selector
+
+
+$ cat tomcat.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: linux-tomcat-app1-deployment-label
+  name: linux-tomcat-app1-deployment
+  namespace: linux
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linux-tomcat-app1-selector
+  template:
+    metadata:
+      labels:
+        app: linux-tomcat-app1-selector
+    spec:
+      containers:
+      - name: linux-tomcat-app1-container
+        image: tomcat:7.0.109-jdk8-openjdk
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+#        resources:
+#          limits:
+#            cpu: 2
+#            memory: 2Gi
+#          requests:
+#            cpu: 500m
+#            memory: 1Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: linux-tomcat-app1-service-label
+  name: linux-tomcat-app1-service
+  namespace: linux
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30007
+  selector:
+    app: linux-tomcat-app1-selector
+
+# 部署linux namespace nginx pod
+$ kubectl apply -f nginx.yaml
+# 部署linux namespace tomcat pod
+$ kubectl apply -f tomcat.yaml
+</code></pre>
+<p>先实现将nginx的请求转发给同一个namespace的tomcat。<br>
+配置linux ns的nginx 和tomcat</p>
+<pre><code class="language-shell">进入linux namespace tomcat pod，创建app目录
+$ kubectl -n linux exec -it linux-tomcat-app1-deployment-569c85d747-7d7tx -- bash
+mkdir app
+echo &quot;&lt;h1&gt;linux app web page&lt;h1&gt;&quot; &gt; app/index.jsp
+
+然后在nginx pod中配置location,将请求转发给tomcat
+$ kubectl -n linux exec -it linux-nginx-deployment-594bf6dcbf-676sg -- sh
+vi /etc/nginx/conf.d/default.conf
+...
+location /app {                                           
+        proxy_pass http://linux-tomcat-app1-service.linux.svc.cluster.local
+    }
+...  
+
+ #测试域名是否可用
+ping linux-tomcat-app1-service.linux.svc.cluster.local 
+curl linux-tomcat-app1-service.linux.svc.cluster.local/app/
+&lt;h1&gt;linux app web page&lt;h1&gt;
+
+生效nginx配置
+$ nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+/ $ nginx -s reload
+</code></pre>
+<p>访问页面测试<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656718840752.png" alt="" loading="lazy"></p>
+<ul>
+<li>python ns部署nginx和tomcat，并让nginx可以将来自于/app的请求转发至当前namespace的tomcat pod。</li>
+</ul>
+<pre><code class="language-shell">1. 创建python命名空间
+kubectl create namespace python
+
+2. 部署nginx和tomcat到python命令空间中
+$ vim nginx.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: python-nginx-deployment-label
+  name: python-nginx-deployment
+  namespace: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-nginx-selector
+  template:
+    metadata:
+      labels:
+        app: python-nginx-selector
+        project: python
+    spec:
+      containers:
+      - name: python-nginx-container
+        image: nginx:1.20.2-alpine
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        - containerPort: 443
+          protocol: TCP
+          name: https
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+#        resources:
+#          limits:
+#            cpu: 2
+#            memory: 2Gi
+#          requests:
+#            cpu: 500m
+#            memory: 1Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: python-nginx-service-label
+  name: python-nginx-service
+  namespace: python
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30014
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+    nodePort: 30453
+  selector:
+    app: python-nginx-selector
+    project: python #一个或多个selector，至少能匹配目标pod的一个标签
+
+$ vim tomcat.yaml
+kind: Deployment
+#apiVersion: extensions/v1beta1
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: python-tomcat-app1-deployment-label
+  name: python-tomcat-app1-deployment
+  namespace: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-tomcat-app1-selector
+  template:
+    metadata:
+      labels:
+        app: python-tomcat-app1-selector
+    spec:
+      nodeName: 10.1.13.189  # 绑定node,用来实现nginx和tomcat跨主机
+      containers:
+      - name: python-tomcat-app1-container
+        image: tomcat:7.0.109-jdk8-openjdk
+        #command: [&quot;/apps/tomcat/bin/run_tomcat.sh&quot;]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        - name: &quot;password&quot;
+          value: &quot;123456&quot;
+        - name: &quot;age&quot;
+          value: &quot;18&quot;
+#        resources:
+#          limits:
+#            cpu: 2
+#            memory: 2Gi
+#          requests:
+#            cpu: 500m
+#            memory: 1Gi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: python-tomcat-app1-service-label
+  name: python-tomcat-app1-service
+  namespace: python
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30015
+  selector:
+    app: python-tomcat-app1-selector
+
+# 部署python namespace nginx pod 
+$ kubectl apply -f nginx.yaml
+# 部署python namespace tomcat pod
+$ kubectl apply -f tomcat.yaml
+</code></pre>
+<p>运行在linux ns的nginx默认允许将请求转发至运行在python ns的tomcat的。<br>
+接下来验证将linux ns的nginx请求转发至python ns的tomcat中。</p>
+<pre><code class="language-shell">在python namespace tomcat pod中创建app目录存放页面
+cd webapps &amp;&amp; mkdir app
+echo &quot;&lt;h1&gt; python app web page&lt;h1&gt;&quot; &gt; app/index.jsp
+
+在python namespace nginx pod中更改配置，添加location，将请求转发给python namespace的tomcat pod
+vi  /etc/nginx/conf.d/default.conf
+...
+    location /app {                         
+        proxy_pass http://python-tomcat-app1-service.python.svc.cluster.local;
+    }  
+...
+
+/ # nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+/ # nginx -s reload
+2022/07/02 00:00:52 [notice] 50#50: signal process started
+</code></pre>
+<p>访问页面测试<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656720188938.png" alt="" loading="lazy"></p>
+<p>将linux namespace的nginx app转发url改为 python namespace的tomcat上，测试是否可用。</p>
+<pre><code class="language-shell">$ kubectl -n linux exec -it linux-nginx-deployment-594bf6dcbf-676sg -- sh
+...
+    location /app {
+        proxy_pass http://python-tomcat-app1-service.python.svc.cluster.local;
+    }
+...
+
+/ $ nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+/ $ nginx -s reload
+2022/07/02 00:06:38 [notice] 130#130: signal process started
+</code></pre>
+<p>刷新页面访问测试<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1656720584967.png" alt="" loading="lazy"></p>
+<p><strong>结论</strong>：<br>
+经过测试发现，运行在python namespace的服务，在默认情况下是可以任何一个其他namespace pod进行调用的。不存在默认的拒绝策略，默认全部允许。所以说无论在不在同一个服务器，在不在同一个namespace，默认都允许。</p>
+<h2 id="拒绝网络策略">拒绝网络策略</h2>
+<p>测试容器(创建多个pod用于后期从不同的节点进行测试)：<br>
+创建测试Pod,用于测试访问目的nginx、tomcat等业务pod：</p>
+<pre><code class="language-shell">~# kubectl run net-test-centos-pod1 --image=centos:7.9.2009 sleep 10000000 -n linux
+~# kubectl run net-test-centos-pod1 --image=centos:7.9.2009 sleep 10000000 -n python
+~# kubectl run centos-net-test1 --image=centos:7.9.2009 sleep 360000 #测试容器
+</code></pre>
+<h3 id="示例1">示例1</h3>
+<p>ingress-以pod为限制单位、只允许同namespace含有特定标签的源pod访问目标pod的所有端口：</p>
+<p><code>vim case1-ingress-podSelector.yaml</code></p>
+<pre><code class="language-shell">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tomcat-access--networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Ingress      #访问入口流量
+  podSelector:
+    matchLabels:
+      app: python-tomcat-app1-selector #对匹配到的目的Pod应用以下规则
+  ingress: #入栈规则，如果指定目标端口就是匹配全部端口和协议，协议TCP, UDP, or SCTP
+  - from:    #允许访问
+    - podSelector:
+        matchLabels:
+          #app: python-nginx-selector #如果存在多个matchLabel条件，如果存在多个matchLabel条件,是and的关系,即要同时满足条件A、条件B、条件X
+          project: &quot;pythonxx&quot;  # 允许带有project=pythonxx标签的pod流量进入
+</code></pre>
+<p>在生效访问策略之前，先测试循环访问</p>
+<pre><code class="language-shell">while true; do curl 10.1.13.186:30015/app/index.jsp;sleep 0.5; done
+&lt;h1&gt;python app web page&lt;h1&gt;
+&lt;h1&gt;python app web page&lt;h1&gt;
+&lt;h1&gt;python app web page&lt;h1&gt;
+...
+</code></pre>
+<p>生效策略</p>
+<pre><code class="language-shell">$ kubectl apply -f case1-ingress-podSelector.yaml
+
+立刻发现页面无法访问
+</code></pre>
+<p><strong>结果</strong>：</p>
+<ol>
+<li>不允许从其它namespace访问目标pod，即默认禁止了跨ns访问目标pod。</li>
+<li>非明确允许的pod，同namespace 也无法访问</li>
+<li>不允许从宿主机访问目标pod。</li>
+<li>该策略只允许同namespace含有特定标签的源pod访问目标pod，比如tomcat只允许了有特定标签的源pod nginx访问。</li>
+<li>该策略不影响其它namespace的pod内部之间的相互访问，即linux的pod与linux的pod访问正常。</li>
+<li>该策略不影响各namespace的pod与非明确禁止的pod之间的访问，即linux的pod访问python的其它pod也正常。</li>
+</ol>
+<p>验证calico当前规则：</p>
+<pre><code class="language-shell">$ calicoctl get networkpolicy -n python
+NAMESPACE   NAME
+python      knp.default.tomcat-access--networkpolicy
+
+$ calicoctl get networkpolicy -n python  knp.default.tomcat-access--networkpolicy -o yaml
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: &quot;2022-07-02T00:34:59Z&quot;
+  name: knp.default.tomcat-access--networkpolicy
+  namespace: python
+  resourceVersion: &quot;13425519&quot;
+  uid: 947f6752-7311-48fe-9ba8-410a152a58e6
+spec:
+  ingress:
+  - action: Allow
+    destination: {}
+    source:
+      selector: projectcalico.org/orchestrator == 'k8s' &amp;&amp; project == 'python'
+  order: 1000
+  selector: projectcalico.org/orchestrator == 'k8s' &amp;&amp; app == 'python-tomcat-app1-selector'
+  types:
+  - Ingress
+
+</code></pre>
+<h3 id="示例二">示例二</h3>
+<p>ingress-允许同namespace的所有pod访问当前namespace的目标pod多个指定端口</p>
+<ol>
+<li><code>vim case3-ingress-podSelector-ns-MultiPort.yaml</code></li>
+</ol>
+<pre><code class="language-shell">$ cat case3-ingress-podSelector-ns-MultiPort.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tomcat-access-networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: #目标pod
+    matchLabels:
+      app: python-tomcat-app1-selector
+  ingress:
+  - from:
+    - podSelector: #匹配源pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+        matchLabels: {}
+    ports: #入栈规则，如果指定目标端口就是匹配全部端口和协议，协议TCP, UDP, or SCTP
+    - protocol: TCP
+      port: 8080 #允许通过TCP协议访问目标pod的8080端口，但是其它没有允许的端口将全部禁止访问
+      #port: 80
+    - protocol: TCP
+      port: 3306
+    - protocol: TCP
+      port: 6379
+</code></pre>
+<ol start="2">
+<li>生效策略</li>
+</ol>
+<pre><code class="language-shell">$ kubectl apply -f case3-ingress-podSelector-ns-MultiPort.yaml
+</code></pre>
+<ol start="3">
+<li>验证<br>
+1&gt; 跨namespace禁止访问</li>
+</ol>
+<pre><code>root@k8s-master1:~# kubectl exec -it linux-nginx-deployment-5cd9566d7f-jx9l6 sh -n linux 
+/ # curl 10.200.151.218:8080/app/index.jsp
+ #linux ns的pod访问不了python ns中的pod
+</code></pre>
+<p>2&gt; 同namespace的其它pod都可以访问目的pod的指定目标端口(含多目标端口)</p>
+<pre><code class="language-shell">root@k8s-master1:~# kubectl exec -it net-test-centos-pod1 bash -n python 
+[root@net-test-centos-pod1 /]# curl 10.200.151.218:8080/app/index.jsp 
+#同一个ns中的任意Pod均可以访问目的Pod
+python web app web page
+</code></pre>
+<p>拒绝访问的iptables规则：</p>
+<pre><code class="language-shell">root@k8s-node2:~# iptables-save | grep 6379 （Pod所在主机,其它主机无此规则）
+ -A cali-pi-_Q4_rcdNPwrMq4MzwXsp -p tcp -m comment --comment &quot;cali:vOv4Rvj5F7wgCwVT&quot; -m set --match-set
+cali40s:i_4-mErXOxx3I3EQOxm4JCQ src -m multiport --dports 3306,6379,8080 -j MARK --set-xmark 0x10000/0x10000
+</code></pre>
+<h3 id="示例三">示例三</h3>
+<p>ingress-允许同namespace的所有pod访问当前namespace的目标pod所有端口</p>
+<ol>
+<li><code>编辑 case4-ingress-podSelector-ns.yaml</code></li>
+</ol>
+<pre><code class="language-shell">$ vim case4-ingress-podSelector-ns.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tomcat-access--networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: #目标pod
+    matchLabels: {} #匹配所有目标pod
+  ingress:
+  - from:
+    - podSelector: #匹配源pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+        matchLabels: {}
+    #ports: #入栈规则，如果指定目标端口就是匹配全部端口和协议，协议TCP, UDP, or SCTP
+    #- protocol: TCP
+    #  port: {} #允许通过TCP协议访问目标pod的8080端口，但是其它没有允许的端口将全部禁止访问
+      #port: 80
+    #- protocol: TCP
+    #  port: 3306
+    #- protocol: TCP
+    #  port: 6379
+</code></pre>
+<p>生效策略</p>
+<pre><code class="language-shell">$ kubectl apply -f case4-ingress-podSelector-ns.yaml
+</code></pre>
+<ol>
+<li>其它namespace无法访问目标ns的pod。</li>
+<li>同namespace的pod可以访问当前namespace中的所有pod的任意端口</li>
+</ol>
+<h3 id="示例四">示例四</h3>
+<p>ingress-ipBlock白名单</p>
+<ol>
+<li><code>编辑 case5-ingress-ipBlock.yaml</code></li>
+</ol>
+<pre><code class="language-shell">$ vim  case5-ingress-ipBlock.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tomcat-access--networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: #目标pod
+    matchLabels:
+      app: python-tomcat-app1-selector
+  ingress:
+  - from:
+#    - podSelector: #匹配源pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+#        matchLabels: {}
+    - ipBlock:
+        cidr: 10.200.0.0/16 #白名单，允许访问的地址范围，没有允许的将禁止访问目标pod
+        except:
+        - 10.200.219.0/24 #在以上范围内禁止访问的源IP地址
+        - 10.200.229.0/24 #在以上范围内禁止访问的源IP地址
+        - 10.200.218.11/32 #在以上范围内禁止访问的源IP地址
+    ports: #入栈规则，如果指定目标端口就是匹配全部端口和协议，协议TCP, UDP, or SCTP
+    - protocol: TCP
+      port: 8080 #允许通过TCP协议访问目标pod的8080端口，但是其它没有允许的端口将全部禁止访问
+      #port: 80
+    - protocol: TCP
+      port: 3306
+    - protocol: TCP
+      port: 6379
+
+</code></pre>
+<ol>
+<li>只要在白名单范围内没有被except指定禁止的源pod IP，都允许访问。</li>
+<li>在只设置了ipBlock匹配的前提下，其它namespace 中没有在except范围的pod 也可以访问目标pod，及linux ns中的pod只要不在except地址范围内，也可以访问python ns中的pod了。</li>
+</ol>
+<h3 id="示例五">示例五</h3>
+<p>ingress-namespace Selector-ns选择器：基于namespace做访问限制</p>
+<ol>
+<li>给两个namespace打不同的标签</li>
+</ol>
+<pre><code class="language-shell">$ kubectl label ns linux nsname=linux 
+$ kubectl label ns python nsname=python
+</code></pre>
+<ol start="2">
+<li>编辑  case6-ingress-namespaceSelector.yaml</li>
+</ol>
+<pre><code class="language-shell">$ cat case6-ingress-namespaceSelector.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: tomcat-access--networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Ingress
+  podSelector: #目标pod
+    matchLabels: {} #允许访问python namespace 中的所有pod
+#      app: python-tomcat-app1-selector #可以只允许访问python namespace中指定的pod
+  ingress:
+  - from:
+#    - podSelector: #匹配源pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+#        matchLabels: {}
+#    - ipBlock:
+#        cidr: 10.200.0.0/16 #指定禁止访问的源网段
+#        except:
+#        - 10.200.218.0/24 #在以上范围内禁止访问的源IP地址
+
+    - namespaceSelector:
+#        matchLabels: {} #允许所有namespace访问python namespace指定的目标端口或指定的pod加指定端口
+        matchLabels:
+          nsname: linux #只允许指定的namespace访问
+    - namespaceSelector:
+        matchLabels:
+          nsname: python #只允许指定的namespace访问
+    ports: #入栈规则，如果指定目标端口就是匹配全部端口和协议，协议TCP, UDP, or SCTP
+    - protocol: TCP
+      port: 8080 #允许通过TCP协议访问目标pod的8080端口，但是其它没有允许的端口将全部禁止访问
+      #port: 80
+    - protocol: TCP
+      port: 3306
+    - protocol: TCP
+      port: 6379
+
+</code></pre>
+<ol>
+<li>被明确允许的namespace中的pod可以访问目标pod</li>
+<li>没有明确声明允许的namespace将禁止访问</li>
+<li>没有明确声明允许的话，即使同一个namespace也禁止访问</li>
+<li>比如只允许了linux和python两个ns，那么default中的pod将无法访问。</li>
+</ol>
+<h3 id="示例六">示例六</h3>
+<p>Egress-podSelector-Pod出口方向目的IP及目的端口限制-只允许访问指定的目的地址范围及端口</p>
+<p>限制指定的pod可以访指定的ip</p>
+<ol>
+<li>基于Egress白名单,定义ns中匹配成功的pod可以访问ipBlock指定的地址和ports指定的端口。</li>
+<li>匹配成功的pod访问未明确定义在Egress的白名单的其它IP的请求，将拒绝。</li>
+<li>没有匹配成功的源pod,主动发起的出口访问请求不受影响。</li>
+</ol>
+<pre><code class="language-shell">$ vim  case7-Egress-ipBlock.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-access-networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Egress
+  podSelector: #目标pod选择器
+    matchLabels:  #基于label匹配目标pod
+      app: python-tomcat-app1-selector #匹配python namespace中app的值为python-tomcat-app1-selector的pod,然后基于egress中的指定网络策略进行出口方向的网络限制
+  egress:
+  - to:
+    - ipBlock:   #白名单
+        cidr: 10.200.0.0/16 #允许匹配到的pod出口访问的目的CIDR地址范围
+    - ipBlock:    #白名单
+        cidr: 172.31.7.106/32 #允许匹配到的pod出口访问的目的主机
+    ports:
+    - protocol: TCP
+      port: 80 #允许匹配到的pod访问目的端口为80的访问
+    - protocol: TCP
+      port: 53 #允许匹配到的pod访问目的端口为53 即DNS的解析
+    - protocol: UDP
+      port: 53 #允许匹配到的pod访问目的端口为53 即DNS的解析
+</code></pre>
+<h3 id="示例七">示例七</h3>
+<p>Egress-podSelector-Pod出口方向目的Pod限制-只允许访问指定的pod及端口</p>
+<p>基于podSelector选择器，限制源pod能够访问的目的pod</p>
+<pre><code class="language-shell">$ vim case8-Egress-PodSelector.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-access-networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Egress    #限制出口方向
+  podSelector: #目标pod选择器
+    matchLabels:  #基于label匹配目标pod
+      app: python-nginx-selector #匹配python namespace中app的值为python-tomcat-app1-selector的pod,然后基于egress中的指定网络策略进行出口方向的网络限制
+  egress:
+  - to:
+#    - ipBlock:
+#        cidr: 10.200.0.0/16 #允许访问的目的CIDR地址范围
+#    - ipBlock:
+#        cidr: 172.31.7.106/32 #允许访问的目的主机地址
+#    - ipBlock:
+#        cidr: 10.200.218.4/32 #白名单,允许访问的目的主机地址
+    - podSelector: #匹配pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+        matchLabels:
+          app: python-tomcat-app1-selector
+    ports:
+    - protocol: TCP
+      port: 8080 #允许80端口的访问
+    - protocol: TCP
+      port: 53 #允许DNS的解析
+    - protocol: UDP
+      port: 53
+
+</code></pre>
+<ol>
+<li>匹配成功的源pod只能访问指定的目的pod的指定端口</li>
+<li>其它没有允许的出口请求将禁止访问</li>
+</ol>
+<h3 id="示例八">示例八</h3>
+<p>Egress-namespaceSelector： 限制匹配成功的pod没有访问指定的namespace</p>
+<p>1.匹配成功的源pod可以访问指定的目标namespace。<br>
+2.不能访问除指定的namespace以外的其它namespace及外网。<br>
+3.比如允许指定的源pod访问linux和python ns中的8080、3306、6379等端口，但是其它ns无法访问</p>
+<pre><code class="language-shell"># cat case9-Egress-namespaceSelector.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-access-networkpolicy
+  namespace: python
+spec:
+  policyTypes:
+  - Egress
+  podSelector: #目标pod选择器
+    matchLabels:  #基于label匹配目标pod
+      app: python-nginx-selector #匹配python namespace中app的值为python-tomcat-app1-selector的pod,然后基于egress中的指定网络策略进行出口方向的网络限制
+  egress:
+  - to:
+#    - ipBlock:
+#        cidr: 10.200.0.0/16 #允许访问的目的CIDR地址范围
+#    - ipBlock:
+#        cidr: 172.31.7.106/32 #允许访问的目的主机地址
+#    - ipBlock:
+#        cidr: 10.200.218.4/32 #允许访问的目的主机地址
+#    - podSelector: #匹配pod,matchLabels: {}为不限制源pod即允许所有pod,写法等同于resources(不加就是不限制)
+#        matchLabels:
+#          app: python-tomcat-app1-selector
+
+    - namespaceSelector:
+        matchLabels:
+          nsname: python #指定允许访问的目的namespace
+    - namespaceSelector:
+        matchLabels:
+          nsname: linux #指定允许访问的目的namespace
+    ports:
+    - protocol: TCP
+      port: 8080 #允许80端口的访问
+    - protocol: TCP
+      port: 53 #允许DNS的解析
+    - protocol: UDP
+      port: 53
+
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/ggkWrISWj/">
+                <h3 class="post-title">
+                  K8s Pod实现代码升级和回滚
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-06-30T23:46:07.457Z</updated>
+    <updated>2022-07-03T02:34:16.026Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[K8s 网络策略]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/OqQozuPxN/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/OqQozuPxN/">
+        </link>
+        <updated>2022-07-03T01:09:16.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[K8s Pod实现代码升级和回滚]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/ggkWrISWj/</id>
@@ -25,59 +32,52 @@
         <updated>2022-06-20T15:37:13.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战：运⾏dubbo服务]]></title>
+        <title type="html"><![CDATA[K8s业务迁移：运⾏dubbo服务]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/3SrlIs9OK/">
         </link>
         <updated>2022-06-19T05:27:58.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战: 部署WordPress]]></title>
+        <title type="html"><![CDATA[K8s业务迁移: 部署WordPress]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/H9pWSC0aq/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/H9pWSC0aq/">
         </link>
         <updated>2022-06-19T05:26:21.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战:  部署Jenkins]]></title>
+        <title type="html"><![CDATA[K8s业务迁移:  部署Jenkins]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/YawT38S5G/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/YawT38S5G/">
         </link>
         <updated>2022-06-19T05:24:44.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战: MySQL 主从]]></title>
+        <title type="html"><![CDATA[K8s业务迁移: MySQL 主从]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/554ZzYvc5/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/554ZzYvc5/">
         </link>
         <updated>2022-06-19T05:23:08.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战：Redis 业务容器化]]></title>
+        <title type="html"><![CDATA[K8s业务迁移：Redis 业务容器化]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/">
         </link>
         <updated>2022-06-19T05:20:58.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战: zookeeper集群]]></title>
+        <title type="html"><![CDATA[K8s业务迁移: zookeeper集群]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/SGTCcFB06/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/SGTCcFB06/">
         </link>
         <updated>2022-06-19T05:18:12.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[K8s实战: Nginx+Tomcat 动静分离]]></title>
+        <title type="html"><![CDATA[K8s业务迁移: Nginx+Tomcat 动静分离]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/</id>
         <link href="https://adong97.github.io/HDong.github.io/post/gn2hvi2hF/">
         </link>
         <updated>2022-05-29T04:59:48.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Velero结合minio实现kubernetes 业务数据备份与恢复]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/ffYjV0kyR/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/ffYjV0kyR/">
-        </link>
-        <updated>2022-05-07T15:39:04.000Z</updated>
     </entry>
 </feed>
