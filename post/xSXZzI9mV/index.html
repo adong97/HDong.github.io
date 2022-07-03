@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656815606549">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1656864227286">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656815606549" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1656864227286" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -152,7 +152,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Kubernetes服务访问之Ingress</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-10 / 29 min read
+          2022-02-10 / 18 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/xSXZzI9mV.png" alt="">
@@ -160,49 +160,75 @@
         <div class="post-content yue">
           <h2 id="34-kubernetes服务访问之ingress">3.4 Kubernetes服务访问之Ingress</h2>
 <p>对于Kubernetes的Service，无论是Cluster-Ip和Node Port均是四层的负载，集群内的服务如何实现七层的负载均衡，这就需要借助于Ingress，Ingress控制器的实现方式有很多，比如nginx, Contour, Haproxy, trafik, Istio。</p>
-<p>几种常用的ingress功能对比和选型可以参考<a href="https://www.kubernetes.org.cn/5948.html">这里</a></p>
-<p>Ingress-nginx是7层的负载均衡器 ，负责统一管理外部对k8s cluster中Service的请求。主要包含：</p>
+<p>几种常用的ingress功能对比和选型可以参考：</p>
+<ul>
+<li>https://www.kubernetes.org.cn/5948.html</li>
+<li>https://kubernetes.io/zh/docs/concepts/services-networking/ingress/</li>
+</ul>
+<p>Ingress 是 kubernetes API 中的标准资源类型之一，ingress 实现的功能是在应用层对客户端请求的 host 名称或请求的URL 路径把请求转发到指定的 service 资源的规则，即用于将 kubernetes集群外部的请求资源转发之集群内部的 service，再被 service 转发之 pod处理客户端的请求。<br>
+主要包含：</p>
 <ul>
 <li>
-<p>ingress-nginx-controller：根据用户编写的ingress规则（创建的ingress的yaml文件），动态的去更改nginx服务的配置文件，并且reload重载使其生效（是自动化的，通过lua脚本来实现）；</p>
+<p><strong>ingress-nginx-controller</strong>：根据用户编写的ingress规则（创建的ingress的yaml文件），动态的去更改nginx服务的配置文件，并且reload重载使其生效（是自动化的，通过lua脚本来实现）；</p>
 </li>
 <li>
-<p>Ingress资源对象：将Nginx的配置抽象成一个Ingress对象</p>
-<pre><code class="language-yaml">apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-wildcard-host
-spec:
-  rules:
-  - host: &quot;foo.bar.com&quot;
-    http:
-      paths:
-      - pathType: Prefix
-        path: &quot;/bar&quot;
-        backend:
-          service:
-            name: service1
-            port:
-            number: 80
-  - host: &quot;bar.foo.com&quot;
-    http:
-      paths:
-      - pathType: Prefix
-        path: &quot;/foo&quot;
-        backend:
-          service:
-            name: service2
-            port:
-              number: 80
-</code></pre>
+<p><strong>Ingress资源对象</strong>：将Nginx的配置抽象成一个Ingress对象</p>
 </li>
 </ul>
-<p>工作原理：</p>
-<p>1  先创建一个Ingress资源类型，Ingress资源可以定义一个域名。<br>
+<p><strong>Ingress controller 控制器</strong>:<br>
+https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers/</p>
+<p>Ingress 资源需要指定监听地址、请求的 host 和 URL 等配置，然后根据这些规则的匹配机制将客户端的请求进行转发，这种能够为 ingress 配置资源监听并转发流量的组件称为 ingress 控制器(ingress controller)，ingress controller 是 kubernetes 的一个附件，类似于dashboard 或者 flannel 一样，需要单独部署。</p>
+<pre><code>Ingress 选型： 
+https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers/
+
+部署 ingress controller： 
+https://kubernetes.github.io/ingress-nginx/deploy/
+
+NodePort 方式： 
+https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal
+
+官方配置文档：
+https://kubernetes.io/zh/docs/concepts/services-networking/ingress/
+</code></pre>
+<pre><code class="language-yaml">  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: ingress-wildcard-host
+  spec:
+    rules:
+    - host: &quot;foo.bar.com&quot;
+      http:
+        paths:
+        - pathType: Prefix
+          path: &quot;/bar&quot;
+          backend:
+            service:
+              name: service1
+              port:
+              number: 80
+    - host: &quot;bar.foo.com&quot;
+      http:
+        paths:
+        - pathType: Prefix
+          path: &quot;/foo&quot;
+          backend:
+            service:
+              name: service2
+              port:
+                number: 80
+</code></pre>
+<p><strong>工作原理</strong>：</p>
+<ol>
+<li>
+<p>先创建一个Ingress资源类型，Ingress资源可以定义一个域名。<br>
 在访问&quot;foo.bar.com&quot;域名的时候，这个域名只要解析到Ingress上面，foo.bar.com/bar路径的访问会转发到backend中的service1的80端口上。<br>
 同理，在访问&quot;bar.foo.com&quot;域名的时候，bar.foo.com/foo路径的访问就会转发到service2的80端口上。</p>
-<p>2.这个Ingress资源类型会被nginx-ingress-controller监听处理。<br>
+</li>
+<li>
+<p>这个Ingress资源类型会被nginx-ingress-controller监听处理。<br>
 配置文件中的spce.rules 最终是由nginx实现反向代理转发功能，但是由于nginx无法识别Ingress配置文件，所以需要nginx-ingress-controller对资源中的配置片段进行转换，放到nginx.conf中，解析成为nginx可以理解的配置。</p>
+</li>
+</ol>
 <p>3.解析完之后，nginx再进行一次reload，即可解析生效。<br>
 (同下方&quot;实现逻辑&quot;)</p>
 <h3 id="340-ingress-的访问方案">3.4.0 ingress 的访问方案</h3>
@@ -225,8 +251,12 @@ ingress-nginx 到底是以何种的方法去进行所谓的跟后端的 svc 进�
 3）再写到nginx-ingress-controller的pod里，这个Ingress controller的pod里运行着一个Nginx服务，控制器把生成的nginx配置写入/etc/nginx/nginx.conf文件中<br>
 4）然后reload一下使配置生效。以此达到域名分别配置和动态更新的问题。</p>
 <h3 id="343-安装">3.4.3 安装</h3>
-<p>官方文档: https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md</p>
-<pre><code class="language-shell">$ wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+<p>官方文档: https://github.com/kubernetes/ingress-nginx/blob/main/docs/deploy/index.md  #安装部署<br>
+https://docs.nginx.com/nginx-ingress-controller/intro/overview/<br>
+https://kubernetes.io/docs/concepts/services-networking/ingress/<br>
+https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/</p>
+<pre><code class="language-shell">github下载yaml文件：
+https://github.com/kubernetes/ingress-nginx/blob/main/deploy/static/provider/baremetal/1.23/deploy.yaml
 ## 或者使用myblog/deployment/ingress/mandatory.yaml
 
 ## 修改部署节点
@@ -240,661 +270,13 @@ $ grep -n5 nodeSelector mandatory.yaml
 218-        ingress: &quot;true&quot;		#替换此处标签，来决定将ingress部署在哪些机器
 219-      containers:
 220-        - name: nginx-ingress-controller
-221-          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
-222-          args:
-
-</code></pre>
-<ul>
-<li>k8s 1.22.x版本使用以下nginx-ingress-controller.yaml文件</li>
-</ul>
-<pre><code>apiVersion: v1
-kind: Namespace
-metadata:
-  name: ingress-nginx
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-
----
-# Source: ingress-nginx/templates/controller-serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx
-  namespace: ingress-nginx
-automountServiceAccountToken: true
----
-# Source: ingress-nginx/templates/controller-configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
-data:
----
-# Source: ingress-nginx/templates/clusterrole.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-  name: ingress-nginx
-rules:
-  - apiGroups:
-      - ''
-    resources:
-      - configmaps
-      - endpoints
-      - nodes
-      - pods
-      - secrets
-    verbs:
-      - list
-      - watch
-  - apiGroups:
-      - ''
-    resources:
-      - nodes
-    verbs:
-      - get
-  - apiGroups:
-      - ''
-    resources:
-      - services
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ''
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingressclasses
-    verbs:
-      - get
-      - list
-      - watch
----
-# Source: ingress-nginx/templates/clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-  name: ingress-nginx
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ingress-nginx
-subjects:
-  - kind: ServiceAccount
-    name: ingress-nginx
-    namespace: ingress-nginx
----
-# Source: ingress-nginx/templates/controller-role.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx
-  namespace: ingress-nginx
-rules:
-  - apiGroups:
-      - ''
-    resources:
-      - namespaces
-    verbs:
-      - get
-  - apiGroups:
-      - ''
-    resources:
-      - configmaps
-      - pods
-      - secrets
-      - endpoints
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ''
-    resources:
-      - services
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingressclasses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ''
-    resources:
-      - configmaps
-    resourceNames:
-      - ingress-controller-leader
-    verbs:
-      - get
-      - update
-  - apiGroups:
-      - ''
-    resources:
-      - configmaps
-    verbs:
-      - create
-  - apiGroups:
-      - ''
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
----
-# Source: ingress-nginx/templates/controller-rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx
-  namespace: ingress-nginx
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: ingress-nginx
-subjects:
-  - kind: ServiceAccount
-    name: ingress-nginx
-    namespace: ingress-nginx
----
-# Source: ingress-nginx/templates/controller-service-webhook.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx-controller-admission
-  namespace: ingress-nginx
-spec:
-  type: ClusterIP
-  ports:
-    - name: https-webhook
-      port: 443
-      targetPort: webhook
-      appProtocol: https
-  selector:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/component: controller
----
-# Source: ingress-nginx/templates/controller-deployment.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: ingress-nginx
-      app.kubernetes.io/instance: ingress-nginx
-      app.kubernetes.io/component: controller
-  revisionHistoryLimit: 10
-  minReadySeconds: 0
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: ingress-nginx
-        app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/component: controller
-    spec:
-      hostNetwork: true
-      dnsPolicy: ClusterFirst
-      containers:
-        - name: controller
-          image: registry.cn-beijing.aliyuncs.com/kole_chang/controller:v1.0.0
-          imagePullPolicy: IfNotPresent
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - /wait-shutdown
-          args:
-            - /nginx-ingress-controller
-            - --election-id=ingress-controller-leader
-            - --controller-class=k8s.io/ingress-nginx
-            - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
-            - --validating-webhook=:8443
-            - --validating-webhook-certificate=/usr/local/certificates/cert
-            - --validating-webhook-key=/usr/local/certificates/key
-            - --watch-ingress-without-class=true
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - NET_BIND_SERVICE
-            runAsUser: 101
-            allowPrivilegeEscalation: true
-          env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: LD_PRELOAD
-              value: /usr/local/lib/libmimalloc.so
-          livenessProbe:
-            failureThreshold: 5
-            httpGet:
-              path: /healthz
-              port: 10254
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /healthz
-              port: 10254
-              scheme: HTTP
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-            - name: https
-              containerPort: 443
-              protocol: TCP
-            - name: webhook
-              containerPort: 8443
-              protocol: TCP
-          volumeMounts:
-            - name: webhook-cert
-              mountPath: /usr/local/certificates/
-              readOnly: true
-          resources:
-            requests:
-              cpu: 100m
-              memory: 90Mi
-      nodeSelector:
-        kubernetes.io/os: linux
-      serviceAccountName: ingress-nginx
-      terminationGracePeriodSeconds: 300
-      volumes:
-        - name: webhook-cert
-          secret:
-            secretName: ingress-nginx-admission
----
-# Source: ingress-nginx/templates/controller-ingressclass.yaml
-# We don't support namespaced ingressClass yet
-# So a ClusterRole and a ClusterRoleBinding is required
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: controller
-  name: nginx
-  namespace: ingress-nginx
-spec:
-  controller: k8s.io/ingress-nginx
----
-# Source: ingress-nginx/templates/admission-webhooks/validating-webhook.yaml
-# before changing this value, check the required kubernetes version
-# https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#prerequisites
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingWebhookConfiguration
-metadata:
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-  name: ingress-nginx-admission
-webhooks:
-  - name: validate.nginx.ingress.kubernetes.io
-    matchPolicy: Equivalent
-    rules:
-      - apiGroups:
-          - networking.k8s.io
-        apiVersions:
-          - v1
-        operations:
-          - CREATE
-          - UPDATE
-        resources:
-          - ingresses
-    failurePolicy: Fail
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    clientConfig:
-      service:
-        namespace: ingress-nginx
-        name: ingress-nginx-controller-admission
-        path: /networking/v1/ingresses
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: ingress-nginx-admission
-  namespace: ingress-nginx
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/clusterrole.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: ingress-nginx-admission
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-rules:
-  - apiGroups:
-      - admissionregistration.k8s.io
-    resources:
-      - validatingwebhookconfigurations
-    verbs:
-      - get
-      - update
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/clusterrolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: ingress-nginx-admission
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ingress-nginx-admission
-subjects:
-  - kind: ServiceAccount
-    name: ingress-nginx-admission
-    namespace: ingress-nginx
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/role.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: ingress-nginx-admission
-  namespace: ingress-nginx
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-rules:
-  - apiGroups:
-      - ''
-    resources:
-      - secrets
-    verbs:
-      - get
-      - create
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: ingress-nginx-admission
-  namespace: ingress-nginx
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade,post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: ingress-nginx-admission
-subjects:
-  - kind: ServiceAccount
-    name: ingress-nginx-admission
-    namespace: ingress-nginx
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/job-createSecret.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: ingress-nginx-admission-create
-  namespace: ingress-nginx
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-spec:
-  template:
-    metadata:
-      name: ingress-nginx-admission-create
-      labels:
-        helm.sh/chart: ingress-nginx-4.0.1
-        app.kubernetes.io/name: ingress-nginx
-        app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 1.0.0
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: admission-webhook
-    spec:
-      containers:
-        - name: create
-          image: registry.cn-beijing.aliyuncs.com/kole_chang/kube-webhook-certgen:v1.0
-          imagePullPolicy: IfNotPresent
-          args:
-            - create
-            - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
-            - --namespace=$(POD_NAMESPACE)
-            - --secret-name=ingress-nginx-admission
-          env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-      restartPolicy: OnFailure
-      serviceAccountName: ingress-nginx-admission
-      nodeSelector:
-        kubernetes.io/os: linux
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 2000
----
-# Source: ingress-nginx/templates/admission-webhooks/job-patch/job-patchWebhook.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: ingress-nginx-admission-patch
-  namespace: ingress-nginx
-  annotations:
-    helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-  labels:
-    helm.sh/chart: ingress-nginx-4.0.1
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/instance: ingress-nginx
-    app.kubernetes.io/version: 1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: admission-webhook
-spec:
-  template:
-    metadata:
-      name: ingress-nginx-admission-patch
-      labels:
-        helm.sh/chart: ingress-nginx-4.0.1
-        app.kubernetes.io/name: ingress-nginx
-        app.kubernetes.io/instance: ingress-nginx
-        app.kubernetes.io/version: 1.0.0
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/component: admission-webhook
-    spec:
-      containers:
-        - name: patch
-          image: registry.cn-beijing.aliyuncs.com/kole_chang/kube-webhook-certgen:v1.0
-          imagePullPolicy: IfNotPresent
-          args:
-            - patch
-            - --webhook-name=ingress-nginx-admission
-            - --namespace=$(POD_NAMESPACE)
-            - --patch-mutating=false
-            - --secret-name=ingress-nginx-admission
-            - --patch-failure-policy=Fail
-          env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-      restartPolicy: OnFailure
-      serviceAccountName: ingress-nginx-admission
-      nodeSelector:
-        kubernetes.io/os: linux
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 2000
+221-          image: registry.cn-hangzhou.aliyuncs.com/zhangshijie/ingress-nginx:v1.2.0    #修改镜像下载地址为国内镜像地址
 </code></pre>
 <p>创建ingress</p>
 <pre><code class="language-shell"># 为k8s-master节点添加label
 $ kubectl label node k8s-master ingress=true
 
-$ kubectl apply -f mandatory.yaml
+$ kubectl apply -f ingress-nginx-controller-v1.2.0_deployment.yaml
 
 ##进入nginx-ingress-controller Pod查看nginx进程
 $ kubectl -n ingress-nginx exec -it nginx-ingress-controller-58b5c4bd64-rbj9z bash
@@ -908,7 +290,7 @@ PID   USER     TIME  COMMAND
    47 www-data  0:00 nginx: worker process
    48 www-data  0:00 ps aux
 
-##/nginx-ingress-controller 进程就是用来把ingress yaml转化成nginx.conf的。
+##/ nginx-ingress-controller 进程就是用来把ingress yaml转化成nginx.conf的。
 转化成nginx.conf以后，由于nginx本身支持reload,所以做一次reload即可生效
 </code></pre>
 <p>使用示例：<code>myblog/deployment/ingress.yaml</code></p>
@@ -950,7 +332,7 @@ Events:             &lt;none&gt;
 ## 访问myblog.luffy.com域名的&quot;/&quot;路径（curl http://myblog.luffy.com/）会转换到 myblog:80端口上去。
 </code></pre>
 <p><strong>ingress.yaml文件参数解析</strong></p>
-<pre><code>$ vim ingress1.yaml 
+<pre><code class="language-shell">$ vim ingress1.yaml 
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
