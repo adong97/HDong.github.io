@@ -30,30 +30,17 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#11-%E9%83%A8%E7%BD%B2%E6%96%B9%E5%BC%8F">1.1 部署方式</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -145,51 +132,56 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="ri-bookmark-line"></i> 推荐书籍
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io/post-images/ZDr4Wj9Ip.png'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">部署ceph集群</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-07-08 / 2 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/ZDr4Wj9Ip/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">经济机器是如何运行的</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2022-01-03 / 17 min read</div>
-    </div>
-  </section>
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/oUhNbLO5-.png" alt="">
+        
+        <div class="post-content yue">
+          <p>https://github.com/ceph/ceph http://docs.ceph.org.cn/install/manual-deployment/ #简要部署过程</p>
+<p>版本历史：<br>
+https://docs.ceph.com/en/latest/releases/index.html<br>
+https://docs.ceph.com/en/latest/releases/octopus/ #ceph 15 即 octopus 版本支持的系统<br>
+https://docs.ceph.com/en/latest/releases/pacific/ #ceph 16即Pacific 版本支持的系统<br>
+在 ceph 16 中不在支持 centos7</p>
+<h2 id="11-部署方式">1.1 部署方式</h2>
+<p>ceph-ansible：https://github.com/ceph/ceph-ansible #python<br>
+ceph-salt：https://github.com/ceph/ceph-salt #python<br>
+ceph-container：https://github.com/ceph/ceph-container #shell<br>
+ceph-chef：https://github.com/ceph/ceph-chef #Ruby<br>
+cephadm: https://docs.ceph.com/en/latest/cephadm/ #ceph 官方在 ceph 15 版本加入的 ceph 部署工具</p>
+<p>ceph-deploy：https://github.com/ceph/ceph-deploy #python<br>
+是一个 ceph 官方维护的基于 ceph-deploy 命令行部署 ceph 集群的工具，基于 ssh 执行可 以 sudo 权限的 shell 命令以及一些 python 脚本 实现 ceph 集群的部署和管理维护。<br>
+Ceph-deploy 只用于部署和管理 ceph 集群，客户端需要访问 ceph，需要部署客户端工具。</p>
 
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${1 * 0.2}s` }">
-    
-      <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://adong97.github.io/HDong.github.io/post-images/renzhijuexing.jpg'">
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://adong97.github.io/HDong.github.io/post/renzhijuexing/">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">《认知觉醒：开启自我改变的原动力》</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
-        
-      </div>
-      <div class="text-gray-400 text-sm font-light">2021-12-11 / 133 min read</div>
-    </div>
-  </section>
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz/">
+            <span class="flex-auto">Kubernetes</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/bFDvFYQAy/">
+                <h3 class="post-title">
+                  Ceph存储
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
 
       </div>
     </div>
