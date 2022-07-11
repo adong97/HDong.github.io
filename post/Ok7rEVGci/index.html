@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657504908870">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657553891964">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657504908870" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657553891964" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -36,6 +36,12 @@
             <ul class="markdownIt-TOC">
 <li><a href="#grafana-%E5%AE%89%E8%A3%85">Grafana 安装</a>
 <ul>
+<li><a href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85grafana">二进制安装Grafana</a>
+<ul>
+<li><a href="#%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86">插件管理</a></li>
+</ul>
+</li>
+<li><a href="#k8s%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2grafana">K8s环境部署Grafana</a></li>
 <li><a href="#%E5%AF%BC%E5%85%A5dashboard%E7%9A%84%E9%85%8D%E7%BD%AE">导入Dashboard的配置</a></li>
 <li><a href="#devopsprodigy-kubegraf%E6%8F%92%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8">DevOpsProdigy KubeGraf插件的使用</a></li>
 <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF">自定义监控面板</a></li>
@@ -143,7 +149,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Grafana安装与配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 16 min read
+          2022-02-26 / 18 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/Ok7rEVGci.png" alt="">
@@ -151,6 +157,50 @@
         <div class="post-content yue">
           <p>可视化面板，功能齐全的度量仪表盘和图形编辑器，支持 Graphite、zabbix、InfluxDB、Prometheus、OpenTSDB、Elasticsearch 等作为数据源，比 Prometheus 自带的图表展示功能强大太多，更加灵活，有丰富的插件，功能更加强大。</p>
 <h1 id="grafana-安装">Grafana 安装</h1>
+<h2 id="二进制安装grafana">二进制安装Grafana</h2>
+<p>https://grafana.com/grafana/download #下载地址<br>
+https://grafana.com/docs/grafana/latest/installation/requirements/ #安装⽂档</p>
+<ol>
+<li>安装依赖</li>
+</ol>
+<pre><code class="language-shell">root@grafana-server:~# apt-get install -y adduser libfontconfig1 
+root@grafana-server:~# dpkg -i grafana-enterprise_8.4.1_amd64.deb
+</code></pre>
+<ol start="2">
+<li>grafana server配置⽂件</li>
+</ol>
+<pre><code class="language-shell">root@grafana-server:~# vim /etc/grafana/grafana.ini 
+# vim /etc/grafana/grafana.ini 
+[server]
+# Protocol (http, https, socket) 
+protocol = http
+
+# The ip address to bind to, empty will bind to all interfaces 
+http_addr = 0.0.0.0
+
+# The http port to use
+http_port = 3000   #可变更端口
+</code></pre>
+<ol start="3">
+<li>启动grafana</li>
+</ol>
+<pre><code class="language-shell">root@grafana-server:~# systemctl restart grafana-server 
+root@grafana-server:~# systemctl enable grafana-server
+</code></pre>
+<h3 id="插件管理">插件管理</h3>
+<p>饼图插件未安装，需要提前安装<br>
+https://grafana.com/grafana/plugins/grafana-piechart-panel</p>
+<pre><code class="language-shell">在线安装： 
+# grafana-cli plugins install grafana-piechart-panel
+
+离线安装： 
+# pwd
+/var/lib/grafana/plugins
+# unzip grafana-piechart-panel-v1.3.8-0-g4f34110.zip 
+# mv grafana-piechart-panel-4f34110 grafana-piechart-panel
+# systemctl restart grafana-server
+</code></pre>
+<h2 id="k8s环境部署grafana">K8s环境部署Grafana</h2>
 <p>注意点：</p>
 <ul>
 <li>使用最新版本的镜像 https://github.com/grafana/grafana</li>

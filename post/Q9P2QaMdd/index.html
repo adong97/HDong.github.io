@@ -1,0 +1,589 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657553891964">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657553891964" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-promql%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80">一、PromQL数据基础</a>
+<ul>
+<li><a href="#11-%E6%95%B0%E6%8D%AE%E5%88%86%E7%B1%BB">1.1 数据分类</a></li>
+<li><a href="#12-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">1.2 数据类型</a>
+<ul>
+<li><a href="#121-counter">1.2.1 Counter</a></li>
+<li><a href="#122-gauge">1.2.2 Gauge</a></li>
+<li><a href="#123-histogram">1.2.3 Histogram</a></li>
+<li><a href="#124-summary">1.2.4 Summary</a></li>
+</ul>
+</li>
+<li><a href="#13-promql-%E5%8C%B9%E9%85%8D%E5%99%A8">1.3 PromQL-匹配器</a></li>
+<li><a href="#14-promql-%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4">1.4 PromQL-时间范围</a></li>
+<li><a href="#15-promql-%E8%BF%90%E7%AE%97%E7%AC%A6">1.5 PromQL-运算符</a></li>
+<li><a href="#16-promql-%E8%81%9A%E5%90%88%E8%BF%90%E7%AE%97">1.6 PromQL-聚合运算</a>
+<ul>
+<li><a href="#161-max-min-avg">1.6.1 max、min、avg</a></li>
+<li><a href="#162-sum-count">1.6.2 sum、count</a></li>
+<li><a href="#163-abs-absent">1.6.3 abs、absent</a></li>
+<li><a href="#164-stddev-stdvar">1.6.4 stddev、stdvar</a></li>
+<li><a href="#165-topk-bottomk">1.6.5 topk、bottomk</a></li>
+<li><a href="#166-rate-irate">1.6.6 rate、irate</a></li>
+<li><a href="#167-by-without">1.6.7 by、without</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-promql-%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5">二、PromQL 常用语句</a>
+<ul>
+<li><a href="#21-node-%E7%9B%91%E6%8E%A7%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5">2.1 node 监控常用语句</a></li>
+<li><a href="#22-pod-%E5%92%8C-%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E8%AF%AD%E5%8F%A5">2.2 pod 和 容器监控语句</a>
+<ul>
+<li><a href="#221-kubernetes-%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3">2.2.1 kubernetes 资源相关</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes业务迁移
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">PromQL语句</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-26 / 13 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/Q9P2QaMdd.png" alt="">
+        
+        <div class="post-content yue">
+          <p>https://prometheus.io/docs/prometheus/latest/querying/basics/</p>
+<p>Prometheus提供⼀个函数式的表达式语⾔PromQL (Prometheus Query Language)，可以使⽤户实时 地查找和聚合时间序列数据，表达式计算结果可以在图表中展示，也可以在Prometheus表达式浏览器<br>
+中以表格形式展示，或者作为数据源, 以HTTP API的⽅式提供给外部系统使⽤。</p>
+<h1 id="一-promql数据基础">一、PromQL数据基础</h1>
+<h2 id="11-数据分类">1.1 数据分类</h2>
+<ul>
+<li>
+<p>瞬时向量、瞬时数据(instant vector):是⼀组时间序列，每个时间序列包含单个数据样本，⽐如 node_memory_MemFree_bytes查询当前剩余内存就是⼀个瞬时向量，该表达式的返回值中只会包含该时 间序列中的最新的⼀个样本值，⽽相应的这样的表达式称之为瞬时向量表达式，例如： prometheus_http_requests_total</p>
+</li>
+<li>
+<p>范围向量、范围数据(range vector):是指在任何⼀个时间范围内，抓取的所有度量指标数据.⽐如最近⼀天的⽹卡流量趋势图， 例如：prometheus_http_requests_total[5m]</p>
+</li>
+<li>
+<p>标量、纯量数据(scalar)：是⼀个浮点数类型的数据值，使⽤node_load1获取到时⼀个瞬时向量，但是 可⽤使⽤内置函数scalar()将瞬时向量转换为标量，例如：scalar(sum(node_load1))</p>
+</li>
+<li>
+<p>字符串(string):简单的字符串类型的数据，目前未使⽤,(a simple string value; currently unused）。</p>
+</li>
+</ul>
+<h2 id="12-数据类型">1.2 数据类型</h2>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1657551651165.png" alt="" loading="lazy"></figure>
+<h3 id="121-counter">1.2.1 Counter</h3>
+<p>计数器,Counter类型代表⼀个累积的指标数据，在没有被重置的前提下只增不减，比如磁盘I/O 总数、nginx的请求总数、⽹卡流经的报文总数等。</p>
+<h3 id="122-gauge">1.2.2 Gauge</h3>
+<p>仪表盘,Gauge类型代表⼀个可以任意变化的指标数据，值可以随时增⾼或减少，如带宽速录、CPU负载、内存利⽤率、nginx 活动连接数等。</p>
+<h3 id="123-histogram">1.2.3 Histogram</h3>
+<p>累积直方图，Histogram会在⼀段时间范围内对数据进行采样(通常是请求持续时间或响应大小等),假如每分钟产⽣⼀个当前的活跃连接数，那么⼀天就会产⽣1440个数据，查看数据的每间隔的绘图跨度为2⼩时，那么2点的柱状图(bucket)会包含0点到2点即两个小时的数据，⽽4点的柱状图(bucket)则会包含0点到4点的数据，而6点的柱状图(bucket)则会包含0点到6点的数据。</p>
+<pre><code class="language-shell"> prometheus_tsdb_compaction_chunk_range_seconds_bucket 
+ # TYPE go_gc_heap_frees_by_size_bytes_total histogram 
+ go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;8.999999999999998&quot;}
+1.489766e+06 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;24.999999999999996&quot;} 3.1621269e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;64.99999999999999&quot;} 3.9805887e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;144.99999999999997&quot;} 4.5192143e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;320.99999999999994&quot;} 4.5981675e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;704.9999999999999&quot;} 4.6231281e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;1536.9999999999998&quot;} 4.6293065e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;3200.9999999999995&quot;} 4.6357758e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;6528.999999999999&quot;} 4.6406395e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;13568.999999999998&quot;} 4.6415683e+07 go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;27264.999999999996&quot;} 4.6443154e+07
+go_gc_heap_frees_by_size_bytes_total_bucket{le=&quot;+Inf&quot;} 4.6448752e+07 go_gc_heap_frees_by_size_bytes_total_sum 4.690375928e+09
+go_gc_heap_frees_by_size_bytes_total_count 4.6448752e+07
+</code></pre>
+<h3 id="124-summary">1.2.4 Summary</h3>
+<p>摘要，也是⼀组数据，统计的不是区间的个数⽽是统计分位数,从0到1，表示是0%~100%，如下 统计的是 0、0.25、0.5、0.75、1的数据量分别是多少</p>
+<pre><code class="language-shell"> go_gc_duration_seconds
+# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
+# TYPE go_gc_duration_seconds summary 
+go_gc_duration_seconds{quantile=&quot;0&quot;} 1.8479e-05 
+go_gc_duration_seconds{quantile=&quot;0.25&quot;} 6.5059e-05 
+go_gc_duration_seconds{quantile=&quot;0.5&quot;} 9.3605e-05 
+go_gc_duration_seconds{quantile=&quot;0.75&quot;} 0.000133103 #百分之75的 go_gc_duration_seconds的持续时间 
+go_gc_duration_seconds{quantile=&quot;1&quot;} 0.004022673
+go_gc_duration_seconds_sum 1.446781088
+go_gc_duration_seconds_count 7830
+</code></pre>
+<h2 id="13-promql-匹配器">1.3 PromQL-匹配器</h2>
+<pre><code class="language-shell">= :选择与提供的字符串完全相同的标签，精确匹配。 
+!= :选择与提供的字符串不相同的标签，去反。 
+=~ :选择正则表达式与提供的字符串（或⼦字符串）相匹配的标签。 
+!~ :选择正则表达式与提供的字符串（或⼦字符串）不匹配的标签。
+
+#查询格式&lt;metric name&gt;{&lt;label name&gt;=&lt;label value&gt;, ...} 
+node_load1{instance=&quot;172.31.7.111:9100&quot;} 
+node_load1{job=&quot;promethues-node&quot;}
+
+node_load1{job=&quot;promethues-node&quot;,instance=&quot;172.31.7.111:9100&quot;} #精确匹配 
+node_load1{job=&quot;promethues-node&quot;,instance!=&quot;172.31.7.111:9100&quot;} #取反 
+node_load1{instance=~&quot;172.31.7.11.*:9100$&quot;} #包含正则且匹配
+node_load1{instance!~&quot;172.31.7.111:9100&quot;} #包含正则且取反
+</code></pre>
+<h2 id="14-promql-时间范围">1.4 PromQL-时间范围</h2>
+<pre><code class="language-shell">s - 秒 
+m - 分钟 
+h - ⼩时 
+d - 天 
+w - 周 
+y - 年
+
+#瞬时向量表达式，选择当前最新的数据 
+node_memory_MemTotal_bytes{}
+
+#区间向量表达式，选择以当前时间为基准，查询所有节点node_memory_MemTotal_bytes指标5分钟内 的数据
+node_memory_MemTotal_bytes{}[5m]
+
+#区间向量表达式，选择以当前时间为基准，查询指定节点node_memory_MemTotal_bytes指标5分钟内 的数据
+node_memory_MemTotal_bytes{instance=&quot;172.31.7.111:9100&quot;}[5m]
+</code></pre>
+<h2 id="15-promql-运算符">1.5 PromQL-运算符</h2>
+<pre><code class="language-shell">+ 加法 
+- 减法 
+* 乘法 
+/ 除法 
+% 模 
+^ 幂等
+
+node_memory_MemFree_bytes/1024/1024 #将内存进⾏单位从字节转⾏为兆 
+node_disk_read_bytes_total{device=&quot;sda&quot;} +
+node_disk_written_bytes_total{device=&quot;sda&quot;} #计算磁盘读写数据量
+</code></pre>
+<h2 id="16-promql-聚合运算">1.6 PromQL-聚合运算</h2>
+<h3 id="161-max-min-avg">1.6.1 max、min、avg</h3>
+<pre><code class="language-shell">max() #最⼤值 
+min() #最⼩值 
+avg() #平均值
+
+计算每个节点的最⼤的流量值：
+max(node_network_receive_bytes_total) by (instance) 
+
+计算每个节点最近五分钟每个device的最⼤流量
+max(rate(node_network_receive_bytes_total[5m])) by (device)
+</code></pre>
+<h3 id="162-sum-count">1.6.2 sum、count</h3>
+<pre><code class="language-shell">sum() #求数据值相加的和(总数) 
+sum(prometheus_http_requests_total)  {} 2495 #最近总共请求数为2495次，⽤于计算返回值的总数(如http请求次数)
+
+count() #统计返回值的条数 
+count(node_os_version) {} 2 #⼀共两条返回的数据，可以⽤于统计节点数、pod数量等
+
+
+count_values() #对value的个数(⾏数)进⾏计数
+count_values(&quot;node_version&quot;,node_os_version) #统计不同的系统版本节点有多少
+</code></pre>
+<h3 id="163-abs-absent">1.6.3 abs、absent</h3>
+<pre><code class="language-shell">abs() #返回指标数据的值 
+abs(sum(prometheus_http_requests_total{handler=&quot;/metrics&quot;}))
+
+absent() #如果监指标有数据就返回空，如果监控项没有数据就返回1，可⽤于对监控项设置告警通知
+absent(sum(prometheus_http_requests_total{handler=&quot;/metrics&quot;}))
+</code></pre>
+<h3 id="164-stddev-stdvar">1.6.4 stddev、stdvar</h3>
+<pre><code class="language-shell">stddev() #标准差 
+stddev(prometheus_http_requests_total) #5+5=10,1+9=10,1+9这⼀组的数据差异就⼤， 在系统是数据波动较⼤，不稳定
+
+stdvar() #求⽅差
+stdvar(prometheus_http_requests_total)
+</code></pre>
+<h3 id="165-topk-bottomk">1.6.5 topk、bottomk</h3>
+<pre><code class="language-shell">topk() #样本值排名最⼤的N个数据  
+  #取从⼤到⼩的前6个 
+  topk(6, prometheus_http_requests_total)
+
+bottomk() #样本值排名最⼩的N个数据 
+  #取从⼩到⼤的前6个
+  bottomk(6, prometheus_http_requests_total)
+</code></pre>
+<h3 id="166-rate-irate">1.6.6 rate、irate</h3>
+<pre><code class="language-shell">rate() #函数是专⻔搭配counter数据类型使⽤函数，功能是取counter数据类型在这个时间段中平均 每秒的增量平均数,适合⽤于计算数据相对平稳的数据。 
+
+  rate(prometheus_http_requests_total[5m]) 
+  rate(node_network_receive_bytes_total[5m]) 
+  
+irate() #函数是专⻔搭配counter数据类型使⽤函数，irate获取的是指定时间范围内最近的两个数据 来计算数据的速率，适合计算数据变化⽐较⼤的数据，显示的数据相对⽐较准确。 
+  
+  irate(prometheus_http_requests_total[5m])
+  irate(node_network_receive_bytes_total[5m])
+</code></pre>
+<h3 id="167-by-without">1.6.7 by、without</h3>
+<pre><code class="language-shell">#by，在计算结果中，只保留by指定的标签的值，并移除其它所有的 
+sum(rate(node_network_receive_packets_total{instance=~&quot;.*&quot;}[10m])) by (instance)
+sum(rate(node_memory_MemFree_bytes[5m])) by (increase)
+
+#without，从计算结果中移除列举的instance,job标签，保留其它标签
+sum(prometheus_http_requests_total) without (instance,job)
+</code></pre>
+<h1 id="二-promql-常用语句">二、PromQL 常用语句</h1>
+<p>下面这些只是一些基本的 PromQL 语句，而且都是 Prometheus 自己定义好的、除非我们通过二次开发不然不能修改。</p>
+<h2 id="21-node-监控常用语句">2.1 node 监控常用语句</h2>
+<pre><code class="language-shell"># 常用 QL 语句
+
+# 查询 node 节点总内存大小
+node_memory_MemTotal_bytes  
+
+# 查询 node 节点剩余可用内存
+node_memory_MemFree_bytes   
+
+# 查询指定节点的总内存
+node_memory_MemTotal_bytes{instance=&quot;172.31.7.111:9100&quot;} 
+
+# 查询指定节点的可用内存
+node_memory_MemFree_bytes{instance=&quot;172.31.7.111:9100&quot;}  
+
+# 查询指定磁盘的每秒磁盘 io
+node_disk_io_time_seconds_total{device=&quot;sda&quot;}           
+
+#查看指定磁盘的磁盘剩余空间
+node_filesystem_free_bytes{device=&quot;/dev/sda1&quot;,fstype=&quot;xfs&quot;,mountpoint=&quot;/&quot;} 
+
+# CPU 负载
+# HELP node_load1 1m load average. 
+# TYPE node_load1 gauge 
+node_load1 0.1
+
+# HELP node_load15 15m load average. 
+# TYPE node_load15 gauge 
+node_load15 0.17
+
+# HELP node_load5 5m load average.
+# TYPE node_load5 gauge 
+node_load5 0.13
+
+# cpu使用率 5 分钟内百分比: 
+100-(avg(irate(node_cpu_seconds_total{mode=&quot;idle&quot;}[5m])) by(instance) *100)
+
+# cpu分别在1分钟，3分钟，5分钟之内的使用情况:
+node_load1 / count by(job, instance)(count by(job, instance, cpu)(node_cpu_seconds_total))
+
+node_load3 / count by(job, instance)(count by(job, instance, cpu)(node_cpu_seconds_total))
+
+node_load5 / count by(job, instance)(count by(job, instance, cpu)(node_cpu_seconds_total))
+
+# 内存使用率百分比
+# (总内存 - 已使用内存 - 缓冲区内存 - 字段内存) = 剩余内存 / 总内存 * 100 = 可用内存
+# node_memory_Buffers_bytes
+# 可用内存
+# node_memory_MemAvailable_bytes
+((node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Buffers_bytes - node_memory_Cached_bytes) / (node_memory_MemTotal_bytes )) * 100
+
+# 硬盘使用情况百分比
+#（总大小-剩余大小）/总大小=硬盘使用率
+(node_filesystem_size_bytes {mountpoint =&quot;/&quot;} - node_filesystem_free_bytes {mountpoint =&quot;/&quot;}) /
+node_filesystem_size_bytes {mountpoint =&quot;/&quot;} * 100
+
+# 硬盘io使用情况
+# 硬盘使⽤率 是 read + written 读和写 都会占⽤IO /1024 两次后 就由 bytes =&gt; Mbs 
+((rate(node_disk_read_bytes_total[5m] )+ rate(node_disk_written_bytes_total[5m])) / 1024 /1024)
+
+# 网卡流量
+# irate 和 rate 都会用于计算某个指标在一定时间间隔内的变化速率。但是它们的计算方法有所不同：irate 取的是在指定时间范围内的最近两个数据点来算速率，而 rate 会取指定时间范围内所有数据点，算出一组速率，然后取平均值作为结果
+irate(node_network_transmit_bytes_total{device!~&quot;lo&quot;}[1m]) / 1000
+</code></pre>
+<h2 id="22-pod-和-容器监控语句">2.2 pod 和 容器监控语句</h2>
+<h3 id="221-kubernetes-资源相关">2.2.1 kubernetes 资源相关</h3>
+<pre><code class="language-shell"># 关于 CPU 的 limit 合理性指标。
+#查出最近5分钟，超过 20% 的 CPU 执行周期受到限制的容器。表达式：
+sum(increase(container_cpu_cfs_throttled_periods_total{container!=&quot;&quot;, namespace!=&quot;&quot;, pod!=&quot;&quot;}[5m])) by (container, pod, namespace)/ sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespace) &gt; ( 20 / 100 )
+
+# 相关指标说明：
+container_cpu_cfs_periods_total ：容器生命周期中度过的 cpu 周期总数
+container_cpu_cfs_throttled_periods_total：容器生命周期中度过的受限的 cpu 周期总数
+
+# 集群 CPU 过度使用。
+# CPU 已经过度使用无法容忍节点故障，节点资源使用的总量超过节点的 CPU 总量，所以如果有节点故障将影响集群资源运行因为所需资源将无法被分配。
+sum(namespace:kube_pod_container_resource_requests_cpu_cores:sum{})/sum(kube_node_status_allocatable_cpu_cores)&gt;(count(kube_node_status_allocatable_cpu_cores)-1) / count(kube_node_status_allocatable_cpu_cores)
+
+# 相关指标说明：
+kube_pod_container_resource_requests_cpu_cores ：资源 CPU 使用的 cores 数量
+kube_node_status_allocatable_cpu_cores ：节点 CPU cores 数量
+
+# 集群内存过度使用。内存已经过度使用无法容忍节点故障，节点资源使用的总量超过节点的内存总量，所以如果有节点故障将影响集群资源运行因为所需资源将无法被分配。表达式：
+sum(namespace:kube_pod_container_resource_requests_memory_bytes:sum{})/sum(kube_node_status_allocatable_memory_bytes)&gt;(count(kube_node_status_allocatable_memory_bytes)-1)/ count(kube_node_status_allocatable_memory_bytes)
+
+# 相关指标说明：
+kube_pod_container_resource_requests_memory_bytes：资源内存使用的量
+kube_node_status_allocatable_memory_bytes：节点内存量
+
+# 集群CPU是否超分。查看 CPU 资源分配的额度是否超过进群总额度
+sum(kube_pod_container_resource_limits_cpu_cores{job=&quot;kube-state-metrics&quot;})/sum(kube_node_status_allocatable_cpu_cores)&gt; 1.1
+
+# 相关指标说明：
+kube_pod_container_resource_limits_cpu_cores            ：资源分配的 CPU 资源额度
+kube_node_status_allocatable_cpu_cores                  ：节点 CPU 总量
+
+# 集群超分内存，查看内存资源分配的额度是否超过进群总额度
+sum(kube_pod_container_resource_limits_memory_bytes{job=&quot;kube-state-metrics&quot;})/sum(kube_node_status_allocatable_memory_bytes{job=&quot;kube-state-metrics&quot;})&gt; 1.1
+
+# 相关指标说明:
+kube_pod_container_resource_limits_memory_bytes：资源配额内存量
+kube_node_status_allocatable_memory_bytes：节点内存量
+
+# 命名空间级内存资源使用的比例，关乎资源配额。当使用 request 和 limit 限制资源时，使用值和最大值还是有一点区别，当有 request 时说明最低分配了这么多资源。需要注意当 request 等于 limit 时那么说明资源已经是100%已经分配使用当监控告警发出的时候需要区分。
+sum (kube_pod_container_resource_requests_memory_bytes{job=&quot;kube-state-metrics&quot;} ) by (namespace)/ (sum(kube_pod_container_resource_limits_memory_bytes{job=&quot;kube-state-metrics&quot;}) by (namespace)) &gt; 0.8
+
+# 相关指标说明:
+kube_pod_container_resource_requests_memory_bytes       ：内存资源使用量
+kube_pod_container_resource_limits_memory_bytes         ：内存资源最大值
+
+# 命名空间级 CPU 资源使用的比例，关乎资源配额。当使用 request 和 limit 限制资源时，使用值和最大值还是有一点区别，当有 request 时说明最低分配了这么多资源。需要注意当 request 等于 limit 时那么说明资源已经是100%已经分配使用当监控告警发出的时候需要区分。
+sum (kube_pod_container_resource_requests_cpu_cores{job=&quot;kube-state-metrics&quot;} ) by (namespace)/ (sum(kube_pod_container_resource_limits_cpu_cores{job=&quot;kube-state-metrics&quot;}) by (namespace)) &gt; 0.8
+
+# 相关指标说明:
+kube_pod_container_resource_requests_cpu_cores：CPU 使用量
+kube_pod_container_resource_limits_cpu_cores：CPU 限额最大值
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/yIGgSal46/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  基于Kubernetes的DevOps平台实践
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/NetHMaIIz/">
+                <h3 class="post-title">
+                  自定义指标实现业务伸缩
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>

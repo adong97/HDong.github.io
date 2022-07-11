@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657504908870">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657553891964">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657504908870" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657553891964" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -42,7 +42,11 @@
 <li><a href="#%E5%B8%B8%E7%94%A8%E7%9B%91%E6%8E%A7%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">常用监控对象的指标采集</a>
 <ul>
 <li><a href="#%E7%9B%91%E6%8E%A7kube-apiserver">监控kube-apiserver</a></li>
-<li><a href="#%E7%9B%91%E6%8E%A7%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%9F%BA%E7%A1%80%E6%8C%87%E6%A0%87-node_exporter">监控集群节点基础指标 Node_exporter</a></li>
+<li><a href="#%E7%9B%91%E6%8E%A7%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E5%9F%BA%E7%A1%80%E6%8C%87%E6%A0%87-node_exporter">监控集群节点基础指标 Node_exporter</a>
+<ul>
+<li><a href="#node-exporter%E6%8C%87%E6%A0%87%E6%95%B0%E6%8D%AE">node-exporter指标数据</a></li>
+</ul>
+</li>
 <li><a href="#prometheus%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8Erelabeling">Prometheus的服务发现与Relabeling</a></li>
 <li><a href="#%E5%AE%B9%E5%99%A8%E6%8C%87%E6%A0%87%E9%87%87%E9%9B%86">容器指标采集</a>
 <ul>
@@ -150,7 +154,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">常用监控对象的指标采集</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 20 min read
+          2022-02-26 / 21 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/2--X3r9eT.png" alt="">
@@ -345,6 +349,36 @@ $ curl 10.1.13.158:9100/metrics
 </ul>
 </li>
 </ul>
+<h3 id="node-exporter指标数据">node-exporter指标数据</h3>
+<pre><code class="language-shell"># curl 172.30.7.111:9100/metrics 
+#node-export默认的监听端⼝为9100，可以使⽤浏览器或curl访问数据： 
+# HELP node_cpu_guest_seconds_total Seconds the CPUs spent in guests (VMs) for each mode.
+# TYPE node_cpu_guest_seconds_total counter 
+node_cpu_guest_seconds_total{cpu=&quot;0&quot;,mode=&quot;nice&quot;} 0 
+node_cpu_guest_seconds_total{cpu=&quot;0&quot;,mode=&quot;user&quot;} 0 
+# HELP node_cpu_seconds_total Seconds the CPUs spent in each mode. 
+# TYPE node_cpu_seconds_total counter 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;idle&quot;} 4168.02 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;iowait&quot;} 0.84 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;irq&quot;} 0 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;nice&quot;} 1.96 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;softirq&quot;} 9.33 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;steal&quot;} 0 
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;system&quot;} 167.92
+node_cpu_seconds_total{cpu=&quot;0&quot;,mode=&quot;user&quot;} 290.23
+</code></pre>
+<p>常见的指标</p>
+<pre><code class="language-shell">node_boot_time：系统⾃启动以后的总结时间 
+node_cpu：系统CPU使⽤量 
+node_disk*：磁盘IO 
+node_filesystem*：系统⽂件系统⽤量 
+node_load1：系统CPU负载 
+node_memeory*：内存使⽤量 
+node_network*：⽹络带宽指标 
+node_time：当前系统时间 
+go_*：node exporter中go相关指标
+process_*：node exporter⾃身进程相关运⾏指标
+</code></pre>
 <h2 id="prometheus的服务发现与relabeling">Prometheus的服务发现与Relabeling</h2>
 <p>之前已经给Prometheus配置了RBAC，有读取node的权限，因此Prometheus可以去调用Kubernetes API获取node信息，所以Prometheus通过与 Kubernetes API 集成，提供了内置的服务发现分别是：<code>Node</code>、<code>Service</code>、<code>Pod</code>、<code>Endpoints</code>、<code>Ingress</code></p>
 <p>配置job即可：</p>
