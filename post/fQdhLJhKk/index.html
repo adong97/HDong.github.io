@@ -34,10 +34,15 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%89%8D%E8%A8%80">前言</a>
+<li>
 <ul>
-<li><a href="#elk-%E5%92%8C-efk-%E6%A6%82%E8%BF%B0">ELK 和 EFK 概述</a></li>
-<li><a href="#filebeats-logstash-fluentd-%E4%B8%89%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB">Filebeats、Logstash、Fluentd 三者的区别和联系</a></li>
+<li><a href="#kubernetes_sd_configs">kubernetes_sd_configs</a>
+<ul>
+<li><a href="#%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD-%E9%87%8D%E6%96%B0%E6%A0%87%E8%AE%B0%E7%9B%AE%E7%9A%84">基础功能-重新标记目的</a></li>
+<li><a href="#label-%E8%AF%A6%E8%A7%A3">label 详解</a></li>
+<li><a href="#action-%E8%AF%A6%E8%A7%A3">action 详解</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -134,45 +139,99 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">开源日志管理方案ELK和EFK的区别</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">prometheus 的服务发现机制</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 4 min read
+          2022-02-26 / 6 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/lqDokfMSo.png" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/fQdhLJhKk.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="前言">前言</h1>
-<p>主流的 ELK (Elasticsearch, Logstash, Kibana) 目前已经转变为 EFK (Elasticsearch, Filebeat or Fluentd, Kibana) ，对于容器云的日志方案业内也普遍推荐采用 Fluentd，我们一起来看下从 ELK 到 EFK 发生了哪些变化。</p>
-<h2 id="elk-和-efk-概述">ELK 和 EFK 概述</h2>
-<p>随着现在各种软件系统的复杂度越来越高，特别是部署到云上之后，再想登录各个节点上查看各个模块的 log，基本是不可行了。因为不仅效率低下，而且有时由于安全性，不可能让工程师直接访问各个物理节点。而且现在大规模的软件系统基本都采用集群的部署方式，意味着对每个 service，会启动多个完全一样的 POD 对外提供服务，每个 container 都会产生自己的 log，仅从产生的 log 来看，你根本不知道是哪个 POD 产生的，这样对查看分布式的日志更加困难。</p>
-<p>所以在云时代，需要一个收集并分析 log 的解决方案。首先需要将分布在各个角落的 log 收集到一个集中的地方，方便查看。收集了之后，还可以进行各种统计分析，甚至用流行的大数据或 maching learning 的方法进行分析。</p>
-<p>ELK 就是这样的解决方案，而且基本就是事实上的标准。ELK 是三个开源项目的首字母缩写，如下：</p>
+          <p>prometheus 默认是采用 pull 方式拉取监控数据的，也就是定时去目标主机上抓取metrics 数据，每一个被抓取的目标需要暴露一个 HTTP 接口，prometheus 通过这个暴露的接口就可以获取到相应的指标数据，这种方式需要由目标服务决定采集的目标有哪些，通过配置在 scrape_configs 中的各种 job 来实现，无法动态感知新服务，如果后面增加了节点或者组件信息，就得手动修改 promrtheus 配置，并重启 promethues，很不方便，所以出现了动态服务发现，动态服务发现能够自动发现集群中的新端点，并加入到配置中，通过服务发现，Prometheus能查询到需要监控的 Target 列表，然后轮询这些 Target 获取监控数据。</p>
+<p>prometheus获取数据源 target 的方式有多种，如静态配置和动态服务发现配置， prometheus 目前支持的服务发现有很多种，常用的主要分为以下几种：</p>
+<pre><code class="language-shell">kubernetes_sd_configs: #基于 Kubernetes API 实现的服务发现，让 prometheus 动态发现 kubernetes 中被监控的目标 
+static_configs: #静态服务发现，基于 prometheus 配置文件指定的监控目标 
+dns_sd_configs: #DNS 服务发现监控目标 
+consul_sd_configs: #Consul 服务发现，基于 consul 服务动态发现监控目标
+file_sd_configs: #基于指定的文件实现服务发现，基于指定的文件发现监控目标
+</code></pre>
 <ul>
-<li>E: Elasticsearch</li>
-<li>L: Logstash</li>
-<li>K: Kibana</li>
+<li>
+<p>promethues 的静态静态服务发现 static_configs：每当有一个新的目标实例需要监控，都需要手动修改配置文件配置目标 target。</p>
+</li>
+<li>
+<p>promethues 的 consul 服务发现 consul_sd_configs：Prometheus 一直监视 consul 服务，当发现在 consul 中注册的服务有变化，prometheus 就会自动监控到所有注册到 consul 中的目标资源。</p>
+</li>
+<li>
+<p>promethues 的 k8s 服务发现 kubernetes_sd_configs：Prometheus 与 Kubernetes 的 API 进行交互，动态的发现 Kubernetes 中部署的所有可监控的目标资源。</p>
+</li>
 </ul>
-<p>Logstash 的主要作用是收集分布在各处的 log 并进行处理；<br>
-Elasticsearch 则是一个集中存储 log 的地方，更重要的是它是一个全文检索以及分析的引擎，它能让用户以近乎实时的方式来查看、分析海量的数据。<br>
-Kibana 则是为 Elasticsearch 开发的前端 GUI，让用户可以很方便的以图形化的接口查询，Elasticsearch 中存储的数据，同时也提供了各种分析的模块，比如构建 dashboard 的功能。</p>
-<p>将 ELK 中的 L 理解成 Logging Agent 更合适。Elasticsearch 和 Kibana 基本就是存储、检索和分析 log 的标准方案，而 Logstash 则并不是唯一的收集 log 的方案，Fluentd 和 Filebeats 也能用于收集 log。所以现在网上有 ELK，EFK 之类的缩写。</p>
-<p>一般采用的架构如下图所示。通常一个小型的 cluster 有三个节点，在这三个节点上可能会运行几十个甚至上百个容器。而我们只需要在每个节点上启动一个 logging agent 的实例（在 kubernetes 中就是 DaemonSet 的概念）即可。<br>
-<img src="https://adong97.github.io/HDong.github.io/post-images/1645835475319.jpg" alt="" loading="lazy"></p>
-<h2 id="filebeats-logstash-fluentd-三者的区别和联系">Filebeats、Logstash、Fluentd 三者的区别和联系</h2>
-<p>Filebeats 是一个轻量级的收集本地 log 数据的方案，官方对 Filebeats 的说明如下。可以看出 Filebeats 功能比较单一，它仅仅只能收集本地的 log，但并不能对收集到的 Log 做什么处理，所以通常 Filebeats 通常需要将收集到的 log 发送到 Logstash 做进一步的处理。</p>
-<p>Logstash 和 Fluentd 都具有收集并处理 log 的能力，网上有很多关于二者的对比，提供一个写得比较好的文章链接如下。功能上二者旗鼓相当，但 Logstash 消耗更多的 memory，对此 Logstash 的解决方案是使用 Filebeats 从各个叶子节点上收集 log，当然 Fluentd 也有对应的 Fluent Bit。<br>
-https://logz.io/blog/fluentd-Logstash/</p>
-<p>另外一个重要的区别是 Fluentd 抽象性做得更好，对用户屏蔽了底层细节的繁琐。<br>
-Filebeats、Logstash、Elasticsearch 和 Kibana 是属于同一家公司的开源项目，官方文档如下：   https://www.elastic.co/guide/index.html<br>
-Fluentd 则是另一家公司的开源项目，官方文档如下：<br>
-https://docs.fluentd.org</p>
+<h2 id="kubernetes_sd_configs">kubernetes_sd_configs</h2>
+<p>官方文档：https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config</p>
+<p>promethues 的 relabeling（重新修改标签）功能很强大，它能够在抓取到目标实例之前把目标实例的元数据标签动态重新修改，动态添加或者覆盖标签。<br>
+prometheus 从 Kubernetes API 动态发现目标(targer)之后，在被发现的 target 实例中，都包含一些原始的 Metadata 标签信息，默认的标签有：</p>
+<pre><code class="language-shell"> __address__：以&lt;host&gt;:&lt;port&gt; 格式显示目标 targets 的地址 
+ __scheme__：采集的目标服务地址的Scheme 形式，HTTP 或者HTTPS
+__metrics_path__：采集的目标服务的访问路径
+</code></pre>
+<h3 id="基础功能-重新标记目的">基础功能-重新标记目的</h3>
+<p>为了更好的识别监控指标,便于后期调用数据绘图、告警等需求，prometheus 支 持对发现的目标进行 label 修改，在两个阶段可以重新标记：</p>
+<ul>
+<li>
+<p><strong>relabel_configs</strong> ： 在对 target 进行数据采集之前（比如在采集数据之前重新定义标签信息，如目的 IP、 目的端口等信息），可以使用 relabel_configs 添加、修改或删除一些标签、也可以只采集特定目标或过滤目标。</p>
+</li>
+<li>
+<p><strong>metric_relabel_configs</strong>：在对 target 进行数据采集之后，即如果是已经抓取到指标数据时，可以使用 metric_relabel_configs 做最后的重新标记和过滤。</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1657871937192.png" alt="" loading="lazy"></figure>
+<pre><code class="language-shell">- job_name: 'kubernetes-apiserver' #job 名称 
+    kubernetes_sd_configs: #基于 kubernetes_sd_configs 实现服务发现 
+    - role: endpoints #发现 endpoints 
+    scheme: https #当前 jod 使用的发现协议 
+    tls_config: #证书配置 
+      ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt #容器里的证书路径
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token #容器里的 token 路径
+    relabel_configs: #重新 re 修改标签 label 配置 configs 
+    - source_labels: [__meta_kubernetes_namespace,__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name] #源标签,即对哪些标签进行操作 
+      action: keep #action 定义了 relabel 的具体动作，action 支持多种
+      regex: default;kubernetes;https #发现了 default 命名空间的 kubernetes 服务切是 https 协议
+</code></pre>
+<h3 id="label-详解">label 详解</h3>
+<ul>
+<li><strong>source_labels</strong>：源标签，没有经过 relabel 处理之前的标签名字</li>
+<li><strong>target_label</strong>：通过 action 处理之后的新的标签名字</li>
+<li><strong>regex</strong>：给定的值或正则表达式匹配，匹配源标签</li>
+<li><strong>replacement</strong>：通过分组替换后标签（target_label）对应的值</li>
+</ul>
+<h3 id="action-详解">action 详解</h3>
+<p>官方文档：https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config</p>
+<ul>
+<li>replace: 替换标签值，根据 regex 正则匹配到源标签的值，使用 replacement 来引用表达式匹配的分组</li>
+<li>keep: 满足 regex 正则条件的实例进行采集，把 source_labels 中没有匹配到 regex 正则内容的 Target 实例丢掉，即只采集匹配成功的实例。</li>
+<li>drop：满足 regex 正则条件的实例不采集，把 source_labels 中匹配到 regex 正则内容的 Target 实例丢掉，即只采集没有匹配到的实例。</li>
+<li>hashmod：使用 hashmod 计算 source_labels 的Hash 值并进行对比，基于自定义的模数取模，以实现对目标进行分类、重新赋值等功能：<pre><code class="language-shell">scrape_configs: 
+  - job_name: ip_job 
+    relabel_configs: 
+    - source_labels: [__address__] 
+      modulus:    4
+      target_label: __ip_hash 
+      action:  hashmod
+   - source_labels: [__ip_hash] 
+     regex:  ^1$ 
+     action:  keep
+</code></pre>
+</li>
+<li>labelmap：匹配 regex 所有标签名称,然后复制匹配标签的值进行分组，通过 replacement 分组引用 （<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo separator="true">,</mo></mrow><annotation encoding="application/x-tex">{1},</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord">1</span></span><span class="mpunct">,</span></span></span></span>{2},…）替代</li>
+<li>labelkeep：匹配 regex 所有标签名称,其它不匹配的标签都将从标签集中删除</li>
+<li>labeldrop：匹配 regex 所有标签名称,其它匹配的标签都将从标签集中删除</li>
+</ul>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM/">
-            <span class="flex-auto">Kubernetes日志采集</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
           </a>
         
 
@@ -180,10 +239,10 @@ https://docs.fluentd.org</p>
         <div class="flex justify-between py-8">
           
             <div class="prev-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/hR_asgw8g/">
+              <a href="https://adong97.github.io/HDong.github.io/post/Ok7rEVGci/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
-                  Prometheus监控部署
+                  Grafana安装与配置
                 </h3>
               </a>
             </div>
@@ -191,9 +250,9 @@ https://docs.fluentd.org</p>
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/1IA40gbgV/">
+              <a href="https://adong97.github.io/HDong.github.io/post/2--X3r9eT/">
                 <h3 class="post-title">
-                  EFK基于k8s部署及验证
+                  常用监控对象的指标采集
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>

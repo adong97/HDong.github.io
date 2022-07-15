@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657851923909">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657878450571">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657851923909" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657878450571" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -39,6 +39,7 @@
 <li><a href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85grafana">二进制安装Grafana</a>
 <ul>
 <li><a href="#%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86">插件管理</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0prometheus%E6%95%B0%E6%8D%AE%E6%BA%90%E5%92%8C%E6%A8%A1%E6%9D%BF">添加prometheus数据源和模板</a></li>
 </ul>
 </li>
 <li><a href="#k8s%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2grafana">K8s环境部署Grafana</a></li>
@@ -192,6 +193,10 @@ root@grafana-server:~# systemctl enable grafana-server
 https://grafana.com/grafana/plugins/grafana-piechart-panel</p>
 <pre><code class="language-shell">在线安装： 
 # grafana-cli plugins install grafana-piechart-panel
+✔ Downloaded grafana-piechart-panel v1.6.2 zip successfully
+
+Please restart Grafana after installing plugins. Refer to Grafana documentation for instructions if necessary.
+
 
 离线安装： 
 # pwd
@@ -200,6 +205,12 @@ https://grafana.com/grafana/plugins/grafana-piechart-panel</p>
 # mv grafana-piechart-panel-4f34110 grafana-piechart-panel
 # systemctl restart grafana-server
 </code></pre>
+<h3 id="添加prometheus数据源和模板">添加prometheus数据源和模板</h3>
+<p>添加数据源<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1657857119398.png" alt="" loading="lazy"><br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1657857199392.png" alt="" loading="lazy"><br>
+添加模板<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1657857410784.png" alt="" loading="lazy"></p>
 <h2 id="k8s环境部署grafana">K8s环境部署Grafana</h2>
 <p>注意点：</p>
 <ul>
@@ -720,9 +731,9 @@ rate(node_cpu_seconds_total{instance=&quot;k8s-master&quot;,mode=&quot;idle&quot
 
           
             <div class="next-post">
-              <a href="https://adong97.github.io/HDong.github.io/post/2--X3r9eT/">
+              <a href="https://adong97.github.io/HDong.github.io/post/fQdhLJhKk/">
                 <h3 class="post-title">
-                  常用监控对象的指标采集
+                  prometheus 的服务发现机制
                   <i class="ri-arrow-right-line"></i>
                 </h3>
               </a>
