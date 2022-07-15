@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657553891964">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1657845310538">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657553891964" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1657845310538" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -51,6 +51,12 @@
 <li><a href="#242-%E9%AA%8C%E8%AF%81node-exporter-web%E7%95%8C%E9%9D%A2">2.4.2 验证node exporter web界面</a></li>
 </ul>
 </li>
+<li><a href="#25-daemonset%E9%83%A8%E7%BD%B2cadvisor">2.5 Daemonset部署Cadvisor</a>
+<ul>
+<li><a href="#251-cadvisor%E6%8C%87%E6%A0%87%E6%95%B0%E6%8D%AE">2.5.1 cadvisor指标数据</a></li>
+</ul>
+</li>
+<li><a href="#26-daemonset%E9%83%A8%E7%BD%B2node-exporter">2.6 daemonset部署node-exporter</a></li>
 </ul>
 </li>
 <li><a href="#%E4%B8%89-%E7%90%86%E8%A7%A3%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE%E5%BA%93tsdb">三、理解时间序列数据库（TSDB）</a></li>
@@ -150,7 +156,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Prometheus监控部署</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 14 min read
+          2022-02-26 / 20 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/hR_asgw8g.png" alt="">
@@ -301,7 +307,8 @@ scrape_configs:
     static_configs:
     - targets: ['localhost:9090']
     
-# kubectl -n monitor create configmap prometheus-config --from-file=prometheus.yml
+## 生成prometheus配置
+$ kubectl -n monitor create configmap prometheus-config --from-file=prometheus.yml
 </code></pre>
 <ol start="2">
 <li>创建pvc</li>
@@ -600,6 +607,268 @@ bash node-exporter-1.3.1-onekey-install.sh
 </code></pre>
 <h3 id="242-验证node-exporter-web界面">2.4.2 验证node exporter web界面</h3>
 <figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1657497538191.png" alt="" loading="lazy"></figure>
+<h2 id="25-daemonset部署cadvisor">2.5 Daemonset部署Cadvisor</h2>
+<pre><code class="language-shell">1. 创建命名空间
+$ kubectl create ns monitoring
+
+2. 编写cadvisor  yaml文件
+vim case1-daemonset-deploy-cadvisor.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cadvisor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: cAdvisor
+  template:
+    metadata:
+      labels:
+        app: cAdvisor
+    spec:
+      tolerations:    #污点容忍,忽略master的NoSchedule
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+      hostNetwork: true
+      restartPolicy: Always   # 重启策略
+      containers:
+      - name: cadvisor
+        image: harbor.weixd.com/baseimage/cadvisor:v0.39.3
+        imagePullPolicy: IfNotPresent  # 镜像策略
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: root
+            mountPath: /rootfs
+          - name: run
+            mountPath: /var/run
+          - name: sys
+            mountPath: /sys
+          - name: docker
+            mountPath: /var/lib/docker
+      volumes:
+      - name: root
+        hostPath:
+          path: /
+      - name: run
+        hostPath:
+          path: /var/run
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: docker
+        hostPath:
+          path: /var/lib/docker
+
+3. 部署并查看pod
+$ kubectl apply -f case1-daemonset-deploy-cadvisor.yaml
+$ kubectl -n monitoring get pod -o wide
+NAME                  READY   STATUS             RESTARTS     AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+cadvisor-bb4ql        1/1     Running            0            11s   10.1.13.188   10.1.13.188   &lt;none&gt;           &lt;none&gt;
+cadvisor-bjnbc        0/1     CrashLoopBackOff   1 (7s ago)   11s   10.1.13.186   10.1.13.186   &lt;none&gt;           &lt;none&gt;
+cadvisor-c7xxw        1/1     Running            0            11s   10.1.13.187   10.1.13.187   &lt;none&gt;           &lt;none&gt;
+cadvisor-g9rm6        1/1     Running            0            11s   10.1.13.190   10.1.13.190   &lt;none&gt;           &lt;none&gt;
+cadvisor-mznzl        1/1     Running            0            11s   10.1.13.189   10.1.13.189   &lt;none&gt;           &lt;none&gt;
+
+4. prometheus收集cadvisor 数据
+编辑prometheus.yml文件,添加监控项
+vim /apps/prometheus/prometheus.yml
+...
+ - job_name: &quot;container&quot;
+    static_configs:
+      - targets: [&quot;10.1.13.187:8080&quot;,&quot;10.1.13.188:8080&quot;,&quot;10.1.13.189:8080&quot;,&quot;10.1.13.190:8080&quot;]
+...
+
+5. 重新生效配置
+curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1657838368565.png" alt="" loading="lazy"></figure>
+<h3 id="251-cadvisor指标数据">2.5.1 cadvisor指标数据</h3>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>container_cpu_load_average_10s</td>
+<td>gauge</td>
+<td>过去10s容器CPU的平均负载</td>
+</tr>
+<tr>
+<td>container_cpu_usage_seconds_total</td>
+<td>counter</td>
+<td>容器在每个CPU内核上的累积占用时间(单位：秒)</td>
+</tr>
+<tr>
+<td>container_cpu_system_seconds_total</td>
+<td>counter</td>
+<td>System CPU累积占用时间(单位：秒)</td>
+</tr>
+<tr>
+<td>container_cpu_user_seconds_total</td>
+<td>counter</td>
+<td>User CPU累积占用时间(单位：秒)</td>
+</tr>
+<tr>
+<td>container_fs_usage_bytes</td>
+<td>gauge</td>
+<td>容器中文件系统的使用量(单位：秒)</td>
+</tr>
+<tr>
+<td>container_fs_limit_bytes</td>
+<td>gauge</td>
+<td>容器可以使用的文件系统总量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_fs_reads_bytes_total</td>
+<td>counter</td>
+<td>容器累积读取数据的总量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_fs_writes_bytes_total</td>
+<td>counter</td>
+<td>容器累积写入数据的总量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_memory_max_usage_bytes</td>
+<td>gauge</td>
+<td>容器的最⼤内存使⽤量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_memory_usage_bytes</td>
+<td>gauge</td>
+<td>容器当前的内存使⽤量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_spec_memory_limit_bytes</td>
+<td>gauge</td>
+<td>容器的内存使⽤量限制(单位：字节)</td>
+</tr>
+<tr>
+<td>machine_memory_bytes</td>
+<td>gauge</td>
+<td>当前主机的内存总量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_network_receive_bytes_total</td>
+<td>counter</td>
+<td>容器⽹络累积接收数据总量(单位：字节)</td>
+</tr>
+<tr>
+<td>container_network_transmit_bytes_total</td>
+<td>counter</td>
+<td>容器⽹络累积传输数据总量(单位：字节)</td>
+</tr>
+</tbody>
+</table>
+<p>当能够正常采集到cAdvisor的样本数据后，可以通过以下表达式计算容器的CPU使⽤率：</p>
+<pre><code class="language-shell">（1）sum(irate(container_cpu_usage_seconds_total{image!=&quot;&quot;}[1m])) without (cpu) 容器CPU使⽤率
+（2）container_memory_usage_bytes{image!=&quot;&quot;} 查询容器内存使⽤量（单位：字节）
+（3）sum(rate(container_network_receive_bytes_total{image!=&quot;&quot;}[1m])) without (interface)
+查询容器⽹络接收量（速率）（单位：字节/秒）
+（4）sum(rate(container_network_transmit_bytes_total{image!=&quot;&quot;}[1m])) without (interface) 容器⽹络传输量 字节/秒
+（5）sum(rate(container_fs_reads_bytes_total{image!=&quot;&quot;}[1m])) without (device) 容器⽂件系统读取速率 字节/秒
+（6）sum(rate(container_fs_writes_bytes_total{image!=&quot;&quot;}[1m])) without (device) 容器⽂件系统写⼊速率 字节/秒
+</code></pre>
+<p>cadvisor 常⽤容器监控指标</p>
+<pre><code class="language-shell">（1）⽹络流量 sum(rate(container_network_receive_bytes_total{name=~&quot;.+&quot;}[1m])) by (name) 
+##容器⽹络接收的字节数（1分钟内），根据名称查询 name=~&quot;.+&quot;
+
+sum(rate(container_network_transmit_bytes_total{name=~&quot;.+&quot;}[1m])) by (name) 
+##容器⽹络传输的字节数（1分钟内），根据名称查询 name=~&quot;.+&quot;
+
+（2）容器 CPU相关
+sum(rate(container_cpu_system_seconds_total[1m])) 
+###所⽤容器system cpu的累计使⽤时间（1min钟内）
+
+sum(irate(container_cpu_system_seconds_total{image!=&quot;&quot;}[1m])) without (cpu)
+###每个容器system cpu的使⽤时间（1min钟内） 
+
+sum(rate(container_cpu_usage_seconds_total{name=~&quot;.+&quot;}[1m])) by (name) * 100 
+#每个容器的cpu使⽤率
+
+sum(sum(rate(container_cpu_usage_seconds_total{name=~&quot;.+&quot;}[1m])) by (name) * 100)
+#总容器的cpu使⽤率
+</code></pre>
+<h2 id="26-daemonset部署node-exporter">2.6 daemonset部署node-exporter</h2>
+<ol>
+<li>编写并部署 node-exporter yaml文件</li>
+</ol>
+<pre><code class="language-shell">$ cat  case2-daemonset-deploy-node-exporter.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+  labels:
+    k8s-app: node-exporter
+spec:
+  selector:
+    matchLabels:
+        k8s-app: node-exporter
+  template:
+    metadata:
+      labels:
+        k8s-app: node-exporter
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+      containers:
+      - image: prom/node-exporter:v1.3.1
+        imagePullPolicy: IfNotPresent
+        name: prometheus-node-exporter
+        ports:
+        - containerPort: 9100
+          hostPort: 9100
+          protocol: TCP
+          name: metrics
+        volumeMounts:
+        - mountPath: /host/proc
+          name: proc
+        - mountPath: /host/sys
+          name: sys
+        - mountPath: /host
+          name: rootfs
+        args:
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        - --path.rootfs=/host
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: rootfs
+          hostPath:
+            path: /
+      hostNetwork: true   #使用宿主机网络
+      hostPID: true
+
+kubectl apply -f case2-daemonset-deploy-node-exporter.yaml
+</code></pre>
+<ol start="2">
+<li>prometheus收集cadvisor 数据</li>
+</ol>
+<pre><code class="language-shell">编辑prometheus.yml文件,添加监控项
+vim /apps/prometheus/prometheus.yml
+...
+  - job_name: &quot;prometheus-node&quot;
+    static_configs:
+      - targets: [&quot;10.1.13.186:9100&quot;,&quot;10.1.13.187:9100&quot;,&quot;10.1.13.188:9100&quot;,&quot;10.1.13.189:9100&quot;,&quot;10.1.13.190:9100&quot;]
+...
+</code></pre>
+<ol start="3">
+<li>重新生效配置<br>
+curl -X POST http://10.1.13.186:9090/-/reload</li>
+</ol>
 <h1 id="三-理解时间序列数据库tsdb">三、理解时间序列数据库（TSDB）</h1>
 <pre><code class="language-shell"># http://localhost:9090/metrics
 $ kubectl -n monitor get po -o wide
