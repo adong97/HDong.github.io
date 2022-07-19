@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658124620048">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658222508663">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658124620048" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658222508663" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -55,6 +55,16 @@
 <li><a href="#1110-prometheus-%E9%83%A8%E7%BD%B2%E5%9C%A8-k8s-%E9%9B%86%E7%BE%A4%E4%BB%A5%E5%A4%96%E5%B9%B6%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.1.10 prometheus 部署在 k8s 集群以外并实现服务发现</a></li>
 </ul>
 </li>
+<li><a href="#12-static_configs-%E9%9D%99%E6%80%81%E9%85%8D%E7%BD%AE">1.2 static_configs 静态配置</a></li>
+<li><a href="#13-cousul_sd_configs">1.3 cousul_sd_configs</a>
+<ul>
+<li><a href="#131-%E9%83%A8%E7%BD%B2consul%E9%9B%86%E7%BE%A4">1.3.1 部署consul集群</a></li>
+<li><a href="#132-%E6%B5%8B%E8%AF%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE">1.3.2 测试写入数据</a></li>
+<li><a href="#133-%E9%85%8D%E7%BD%AE-prometheus-%E5%88%B0-consul-%E5%8F%91%E7%8E%B0%E6%9C%8D%E5%8A%A1">1.3.3 配置 prometheus 到 consul 发现服务</a></li>
+<li><a href="#134-consul-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%A0%E9%99%A4">1.3.4 consul 服务注册与删除</a></li>
+</ul>
+</li>
+<li><a href="#14-file_sd_configs-%E5%9F%BA%E4%BA%8E%E6%96%87%E4%BB%B6%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.4 file_sd_configs 基于文件的服务发现</a></li>
 </ul>
 </li>
 </ul>
@@ -153,7 +163,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">prometheus 的服务发现机制</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 17 min read
+          2022-02-26 / 23 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/fQdhLJhKk.png" alt="">
@@ -332,7 +342,7 @@ sum(rate(apiserver_request_total[10m])) by (resource,subresource,verb)
         action: replace
         target_label: __metrics_path__
         regex: (.+)  #路径为 1 到任意长度(.为匹配除\n之外的任意单个字符，+为匹配一次或多次)
-        #地址发现及标签重写
+      #地址发现及标签重写
       - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
         action: replace
         target_label: __address__
@@ -449,7 +459,7 @@ process_*：node exporter 运行时进程内部进程指标
       scheme: https    # 协议
       tls_config:    # 证书配置
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt    # 默认证书路径
-      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token    默认token路径
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token    # 默认token路径
       relabel_configs:    # 标签重写配置
       - action: labelmap
         regex: __meta_kubernetes_node_label_(.+)
@@ -703,6 +713,163 @@ scrape_configs:
       action: replace
       target_label: Env
 </code></pre>
+<h2 id="12-static_configs-静态配置">1.2 static_configs 静态配置</h2>
+<p>prometheus配置文件</p>
+<pre><code class="language-shell"># A scrape configuration containing exactly one endpoint to scrape:   ## 端点的抓取配置
+# Here it's Prometheus itself.    #prometheus 的默认配置
+scrape_configs:
+# 作业名称 job=&lt;job_name&gt;会自动添加到此配置的时间序列数据中
+  # The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.
+  - job_name: &quot;prometheus&quot;    # job 名称
+
+    # metrics_path defaults to '/metrics'  #默认 uri
+    # scheme defaults to 'http'.  #协议
+
+    static_configs:   # 静态服务配置
+      - targets: [&quot;localhost:9090&quot;]  #目标端点地址,手动指定
+
+  - job_name: &quot;prometheus-node&quot;
+    static_configs:
+      - targets: [&quot;10.1.13.186:9100&quot;,&quot;10.1.13.187:9100&quot;,&quot;10.1.13.188:9100&quot;,&quot;10.1.13.189:9100&quot;,&quot;10.1.13.190:9100&quot;]
+
+  - job_name: &quot;container&quot;
+    static_configs:
+      - targets: [&quot;10.1.13.187:8080&quot;,&quot;10.1.13.188:8080&quot;,&quot;10.1.13.189:8080&quot;,&quot;10.1.13.190:8080&quot;]
+</code></pre>
+<h2 id="13-cousul_sd_configs">1.3 cousul_sd_configs</h2>
+<p>consul官方地址：https://www.consul.io/<br>
+Consul 是分布式 k/v 数据存储集群，目前常用于服务的服务注册和发现。</p>
+<h3 id="131-部署consul集群">1.3.1 部署consul集群</h3>
+<p>https://releases.hashicorp.com/consul/</p>
+<p>环境准备：<br>
+10.1.13.186<br>
+10.1.13.187<br>
+10.1.13.188</p>
+<pre><code class="language-shell">Node1: 
+$ unzip consul_1.11.1_linux_amd64.zip 
+$ cp consul /usr/local/bin/ 
+$ scp consul 10.1.13.187:/usr/local/bin/
+$ scp consul 10.1.13.188:/usr/local/bin/
+
+$ consul -h  # 验证可执行 
+
+分别创建数据目录：
+$ mkdir /data/consul/ -p
+
+参数：
+consul agent -server # 使用server模式运行consul服务
+-bootstrap #首次部署使用初始化模式
+-bind #设置集群通信的监听地址
+-client #设置客户端访问的监听地址
+-data-dir #指定数据保存路径
+-ui #启用内置静态web UI服务器
+-node #此节点的名称，集群中必须唯一
+-datacenter-dc=1  #集群名称，默认是dc1
+-join #加入到已有consul环境
+
+启动服务：
+node1:
+nohup consul agent -server -bootstrap -bind=10.1.13.186 -client=10.1.13.186 -data-dir=/data/consul -ui -node=10.1.13.186 &amp;
+
+
+## node2、node3节点不用再进行初始化,加入node1即可
+node2:
+nohup consul agent -server  -bind=10.1.13.187 -client=10.1.13.187 -data-dir=/data/consul -join=10.1.13.186 &amp;
+
+
+node3:
+nohup consul agent -server  -bind=10.1.13.188 -client=10.1.13.188 -data-dir=/data/consul -join=10.1.13.186 &amp;
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1658186707553.jpg" alt="" loading="lazy"></figure>
+<h3 id="132-测试写入数据">1.3.2 测试写入数据</h3>
+<p>通过 consul 的 API 写入数据</p>
+<pre><code class="language-shell">$ curl -X PUT -d '{&quot;id&quot;: &quot;node-exporter186&quot;,&quot;name&quot;:&quot;node-exporter186&quot;,&quot;address&quot;:&quot;10.1.13.186&quot;,&quot;port&quot;:9100,&quot;tags&quot;:[&quot;node-exporter&quot;],&quot;checks&quot;:[{&quot;http&quot;:&quot;http://10.1.13.186:9100/&quot;,&quot;interval&quot;:&quot;5s&quot;}]}' http://10.1.13.186:8500/v1/agent/service/register
+
+
+$ curl -X PUT -d '{&quot;id&quot;: &quot;node-exporter187&quot;,&quot;name&quot;:&quot;node-exporter187&quot;,&quot;address&quot;:&quot;10.1.13.187&quot;,&quot;port&quot;:9100,&quot;tags&quot;:[&quot;node-exporter&quot;],&quot;checks&quot;:[{&quot;http&quot;:&quot;http://10.1.13.187:9100/&quot;,&quot;interval&quot;:&quot;5s&quot;}]}' http://10.1.13.186:8500/v1/agent/service/register
+
+&quot;checks&quot;:[{&quot;http&quot;:&quot;http://10.1.13.186:9100/&quot;,&quot;interval&quot;:&quot;5s&quot;}]
+# 每个5s检查一次服务是否可用，如果检查状态失败则剔除consul
+
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1658187539985.jpg" alt="" loading="lazy"></figure>
+<h3 id="133-配置-prometheus-到-consul-发现服务">1.3.3 配置 prometheus 到 consul 发现服务</h3>
+<p><strong>主要配置字段</strong>：</p>
+<ul>
+<li>
+<p>static_configs: # 配置数据源</p>
+</li>
+<li>
+<p>consul_sd_configs: # 指定基于 consul 服务发现的配置</p>
+</li>
+<li>
+<p>rebel_configs：# 重新标记</p>
+</li>
+<li>
+<p>services: []  # 表示匹配 consul 中所有的 service</p>
+</li>
+<li>
+<p>k8s 部署 prometheus 配置文件</p>
+</li>
+</ul>
+<pre><code class="language-shell">...
+    - job_name: consul
+      honor_labels: true
+      metrics_path: /metrics
+      scheme: http
+      consul_sd_configs:
+        - server: 10.1.13.186:8500
+          services: []
+        - server: 10.1.13.187:8500
+          services: []
+        - server: 10.1.13.188:8500
+          services: []
+      relabel_configs:
+      - source_labels: ['__meta_consul_tags']
+        target_label: 'product'
+      - source_labels: ['__meta_consul_dc']
+        target_label: 'idc'
+      - source_labels: ['__meta_consul_service']
+        regex: &quot;consul&quot;
+        action: drop
+...
+</code></pre>
+<ul>
+<li>二进制-prometheus 配置文件</li>
+</ul>
+<pre><code class="language-shell">...
+- job_name: consul  honor_labels: true
+  metrics_path: /metrics  scheme: http
+  consul_sd_configs:
+    - server: 172.31.2.181:8500
+      services: [] #发现的目标服务名称，空为所有服务，可以写 servicea,servcieb,servicec
+    - server: 172.31.2.182:8500
+      services: []
+    - server: 172.31.2.183:8500
+      services: []
+  relabel_configs:
+    - source_labels: ['__meta_consul_tags']
+      target_label: 'product'
+    - source_labels: ['__meta_consul_dc']
+      target_label: 'idc'
+    - source_labels: ['__meta_consul_service']  # 匹配删除__meta_consul_service 为 consul 的发现结果
+      regex: &quot;consul&quot;
+      action: drop
+...
+</code></pre>
+<h3 id="134-consul-服务注册与删除">1.3.4 consul 服务注册与删除</h3>
+<ul>
+<li>服务注册</li>
+</ul>
+<pre><code class="language-shell">$ curl -X PUT -d '{&quot;id&quot;: &quot;node-exporter186&quot;,&quot;name&quot;:&quot;node-exporter186&quot;,&quot;address&quot;:&quot;10.1.13.186&quot;,&quot;port&quot;:9100,&quot;tags&quot;:[&quot;node-exporter&quot;],&quot;checks&quot;:[{&quot;http&quot;:&quot;http://10.1.13.186:9100/&quot;,&quot;interval&quot;:&quot;5s&quot;}]}' http://10.1.13.186:8500/v1/agent/service/register
+</code></pre>
+<ul>
+<li>服务删除</li>
+</ul>
+<pre><code class="language-shell">$ curl --request PUT http://10.1.13.186:8500/v1/agent/service/deregister/node-exporter103
+</code></pre>
+<h2 id="14-file_sd_configs-基于文件的服务发现">1.4 file_sd_configs 基于文件的服务发现</h2>
+<p>用户在本地创建一个json文件，prometheus会监控json文件，如果文件中的地址发生变化，那么prometheus就会做出相应的调整。</p>
 
         </div>
 
