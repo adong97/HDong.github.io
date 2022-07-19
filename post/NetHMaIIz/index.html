@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658222508663">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658245029961">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658222508663" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658245029961" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,6 +34,13 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
+<li><a href="#kube-state-metrics-%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D">kube-state-metrics 组件介绍</a>
+<ul>
+<li><a href="#%E9%83%A8%E7%BD%B2-kube-state-metrics">部署 kube-state-metrics</a></li>
+<li><a href="#prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">prometheus 采集数据</a></li>
+<li><a href="#grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF">grafana 导入模板</a></li>
+</ul>
+</li>
 <li><a href="#kubernetes-metrics-api%E4%BD%93%E7%B3%BB%E5%9B%9E%E9%A1%BE">Kubernetes Metrics API体系回顾</a>
 <ul>
 <li><a href="#adapter%E5%AE%89%E8%A3%85%E5%AF%B9%E6%8E%A5">Adapter安装对接</a></li>
@@ -147,23 +154,137 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">自定义指标实现业务伸缩</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 16 min read
+          2022-02-26 / 19 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/NetHMaIIz.png" alt="">
         
         <div class="post-content yue">
-          <h1 id="kubernetes-metrics-api体系回顾">Kubernetes Metrics API体系回顾</h1>
+          <h1 id="kube-state-metrics-组件介绍">kube-state-metrics 组件介绍</h1>
+<p>github地址：<br>
+https://github.com/kubernetes/kube-state-metrics</p>
+<p>镜像：<br>
+https://hub.docker.com/r/bitnami/kube-state-metrics<br>
+https://quay.io/repository/coreos/kube-state-metrics?tag=latest&amp;tab=tags</p>
+<p>指标：<br>
+https://xie.infoq.cn/article/9e1fff6306649e65480a96bb1</p>
+<p><strong>Kube-state-metrics</strong>:通过监听 API Server 生成有关资源对象的状态指标，比如 Deployment、Node、Pod， 需要注意的是 kube-state-metrics 只是简单的提供一个metrics 数据，并不会存储这些指标数据，所以我们可以使用 Prometheus 来抓取这些数据然后存储，主要关注的是业务相关的一些元数据，比如 Deployment、Pod、副本状态等，调度了多少个 replicas？现在可用的有几个？多少个 Pod 是running/stopped/terminated状态？Pod 重启了多少次？ 目前有多少 job 在运行中。</p>
+<h2 id="部署-kube-state-metrics">部署 kube-state-metrics</h2>
+<pre><code class="language-shell">$ cat case5-kube-state-metrics-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-state-metrics
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+    spec:
+      serviceAccountName: kube-state-metrics
+      containers:
+      - name: kube-state-metrics
+        image: bitnami/kube-state-metrics:2.5.0
+        ports:
+        - containerPort: 8080
+
+---
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-state-metrics
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-state-metrics
+rules:
+- apiGroups: [&quot;&quot;]
+  resources: [&quot;nodes&quot;, &quot;pods&quot;, &quot;services&quot;, &quot;resourcequotas&quot;, &quot;replicationcontrollers&quot;, &quot;limitranges&quot;, &quot;persistentvolumeclaims&quot;, &quot;persistentvolumes&quot;, &quot;namespaces&quot;, &quot;endpoints&quot;]
+  verbs: [&quot;list&quot;, &quot;watch&quot;]
+- apiGroups: [&quot;extensions&quot;]
+  resources: [&quot;daemonsets&quot;, &quot;deployments&quot;, &quot;replicasets&quot;]
+  verbs: [&quot;list&quot;, &quot;watch&quot;]
+- apiGroups: [&quot;apps&quot;]
+  resources: [&quot;statefulsets&quot;]
+  verbs: [&quot;list&quot;, &quot;watch&quot;]
+- apiGroups: [&quot;batch&quot;]
+  resources: [&quot;cronjobs&quot;, &quot;jobs&quot;]
+  verbs: [&quot;list&quot;, &quot;watch&quot;]
+- apiGroups: [&quot;autoscaling&quot;]
+  resources: [&quot;horizontalpodautoscalers&quot;]
+  verbs: [&quot;list&quot;, &quot;watch&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-state-metrics
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-state-metrics
+subjects:
+- kind: ServiceAccount
+  name: kube-state-metrics
+  namespace: kube-system
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+  name: kube-state-metrics
+  namespace: kube-system
+  labels:
+    app: kube-state-metrics
+spec:
+  type: NodePort
+  ports:
+  - name: kube-state-metrics
+    port: 8080
+    targetPort: 8080
+    nodePort: 30666
+    protocol: TCP
+  selector:
+    app: kube-state-metrics
+
+ # 部署实例
+ kubectl apply -f case5-kube-state-metrics-deploy.yaml
+</code></pre>
+<h2 id="prometheus-采集数据">prometheus 采集数据</h2>
+<pre><code class="language-shell">$ cat /apps/prometheus/prometheus.yml
+  - job_name: &quot;kube-state-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:30666&quot;]
+
+# 生效配置
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="grafana-导入模板">grafana 导入模板</h2>
+<p>推荐Import</p>
+<ul>
+<li>13824</li>
+<li>14518</li>
+</ul>
+<h1 id="kubernetes-metrics-api体系回顾">Kubernetes Metrics API体系回顾</h1>
 <p>前面章节，我们讲过基于CPU和内存的HPA，即利用metrics-server及HPA，可以实现业务服务可以根据pod的cpu和内存进行弹性伸缩。<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1646842972498.png" alt="" loading="lazy"></p>
 <p>k8s对监控接口进行了标准化：</p>
 <ul>
 <li>
-<p>Resource Metrics<br>
+<p><strong>Resource Metrics</strong><br>
 对应的接口是 metrics.k8s.io，主要的实现就是 metrics-server</p>
 </li>
 <li>
-<p>Custom Metrics<br>
+<p><strong>Custom Metrics</strong><br>
 对应的接口是 custom.metrics.k8s.io(通用类指标的接口)，主要的实现是 Prometheus， 它提供的是资源监控和自定义监控<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1647763180709.png" alt="" loading="lazy"></p>
 </li>

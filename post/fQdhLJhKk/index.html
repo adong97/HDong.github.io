@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658222508663">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658245029961">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658222508663" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658245029961" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -65,6 +65,12 @@
 </ul>
 </li>
 <li><a href="#14-file_sd_configs-%E5%9F%BA%E4%BA%8E%E6%96%87%E4%BB%B6%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.4 file_sd_configs 基于文件的服务发现</a></li>
+<li><a href="#15-dns%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.5 DNS服务发现</a>
+<ul>
+<li><a href="#151-a-%E8%AE%B0%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.5.1 A 记录服务发现</a></li>
+<li><a href="#152-srv-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">1.5.2 SRV 服务发现</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -163,7 +169,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">prometheus 的服务发现机制</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 23 min read
+          2022-02-26 / 25 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/fQdhLJhKk.png" alt="">
@@ -870,6 +876,60 @@ $ curl -X PUT -d '{&quot;id&quot;: &quot;node-exporter187&quot;,&quot;name&quot;
 </code></pre>
 <h2 id="14-file_sd_configs-基于文件的服务发现">1.4 file_sd_configs 基于文件的服务发现</h2>
 <p>用户在本地创建一个json文件，prometheus会监控json文件，如果文件中的地址发生变化，那么prometheus就会做出相应的调整。</p>
+<p>编辑 sd_configs 文件:</p>
+<pre><code class="language-shell"># pwd 
+/apps/prometheus 
+
+#mkdir file_sd 
+#vim file_sd/sd_my_server.json 
+[
+  { 
+     &quot;targets&quot;: [&quot;10.1.13.186:9100&quot;.&quot;10.1.13.187:9100&quot;]
+  }
+]
+</code></pre>
+<p>prometheus调用sd_configs</p>
+<pre><code class="language-shell">$ vim prometheus.yml
+  - job_name: 'kubernetes-apiservers-monitor'
+    file_sd_configs:
+    - files:
+      - /apps/prometheus/file_sd/sd_my_server.json 
+        refresh_interval: 10s
+
+systemctl restart prometheus
+</code></pre>
+<h2 id="15-dns服务发现">1.5 DNS服务发现</h2>
+<p>基于 DNS 的服务发现允许配置指定一组 DNS 域名，这些域名会定期查询以发现目标列表,域名需要可以 被配置的DNS服务器解析为 IP。</p>
+<p>此服务发现方法仅支持基本的 DNS A、AAAA 和 SRV 记录查询。<br>
+A记录： 域名解析为 IP<br>
+SRV：SRV 记录了哪台计算机提供了具体哪个服务，格式为：自定义的服务的名字.协议的类型.域名（例<br>
+如：_example-server._tcp.www.mydns.com）</p>
+<p>prometheus 会对收集的指标数据进行重新打标，重新标记期间，可以使用以下元标签： __meta_dns_name：产生发现目标的记录名称。<br>
+__meta_dns_srv_record_target: SRV 记录的目标字段<br>
+__meta_dns_srv_record_port: SRV 记录的端口字段</p>
+<h3 id="151-a-记录服务发现">1.5.1 A 记录服务发现</h3>
+<pre><code class="language-shell">$ vim /etc/hosts 
+10.1.13.186 node1.example.com
+10.1.13.187 node2.example.com
+
+$ vim /apps/prometheus/prometheus.yml
+  - job_name: 'dns-server-name-monitor'
+    metrics_path: &quot;/metrics&quot;  # uri
+    dns_sd_configs:  # DNS服务发现
+    - names: [&quot;node1.example.com&quot;, &quot;node2.example.com&quot;]   # service名称
+      type: A  # 类型为A记录
+      port: 9100   # 端口
+</code></pre>
+<h3 id="152-srv-服务发现">1.5.2 SRV 服务发现</h3>
+<p>需要有DNS服务器实现域名解析</p>
+<pre><code class="language-shell"># vim /apps/prometheus/prometheus.yml 
+- job_name: 'dns-node-monitor-srv' 
+  metrics_path: &quot;/metrics&quot; 
+  dns_sd_configs: 
+  - names: [&quot;_prometheus._tcp.node.example.com&quot;] 
+    type: SRV
+    port: 9100
+</code></pre>
 
         </div>
 
