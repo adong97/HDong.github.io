@@ -1,0 +1,534 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658277781915">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658277781915" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E4%B8%80-%E7%9B%91%E6%8E%A7tomcat">一、监控tomcat</a>
+<ul>
+<li><a href="#11-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%95%9C%E5%83%8F">1.1 自定义镜像</a></li>
+<li><a href="#12-%E6%9E%84%E5%BB%BA%E5%B9%B6%E6%B5%8B%E8%AF%95%E9%95%9C%E5%83%8F">1.2 构建并测试镜像</a></li>
+<li><a href="#13-%E5%88%9B%E5%BB%BApod%E5%B9%B6%E9%AA%8C%E8%AF%81">1.3 创建pod并验证</a></li>
+<li><a href="#14-prometheus-%E9%87%87%E9%9B%86%E5%B9%B6%E9%AA%8C%E8%AF%81%E6%95%B0%E6%8D%AE">1.4 prometheus 采集并验证数据</a></li>
+<li><a href="#15-grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF">1.5 grafana 导入模板</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E7%9B%91%E6%8E%A7-redis">二、监控 Redis</a>
+<ul>
+<li><a href="#21-%E9%83%A8%E7%BD%B2redis">2.1 部署Redis</a></li>
+<li><a href="#22-prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">2.2 prometheus 采集数据</a></li>
+<li><a href="#23-grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF%E5%B9%B6%E9%AA%8C%E8%AF%81">2.3 grafana 导入模板并验证</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes业务迁移
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">prometheus监控扩展</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-07-20 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/H2FJXl9R1.png" alt="">
+        
+        <div class="post-content yue">
+          <p>基于第三方 exporter 实现对目的服务的监控。</p>
+<h1 id="一-监控tomcat">一、监控tomcat</h1>
+<p>监控 tomcat 的活跃连接数、堆栈内存等信息：</p>
+<pre><code class="language-shell"># TYPE tomcat_connections_active_total gauge 
+tomcat_connections_active_total{name=&quot;http-nio-8080&quot;,} 2.0
+
+# TYPE jvm_memory_bytes_used gauge
+jvm_memory_bytes_used{area=&quot;heap&quot;,} 2.4451216E7
+</code></pre>
+<h2 id="11-自定义镜像">1.1 自定义镜像</h2>
+<ol>
+<li>tomcat目录结构</li>
+</ol>
+<pre><code class="language-shell"># tree .
+.
+├── template
+│    └── tomcat-dashboard.json
+├── tomcat-image
+│    ├── Dockerfile
+│    ├── build-command.sh
+│    ├── metrics.war
+│    ├── myapp
+│    │    ├── index.jsp
+│    │    └── tomcat-app1_v1.tar.gz
+│    ├── myapp.tar.gz
+│    ├── run_tomcat.sh
+│    ├── server.xml
+│    ├── simpleclient-0.8.0.jar
+│    ├── simpleclient_common-0.8.0.jar
+│    ├── simpleclient_hotspot-0.8.0.jar
+│    ├── simpleclient_servlet-0.8.0.jar
+│    ├── tomcat-8.5.73-jdk11-corretto.tar.gz
+│    ├── tomcat_exporter_client-0.0.12.jar
+│    └── tomcat_exporter_servlet-0.0.12.war
+└── yaml
+    ├── tomcat-deploy.yaml
+    └── tomcat-svc.yaml
+</code></pre>
+<ol start="2">
+<li>编写Dockerfile</li>
+</ol>
+<pre><code class="language-shell">$ cat tomcat-image/Dockerfile
+
+#FROM tomcat:8.5.73-jdk11-corretto
+FROM tomcat:8.5.73   # 使用tomcat官方镜像
+
+LABEL maintainer=&quot;adong 3063585531@qq.com&quot;
+
+ADD server.xml /usr/local/tomcat/conf/server.xml  # tomcat配置文件
+
+RUN mkdir /data/tomcat/webapps -p   # 创建数据目录
+ADD myapp /data/tomcat/webapps/myapp
+# 以下添加的jar包，用于暴露当前tomcat中的指标数据
+ADD metrics.war /data/tomcat/webapps  # 独立监听端口，将指标数据暴露出来
+ADD simpleclient-0.8.0.jar  /usr/local/tomcat/lib/
+ADD simpleclient_common-0.8.0.jar /usr/local/tomcat/lib/
+ADD simpleclient_hotspot-0.8.0.jar /usr/local/tomcat/lib/
+ADD simpleclient_servlet-0.8.0.jar /usr/local/tomcat/lib/
+ADD tomcat_exporter_client-0.0.12.jar /usr/local/tomcat/lib/
+
+EXPOSE 8080 8443 8009
+
+CMD [&quot;/usr/local/tomcat/bin/catalina.sh&quot;,&quot;run&quot;]  # 前台启动服务
+</code></pre>
+<h2 id="12-构建并测试镜像">1.2 构建并测试镜像</h2>
+<pre><code class="language-shell">$ cat  build-command.sh
+#!/bin/bash
+docker build -t harbor.weixd.com/magedu/tomcat-app1:v1 .
+docker push harbor.weixd.com/magedu/tomcat-app1:v1
+
+# 构建镜像
+bash build-command.sh
+
+# 测试镜像
+$ docker run -it --rm -p 8081:8080 harbor.weixd.com/magedu/tomcat-app1:v1
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1658270415260.jpg" alt="" loading="lazy"></figure>
+<h2 id="13-创建pod并验证">1.3 创建pod并验证</h2>
+<ul>
+<li>tomcat-deployment yam文件</li>
+</ul>
+<pre><code class="language-shell">$ cat tomcat-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+     app: tomcat
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: tomcat
+      annotations:
+        prometheus.io/scrape: 'true'   # 允许prometheus抓取数据
+    spec:
+      containers:
+      - name: tomcat
+        image: harbor.weixd.com/magedu/tomcat-app1:v1
+        ports:
+        - containerPort: 8080
+        securityContext:
+          privileged: true
+</code></pre>
+<ul>
+<li>tomcat-svc yaml文件</li>
+</ul>
+<pre><code class="language-shell">$ cat tomcat-svc.yaml
+kind: Service  #service 类型
+apiVersion: v1
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'  # 允许prometheus通过svc发现pod
+  name: tomcat-service
+spec:
+  selector:
+    app: tomcat
+  ports:
+  - nodePort: 31080
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  type: NodePort
+</code></pre>
+<p>创建pod</p>
+<pre><code class="language-shell">$ kubectl apply -f tomcat-deploy.yaml
+$ kubectl apply -f tomcat-svc.yaml
+</code></pre>
+<p>如果prometheus部署在k8s环境中，能够和pod通信，可以直接通过pod的IP地址和端口获取指标数据<br>
+例如：<code>curl 10.200.85.208:8080/metrics/</code>就可以直接获取tomcat pod的指标数据。</p>
+<p>如果prometheus部署在k8s环境外面，无法直接和pod直接通信，可以通过创建svc将tomcat的端口暴漏出来。但是通过svc获取指标数据有一个问题，就是tomcat在多副本的情况下，数据抓不准。svc是一个总数口，流量会转发给不同的pod，所以每次抓只能抓一个pod A或者pod B，所以prometheus最好是跑在k8s环境中。</p>
+<h2 id="14-prometheus-采集并验证数据">1.4 prometheus 采集并验证数据</h2>
+<pre><code class="language-shell">$ cat /apps/prometheus/prometheus.yml
+...
+  - job_name: &quot;kube-tomcat-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:31080&quot;]
+...
+</code></pre>
+<h2 id="15-grafana-导入模板">1.5 grafana 导入模板</h2>
+<p>https://github.com/nlighten/tomcat_exporter<br>
+https://github.com/nlighten/tomcat_exporter/tree/master/dashboard</p>
+<h1 id="二-监控-redis">二、监控 Redis</h1>
+<p>通过 redis_exporter 监控 redis 服务状态。<br>
+github地址：https://github.com/oliver006/redis_exporter</p>
+<h2 id="21-部署redis">2.1 部署Redis</h2>
+<ol>
+<li>redis-deployment yaml文件</li>
+</ol>
+<pre><code class="language-shell">$ cat redis-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:4.0.14
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 6379
+      - name: redis-exporter  # 同时启动redis-exporter
+        image: oliver006/redis_exporter:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 9121
+</code></pre>
+<ol start="2">
+<li>redis-svc yaml文件</li>
+</ol>
+<pre><code class="language-shell">$ cat redis-redis-svc.yaml
+kind: Service  #service 类型
+apiVersion: v1
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+  name: redis-redis-service
+  namespace: default
+spec:
+  selector:
+    app: redis
+  ports:
+  - nodePort: 31081
+    name: redis
+    port: 6379
+    protocol: TCP
+    targetPort: 6379
+  type: NodePort
+</code></pre>
+<ol start="3">
+<li>redis-exporter yaml文件</li>
+</ol>
+<pre><code class="language-shell">$ cat redis-exporter-svc.yaml
+kind: Service  #service 类型
+apiVersion: v1
+metadata:
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: &quot;9121&quot;
+  name: redis-exporter-service
+  namespace: default
+spec:
+  selector:
+    app: redis
+  ports:
+  - nodePort: 31082
+    name: prom
+    port: 9121
+    protocol: TCP
+    targetPort: 9121
+  type: NodePort
+</code></pre>
+<p>部署pod</p>
+<pre><code class="language-shell">$ kubectl apply -f .
+</code></pre>
+<h2 id="22-prometheus-采集数据">2.2 prometheus 采集数据</h2>
+<pre><code class="language-shell">$ cat /apps/prometheus/prometheus.yml
+...
+  - job_name: &quot;kube-redis-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:31082&quot;]
+...
+
+# 重新生效配置
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="23-grafana-导入模板并验证">2.3 grafana 导入模板并验证</h2>
+<ul>
+<li>14615</li>
+</ul>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/oUhNbLO5-/">
+                <h3 class="post-title">
+                  部署ceph集群
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
