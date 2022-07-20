@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://adong97.github.io/HDong.github.io</id>
     <title>Adong&apos;s blog</title>
-    <updated>2022-07-20T00:43:20.678Z</updated>
+    <updated>2022-07-20T02:30:14.831Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://adong97.github.io/HDong.github.io"/>
     <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
@@ -10,13 +10,6 @@
     <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
     <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, Adong&apos;s blog</rights>
-    <entry>
-        <title type="html"><![CDATA[prometheus监控扩展]]></title>
-        <id>https://adong97.github.io/HDong.github.io/post/H2FJXl9R1/</id>
-        <link href="https://adong97.github.io/HDong.github.io/post/H2FJXl9R1/">
-        </link>
-        <updated>2022-07-19T22:17:04.000Z</updated>
-    </entry>
     <entry>
         <title type="html"><![CDATA[部署ceph集群]]></title>
         <id>https://adong97.github.io/HDong.github.io/post/oUhNbLO5-/</id>
@@ -79,5 +72,12 @@
         <link href="https://adong97.github.io/HDong.github.io/post/554ZzYvc5/">
         </link>
         <updated>2022-06-19T05:23:08.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[K8s业务迁移：Redis 业务容器化]]></title>
+        <id>https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/</id>
+        <link href="https://adong97.github.io/HDong.github.io/post/eFQp_T-iN/">
+        </link>
+        <updated>2022-06-19T05:20:58.000Z</updated>
     </entry>
 </feed>
