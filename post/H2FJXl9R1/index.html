@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658284199977">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658419671035">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658284199977" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658419671035" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -48,6 +48,39 @@
 <li><a href="#21-%E9%83%A8%E7%BD%B2redis">2.1 部署Redis</a></li>
 <li><a href="#22-prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">2.2 prometheus 采集数据</a></li>
 <li><a href="#23-grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF%E5%B9%B6%E9%AA%8C%E8%AF%81">2.3 grafana 导入模板并验证</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E7%9B%91%E6%8E%A7-mysql">三、监控 MySQL</a>
+<ul>
+<li><a href="#31-%E5%AE%89%E8%A3%85mysql">3.1 安装mysql</a></li>
+<li><a href="#32-%E5%87%86%E5%A4%87-mysqld_exporter">3.2 准备 mysqld_exporter</a></li>
+<li><a href="#33-prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">3.3 prometheus 采集数据</a></li>
+<li><a href="#34-%E6%B7%BB%E5%8A%A0granafa%E6%A8%A1%E6%9D%BF">3.4 添加Granafa模板</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-%E7%9B%91%E6%8E%A7-haproxy">四、监控 Haproxy</a>
+<ul>
+<li><a href="#41-%E9%83%A8%E7%BD%B2haproxy">4.1 部署haproxy</a></li>
+<li><a href="#42-%E9%83%A8%E7%BD%B2-haproxy_exporter">4.2 部署 haproxy_exporter</a></li>
+<li><a href="#43-%E9%AA%8C%E8%AF%81metrics-%E6%95%B0%E6%8D%AE">4.3 验证metrics 数据</a></li>
+<li><a href="#44-prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">4.4 prometheus 采集数据</a></li>
+<li><a href="#45-grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF%E5%B9%B6%E9%AA%8C%E8%AF%81">4.5 grafana 导入模板并验证</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E7%9B%91%E6%8E%A7-nginx">五、监控 nginx</a>
+<ul>
+<li><a href="#51%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85nginx">5.1编译安装nginx</a>
+<ul>
+<li><a href="#511-%E7%BC%96%E8%BE%91-nginx-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.1.1 编辑 nginx 配置文件</a></li>
+<li><a href="#512-%E5%90%AF%E5%8A%A8-nginx-%E5%B9%B6%E9%AA%8C%E8%AF%81-web-%E7%8A%B6%E6%80%81%E9%A1%B5">5.1.2 启动 nginx 并验证 web 状态页</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%85%AD-blackbox_exporter-%E7%9B%91%E6%8E%A7url">六、blackbox_exporter 监控URL</a>
+<ul>
+<li><a href="#61-%E9%83%A8%E7%BD%B2blackbox-exporter">6.1 部署blackbox exporter</a></li>
+<li><a href="#62-%E5%88%9B%E5%BB%BA-blackbox-exporter-%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6">6.2 创建 blackbox exporter 启动文件</a></li>
 </ul>
 </li>
 </ul>
@@ -146,7 +179,7 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">prometheus监控扩展</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 6 min read
+          2022-02-26 / 11 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/H2FJXl9R1.png" alt="">
@@ -402,6 +435,229 @@ $ curl -X POST http://10.1.13.186:9090/-/reload
 <ul>
 <li>14615</li>
 </ul>
+<h1 id="三-监控-mysql">三、监控 MySQL</h1>
+<p>通过mysqld_exporter 监控MySQL 服务的运行状态<br>
+github地址：https://github.com/prometheus/mysqld_exporter</p>
+<h2 id="31-安装mysql">3.1 安装mysql</h2>
+<pre><code class="language-shell">$ apt install  mariadb-server -y 
+</code></pre>
+<p>授权监控账户权限</p>
+<pre><code class="language-shell">MariaDB [(none)]&gt; CREATE USER 'mysql_exporter'@'localhost' IDENTIFIED BY 'imnot007*';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [(none)]&gt; GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'mysql_exporter'@'localhost';
+Query OK, 0 rows affected (0.000 sec)
+
+验证权限：
+~# mysql -umysql_exporter -pimnot007* -hlocalhost
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 37
+Server version: 10.3.34-MariaDB-0ubuntu0.20.04.1 Ubuntu 20.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&gt;
+</code></pre>
+<h2 id="32-准备-mysqld_exporter">3.2 准备 mysqld_exporter</h2>
+<p>github地址：https://github.com/prometheus/mysqld_exporter/releases</p>
+<pre><code class="language-shell"># tar xf mysqld_exporter-0.13.0.linux-amd64.tar.gz 
+# cd mysqld_exporter-0.13.0.linux-amd64/ 
+# cp mysqld_exporter /usr/local/bin/
+
+# 免密码登录配置： 
+# cat /root/.my.cnf 
+[client] 
+user=mysql_exporter
+password=imnot007*
+
+# 验证权限
+# mysql
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 38
+Server version: 10.3.34-MariaDB-0ubuntu0.20.04.1 Ubuntu 20.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]&gt;
+</code></pre>
+<p>启动mysql_exporter</p>
+<pre><code class="language-shell">$ vim /etc/systemd/system/mysqld_exporter.service
+
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/mysqld_exporter --config.my-cnf=/root/.my.cnf
+
+[Install]
+WantedBy=multi-user.target
+
+# systemctl daemon-reload 
+# systemctl restart mysqld_exporter
+# systemctl enable mysqld_exporter
+</code></pre>
+<p>验证metrics</p>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1658359627966.jpg" alt="" loading="lazy"></figure>
+<h2 id="33-prometheus-采集数据">3.3 prometheus 采集数据</h2>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+   - job_name: &quot;kube-mysql-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:9104&quot;]
+
+# 重新接在配置
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="34-添加granafa模板">3.4 添加Granafa模板</h2>
+<ul>
+<li>13106</li>
+<li>11323</li>
+</ul>
+<h1 id="四-监控-haproxy">四、监控 Haproxy</h1>
+<p>通过 haproxy_exporter 监控 haproxy<br>
+Github地址：https://github.com/prometheus/haproxy_exporter</p>
+<h2 id="41-部署haproxy">4.1 部署haproxy</h2>
+<pre><code class="language-shell">$  yum install haproxy
+
+修改 socket 文件 
+$ vim /etc/haproxy/haproxy.cfg
+  # turn on stats unix socket 
+  # stats socket /var/lib/haproxy/stats 
+  stats socket /var/lib/haproxy/haproxy.sock mode 600 level admin   #使用admin用户
+
+# systemctl  restart haproxy
+</code></pre>
+<h2 id="42-部署-haproxy_exporter">4.2 部署 haproxy_exporter</h2>
+<pre><code class="language-shell"># tar xvf haproxy_exporter-0.12.0.linux-amd64.tar.gz 
+# cp haproxy_exporter-0.12.0.linux-amd64/haproxy_exporter /usr/local/bin/
+
+
+启动方式一： 指定sock文件路径启动
+# haproxy_exporter --haproxy.scrape-uri=unix:/var/lib/haproxy/haproxy.sock
+
+启动方式二： 
+开启状态页： 
+listen stats 
+  bind :9009 
+  stats enable 
+  #stats hide-version 
+  stats uri /haproxy-status 
+  stats realm HAPorxy\ Stats\ Page 
+  stats auth haadmin:123456
+  stats auth admin:123456
+
+指定url启动
+# haproxy_exporter --haproxy.scrape-uri=&quot;http://haadmin:123456@127.0.0.1:9009/haproxy-status;csv&quot; &amp;
+</code></pre>
+<h2 id="43-验证metrics-数据">4.3 验证metrics 数据</h2>
+<figure data-type="image" tabindex="3"><img src="https://adong97.github.io/HDong.github.io/post-images/1658361556348.jpg" alt="" loading="lazy"></figure>
+<h2 id="44-prometheus-采集数据">4.4 prometheus 采集数据</h2>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+   - job_name: &quot;kube-haproxy-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:9101&quot;]
+
+# 重新接在配置
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="45-grafana-导入模板并验证">4.5 grafana 导入模板并验证</h2>
+<ul>
+<li>367</li>
+<li>2428</li>
+</ul>
+<h1 id="五-监控-nginx">五、监控 nginx</h1>
+<p>通过 prometheus 监控 nginx<br>
+需要在编译安装 nginx 的时候添加 nginx-module-vts 模块<br>
+github 地址：https://github.com/vozlt/nginx-module-vts  # 收集nginx指标数据</p>
+<h2 id="51编译安装nginx">5.1编译安装nginx</h2>
+<pre><code class="language-shell"># 克隆项目到本地
+$ git clone https://github.com/vozlt/nginx-module-vts.git 
+#下载nginx部署包
+$ wget http://nginx.org/download/nginx-1.20.2.tar.gz 
+# 解压并安装
+$ tar xvf nginx-1.20.2.tar.gz
+$ cd nginx-1.20.2/ 
+# 开始编译
+$ ./configure --prefix=/apps/nginx \
+--with-http_ssl_module \
+--with-http_v2_module \
+--with-http_realip_module \
+--with-http_stub_status_module \
+--with-http_gzip_static_module \ 
+--with-pcre \
+--with-file-aio \
+--with-stream \
+--with-stream_ssl_module \
+--with-stream_realip_module \
+--add-module=/usr/local//src/nginx-module-vts /  # 添加模块
+
+$ make &amp;&amp; make install
+</code></pre>
+<h3 id="511-编辑-nginx-配置文件">5.1.1 编辑 nginx 配置文件</h3>
+<pre><code class="language-shell">$ vim /apps/nginx/conf/nginx.conf
+http 范围配置： 
+      #gzip on; 
+      vhost_traffic_status_zone;
+
+server 字段配置： 
+      location / { 
+          root html; 
+          index index.html index.htm;
+      }
+      
+      location /status { 
+          vhost_traffic_status_display; 
+          vhost_traffic_status_display_format html;
+      }
+</code></pre>
+<h3 id="512-启动-nginx-并验证-web-状态页">5.1.2 启动 nginx 并验证 web 状态页</h3>
+<pre><code class="language-shell">$ /apps/nginx/sbin/nginx -t 
+nginx: the configuration file /apps/nginx/conf/nginx.conf syntax is ok 
+nginx: configuration file /apps/nginx/conf/nginx.conf test is successful
+
+$ /apps/nginx/sbin/nginx
+</code></pre>
+<h1 id="六-blackbox_exporter-监控url">六、blackbox_exporter 监控URL</h1>
+<p>官方文档：https://prometheus.io/download/#blackbox_exporter<br>
+blackbox_exporter 是 Prometheus 官方提供的一个 exporter，可以通过 HTTP, HTTPS, DNS, TCP 和 ICMP 对被监控节点进行监控和数据采集。</p>
+<ul>
+<li>HTTP/HTPPS：URL/API 可用性检测</li>
+<li>TCP：端口监听检测</li>
+<li>ICMP：主机存活检测</li>
+<li>DNS：域名解析</li>
+</ul>
+<h2 id="61-部署blackbox-exporter">6.1 部署blackbox exporter</h2>
+<pre><code class="language-shell">$ wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.19.0/blackbox_exporter-0.19.0.linux-amd64.tar.gz
+
+$ tar xvf blackbox_exporter-0.19.0.linux-amd64.tar.gz 
+
+$ ln -sv /apps/blackbox_exporter-0.19.0.linux-amd64 /apps/blackbox_exporter
+</code></pre>
+<h2 id="62-创建-blackbox-exporter-启动文件">6.2 创建 blackbox exporter 启动文件</h2>
+<pre><code class="language-shell">$ vim /etc/systemd/system/blackbox-exporter.service 
+
+[Unit] 
+Description=Prometheus Blackbox Exporter 
+After=network.target
+
+[Service] 
+Type=simple 
+User=root 
+Group=root 
+ExecStart=/apps/blackbox_exporter/blackbox_exporter \ 
+      --config.file=/apps/blackbox_exporter/blackbox.yml \ 
+      --web.listen-address=:9115
+Restart=on-failure
+
+[Install] 
+WantedBy=multi-user.target 
+
+$ systemctl  restart blackbox-exporter.service &amp;&amp; systemctl enable blackbox-exporter.service
+</code></pre>
 
         </div>
 

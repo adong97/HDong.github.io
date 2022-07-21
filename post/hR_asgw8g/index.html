@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658284199977">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658419671035">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658284199977" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658419671035" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -158,7 +158,7 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">Prometheus监控架构与部署</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">一、Prometheus监控架构与部署</h1>
         <div class="text-sm text-gray-700 lg:my-8">
           2022-02-26 / 23 min read
         </div>
@@ -169,8 +169,7 @@
           <p>Prometheus 是一个开源监控系统，它本身已经成为了云原生中指标监控的事实标准 。<br>
 https://prometheus.io/</p>
 <h1 id="一-prometheus-简介">一、prometheus 简介</h1>
-<p>Prometheus是基于go语⾔开发的⼀套开源的监控、报警和时间序列数据库的组合，是由SoundCloud 公司开发的开源监控系统，Prometheus于2016年加⼊CNCF（Cloud Native Computing Foundation, 云原⽣计算基⾦会）,2018年8⽉9⽇prometheus成为CNCF继kubernetes 之后毕业的第⼆个项⽬，<br>
-prometheus在容器和微服务领域中得到了⼴泛的应⽤，其特点主要如下：</p>
+<p>Prometheus是基于go语⾔开发的⼀套开源的监控、报警和时间序列数据库的组合，是由SoundCloud 公司开发的开源监控系统，Prometheus于2016年加⼊CNCF（Cloud Native Computing Foundation, 云原⽣计算基⾦会）,2018年8⽉9⽇prometheus成为CNCF继kubernetes 之后毕业的第⼆个项⽬，prometheus在容器和微服务领域中得到了⼴泛的应⽤，其特点主要如下：</p>
 <ul>
 <li>使用key-value的多维度(多个角度，多个层面，多个方面)格式保存数据</li>
 <li>数据不使用MySQL这样的传统数据库，而是使用时序数据库，目前是使用的TSDB</li>
@@ -969,7 +968,7 @@ spec:
 
 kubectl apply -f case2-daemonset-deploy-node-exporter.yaml
 </code></pre>
-<ol>
+<ol start="2">
 <li>prometheus收集Node-export数据</li>
 </ol>
 <pre><code class="language-shell">编辑prometheus.yml文件,添加监控项
