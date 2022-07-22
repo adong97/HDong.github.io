@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658419671035">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658449193333">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658419671035" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658449193333" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -69,18 +69,25 @@
 </li>
 <li><a href="#%E4%BA%94-%E7%9B%91%E6%8E%A7-nginx">五、监控 nginx</a>
 <ul>
-<li><a href="#51%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85nginx">5.1编译安装nginx</a>
-<ul>
-<li><a href="#511-%E7%BC%96%E8%BE%91-nginx-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.1.1 编辑 nginx 配置文件</a></li>
-<li><a href="#512-%E5%90%AF%E5%8A%A8-nginx-%E5%B9%B6%E9%AA%8C%E8%AF%81-web-%E7%8A%B6%E6%80%81%E9%A1%B5">5.1.2 启动 nginx 并验证 web 状态页</a></li>
+<li><a href="#51%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85nginx">5.1编译安装nginx</a></li>
+<li><a href="#52-%E7%BC%96%E8%BE%91-nginx-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">5.2 编辑 nginx 配置文件</a></li>
+<li><a href="#53-%E5%90%AF%E5%8A%A8-nginx-%E5%B9%B6%E9%AA%8C%E8%AF%81-web-%E7%8A%B6%E6%80%81%E9%A1%B5">5.3 启动 nginx 并验证 web 状态页</a></li>
+<li><a href="#54-%E8%AE%BF%E9%97%AEstatus%E9%A1%B5%E9%9D%A2">5.4 访问status页面</a></li>
+<li><a href="#55-%E5%AE%89%E8%A3%85nginx-vts-exporter">5.5 安装nginx vts exporter</a></li>
+<li><a href="#56-%E8%AE%BF%E9%97%AE%E6%8C%87%E6%A0%87%E6%95%B0%E6%8D%AE%E9%A1%B5%E9%9D%A2">5.6 访问指标数据页面</a></li>
+<li><a href="#57-prometheus-%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">5.7 prometheus 采集数据</a></li>
+<li><a href="#45-grafana-%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF%E5%B9%B6%E9%AA%8C%E8%AF%81-2">4.5 grafana 导入模板并验证</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#%E5%85%AD-blackbox_exporter-%E7%9B%91%E6%8E%A7url">六、blackbox_exporter 监控URL</a>
+<li><a href="#%E5%85%AD-blackbox_exporter-%E7%9B%91%E6%8E%A7">六、blackbox_exporter 监控</a>
 <ul>
 <li><a href="#61-%E9%83%A8%E7%BD%B2blackbox-exporter">6.1 部署blackbox exporter</a></li>
 <li><a href="#62-%E5%88%9B%E5%BB%BA-blackbox-exporter-%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6">6.2 创建 blackbox exporter 启动文件</a></li>
+<li><a href="#63-%E9%AA%8C%E8%AF%81web%E7%95%8C%E9%9D%A2">6.3 验证Web界面</a></li>
+<li><a href="#64-blackbox-exporter-%E5%AE%9E%E7%8E%B0url-%E7%9B%91%E6%8E%A7">6.4 blackbox exporter 实现URL 监控</a></li>
+<li><a href="#65-blackbox-exporter-%E5%AE%9E%E7%8E%B0-icmp-%E7%9B%91%E6%8E%A7">6.5 blackbox exporter 实现 ICMP 监控</a></li>
+<li><a href="#66-blackbox-exporter-%E5%AE%9E%E7%8E%B0%E7%AB%AF%E5%8F%A3%E7%9B%91%E6%8E%A7">6.6 blackbox exporter 实现端口监控</a></li>
+<li><a href="#67-%E5%AF%BC%E5%85%A5granafa-%E6%A8%A1%E6%9D%BF">6.7 导入Granafa 模板</a></li>
 </ul>
 </li>
 </ul>
@@ -177,9 +184,9 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">prometheus监控扩展</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">四、prometheus监控扩展</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 11 min read
+          2022-02-26 / 16 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/H2FJXl9R1.png" alt="">
@@ -572,7 +579,7 @@ $ curl -X POST http://10.1.13.186:9090/-/reload
 <h1 id="五-监控-nginx">五、监控 nginx</h1>
 <p>通过 prometheus 监控 nginx<br>
 需要在编译安装 nginx 的时候添加 nginx-module-vts 模块<br>
-github 地址：https://github.com/vozlt/nginx-module-vts  # 收集nginx指标数据</p>
+github 地址：https://github.com/vozlt/nginx-module-vts  # 用于收集nginx指标数据</p>
 <h2 id="51编译安装nginx">5.1编译安装nginx</h2>
 <pre><code class="language-shell"># 克隆项目到本地
 $ git clone https://github.com/vozlt/nginx-module-vts.git 
@@ -581,6 +588,10 @@ $ wget http://nginx.org/download/nginx-1.20.2.tar.gz
 # 解压并安装
 $ tar xvf nginx-1.20.2.tar.gz
 $ cd nginx-1.20.2/ 
+指定模块过程中，可能会遇到无法找到个别依赖库的问题，需要手动安装一下，例如：
+$ apt-get install openssl libssl-dev
+$ apt-get install libpcre3 libpcre3-dev
+
 # 开始编译
 $ ./configure --prefix=/apps/nginx \
 --with-http_ssl_module \
@@ -593,15 +604,15 @@ $ ./configure --prefix=/apps/nginx \
 --with-stream \
 --with-stream_ssl_module \
 --with-stream_realip_module \
---add-module=/usr/local//src/nginx-module-vts /  # 添加模块
+--add-module=/usr/local//src/nginx-module-vts /  # 添加nginx-module-vts模块,用于收集更多的nginx指标数据
 
 $ make &amp;&amp; make install
 </code></pre>
-<h3 id="511-编辑-nginx-配置文件">5.1.1 编辑 nginx 配置文件</h3>
+<h2 id="52-编辑-nginx-配置文件">5.2 编辑 nginx 配置文件</h2>
 <pre><code class="language-shell">$ vim /apps/nginx/conf/nginx.conf
 http 范围配置： 
       #gzip on; 
-      vhost_traffic_status_zone;
+      vhost_traffic_status_zone;  # 开启状态页
 
 server 字段配置： 
       location / { 
@@ -609,21 +620,61 @@ server 字段配置：
           index index.html index.htm;
       }
       
-      location /status { 
+      location /status {   # 添加location
           vhost_traffic_status_display; 
           vhost_traffic_status_display_format html;
       }
 </code></pre>
-<h3 id="512-启动-nginx-并验证-web-状态页">5.1.2 启动 nginx 并验证 web 状态页</h3>
+<h2 id="53-启动-nginx-并验证-web-状态页">5.3 启动 nginx 并验证 web 状态页</h2>
 <pre><code class="language-shell">$ /apps/nginx/sbin/nginx -t 
 nginx: the configuration file /apps/nginx/conf/nginx.conf syntax is ok 
 nginx: configuration file /apps/nginx/conf/nginx.conf test is successful
 
 $ /apps/nginx/sbin/nginx
 </code></pre>
-<h1 id="六-blackbox_exporter-监控url">六、blackbox_exporter 监控URL</h1>
+<h2 id="54-访问status页面">5.4 访问status页面</h2>
+<p>http://10.1.13.186/status<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658441977898.jpg" alt="" loading="lazy"></p>
+<h2 id="55-安装nginx-vts-exporter">5.5 安装nginx vts exporter</h2>
+<p>nginx vts exporter 用于转换指标数据格式为prometheus可以识别的key/value格式数据，再通过端口将数据暴露出去，最后prometheus再通过暴露的端口抓取数据。<br>
+github地址：https://github.com/hnlq715/nginx-vts-exporter/releases</p>
+<pre><code class="language-shell">$ wget https://github.com/hnlq715/nginx-vts-exporter/releases/download/v0.10.3/nginx-vts-exporter-0.10.3.linux-amd64.tar.gz
+
+$ tar -zxvf nginx-vts-exporter-0.10.3.linux-amd64.tar.gz
+$ ln -sv nginx-vts-exporter-0.10.3.linux-amd64.tar.gz nginx-vts-exporter
+'nginx-vts-exporter' -&gt; 'nginx-vts-exporter-0.10.3.linux-amd64.tar.gz'
+
+$ cp nginx-vts-exporter /usr/local/bin/
+
+# 启动nginx-vts-exporter
+$ ./nginx-vts-exporter -nginx.scrape_uri http://10.1.13.186/status/format/json
+2022/07/22 07:09:24 Starting nginx_vts_exporter (version=0.10.3, branch=HEAD, revision=8aa2881c7050d9b28f2312d7ce99d93458611d04)
+2022/07/22 07:09:24 Build context (go=go1.10, user=root@56ca8763ee48, date=20180328-05:47:47)
+2022/07/22 07:09:24 Starting Server at : :9913
+2022/07/22 07:09:24 Metrics endpoint: /metrics
+2022/07/22 07:09:24 Metrics namespace: nginx
+2022/07/22 07:09:24 Scraping information from : http://10.1.13.186/status/format/json
+</code></pre>
+<h2 id="56-访问指标数据页面">5.6 访问指标数据页面</h2>
+<p>访问http://10.1.13.18:9913/metrics<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658445073178.jpg" alt="" loading="lazy"></p>
+<h2 id="57-prometheus-采集数据">5.7 prometheus 采集数据</h2>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+   - job_name: &quot;kube-nginx-metrics&quot;
+    static_configs:
+    - targets: [&quot;10.1.13.186:9913&quot;]
+
+# 重新加载配置
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="45-grafana-导入模板并验证-2">4.5 grafana 导入模板并验证</h2>
+<ul>
+<li>2949</li>
+</ul>
+<h1 id="六-blackbox_exporter-监控">六、blackbox_exporter 监控</h1>
 <p>官方文档：https://prometheus.io/download/#blackbox_exporter<br>
-blackbox_exporter 是 Prometheus 官方提供的一个 exporter，可以通过 HTTP, HTTPS, DNS, TCP 和 ICMP 对被监控节点进行监控和数据采集。</p>
+Github地址：https://github.com/prometheus/blackbox_exporter/</p>
+<p>blackbox_exporter 是 Prometheus 官方提供的一个 exporter，可以通过 HTTP, HTTPS, DNS, TCP 和 ICMP 对被监控节点进行监控和数据采集。</p>
 <ul>
 <li>HTTP/HTPPS：URL/API 可用性检测</li>
 <li>TCP：端口监听检测</li>
@@ -631,33 +682,130 @@ blackbox_exporter 是 Prometheus 官方提供的一个 exporter，可以通过 H
 <li>DNS：域名解析</li>
 </ul>
 <h2 id="61-部署blackbox-exporter">6.1 部署blackbox exporter</h2>
-<pre><code class="language-shell">$ wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.19.0/blackbox_exporter-0.19.0.linux-amd64.tar.gz
+<pre><code class="language-shell">$ wget https://github.com/prometheus/blackbox_exporter/releases/download/v0.21.1/blackbox_exporter-0.21.1.linux-amd64.tar.gz
 
-$ tar xvf blackbox_exporter-0.19.0.linux-amd64.tar.gz 
+$ tar -zxvf blackbox_exporter-0.21.1.linux-amd64.tar.gz
 
-$ ln -sv /apps/blackbox_exporter-0.19.0.linux-amd64 /apps/blackbox_exporter
+$ ln -sv blackbox_exporter-0.21.1.linux-amd64 blackbox_exporter
+'blackbox_exporter' -&gt; 'blackbox_exporter-0.21.1.linux-amd64'
 </code></pre>
 <h2 id="62-创建-blackbox-exporter-启动文件">6.2 创建 blackbox exporter 启动文件</h2>
 <pre><code class="language-shell">$ vim /etc/systemd/system/blackbox-exporter.service 
 
-[Unit] 
-Description=Prometheus Blackbox Exporter 
-After=network.target
+    [Unit] 
+    Description=Prometheus Blackbox Exporter 
+    After=network.target
 
-[Service] 
-Type=simple 
-User=root 
-Group=root 
-ExecStart=/apps/blackbox_exporter/blackbox_exporter \ 
-      --config.file=/apps/blackbox_exporter/blackbox.yml \ 
-      --web.listen-address=:9115
-Restart=on-failure
+    [Service] 
+    Type=simple 
+    User=root 
+    Group=root 
+    ExecStart=/apps/blackbox_exporter/blackbox_exporter  --config.file=/apps/blackbox_exporter/blackbox.yml  --web.listen-address=:9115
+    Restart=on-failure
 
-[Install] 
-WantedBy=multi-user.target 
+    [Install] 
+    WantedBy=multi-user.target 
 
+$ systemctl daemon-reload
 $ systemctl  restart blackbox-exporter.service &amp;&amp; systemctl enable blackbox-exporter.service
 </code></pre>
+<h2 id="63-验证web界面">6.3 验证Web界面</h2>
+<p>http://10.1.13.186:9115/<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658446680282.jpg" alt="" loading="lazy"></p>
+<p>blackbox只是监听一个端口9115，把服务启动起来。支持HTTP, HTTPS, DNS, TCP 和 ICMP 对被监控节点进行监控，但是具体的监控对象是由prometheus传递给blackbox-exporter的。然后blackbox-exporter再拿着监控对象进行采集数据，包括http、tcp等。</p>
+<h2 id="64-blackbox-exporter-实现url-监控">6.4 blackbox exporter 实现URL 监控</h2>
+<p>prometheus 调用 blackbox exporter 实现对URL/ICMP 的监控。</p>
+<p>Prometheus URL 监控配置</p>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+...
+  - job_name: 'http_status'  # http 状态监控
+    metrics_path: /probe  # 访问路径
+    params:
+      module: [http_2xx]  # 成功的状态
+    static_configs:   # 静态配置
+      - targets: ['http://www.xiaomi.com', 'http://www.magedu.com']
+        labels:   # 配置lable
+          instance: http_status
+          group: web
+    relabel_configs:   # 标签替换
+      - source_labels: [__address__] #relabel通过将__address__(当前目标地址)写入__param_target标签来创建一个label。
+        target_label: __param_target #监控目标www.xiaomi.com,作为__address__的value
+      - source_labels: [__param_target] #监控目标
+        target_label: url #将监控目标与url创建一个label
+      - target_label: __address__
+        replacement: 10.1.13.186:9115
+...
+
+# 重新加载配置
+curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://adong97.github.io/HDong.github.io/post-images/1658447623334.jpg" alt="" loading="lazy"></figure>
+<p>在logs中可以查看到证书的有效期，单位是秒，可以进行转换<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658447904400.jpg" alt="" loading="lazy"></p>
+<h2 id="65-blackbox-exporter-实现-icmp-监控">6.5 blackbox exporter 实现 ICMP 监控</h2>
+<p>Prometheus ICMP 监控配置</p>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+...
+# icmp 检测
+  - job_name: 'ping_status'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets: ['10.1.13.188',&quot;223.6.6.6&quot;]
+        labels:
+          instance: 'ping_status'
+          group: 'icmp'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: ip #将ip与__param_target创建一个label
+      - target_label: __address__
+        replacement: 10.1.13.186:9115
+...
+
+# 重新加载配置
+curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="66-blackbox-exporter-实现端口监控">6.6 blackbox exporter 实现端口监控</h2>
+<p>端口监控配置</p>
+<pre><code class="language-shell">$ vim /apps/prometheus/prometheus.yml
+...
+# 端口监控
+  - job_name: 'port_status'
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets: ['10.1.13.186:9090', '10.1.13.188:80','10.1.13.189:22']
+        labels:
+          instance: 'port_status'
+          group: 'port'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: ip
+      - target_label: __address__
+        replacement: 10.1.13.186:9115
+...
+
+# 重新加载配置
+curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="67-导入granafa-模板">6.7 导入Granafa 模板</h2>
+<ul>
+<li>
+<p>13587<br>
+https://grafana.com/grafana/dashboards/13587</p>
+</li>
+<li>
+<p>9965<br>
+https://grafana.com/grafana/dashboards/9965</p>
+</li>
+</ul>
+<figure data-type="image" tabindex="5"><img src="https://adong97.github.io/HDong.github.io/post-images/1658448937756.jpg" alt="" loading="lazy"></figure>
 
         </div>
 
@@ -674,7 +822,7 @@ $ systemctl  restart blackbox-exporter.service &amp;&amp; systemctl enable black
               <a href="https://adong97.github.io/HDong.github.io/post/Q9P2QaMdd/">
                 <h3 class="post-title">
                   <i class="ri-arrow-left-line"></i>
-                  PromQL语句
+                  二、PromQL语句
                 </h3>
               </a>
             </div>
