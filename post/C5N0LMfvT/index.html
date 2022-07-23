@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658449193333">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658562566521">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658449193333" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658562566521" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -34,9 +34,24 @@
           </p>
           <div class="toc-container hidden lg:block">
             <ul class="markdownIt-TOC">
-<li><a href="#%E5%AE%89%E8%A3%85-alertmanager">安装 Alertmanager</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">配置Prometheus与Alertmanager对话</a>
+<li><a href="#%E4%BA%94-alertmanager">五、Alertmanager</a>
 <ul>
+<li><a href="#51-%E5%AE%89%E8%A3%85-alertmanager">5.1 安装 Alertmanager</a>
+<ul>
+<li><a href="#511-k8s%E9%83%A8%E7%BD%B2alertmanager">5.1.1 K8s部署Alertmanager</a></li>
+<li><a href="#512-%E9%83%A8%E7%BD%B2alertmanager-%E6%9C%8D%E5%8A%A1">5.1.2 部署Alertmanager 服务</a></li>
+<li><a href="#513-alertmanager-%E9%85%8D%E7%BD%AE%E9%82%AE%E4%BB%B6%E5%91%8A%E8%AD%A6%E9%80%9A%E7%9F%A5">5.1.3 Alertmanager 配置邮件告警通知</a>
+<ul>
+<li><a href="#5131-alertmanager%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90">5.1.3.1 Alertmanager配置文件解析</a></li>
+<li><a href="#5132-%E9%85%8D%E7%BD%AEprometheus%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">5.1.3.2 配置prometheus报警规则</a></li>
+<li><a href="#5134-prometheus-%E5%8A%A0%E8%BD%BD%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">5.1.3.4 prometheus 加载报警规则</a></li>
+<li><a href="#5135-%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E5%91%8A%E8%AD%A6">5.1.3.5 查看当前告警</a></li>
+<li><a href="#5136-prometheus-%E7%9A%84%E4%BA%8B%E4%BB%B6%E7%8A%B6%E6%80%81">5.1.3.6 prometheus 的事件状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#52-%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">5.2 配置Prometheus与Alertmanager对话</a></li>
 <li><a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a></li>
 <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a>
 <ul>
@@ -147,28 +162,31 @@
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
         <h1 class="text-3xl font-bold lg:mt-16">Alertmanager安装与配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 23 min read
+          2022-02-26 / 29 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/C5N0LMfvT.png" alt="">
         
         <div class="post-content yue">
-          <p>Alertmanager是一个独立的告警模块。</p>
+          <h1 id="五-alertmanager">五、Alertmanager</h1>
+<p>Alertmanager是一个独立的告警模块。</p>
 <ul>
-<li>接收Prometheus等客户端发来的警报</li>
+<li>用于接收Prometheus等客户端发来的警报</li>
 <li>通过分组、删除重复等处理，并将它们通过路由发送给正确的接收器；</li>
-<li>告警方式可以按照不同的规则发送给不同的模块负责人。Alertmanager支持Email, Slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具。</li>
+<li>告警方式可以按照不同的规则发送给不同的模块负责人。</li>
+<li>Alertmanager支持Email, Slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具。</li>
 </ul>
-<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1646842757866.png" alt="" loading="lazy"></figure>
-<p>如果集群主机的内存使用率超过80%，且该现象持续了2分钟？想实现这样的监控告警，如何做？</p>
-<p>从上图可得知设置警报和通知的主要步骤是：</p>
+<p>prometheus 触发一条告警的过程：<br>
+prometheus 首先进行周期性采集数据，将采集的数据保存到TSDB，并对比写入的数据和监控规则做判断，如果超出规则范围则触发阈值，进行告警。 第一次发送告警和后面的告警中间会有间隔时间，连续几次对规则进行判断，如果利用率还是过高，则将告警发送给alertmanger,通过内部分组/抑制/静默进行控制--&gt; 媒体类型 --&gt; 邮件|钉钉|微信等。<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1646842757866.png" alt="" loading="lazy"></p>
 <ul>
-<li>安装和配置 Alertmanager</li>
-<li>配置Prometheus与Alertmanager对话</li>
-<li>在Prometheus中创建警报规则</li>
+<li><strong>分组(group)</strong>: 将类似性质的警报合并为单个通知，比如网络通知、主机通知、服务通知。</li>
+<li><strong>静默(silences)</strong>: 是一种简单的特定时间静音的机制，例如：服务器要升级维护可以先设置这个时间段告警</li>
+<li><strong>抑制(inhibition)</strong>: 当警报发出后，停止重复发送由此警报引发的其他警报即合并一个故障引起的多个报警事 件，可以消除冗余告警。</li>
 </ul>
-<h1 id="安装-alertmanager">安装 Alertmanager</h1>
-<p>Alertmanager，  https://github.com/prometheus/alertmanager#install</p>
+<h2 id="51-安装-alertmanager">5.1 安装 Alertmanager</h2>
+<h3 id="511-k8s部署alertmanager">5.1.1 K8s部署Alertmanager</h3>
+<p>Github地址：https://github.com/prometheus/alertmanager#install</p>
 <pre><code class="language-shell">./alertmanager --config.file=config.yml
 </code></pre>
 <p>alertmanager.yml配置文件格式：</p>
@@ -300,20 +318,197 @@ spec:
               number: 9093
 </code></pre>
 <p>部署Alertmanager</p>
-<pre><code>$ kubectl create -f alertmanager-all.yaml
+<pre><code class="language-shell">$ kubectl create -f alertmanager-all.yaml
 </code></pre>
-<h1 id="配置prometheus与alertmanager对话">配置Prometheus与Alertmanager对话</h1>
+<h3 id="512-部署alertmanager-服务">5.1.2 部署Alertmanager 服务</h3>
+<pre><code class="language-shell"># 下载安装包
+$ wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+
+$ tar -zxvf alertmanager-0.24.0.linux-amd64.tar.gz -C /apps/
+
+$ ln -sv /apps/alertmanager-0.24.0.linux-amd64 /apps/alertmanager
+'/apps/alertmanager' -&gt; '/apps/alertmanager-0.24.0.linux-amd64'
+
+$ cat /etc/systemd/system/alertmanager.service
+[Unit]
+Description=Prometheus alertmanager
+After=network.target
+
+[Service]
+ExecStart=/apps/alertmanager/alertmanager  --config.file=&quot;/apps/alertmanager/alertmanager.yml&quot;
+
+[Install]
+WantedBy=multi-user.target
+
+
+$ systemctl daemon-reload &amp;&amp; systemctl enable alertmanager.service &amp;&amp; systemctl start alertmanager.service
+</code></pre>
+<h3 id="513-alertmanager-配置邮件告警通知">5.1.3 Alertmanager 配置邮件告警通知</h3>
+<p>官方配置文档： https://prometheus.io/docs/alerting/configuration/</p>
+<h4 id="5131-alertmanager配置文件解析">5.1.3.1 Alertmanager配置文件解析</h4>
+<pre><code class="language-shell">$ cat /apps/alertmanager/alertmanager.yml
+
+global:
+# 邮箱通知
+  smtp_from: '3063585531@qq.com'         #发件人邮箱地址
+  smtp_smarthost: 'smtp.qq.com:465'    #邮箱 smtp 地址。
+  smtp_auth_username: '3063585531@qq.com' #发件人的登陆用户名，默认和发件人地址一致。
+  smtp_auth_password: 'eucbuitnthamdgcc' #发件人的登陆密码，有时候是授权码。
+  smtp_require_tls:  false #是否需要 tls 协议。默认是 true。
+  resolve_timeout: 60s #当一个告警在Alertmanager 持续多长时间未接收到新告警后旧标记告警状态为resolved(已解决/已恢复)
+
+# 企业微信通知
+  #wechart_api_url:    #企业微信 API 地址。
+  #wechart_api_secret: #企业微信 API secret
+  #wechat_api_corp_id: #企业微信 corp id 信息。
+
+route: #route 用来设置报警的分发策略
+  group_by: [alertname] #通过 alertname 的值对告警进行分类,- alert: 物理节点 cpu 使用率
+  group_wait: 10s #一组告警第一次发送之前等待的延迟时间，即产生告警后延迟 10 秒钟将组内新产生的消息一起合并发送(一般设置为 0 秒 ~ 几分钟)。
+  group_interval: 2m #一组已发送过初始通知的告警接收到新告警后，下次发送通知前等待的延迟时间(一般设置为 5 分钟或更多)。
+  repeat_interval: 5m #一条成功发送的告警，在最终发送通知之前等待的时间(通常设置为 3 小时或更长时间)。
+
+#间隔示例：
+  #group_wait: 10s #第一次产生告警，等待 10s，组内有告警就一起发出，没有其它告警就单独发出。
+  #group_interval: 2m #第二次产生告警，先等待 2 分钟，2 分钟后还没有恢复就进入 repeat_interval。
+  #repeat_interval: 5m #在最终发送消息前再等待 5 分钟，5 分钟后还没有恢复就发送第二次告警。
+
+  receiver: default-receiver #设置接收人,其它的告警发送给default-receiver
+  routes: #将 critical 的报警发送给myalertname
+  - receiver: myalertname
+    group_wait: 10s
+    match_re:
+      severity: critical
+
+receivers: #定义多接收者
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'wxdongself@163.com'
+        send_resolved: true #通知已经恢复的告警
+
+  - name: 'myalertname'
+    webhook_configs:
+      - url: 'http://10.1.13.1.186:8060/dingtalk/alertname/send'
+        send_resolved: true #通知已经恢复的告警
+
+inhibit_rules: #抑制的规则
+  - source_match: #源匹配级别，当匹配成功发出通知，但是其它'alertname', 'dev', 'instance'产生的warning 级别的告警通知将被抑制
+      severity: 'critical' #报警的事件级别
+    target_match:
+      severity: 'warning' #匹配目标为新产生的目标告警为'warning' 将被抑制
+    equal: ['alertname', 'dev', 'instance']
+</code></pre>
+<pre><code class="language-shell"># 检查配置是否正确
+./amtool check-config alertmanager.yml
+Checking 'alertmanager.yml'  SUCCESS
+Found:
+ - global config
+ - route
+ - 1 inhibit rules
+ - 2 receivers
+ - 0 templates
+
+ # 重启alertmanager服务
+$  systemctl restart alertmanager.service
+
+# 验证 alertmanager 的 9093 端口已经监听 
+$ lsof -i:9093 
+COMMAND       PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+alertmana 2057260 root    8u  IPv6 20008933      0t0  TCP *:9093 (LISTEN)
+</code></pre>
+<h4 id="5132-配置prometheus报警规则">5.1.3.2 配置prometheus报警规则</h4>
+<pre><code class="language-shell">$ pwd
+/apps/prometheus
+
+$ mkdir rules
+$ vim rules/server_rules.yaml
+groups:
+- name: alertmanager_pod.rules
+  rules:
+  - alert: Pod_all_cpu_usage
+    expr: (sum by(name)(rate(container_cpu_usage_seconds_total{image!=&quot;&quot;}[5m]))*100) &gt; 1
+    for: 2m
+    labels:
+      severity: critical
+      service: pods
+    annotations:
+      description: 容器 {{ $labels.name }} CPU 资源利用率大于 10% , (current value is {{ $value }})
+      summary: Dev CPU 负载告警
+
+  - alert: Pod_all_memory_usage
+    #expr: sort_desc(avg by(name)(irate(container_memory_usage_bytes{name!=&quot;&quot;}[5m]))*100) &gt; 10  #内存大于 10%
+    expr: sort_desc(avg by(name)(irate(node_memory_MemFree_bytes {name!=&quot;&quot;}[5m]))) &gt; 2   #内存存大于 2G
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      description: 容器 {{ $labels.name }} Memory 资源利用率大于 2G , (current value is {{ $value }})
+      summary: Dev Memory 负载告警
+
+  - alert: node 内存可用大小
+    expr: node_memory_MemFree_bytes &gt; 1 #故意写错的
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      description: 容器可用内存小于 100k
+</code></pre>
+<h4 id="5134-prometheus-加载报警规则">5.1.3.4 prometheus 加载报警规则</h4>
+<pre><code class="language-shell">$ cat prometheus.yml
+ 
+...
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+           - 10.1.13.186:9093    # 指定alertmanager地址和端口
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+    - &quot;/apps/prometheus/rules/server_rules.yaml&quot;   # 指定规则文件路径
+  # - &quot;second_rules.yml&quot;
+...
+
+# 验证规则
+./promtool check rules rules/server_rules.yaml
+Checking rules/server_rules.yaml
+  SUCCESS: 3 rules found
+
+# 重启prometheus
+$ systemctl restart prometheus.service
+</code></pre>
+<h4 id="5135-查看当前告警">5.1.3.5 查看当前告警</h4>
+<p>在 alertermanager 服务器，使用 amtool 查看当前报警事件</p>
+<pre><code class="language-shell">$ pwd
+/apps/alertmanager
+
+$ ./amtool alert --alertmanager.url=http://10.1.13.186:9093
+Alertname    Starts At                Summary  State
+node 内存可用大小  2022-07-23 07:30:33 UTC           active
+node 内存可用大小  2022-07-23 07:30:33 UTC           active
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1658562560681.jpg" alt="" loading="lazy"></figure>
+<h4 id="5136-prometheus-的事件状态">5.1.3.6 prometheus 的事件状态</h4>
+<p>promethus 报警状态：</p>
+<ul>
+<li>inactive：没有异常。</li>
+<li>pending：已触发阈值，但未满足告警持续时间（即 rule 中的 for 字段）</li>
+<li>firing：已触发阈值且满足条件并发送至 alertmanager</li>
+</ul>
+<h2 id="52-配置prometheus与alertmanager对话">5.2 配置Prometheus与Alertmanager对话</h2>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1646842842773.png" alt="" loading="lazy"><br>
 是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
-<pre><code class="language-shell">...
+<pre><code class="language-shell">$ cat /apps/prometheus/prometheus.yml
+...
     alerting:
       alertmanagers:
       - static_configs:
         - targets:
-          - alertmanager:9093
+          - alertmanager:9093   # 添加 alertmanager 地址
 ...
 </code></pre>
-<p>因此，修改Prometheus的配置文件，然后重新加载pod</p>
+<p>因此，需要修改Prometheus的配置文件，然后重新加载pod。</p>
 <pre><code class="language-shell"># 编辑prometheus-configmap.yaml配置，添加alertmanager内容
 $ kuectl -n monitor edit configmap prometheus-config
 
@@ -332,7 +527,7 @@ data:
       alertmanagers:
       - static_configs:
         - targets:
-          - alertmanager:9093
+          - alertmanager:9093   # 添加 alertmanager 地址
 ...
   
 # 确保prometheus配置已经生效
@@ -362,13 +557,12 @@ $ kubectl -n monitor exec -ti prometheus-7d6799c84c-2kntg cat /etc/prometheus/pr
 17-  # - &quot;second_rules.yml&quot;
 
 
-# 使用软加载的方式，
+# 重新加载prometheus配置
 $ curl -X POST 10.244.1.167:9090/-/reload
 </code></pre>
 <h2 id="配置报警规则">配置报警规则</h2>
 <p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
-<p>在哪里配置？<br>
-同样是在prometheus-configmap中：</p>
+<p>同样是在prometheus-configmap中进行配置：</p>
 <pre><code class="language-shell">$ kubectl -n monitor edit configmap prometheus-config
 
 apiVersion: v1
@@ -388,7 +582,7 @@ data:
           - alertmanager:9093
     # Load rules once and periodically evaluate them according to the global  'evaluation_interval'.
     rule_files:
-      - /etc/prometheus/alert_rules.yml    #添加rule_files
+      - /etc/prometheus/alert_rules.yml    #添加rule_files，指定告警规则文件地址
       # - &quot;first_rules.yml&quot;
       # - &quot;second_rules.yml&quot;
     scrape_configs:
@@ -417,7 +611,7 @@ data:
           - alertmanager:9093
     # Load rules once and periodically evaluate them according to the global  'evaluation_interval'.
     rule_files:
-      - /etc/prometheus/alert_rules.yml
+      - &quot;/etc/prometheus/alert_rules.yml&quot;    # 指定规则文件
       # - &quot;first_rules.yml&quot;
       # - &quot;second_rules.yml&quot;
     scrape_configs:
@@ -438,7 +632,7 @@ data:
           description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
 </code></pre>
 <p>或者新创建一个<code>alert_rules.yml</code>文件:</p>
-<pre><code>$ cat alert_rules.yml
+<pre><code class="language-shell">$ cat alert_rules.yml
 
 groups:
 - name: node_metrics
@@ -450,7 +644,7 @@ groups:
       summary: &quot;{{$labels.instance}}: Low node load detected&quot;
       description: &quot;{{$labels.instance}}: node load is below 1 (current value is: {{ $value }}&quot;
 </code></pre>
-<pre><code>##删除正在使用的配置文件，重新生成
+<pre><code class="language-shell">##删除正在使用的配置文件，重新生成
 $ kubectl -n monitor delete cm prometheus-config
 
 ##重新创建创建prometheus-config configmap
@@ -483,7 +677,7 @@ $ curl -XPOST 10.244.1.10:9090/-/reload
 </li>
 </ul>
 <p>更新配置并软重启，并查看Prometheus报警规则。</p>
-<pre><code>$ kubectl -n monitor exec prometheus-7d6799c84c-k7dck  -- cat /etc/prometheus/alert_rules.yml
+<pre><code class="language-shell">$ kubectl -n monitor exec prometheus-7d6799c84c-k7dck  -- cat /etc/prometheus/alert_rules.yml
 
 groups:
 - name: node_metrics
