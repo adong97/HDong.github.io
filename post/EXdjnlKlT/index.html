@@ -1,0 +1,418 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adong&#39;s blog</title>
+<meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658591595566">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+
+<link rel="stylesheet" href="https://adong97.github.io/HDong.github.io/styles/main.css">
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main px-4 flex flex-col lg:flex-row">
+      <div id="sidebar" class="sidebar-wrapper lg:static lg:w-1/4">
+  <div class="lg:sticky top-0">
+    <div class="sidebar-content">
+      <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
+        <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
+        <a href="https://adong97.github.io/HDong.github.io">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658591595566" alt="">
+        </a>
+        <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
+      </div>
+      
+        <div class="animated fadeInLeft" style="animation-delay: 0.4s">
+          <p class="my-4 text-gray-600 font-light hidden lg:block">
+            文章目录
+          </p>
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li><a href="#%E5%85%AD-pushgateway-%E7%AE%80%E4%BB%8B">六、pushgateway 简介</a>
+<ul>
+<li><a href="#61-%E9%83%A8%E7%BD%B2-pushgateway">6.1 部署 pushgateway</a></li>
+<li><a href="#62-prometheus-%E5%88%B0-pushgateway%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE">6.2 prometheus 到 pushgateway采集数据</a>
+<ul>
+<li><a href="#621-prometheus-%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86">6.2.1 prometheus 配置数据采集</a></li>
+</ul>
+</li>
+<li><a href="#63-%E6%B5%8B%E8%AF%95%E4%BB%8E%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A8%E9%80%81%E5%8D%95%E6%9D%A1%E6%95%B0%E6%8D%AE">6.3 测试从客户端推送单条数据</a></li>
+<li><a href="#64-%E6%B5%8B%E8%AF%95%E4%BB%8E%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A8%E9%80%81%E5%A4%9A%E6%9D%A1%E6%95%B0%E6%8D%AE">6.4 测试从客户端推送多条数据</a></li>
+<li><a href="#65-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%94%B6%E9%9B%86%E6%95%B0%E6%8D%AE">6.5 自定义收集数据</a></li>
+<li><a href="#66-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE">6.6 删除数据</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%83-prometheus-%E8%81%94%E9%82%A6">七、prometheus 联邦</a></li>
+</ul>
+
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="menu-container">
+  <i class="ri-arrow-left-line text-2xl cursor-pointer animated fadeIn close-menu-btn" onclick="closeMenu()"></i>
+  <div>
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/" class="menu" style="animation-delay: 0s">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/KZzTEma9t" class="menu" style="animation-delay: 0.2s">
+          Docker
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/V-jtFh-Fz" class="menu" style="animation-delay: 0.4s">
+          Kubernetes基础
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/u1b0oCOx3" class="menu" style="animation-delay: 0.6000000000000001s">
+          Kubernetes业务迁移
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/dzCVBEmgM" class="menu" style="animation-delay: 0.8s">
+          Kubernetes日志采集
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8" class="menu" style="animation-delay: 1s">
+          Prometheus监控
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/r0PpL7bxH" class="menu" style="animation-delay: 1.2000000000000002s">
+          Devops CI/CD
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/9gU_S9qVp " class="menu" style="animation-delay: 1.4000000000000001s">
+          Spring Cloud微服务
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/AFtdi0ofi" class="menu" style="animation-delay: 1.6s">
+          istio微服务治理
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tag/NqwP-hfIr" class="menu" style="animation-delay: 1.8s">
+          推荐书籍
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/archives" class="menu" style="animation-delay: 2s">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://adong97.github.io/HDong.github.io/tags" class="menu" style="animation-delay: 2.2s">
+          标签
+        </a>
+      
+    
+  </div>
+  <div class="site-footer">
+    <div class="py-4 text-gray-700">Powered by <a href="https://github.com/getgridea/gridea" target="_blank">♥</a></div>
+    <a class="rss" href="https://adong97.github.io/HDong.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+<div class="mask" onclick="closeMenu()">
+</div>
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">六、pushgateway、prometheus联邦和存储</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2022-02-26 / 6 min read
+        </div>
+        
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/EXdjnlKlT.png" alt="">
+        
+        <div class="post-content yue">
+          <h1 id="六-pushgateway-简介">六、pushgateway 简介</h1>
+<p>Github地址：https://github.com/prometheus/pushgateway</p>
+<p>pushgateway是采用<strong>被动推送</strong>的方式，而不是类似于prometheus server 主动连接exporter 获取监控数据。</p>
+<p>pushgateway 可以单独运行在一个节点，然后需要自定义监控脚本把需要监控的主动推送给pushgateway 的 API 接口，然后 pushgateway 再等待 prometheus server 抓取数据，即 <strong>pushgateway 本身没有任何抓取监控数据的功能</strong>，目前 pushgateway 只是被动的等待数据从客户端推送过来。</p>
+<ul>
+<li>--persistence.file=&quot;&quot; #数据保存的文件，默认只保存在内存中</li>
+<li>--persistence.interval=5m #数据持久化的间隔时间</li>
+</ul>
+<p><img src="https://adong97.github.io/HDong.github.io/post-images/1658586410317.png" alt="" loading="lazy"><br>
+被监控主机上需要内置一个指标收集服务，可以是脚本或者jar包。然后收集数据周期性(任务计划)的上传到Pushgateway上，Pushgateway将数据存放本地内存中，最后由Prometheus Server每隔多长时间主动发起连接从Pushgateway上抓取数据，存放到磁盘或远端存储中。</p>
+<h2 id="61-部署-pushgateway">6.1 部署 pushgateway</h2>
+<p><strong>方式一</strong>： 单机部署pushgateway</p>
+<pre><code class="language-shell"># 下载安装包
+$ wget  https://github.com/prometheus/pushgateway/releases/download/v1.4.3/pushgateway-1.4.3.linux-amd64.tar.gz
+
+$ tar -zxvf pushgateway-1.4.3.linux-amd64.tar.gz
+$ cd pushgateway-1.4.3.linux-amd64/
+$ ./pushgateway --help
+
+启动服务并测试访问9091端口
+$ ./pushgateway
+</code></pre>
+<p><strong>方式二</strong>： docker部署pushgateway</p>
+<pre><code class="language-shell">$ docker load -i pushgateway.tar.gz 
+$ docker run -d --name pushgateway -p 9091:9091 prom/pushgateway
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://adong97.github.io/HDong.github.io/post-images/1658587538957.jpg" alt="" loading="lazy"></figure>
+<h2 id="62-prometheus-到-pushgateway采集数据">6.2 prometheus 到 pushgateway采集数据</h2>
+<p>pushgateway 默认指标数据：http://10.1.13.186:9091/metrics</p>
+<h3 id="621-prometheus-配置数据采集">6.2.1 prometheus 配置数据采集</h3>
+<pre><code class="language-shell">$  vim /apps/prometheus/prometheus.yml
+...
+  - job_name: 'pushgateway-monitor'  # job名称
+    scrape_interval: 15s  # 抓取时间，每隔15s抓取一次
+    static_configs:   # 静态配置
+    - targets: ['10.1.13.186:9091']   # 目标地址
+    honor_labels: true   # 保留数据源标签
+...
+
+配置详解：
+honor_labels控制Prometheus如何处理已经存在于已抓取数据中的标签与Prometheus将附加服务器端的标签之间的冲突。
+（&quot;job&quot;和&quot;instance&quot;标签，手动配置的目标标签以及服务发现实现生成的标签）
+ 
+如果 honor_labels 设置为&quot;true&quot;，则通过保留已抓取数据的标签值并忽略冲突的服务器端标签来解决标签冲突。 
+
+如果 honor_labels 设置为&quot;false&quot; ，则通过将已抓取数据中的冲突标签重命名为 &quot;exported_
+&lt;original-label&gt;&quot;（例如&quot;exported_instance&quot;，&quot;exported_job&quot;）
+然后附加服务器端标签来解决标签冲突
+
+
+# 重新生配置文件
+$ curl -X POST http://10.1.13.186:9090/-/reload
+</code></pre>
+<h2 id="63-测试从客户端推送单条数据">6.3 测试从客户端推送单条数据</h2>
+<p>推送单条数据</p>
+<pre><code class="language-shell">要 Push 数据到 PushGateway 中，可以通过其提供的 API 标准接口来添加，
+默认 URL 地址为： http://&lt;ip&gt;:9091/metrics/job/&lt;JOBNAME&gt;{/&lt;LABEL_NAME&gt;/&lt;LABEL_VALUE&gt;}
+
+其中&lt;JOBNAME&gt;是必填项，为prometheus.yml文件中 job 标签值，后边可以跟任意数量的标签对，
+一般我们会添加一个 instance/&lt;INSTANCE_NAME&gt;实例名称标签，来方便区分各个指标。
+
+推送一个 job 名称为mytest_job，key 为mytest_metric 值为 2022 
+$ echo &quot;mytest_metric 2022&quot; | curl --data-binary @- http://10.1.13.186:9091/metrics/job/mytest_job
+
+$ echo &quot;mytest_metric 2026&quot; | curl --data-binary @- http://10.1.13.186:9091/metrics/job/mytest_job
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1658589725795.jpg" alt="" loading="lazy"></figure>
+<p>除了 mytest_metric 外，同时还新增了 push_time_seconds 和 push_failure_time_seconds 两个指标， 这两个是 PushGateway 自动生成的指标, 分别用于记录指标数据的成功上传时间和失败上传时间。</p>
+<h2 id="64-测试从客户端推送多条数据">6.4 测试从客户端推送多条数据</h2>
+<p>推送多条数据</p>
+<pre><code class="language-shell">$ cat &lt;&lt;EOF | curl --data-binary @- http://10.1.13.186:9091/metrics/job/test_job/instance/10.1.13.186
+# 添加实例地址 
+
+#TYPE node_memory_usage gauge 
+node_memory_usage 4311744512 
+# TYPE memory_total gauge 
+node_memory_total 103481868288
+EOF
+</code></pre>
+<h2 id="65-自定义收集数据">6.5 自定义收集数据</h2>
+<p>基于自定义脚本实现数据的收集和推送</p>
+<pre><code class="language-shell">$ cat mem_monitor.sh 
+
+#! /bin/bash
+
+total_memory=$(free |awk '/Mem/{print $2}')   # 获取总内存
+used_memory=$(free |awk '/Mem/{print $3}')   # 获取已用内存
+# 可继续添加更多指标数据......
+
+job_name=&quot;custom_memory_monitor&quot;
+instance_name=`ifconfig eth0 | grep -w inet | awk '{print $2}'`   # 实例地址
+pushgateway_server=&quot;http://10.1.13.186:9091/metrics/job&quot;  # pushgateway地址
+
+
+cat &lt;&lt;EOF | curl --data-binary @- ${pushgateway_server}/${job_name}/instance/${instance_name} 
+#TYPE custom_memory_total gauge 
+custom_memory_total $total_memory
+#TYPE custom_memory_used gauge 
+custom_memory_used $used_memory
+EOF
+
+
+分别在不同主机执行脚本，验证指标数据收集和推送： 
+$ bash mem_monitor.sh
+</code></pre>
+<h2 id="66-删除数据">6.6 删除数据</h2>
+<p>先对一个组写入多个 instance 的数据</p>
+<pre><code class="language-shell">$ cat &lt;&lt;EOF | curl --data-binary @- http://10.1.13.186:9091/metrics/job/test_job/instance/10.1.13.188 
+#TYPE node_memory_usage gauge 
+node_memory_usage 4311744512 
+# TYPE memory_total gauge 
+node_memory_total 103481868288
+EOF
+
+$ cat &lt;&lt;EOF | curl --data-binary @- http://10.1.13.186:9091/metrics/job/test_job/instance/10.1.13.189 
+#TYPE node_memory_usage gauge 
+node_memory_usage 4311744512 
+# TYPE memory_total gauge 
+node_memory_total 103481868288
+EOF
+</code></pre>
+<p>通过API 删除指定组内指定实例的数据</p>
+<pre><code class="language-shell">$ curl -X DELETE http://10.1.13.186:9091/metrics/job/test_job/instance/10.1.13.188
+</code></pre>
+<p>或者可以直接通过Pushgateway界面操作删除。</p>
+<h1 id="七-prometheus-联邦">七、prometheus 联邦</h1>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://adong97.github.io/HDong.github.io/tag/JaV1Typc8/">
+            <span class="flex-auto">Prometheus监控</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+            <div class="prev-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/Q9P2QaMdd/">
+                <h3 class="post-title">
+                  <i class="ri-arrow-left-line"></i>
+                  二、PromQL语句
+                </h3>
+              </a>
+            </div>
+          
+
+          
+            <div class="next-post">
+              <a href="https://adong97.github.io/HDong.github.io/post/H2FJXl9R1/">
+                <h3 class="post-title">
+                  四、prometheus监控扩展
+                  <i class="ri-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <script src="https://adong97.github.io/HDong.github.io/media/prism.js"></script>  
+<script>
+
+Prism.highlightAll()
+let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+// This should probably be throttled.
+// Especially because it triggers during smooth scrolling.
+// https://lodash.com/docs/4.17.10#throttle
+// You could do like...
+// window.addEventListener("scroll", () => {
+//    _.throttle(doThatStuff, 100);
+// });
+// Only not doing it here to keep this Pen dependency-free.
+
+window.addEventListener("scroll", event => {
+  let fromTop = window.scrollY;
+
+  mainNavLinks.forEach((link, index) => {
+    let section = document.getElementById(decodeURI(link.hash).substring(1));
+    let nextSection = null
+    if (mainNavLinks[index + 1]) {
+      nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+    }
+    if (section.offsetTop <= fromTop) {
+      if (nextSection) {
+        if (nextSection.offsetTop > fromTop) {
+          link.classList.add("current");
+        } else {
+          link.classList.remove("current");    
+        }
+      } else {
+        link.classList.add("current");
+      }
+    } else {
+      link.classList.remove("current");
+    }
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  var lazyImages = [].slice.call(document.querySelectorAll(".post-feature-image.lazy"));
+
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target
+          lazyImage.style.backgroundImage = `url(${lazyImage.dataset.bg})`
+          lazyImage.classList.remove("lazy")
+          lazyImageObserver.unobserve(lazyImage)
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage)
+    })
+  } else {
+    // Possibly fall back to a more compatible method here
+  }
+});
+
+const menuContainer = document.querySelector('.menu-container')
+const menus = document.querySelectorAll('.menu-container .menu')
+const mask = document.querySelector('.mask')
+const contentWrapper = document.querySelector('.content-wrapper')
+const latestArticle = document.querySelector('.latest-article')
+const readMore = document.querySelector('.read-more')
+const indexPage = document.querySelector('.index-page')
+
+const isHome = location.pathname === '/'
+if (latestArticle) {
+  latestArticle.style.display = isHome ? 'block' : 'none'
+  readMore.style.display = isHome ? 'block' : 'none'
+  indexPage.style.display = isHome ? 'none' : 'block'
+}
+
+const openMenu = () => {
+  menuContainer.classList.add('open')
+  menus.forEach(menu => {
+    menu.classList.add('animated', 'fadeInLeft')
+  })
+  mask.classList.add('open')
+  contentWrapper.classList.add('is-second')
+}
+
+const closeMenu = () => {
+  menuContainer.classList.remove('open')
+  menus.forEach(menu => {
+    menu.classList.remove('animated', 'fadeInLeft')
+  })
+  mask.classList.remove('open')
+  contentWrapper.classList.remove('is-second')
+}
+</script>
+  
+  </body>
+</html>
