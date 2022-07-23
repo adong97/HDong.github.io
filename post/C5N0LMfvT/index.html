@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adong&#39;s blog</title>
 <meta name="description" content="人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。" />
-<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658562566521">
+<link rel="shortcut icon" href="https://adong97.github.io/HDong.github.io/favicon.ico?v=1658568418068">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
@@ -23,7 +23,7 @@
       <div class="flex lg:block p-4 lg:px-0 items-center fixed lg:static lg:block top-0 right-0 left-0 bg-white z-50">
         <i class="ri-menu-2-line lg:mt-4 text-2xl cursor-pointer animated fadeIn" onclick="openMenu()"></i>
         <a href="https://adong97.github.io/HDong.github.io">
-          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658562566521" alt="">
+          <img class="animated fadeInLeft avatar rounded-lg mx-4 lg:mt-32 lg:mx-0 mt-0 lg:w-24 lg:h-24 w-12 w-12" src="https://adong97.github.io/HDong.github.io/images/avatar.png?v=1658568418068" alt="">
         </a>
         <h1 class="animated fadeInLeft lg:text-4xl font-extrabold lg:mt-8 mt-0 text-xl" style="animation-delay: 0.2s">Adong&#39;s blog</h1>
       </div>
@@ -39,7 +39,7 @@
 <li><a href="#51-%E5%AE%89%E8%A3%85-alertmanager">5.1 安装 Alertmanager</a>
 <ul>
 <li><a href="#511-k8s%E9%83%A8%E7%BD%B2alertmanager">5.1.1 K8s部署Alertmanager</a></li>
-<li><a href="#512-%E9%83%A8%E7%BD%B2alertmanager-%E6%9C%8D%E5%8A%A1">5.1.2 部署Alertmanager 服务</a></li>
+<li><a href="#512-%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2alertmanager">5.1.2 单机部署Alertmanager</a></li>
 <li><a href="#513-alertmanager-%E9%85%8D%E7%BD%AE%E9%82%AE%E4%BB%B6%E5%91%8A%E8%AD%A6%E9%80%9A%E7%9F%A5">5.1.3 Alertmanager 配置邮件告警通知</a>
 <ul>
 <li><a href="#5131-alertmanager%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90">5.1.3.1 Alertmanager配置文件解析</a></li>
@@ -51,19 +51,29 @@
 </li>
 </ul>
 </li>
-<li><a href="#52-%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">5.2 配置Prometheus与Alertmanager对话</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">配置报警规则</a></li>
-<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">自定义webhook实现告警消息的推送</a>
+<li><a href="#52-k8s%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AEprometheus%E4%B8%8Ealertmanager%E5%AF%B9%E8%AF%9D">5.2 K8s环境配置Prometheus与Alertmanager对话</a>
 <ul>
-<li><a href="#%E9%92%89%E9%92%89%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81%E9%85%8D%E7%BD%AE">钉钉消息推送配置</a>
+<li><a href="#521-%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99">5.2.1 配置报警规则</a></li>
+</ul>
+</li>
+<li><a href="#53-%E8%87%AA%E5%AE%9A%E4%B9%89webhook%E5%AE%9E%E7%8E%B0%E5%91%8A%E8%AD%A6%E6%B6%88%E6%81%AF%E7%9A%84%E6%8E%A8%E9%80%81">5.3 自定义webhook实现告警消息的推送</a>
 <ul>
-<li><a href="#%E5%AE%89%E8%A3%85dingtalk">安装dingtalk</a></li>
+<li><a href="#531-%E9%92%89%E9%92%89%E6%B6%88%E6%81%AF%E6%8E%A8%E9%80%81%E9%85%8D%E7%BD%AE">5.3.1 钉钉消息推送配置</a>
+<ul>
+<li><a href="#5311-%E5%AE%89%E8%A3%85dingtalk">5.3.1.1 安装dingtalk</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">基于Label的动态告警处理</a></li>
-<li><a href="#%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">抑制和静默</a></li>
+<li><a href="#53-%E5%9F%BA%E4%BA%8Elabel%E7%9A%84%E5%8A%A8%E6%80%81%E5%91%8A%E8%AD%A6%E5%A4%84%E7%90%86">5.3 基于Label的动态告警处理</a></li>
+<li><a href="#54-%E6%8A%91%E5%88%B6%E5%92%8C%E9%9D%99%E9%BB%98">5.4 抑制和静默</a>
+<ul>
+<li><a href="#541-inhibition-%E5%91%8A%E8%AD%A6%E6%8A%91%E5%88%B6">5.4.1 Inhibition 告警抑制</a></li>
+<li><a href="#542-silences-%E9%9D%99%E9%BB%98">5.4.2 Silences： 静默</a></li>
+</ul>
+</li>
+<li><a href="#55-alertmanager%E9%AB%98%E5%8F%AF%E7%94%A8">5.5 Alertmanager高可用</a></li>
+<li><a href="#56-prometheusalert%E7%BB%84%E4%BB%B6">5.6 PrometheusAlert组件</a></li>
 </ul>
 </li>
 </ul>
@@ -160,9 +170,9 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">Alertmanager安装与配置</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">五、Alertmanager安装与告警配置</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2022-02-26 / 29 min read
+          2022-02-26 / 32 min read
         </div>
         
           <img class="post-feature-image rounded-lg mx-auto my-4" src="https://adong97.github.io/HDong.github.io/post-images/C5N0LMfvT.png" alt="">
@@ -320,7 +330,7 @@ spec:
 <p>部署Alertmanager</p>
 <pre><code class="language-shell">$ kubectl create -f alertmanager-all.yaml
 </code></pre>
-<h3 id="512-部署alertmanager-服务">5.1.2 部署Alertmanager 服务</h3>
+<h3 id="512-单机部署alertmanager">5.1.2 单机部署Alertmanager</h3>
 <pre><code class="language-shell"># 下载安装包
 $ wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
 
@@ -362,34 +372,44 @@ global:
   #wechart_api_secret: #企业微信 API secret
   #wechat_api_corp_id: #企业微信 corp id 信息。
 
-route: #route 用来设置报警的分发策略
-  group_by: [alertname] #通过 alertname 的值对告警进行分类,- alert: 物理节点 cpu 使用率
-  group_wait: 10s #一组告警第一次发送之前等待的延迟时间，即产生告警后延迟 10 秒钟将组内新产生的消息一起合并发送(一般设置为 0 秒 ~ 几分钟)。
-  group_interval: 2m #一组已发送过初始通知的告警接收到新告警后，下次发送通知前等待的延迟时间(一般设置为 5 分钟或更多)。
-  repeat_interval: 5m #一条成功发送的告警，在最终发送通知之前等待的时间(通常设置为 3 小时或更长时间)。
+route:  # route 用来设置报警的分发策略
+  group_by: [alertname] # 通过 alertname 的值对告警进行分类,- alert: 物理节点 cpu 使用率
+  group_wait: 10s # 一组告警第一次发送之前等待的延迟时间，即产生告警后延迟 10 秒钟将组内新产生的消息一起合并发送(一般设置为 0 秒 ~ 几分钟)。
+  group_interval: 2m # 一组已发送过初始通知的告警接收到新告警后，下次发送通知前等待的延迟时间(一般设置为 5 分钟或更多)。
+  repeat_interval: 5m # 一条成功发送的告警，在最终发送通知之前等待的时间(通常设置为 3 小时或更长时间)。
 
 #间隔示例：
-  #group_wait: 10s #第一次产生告警，等待 10s，组内有告警就一起发出，没有其它告警就单独发出。
-  #group_interval: 2m #第二次产生告警，先等待 2 分钟，2 分钟后还没有恢复就进入 repeat_interval。
-  #repeat_interval: 5m #在最终发送消息前再等待 5 分钟，5 分钟后还没有恢复就发送第二次告警。
+  #group_wait: 10s # 第一次产生告警，等待 10s，组内有告警就一起发出，没有其它告警就单独发出。
+  #group_interval: 2m # 第二次产生告警，先等待 2 分钟，2 分钟后还没有恢复就进入 repeat_interval。
+  #repeat_interval: 5m # 在最终发送消息前再等待 5 分钟，5 分钟后还没有恢复就发送第二次告警。
 
-  receiver: default-receiver #设置接收人,其它的告警发送给default-receiver
-  routes: #将 critical 的报警发送给myalertname
-  - receiver: myalertname
+  receiver: default-receiver # 设置默认告警通知接收人
+  routes:   #添加消息路由
+  - receiver: myalertname  # 将 critical 级别的报警发送给myalertname
     group_wait: 10s
     match_re:
       severity: critical
 
-receivers: #定义多接收者
-  - name: 'default-receiver'
-    email_configs:
-      - to: 'wxdongself@163.com'
-        send_resolved: true #通知已经恢复的告警
+## 消息分类发送
+receivers: # 定义多接收者
+- name: 'default-receiver'
+  email_configs:
+    - to: 'wxdongself@163.com'
+      send_resolved: true # 通知已经恢复的告警
 
-  - name: 'myalertname'
-    webhook_configs:
-      - url: 'http://10.1.13.1.186:8060/dingtalk/alertname/send'
-        send_resolved: true #通知已经恢复的告警
+- name: 'myalertname'
+  webhook_configs:
+  - url: 'http://10.1.13.1.186:8060/dingtalk/alertname/send'
+     send_resolved: true # 通知已经恢复的告警
+
+- name: 'wechat'  
+  wechat_configs:
+  - corp_id: ww4c893118fbf4d07c
+    #to_user: '@all'
+    to_party: 2
+    agent_id: 1000004
+    api_secret: STd8cpSsa2RAxH16WpnL6ZiOvVXulbh-XBh2_1kAnAU
+    send_resolved: true
 
 inhibit_rules: #抑制的规则
   - source_match: #源匹配级别，当匹配成功发出通知，但是其它'alertname', 'dev', 'instance'产生的warning 级别的告警通知将被抑制
@@ -496,7 +516,7 @@ node 内存可用大小  2022-07-23 07:30:33 UTC           active
 <li>pending：已触发阈值，但未满足告警持续时间（即 rule 中的 for 字段）</li>
 <li>firing：已触发阈值且满足条件并发送至 alertmanager</li>
 </ul>
-<h2 id="52-配置prometheus与alertmanager对话">5.2 配置Prometheus与Alertmanager对话</h2>
+<h2 id="52-k8s环境配置prometheus与alertmanager对话">5.2 K8s环境配置Prometheus与Alertmanager对话</h2>
 <p><img src="https://adong97.github.io/HDong.github.io/post-images/1646842842773.png" alt="" loading="lazy"><br>
 是否告警是由Prometheus进行判断的，若有告警产生，Prometheus会将告警push到Alertmanager，因此，需要在Prometheus端配置alertmanager的地址：</p>
 <pre><code class="language-shell">$ cat /apps/prometheus/prometheus.yml
@@ -508,7 +528,7 @@ node 内存可用大小  2022-07-23 07:30:33 UTC           active
           - alertmanager:9093   # 添加 alertmanager 地址
 ...
 </code></pre>
-<p>因此，需要修改Prometheus的配置文件，然后重新加载pod。</p>
+<p>修改Prometheus的配置文件，然后重新加载pod。</p>
 <pre><code class="language-shell"># 编辑prometheus-configmap.yaml配置，添加alertmanager内容
 $ kuectl -n monitor edit configmap prometheus-config
 
@@ -560,7 +580,7 @@ $ kubectl -n monitor exec -ti prometheus-7d6799c84c-2kntg cat /etc/prometheus/pr
 # 重新加载prometheus配置
 $ curl -X POST 10.244.1.167:9090/-/reload
 </code></pre>
-<h2 id="配置报警规则">配置报警规则</h2>
+<h3 id="521-配置报警规则">5.2.1 配置报警规则</h3>
 <p>目前Prometheus与Alertmanager已经连通，接下来我们可以针对收集到的各类指标配置报警规则，一旦满足报警规则的设置，则Prometheus将报警信息推送给Alertmanager，进而转发到我们配置的邮件中。</p>
 <p>同样是在prometheus-configmap中进行配置：</p>
 <pre><code class="language-shell">$ kubectl -n monitor edit configmap prometheus-config
@@ -705,7 +725,7 @@ $ curl -XPOST 10.244.1.10:9090/-/reload
 </code></pre>
 <p>说明告警已经推送到Alertmanager端了，但是邮箱登录的时候报错，这是因为邮箱默认没有开启第三方客户端登录。因此需要登录163邮箱设置SMTP服务允许客户端登录。</p>
 <figure data-type="image" tabindex="2"><img src="https://adong97.github.io/HDong.github.io/post-images/1647761962736.jpg" alt="" loading="lazy"></figure>
-<h2 id="自定义webhook实现告警消息的推送">自定义webhook实现告警消息的推送</h2>
+<h2 id="53-自定义webhook实现告警消息的推送">5.3 自定义webhook实现告警消息的推送</h2>
 <p>目前官方内置的第三方通知集成包括：邮件、 即时通讯软件（如Slack、Hipchat）、移动应用消息推送(如Pushover)和自动化运维工具（例如：Pagerduty、Opsgenie、Victorops）。可以在alertmanager的管理界面中查看到。</p>
 <p>每一个receiver具有一个全局唯一的名称，并且对应一个或者多个通知方式：</p>
 <pre><code class="language-shell">name: &lt;string&gt;
@@ -720,8 +740,8 @@ opsgenie_configs:
 webhook_configs:
   [ - &lt;webhook_config&gt;, ... ]
 </code></pre>
-<p>如果想实现告警消息推送给企业常用的即时聊天工具，如钉钉或者企业微信，如何配置？<br>
-Alertmanager的通知方式中还可以支持Webhook，通过这种方式开发者可以实现更多个性化的扩展支持。</p>
+<p><strong>如果想实现告警消息推送给企业常用的即时聊天工具，如钉钉或者企业微信，如何配置？</strong></p>
+<p>Alertmanager的通知方式中还可以支持Webhook，通过这种方式开发者可以实现更多个性化的扩展支持。</p>
 <pre><code class="language-shell"># 警报接收者
 receivers:
 #ops 
@@ -761,8 +781,8 @@ $ echo $demoAlerts
 </li>
 <li>配置alertmanager的receiver为webhook地址</li>
 </ul>
-<h3 id="钉钉消息推送配置">钉钉消息推送配置</h3>
-<p>如何给钉钉群聊发送消息？ 钉钉机器人</p>
+<h3 id="531-钉钉消息推送配置">5.3.1 钉钉消息推送配置</h3>
+<p>如何给钉钉群聊发送消息？ 使用钉钉机器人</p>
 <p>钉钉群聊机器人设置：<br>
 每个群聊机器人在创建的时候都会生成唯一的一个访问地址：</p>
 <pre><code class="language-shell">https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9
@@ -771,12 +791,44 @@ $ echo $demoAlerts
 <pre><code class="language-shell">curl 'https://oapi.dingtalk.com/robot/send?access_token=f628f749a7ad70e86ca7bcb68658d0ce5af7c201ce8ce32acaece4c592364ca9' \
    -H 'Content-Type: application/json' \
    -d '{&quot;msgtype&quot;: &quot;text&quot;,&quot;text&quot;: {&quot;content&quot;: &quot;我就是我, 是不一样的烟火&quot;}}'
+
+或者使用脚本
+$ cat /data/scripts/dingding-keywords.sh 
+#!/bin/bash 
+source /etc/profile 
+#PHONE=$1
+#SUBJECT=$2
+MESSAGE=$1 
+
+/usr/bin/curl -X &quot;POST&quot; 'https://oapi.dingtalk.com/robot/send?access_token=ba76276cd923a4e5dcd653ffabe4b71c4a23e8c4eb8e91446840d527c8d9cd4e' \ 
+-H 'Content-Type: application/json' \ 
+-d '{&quot;msgtype&quot;: &quot;text&quot;, 
+      &quot;text&quot;: { 
+              &quot;content&quot;: &quot;'${MESSAGE}'&quot; 
+       }
+    }'
+
+# 测试发送消息
+~$ bash /data/scripts/dingding-keywords.sh &quot;namespace=default\npod=pod1\ncpu=87%\n 持续时间=4.5m\nalertname=pod&quot;
+{&quot;errcode&quot;:0,&quot;errmsg&quot;:&quot;ok&quot;}
 </code></pre>
-<h4 id="安装dingtalk">安装dingtalk</h4>
-<p>https://gitee.com/agagin/prometheus-webhook-dingtalk</p>
-<p>镜像地址：timonwong/prometheus-webhook-dingtalk:master</p>
-<p>二进制运行：</p>
-<pre><code class="language-shell">$ ./prometheus-webhook-dingtalk --config.file=config.yml
+<h4 id="5311-安装dingtalk">5.3.1.1 安装dingtalk</h4>
+<p>脚本可以直接调用钉钉机器人直接发送告警，但是prometheus是无法直接调用钉钉接口的，需要通过dingtalk组件实现。</p>
+<p><strong>gitee地址</strong>： https://gitee.com/agagin/prometheus-webhook-dingtalk<br>
+<strong>镜像地址</strong>：  timonwong/prometheus-webhook-dingtalk:master</p>
+<p><strong>二进制运行</strong>：</p>
+<pre><code class="language-shell">
+$ tar xvf prometheus-webhook-dingtalk-1.4.0.linux-amd64.tar.gz 
+root@dingding-server:/apps$ cd prometheus-webhook-dingtalk-1.4.0.linux-amd64/
+
+$ ./prometheus-webhook-dingtalk --web.listen-address=&quot;0.0.0.0:8060&quot;
+--ding.profile=&quot;alertname=https://oapi.dingtalk.com/robot/send?access_token=ba76276cd923a4e5dcd653ffabe4b71c4a23e8c4eb8e91446840d527c8d9cd4e&quot;
+
+$ nohup ./prometheus-webhook-dingtalk --web.listen-address=&quot;0.0.0.0:8060&quot;
+--ding.profile=&quot;alertname=https://oapi.dingtalk.com/robot/sendaccess_token=ba76276cd923a4e5dcd653ffabe4b71c4a23e8c4eb8e91446840d527c8d9cd4e&quot; &amp;
+
+或者指定config.yml文件
+$ ./prometheus-webhook-dingtalk --config.file=config.yml
 </code></pre>
 <p>假如使用如下配置：</p>
 <pre><code class="language-shell">targets:
@@ -868,7 +920,7 @@ spec:
     port: 8060
     targetPort: http
 </code></pre>
-<p>创建：</p>
+<p>创建pod：</p>
 <pre><code class="language-shell">$ kubectl apply -f webhook-dingtalk-configmap.yaml
 $ kubectl apply -f webhook-dingtalk-deploy.yaml
 
@@ -882,6 +934,7 @@ level=info ts=2020-07-30T14:05:40.963Z caller=web.go:210 component=web msg=&quot
 </code></pre>
 <p>修改Alertmanager路由及webhook配置：</p>
 <pre><code class="language-shell">$ kubectl -n monitor edit configmap alertmanager
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -925,12 +978,13 @@ data:
         send_resolved: true  # 接受告警恢复的通知
       webhook_configs:
       - send_resolved: true
-        url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send
+        url: http://webhook-dingtalk:8060/dingtalk/webhook_dev/send    # 更改为url
 </code></pre>
 <p>验证钉钉消息是否正常收到。</p>
-<h2 id="基于label的动态告警处理">基于Label的动态告警处理</h2>
+<h2 id="53-基于label的动态告警处理">5.3 基于Label的动态告警处理</h2>
 <p>真实的场景中，我们往往期望可以给告警设置级别，而且可以实现不同的报警级别可以由不同的receiver接收告警消息。</p>
-<p>Alertmanager中路由负责对告警信息进行分组匹配，并向告警接收器发送通知。告警接收器可以通过以下形式进行配置：</p>
+<p>Alertmanager中路由负责对告警信息进行分组匹配，并向告警接收器发送通知。<br>
+告警接收器可以通过以下形式进行配置：</p>
 <pre><code class="language-shell">routes:
 - receiver: ops
   group_wait: 10s
@@ -981,6 +1035,7 @@ receivers:
 </code></pre>
 <p>我们为不同的报警规则设置了不同的标签，如<code>severity: critical</code>，针对规则中的label，来配置alertmanager路由规则，实现转发给不同的接收者。</p>
 <pre><code class="language-shell">$ cat alertmanager-configmap.yaml
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -1054,59 +1109,72 @@ metadata:
   namespace: monitor
 </code></pre>
 <p>分别更新Prometheus和Alertmanager配置，查看报警的发送。</p>
-<h2 id="抑制和静默">抑制和静默</h2>
+<h2 id="54-抑制和静默">5.4 抑制和静默</h2>
 <p>前面我们知道，告警的<code>group(分组)</code>功能通过把多条告警数据聚合，有效的减少告警的频繁发送。除此之外，Alertmanager还支持<code>Inhibition(抑制)</code> 和 <code>Silences(静默)</code>，帮助我们抑制或者屏蔽报警。</p>
-<ul>
-<li>
-<p>Inhibition 抑制<br>
-抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。</p>
-<p>比如当机房出现网络故障时，所有服务都将不可用而产生大量服务不可用告警，但这些警告并不能反映真实问题在哪，真正需要发出的应该是网络故障告警。当出现网络故障告警的时候，应当抑制服务不可用告警的通知。</p>
+<h3 id="541-inhibition-告警抑制">5.4.1 Inhibition 告警抑制</h3>
+<p>抑制是当出现其它告警的时候压制当前告警的通知，可以有效的防止告警风暴。<br>
+比如当机房出现网络故障时，所有服务都将不可用而产生大量服务不可用告警，但这些警告并不能反映真实问题在哪，真正需要发出的应该是网络故障告警。当出现网络故障告警的时候，应当抑制服务不可用告警的通知。</p>
 <p>在Alertmanager配置文件中，使用inhibit_rules定义一组告警的抑制规则：</p>
-<pre><code class="language-shell">inhibit_rules:
-  [ - &lt;inhibit_rule&gt; ... ]
+<pre><code class="language-shell">  inhibit_rules:
+    [ - &lt;inhibit_rule&gt; ... ]
 </code></pre>
 <p>每一条抑制规则的具体配置如下：</p>
-<pre><code class="language-shell">target_match:
-  [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
-target_match_re:
-  [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
-
-source_match:
-  [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
-source_match_re:
-  [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
-
-[ equal: '[' &lt;labelname&gt;, ... ']' ]
+<pre><code class="language-shell">  target_match:
+    [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
+  target_match_re:
+    [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
+  
+  source_match:
+    [ &lt;labelname&gt;: &lt;labelvalue&gt;, ... ]
+  source_match_re:
+    [ &lt;labelname&gt;: &lt;regex&gt;, ... ]
+  
+  [ equal: '[' &lt;labelname&gt;, ... ']' ]
 </code></pre>
 <p>当已经发送的告警通知匹配到target_match或者target_match_re规则，当有新的告警规则如果满足source_match或者定义的匹配规则，并且已发送的告警与新产生的告警中equal定义的标签完全相同，则启动抑制机制，新的告警不会发送。</p>
 <p>例如，定义如下抑制规则：</p>
-<pre><code class="language-shell">- source_match:
-    alertname: NodeDown
-    severity: critical
-  target_match:
-    severity: critical
-  equal:
-    - node
+<pre><code class="language-shell">  - source_match:
+      alertname: NodeDown
+      severity: critical
+    target_match:
+      severity: critical
+    equal:
+      - node
 </code></pre>
-</li>
-</ul>
 <p>如当集群中的某一个主机节点异常宕机导致告警NodeDown被触发，同时在告警规则中定义了告警级别severity=critical。由于主机异常宕机，该主机上部署的所有服务，中间件会不可用并触发报警。根据抑制规则的定义，如果有新的告警级别为severity=critical，并且告警中标签node的值与NodeDown告警的相同，则说明新的告警是由NodeDown导致的，则启动抑制机制停止向接收器发送通知。</p>
 <p>演示：实现如果 NodeMemoryUsage 报警触发，则抑制NodeLoad指标规则引起的报警。</p>
-<pre><code class="language-shell">    inhibit_rules:
-    - source_match:
-        alertname: NodeMemoryUsage
-        severity: critical
-      target_match:
-        severity: normal
-      equal:
-        - instance
+<pre><code class="language-shell">      inhibit_rules:
+      - source_match:
+          alertname: NodeMemoryUsage
+          severity: critical
+        target_match:
+          severity: normal
+        equal:
+          - instance
 </code></pre>
-<ul>
-<li>Silences： 静默</li>
-</ul>
+<h3 id="542-silences-静默">5.4.2 Silences： 静默</h3>
 <p>简单直接的在指定时段关闭告警。静默通过匹配器（Matcher）来配置，类似于路由树。警告进入系统的时候会检查它是否匹配某条静默规则，如果是则该警告的通知将忽略。  静默规则在Alertmanager的 Web 界面里配置。</p>
 <p>一条告警产生后，还要经过 Alertmanager 的分组、抑制处理、静默处理、去重处理和降噪处理最后再发送给接收者。这个过程中可能会因为各种原因会导致告警产生了却最终没有进行通知，可以通过下图了解整个告警的生命周期：<br>
 <img src="https://adong97.github.io/HDong.github.io/post-images/1646842948861.png" alt="" loading="lazy"></p>
+<h2 id="55-alertmanager高可用">5.5 Alertmanager高可用</h2>
+<p>大部分使用Alertmanager组件的时候，都是用的单点架构，如下图所示<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658567498223.jpg" alt="" loading="lazy"></p>
+<p>基于负载均衡实现Alertmanager高可用：<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658567617623.png" alt="" loading="lazy"></p>
+<p>基于Gossip机制实现高可用：<br>
+https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/readmd/alertmanager-high-availability</p>
+<p>Alertmanager 引入了 Gossip 机制。Gossip 机制为多个 Alertmanager 之间提供了信息传递的机制。确保及时在多个 Alertmanager 分别接收到相同告警信息的情况下，并且只有一个告警通知被发送给Receiver。</p>
+<p>集群环境搭建：<br>
+为了能够让 Alertmanager 节点之间进行通讯，需要在 Alertmanager 启动时设置相应的参数。<br>
+其中主要的参数包括：</p>
+<ul>
+<li>--cluster.listen-address string: 当前实例集群服务监听地址</li>
+<li>--cluster.peer value: 初始化时关联的其它实例的集群服务地址<br>
+<img src="https://adong97.github.io/HDong.github.io/post-images/1658567733713.png" alt="" loading="lazy"></li>
+</ul>
+<h2 id="56-prometheusalert组件">5.6 PrometheusAlert组件</h2>
+<p>PrometheusAlert 是开源的运维告警中心消息转发系统，支持主流的监控系统 Prometheus、Zabbix，日志 系统Graylog2，Graylog3、数据可视化系统Grafana、SonarQube，阿里云-云监控，以及所有支持WebHook 接口的系统发出的预警消息，支持将收到的这些消息发送到钉钉，微信，email，飞书，腾讯短信，腾讯电 话，阿里云短信，阿里云电话，华为短信，百度云短信，容联云电话，七陌短信，七陌语音，TeleGram，百度Hi(如流)等。</p>
+<p>Github地址：https://github.com/feiyu563/PrometheusAlert</p>
 
         </div>
 
