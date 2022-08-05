@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://adong97.github.io/HDong.github.io/</id>
+    <title>Adong&apos;s Blog</title>
+    <updated>2022-08-05T07:19:04.024Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://adong97.github.io/HDong.github.io/"/>
+    <link rel="self" href="https://adong97.github.io/HDong.github.io/atom.xml"/>
+    <subtitle>人生就是一场持续争夺领土的战争，一旦你不再为自己想要的奋斗和抗争，那些你不想要的就会接管你的领土和人生。</subtitle>
+    <logo>https://adong97.github.io/HDong.github.io/images/avatar.png</logo>
+    <icon>https://adong97.github.io/HDong.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, Adong&apos;s Blog</rights>
+</feed>
